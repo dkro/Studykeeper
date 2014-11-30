@@ -1,0 +1,58 @@
+.login__container {
+    margin: 0 auto;
+    margin-top: 2em;
+    padding: 1em;
+    border: 1px solid grey;
+    max-width: 20em;
+}
+
+.login__button {
+    width: 100%;
+    font-weight: bold;
+}
+
+.studySearch__tagWrapper {
+    display: inline-block;
+}
+
+.studySearch__tag {
+    float: left;
+    margin-right: 1em;
+    margin-top: 0.7em;
+}
+
+.studySearch__button {
+    float: left;
+    margin-top: 0.7em;
+}
+
+.searchtag__wrapper {
+    border: 0.1em solid lightgray;
+    -webkit-border-radius: 0.6em;
+    -moz-border-radius: 0.6em;
+    border-radius: 0.6em;
+    background-color: lightskyblue;
+    color: white;
+    padding: 0.5em;
+}
+
+.searchtag__button {
+    margin-left: 0.4em;
+}
+
+.registered--participant {
+    margin-top: 5em;
+    max-width: 30em;
+}
+
+.registered--participant__studyDisplay {
+    padding: 0 !important;
+}
+
+.studyDisplay__list {
+    margin-bottom: 0 !important;
+}
+
+.studyDisplay__study {
+    cursor: pointer;
+}

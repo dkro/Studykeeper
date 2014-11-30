@@ -1,0 +1,133 @@
+<!doctype html>
+
+<html lang="en" data-framework="emberjs">
+    <head>
+        <meta charset="utf-8">
+        <title>Study Manager</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <script type="text/x-handlebars" id="application">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Project name</a>
+                    </div>
+                    <div id="navbar" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container">
+                {{outlet}}
+            </div>
+        </script>
+
+        <script type="text/x-handlebars" id="index">
+            <h2>Index</h2>
+        </script>
+
+        <script type="text/x-handlebars" id="login">
+            <div class="login__container">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="emailInput">Email</label>
+                        <input type="email" class="form-control" id="emailInput" placeholder="abc@campus.lmu.de">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordInput">Password</label>
+                        <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                    </div>
+                </form>
+                <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
+                {{#if errorMessage}}
+                    <p class="alert">
+                        {{errorMessage}}
+                    </p>
+                {{/if}}
+            </div>
+        </script>
+
+
+        <script type="text/x-handlebars" id="user">
+            {{study-searchform allOptions=allOptions}}
+
+            <div class="panel panel-default registered--participant">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Angemeldete Studien</h3>
+                </div>
+                {{study-display studies=registeredStudies classNames='registered--participant__studyDisplay panel-body'}}
+            </div>
+
+        </script>
+
+        <script type="text/x-handlebars" id="components/study-searchform">
+            {{view "select" content=unselectedValues selection=currentSelected classNames="form-control"}}
+            {{#if hasTagsSelected}}
+                <div class="studySearch__tagWrapper">
+                    {{#each value in selectedValues}}
+                        {{study-searchtag tagValue=value}}
+                    {{/each}}
+                </div>
+            {{/if}}
+            <button type="button" class="btn btn-default studySearch__button">Search</button>
+        </script>
+
+        <script type="text/x-handlebars" id="components/study-searchtag">
+            <div class="searchtag__wrapper">
+                {{tagValue}}
+                <button type="button" class="close searchtag__button" {{action 'removeTag' tagValue}}>
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+        </script>
+
+        <script type="text/x-handlebars" id="components/study-display">
+            <div class="studyDisplay__list list-group">
+                {{#each study in studies}}
+                    <a class="list-group-item studyDisplay__study">
+                        <h4 class="list-group-item-heading">{{study.name}}</h4>
+                        <p class="list-group-item-text">
+                            <strong>Datum:</strong> {{study.date}} <br>
+                            <strong>Ort:</strong> {{study.location}}
+                        </p>
+                    </a>
+                {{/each}}
+            </div>
+        </script>
+
+
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/handlebars/handlebars.js"></script>
+        <script src="bower_components/ember/ember.js"></script>
+        <script src="bower_components/ember-data/ember-data.js"></script>
+        <script src="js/application.js"></script>
+        <script src="js/router.js"></script>
+        <script src="js/adapter.js"></script>
+        <script src="js/controllers/application_controller.js"></script>
+        <script src="js/controllers/login_controller.js"></script>
+        <script src="js/controllers/user_controller.js"></script>
+        <script src="js/components/study_searchform.js"></script>
+        <script src="js/components/study_searchtag.js"></script>
+        <script src="js/models/studysearch_option.js"></script>
+        <script src="js/components/study_display.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+
+
