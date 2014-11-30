@@ -6,18 +6,29 @@ var passport = require('passport');
 module.exports = function(app) {
 
   app.use(passport.initialize());
+
   // Basic Routes
   app.get('/', function(req, res){
     res.json({ 'message' : 'Bow Wow'});
   });
 
-  app.get('/user/all', userController.getUsers);
+  // Protected Routes (All Roles)
+  app.post('/api/login', auth.loginAuthenticate, userController.test);
 
-  // Protected Routes
-  app.get('/user/dav', auth.authenticate, userController.test);
+  app.get('/api/user/all', userController.getUsers);
 
-  app.get('user/cha', passport.authenticate('bearer', {session:false}), function(req, res){
-    res.json({ username: req.user.username, email: req.user.email });
-  });
+  app.get('/api/user/dav', auth.tokenAuthenticate, userController.test);
 
-}
+  //app.post('/api/signup');
+  // Tutor Routes
+
+
+  // Creator Routes
+
+
+  // Participant Routes
+
+
+  // Super-Admin Routes
+
+};

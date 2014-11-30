@@ -6,21 +6,20 @@ exports.getUsers = function(callback) {
 
 exports.getUserByName = function(data, callback) {
   var queryData = [
-    {UserName : data[0]}
+    {UserName : data.username}
   ];
   var query = connection.query("SELECT * FROM users WHERE username=?;", queryData[0].UserName, callback);
   console.log(query.sql);
 };
 
 exports.getUserByToken = function(data, callback) {
-  console.log('getUserByTokenModel');
   var queryData = [
     {token : data}
   ];
   console.log(queryData);
   var query = connection.query( "SELECT u.username FROM users u\
                                        INNER JOIN auth a ON u.id=a.userId\
-                                       WHERE token=?;"
-      , queryData[0].token, callback);
+                                       WHERE token=?;",
+                                queryData[0].token, callback);
   console.log(query.sql);
 };
