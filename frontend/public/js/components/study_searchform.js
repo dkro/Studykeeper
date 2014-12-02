@@ -28,6 +28,10 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
     hasTagsSelected: false,
 
     reset: function () {
+        this.set('hasTagsSelected', false);
+        this.set('currentSelected', this.defaultOption);
+        this.selectedValues.clear();
+        this.unselectedValues.clear();
         this.unselectedValues.pushObject(this.defaultOption);
         this.unselectedValues.pushObjects(this.allOptions.slice());
     },

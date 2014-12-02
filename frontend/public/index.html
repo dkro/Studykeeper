@@ -25,7 +25,9 @@
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="#">Home</a></li>
                             <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            {{#if isLoggedIn}}
+                                <li {{action 'logout'}}><a href="">Logout</a></li>
+                            {{/if}}
                         </ul>
                     </div>
                 </div>
@@ -45,16 +47,16 @@
                 <form role="form">
                     <div class="form-group">
                         <label for="emailInput">Email</label>
-                        <input type="email" class="form-control" id="emailInput" placeholder="abc@campus.lmu.de">
+                        {{input value=username type="email" id="emailInput" placeholder="abc@campus.lmu.de" classNames="form-control" action="login"}}
                     </div>
                     <div class="form-group">
                         <label for="passwordInput">Password</label>
-                        <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                        {{input value=password type="password" id="passwordInput" placeholder="Password" classNames="form-control" action="login"}}
                     </div>
                 </form>
                 <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
                 {{#if errorMessage}}
-                    <p class="alert">
+                    <p class="alert alert-danger login__alert">
                         {{errorMessage}}
                     </p>
                 {{/if}}
@@ -63,15 +65,25 @@
 
 
         <script type="text/x-handlebars" id="user">
-            {{study-searchform allOptions=allOptions}}
+            {{study-searchform allOptions=allOptions classNames='studySearch'}}
 
-            <div class="panel panel-default registered--participant">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Angemeldete Studien</h3>
+            <div>
+                <div class="panel panel-default registered--participant">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Angemeldete Studien</h3>
+                    </div>
+                    {{study-display studies=registeredStudies classNames='registered--participant__studyDisplay panel-body'}}
                 </div>
-                {{study-display studies=registeredStudies classNames='registered--participant__studyDisplay panel-body'}}
-            </div>
 
+                {{#if isCreator}}
+                <div class="panel panel-default registered--creator">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Erstellte Studien</h3>
+                    </div>
+                    {{study-display studies=createdStudies classNames='registered--participant__studyDisplay panel-body'}}
+                </div>
+                {{/if}}
+            </div>
         </script>
 
         <script type="text/x-handlebars" id="components/study-searchform">

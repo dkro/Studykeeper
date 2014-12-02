@@ -1,14 +1,25 @@
 .login__container {
     margin: 0 auto;
     margin-top: 2em;
-    padding: 1em;
-    border: 1px solid grey;
-    max-width: 20em;
+    padding: 2em;
+    border: 0.2em solid lightgray;
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    border-radius: 0.4em;
+    max-width: 40em;
 }
 
 .login__button {
     width: 100%;
     font-weight: bold;
+}
+
+.login__alert {
+    margin-top: 3em;
+}
+
+.studySearch {
+    max-width: 45em;
 }
 
 .studySearch__tagWrapper {
@@ -43,6 +54,15 @@
 .registered--participant {
     margin-top: 5em;
     max-width: 30em;
+    clear: left;
+    float: left;
+}
+
+.registered--creator {
+    margin-top: 5em;
+    max-width: 30em;
+    float: right;
+    vertical-align: top;
 }
 
 .registered--participant__studyDisplay {

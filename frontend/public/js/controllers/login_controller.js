@@ -1,4 +1,6 @@
 StudyManager.LoginController = Ember.Controller.extend({
+    needs: 'application',
+
     username: null,
 
     password: null,
@@ -30,8 +32,27 @@ StudyManager.LoginController = Ember.Controller.extend({
                     that.set('errorMessage', 'Login failed!');
                 }
             });*/
+            this.set('errorMessage', null);
+            var userRole = null;
 
-            this.transitionToRoute('user');
+            if (this.get('username') === "studycreator" &&
+                this.get('password') === "creator") {
+                userRole = 1;
+            } else if (this.get('username') === "studyadviser" &&
+                this.get('password') === "adviser") {
+                userRole = 2;
+            } else if (this.get('username') === "student" &&
+                this.get('password') === "abc") {
+                userRole = 0;
+            }
+
+            if (userRole == null) {
+                this.set('errorMessage', "Passwort falsch oder User existiert nicht!");
+            } else {
+                this.get('controllers.application').set('userRole', userRole);
+                this.get('controllers.application').set('isLoggedIn', true);
+                this.transitionToRoute('user');
+            }
         }
     },
 
@@ -42,6 +63,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             password: ''
         });
     },
+
 
     token: localStorage.token,
 

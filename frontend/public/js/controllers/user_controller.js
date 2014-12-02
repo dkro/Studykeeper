@@ -1,4 +1,6 @@
 StudyManager.UserController = Ember.Controller.extend({
+    needs: 'application',
+
     allOptions: ["ABC", "BCDEFGH", "C", "DEFGHIJKL"],
 
     registeredStudies: [
@@ -22,7 +24,37 @@ StudyManager.UserController = Ember.Controller.extend({
             date: "06.07.2015",
             location: "Hauptgebäude, Raum B145"
         }
-    ]
+    ],
+
+    createdStudies: [
+        {
+            name: "Studie X",
+            date: "20.09.2015",
+            location: "Hauptgebäude, Raum 045"
+        },
+        {
+            name: "Studie Y",
+            date: "25.06.2015",
+            location: "Amalienstraße, Raum 5"
+        }
+    ],
+
+    isAdviser: false,
+
+    isCreator: false,
+
+    changeOfUserRole: function(userRole) {
+        if (userRole === 0) {
+            this.set('isCreator', false);
+            this.set('isAdviser', false);
+        } else if (userRole === 1) {
+            this.set('isCreator', true);
+            this.set('isAdviser', false);
+        } else if (userRole == 2) {
+            this.set('isCreator', false);
+            this.set('isAdviser', true);
+        }
+    }
 });
 
 

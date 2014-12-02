@@ -1,8 +1,12 @@
 StudyManager.ApplicationController = Ember.Controller.extend({
-    needs: ['login'],
+    needs: ['login', 'user'],
+
+    isLoggedIn: false,
+
+    userRole: 0,
 
     actions: {
-        logout: function() {
+        /*logout: function() {
             var that = this;
 
             Ember.$.get('/logout', { access_token: localStorage.token }).then(
@@ -14,6 +18,14 @@ StudyManager.ApplicationController = Ember.Controller.extend({
                     that.alert("Logout failed!");
                 }
             );
+        }*/
+        logout: function() {
+            this.transitionToRoute('login');
+            this.set('isLoggedIn', false);
         }
-    }
+    },
+
+    userRoleChanged: function() {
+        this.get('controllers.user').changeOfUserRole(this.get('userRole'));
+    }.observes('userRole')
 });
