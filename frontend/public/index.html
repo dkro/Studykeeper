@@ -26,6 +26,7 @@
                             <li class="active"><a href="#">Home</a></li>
                             <li><a href="#about">About</a></li>
                             {{#if isLoggedIn}}
+                                <li {{action 'openAccountSettings'}}><a href="">Account</a></li>
                                 <li {{action 'logout'}}><a href="">Logout</a></li>
                             {{/if}}
                         </ul>
@@ -46,12 +47,12 @@
             <div class="login__container">
                 <form role="form">
                     <div class="form-group">
-                        <label for="emailInput">Email</label>
-                        {{input value=username type="email" id="emailInput" placeholder="abc@campus.lmu.de" classNames="form-control" action="login"}}
+                        <label for="emailLoginInput">Email</label>
+                        {{input value=usermail type="email" id="emailLoginInput" placeholder="abc@campus.lmu.de" classNames="form-control" action="login"}}
                     </div>
                     <div class="form-group">
-                        <label for="passwordInput">Password</label>
-                        {{input value=password type="password" id="passwordInput" placeholder="Password" classNames="form-control" action="login"}}
+                        <label for="passwordLoginInput">Password</label>
+                        {{input value=password type="password" id="passwordLoginInput" placeholder="Password" classNames="form-control" action="login"}}
                     </div>
                 </form>
                 <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
@@ -61,8 +62,41 @@
                     </p>
                 {{/if}}
             </div>
+            <button class="btn btn-primary center-block login__signUpButton" {{action 'signUp'}}>Account erstellen</button>
         </script>
 
+        <script type="text/x-handlebars" id="sign-up">
+            <h2 class="signUp__header">Einen neuen Account anlegen</h2>
+            <form role="form" class="signUp__form">
+                <div class="form-group">
+                    <label for="firstNameSignUpInput">Vorname</label>
+                    {{input type="text" id="firstNameSignUpInput" placeholder="Vorname" classNames="form-control"}}
+                </div>
+                <div class="form-group">
+                    <label for="lastNameSignUpInput">Nachname</label>
+                    {{input type="text" id="lastNameSignUpInput" placeholder="Nachname" classNames="form-control"}}
+                </div>
+                <div class="form-group">
+                    <label for="emailSignUpInput">Email</label>
+                    {{input type="email" id="emailSignUpInput" placeholder="Email" classNames="form-control"}}
+                </div>
+                <div class="form-group">
+                    <label for="passwordSignUpInput">Passwort</label>
+                    {{input type="password" id="passwordSignUpInput" placeholder="Passwort" classNames="form-control"}}
+                </div>
+                <div class="form-group">
+                    <label for="passwordConfirmSignUpInput">Passwort bestätigen</label>
+                    {{input type="password" id="passwordConfirmSignUpInput" placeholder="Passwort bestätigen" classNames="form-control"}}
+                </div>
+
+                <button class="btn btn-default signUp__button">Account anlegen</button>
+            </form>
+        </script>
+
+
+        <script type="text/x-handlebars" id="acc-config">
+            <h2>Acc config</h2>
+        </script>
 
         <script type="text/x-handlebars" id="user">
             {{study-searchform allOptions=allOptions classNames='studySearch'}}
@@ -132,6 +166,8 @@
         <script src="js/adapter.js"></script>
         <script src="js/controllers/application_controller.js"></script>
         <script src="js/controllers/login_controller.js"></script>
+        <script src="js/controllers/signUp_controller.js"></script>
+        <script src="js/controllers/accConfig_controller.js"></script>
         <script src="js/controllers/user_controller.js"></script>
         <script src="js/components/study_searchform.js"></script>
         <script src="js/components/study_searchtag.js"></script>

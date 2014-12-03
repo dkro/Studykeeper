@@ -1,7 +1,7 @@
 StudyManager.LoginController = Ember.Controller.extend({
     needs: 'application',
 
-    username: null,
+    usermail: null,
 
     password: null,
 
@@ -35,13 +35,13 @@ StudyManager.LoginController = Ember.Controller.extend({
             this.set('errorMessage', null);
             var userRole = null;
 
-            if (this.get('username') === "studycreator" &&
+            if (this.get('usermail') === "studycreator" &&
                 this.get('password') === "creator") {
                 userRole = 1;
-            } else if (this.get('username') === "studyadviser" &&
+            } else if (this.get('usermail') === "studyadviser" &&
                 this.get('password') === "adviser") {
                 userRole = 2;
-            } else if (this.get('username') === "student" &&
+            } else if (this.get('usermail') === "student" &&
                 this.get('password') === "abc") {
                 userRole = 0;
             }
@@ -53,6 +53,10 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.get('controllers.application').set('isLoggedIn', true);
                 this.transitionToRoute('user');
             }
+        },
+
+        signUp: function() {
+            this.transitionToRoute('sign-up');
         }
     },
 

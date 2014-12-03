@@ -22,6 +22,10 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         logout: function() {
             this.transitionToRoute('login');
             this.set('isLoggedIn', false);
+        },
+
+        openAccountSettings: function() {
+            this.transitionToRoute('acc-config');
         }
     },
 

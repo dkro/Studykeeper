@@ -18,6 +18,22 @@
     margin-top: 3em;
 }
 
+.login__signUpButton {
+    margin-top: 3em;
+}
+
+.signUp__header {
+    margin-bottom: 1.5em;
+}
+
+.signUp__form {
+    max-width: 50em;
+}
+
+.signUp__button {
+    margin-top: 2em;
+}
+
 .studySearch {
     max-width: 45em;
 }

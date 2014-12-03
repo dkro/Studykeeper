@@ -1,6 +1,8 @@
 StudyManager.Router.map(function() {
   // TODO: Change this!
   this.route('login', { path: '/' });
+  this.route('sign-up');
+  this.route('acc-config');
   this.route('logout');
   this.route('user');
 });
@@ -32,6 +34,14 @@ StudyManager.LoginRoute = Ember.Route.extend({
   setupController: function(controller) {
     controller.reset();
   }
+});
+
+StudyManager.SignUpRoute = Ember.Route.extend({
+
+});
+
+StudyManager.AccConfigRoute = Ember.Route.extend({
+
 });
 
 StudyManager.UserRoute = Ember.Route.extend({
