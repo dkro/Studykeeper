@@ -2,6 +2,7 @@ var passport       = require('passport');
 var LocalStrategy  = require('passport-local').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var User           = require('../models/users');
+var crypt          = require('../utilities/encryption');
 
 module.exports = function() {
 
@@ -14,14 +15,22 @@ module.exports = function() {
           }
 
           if (!user) {
-            return done(null, false, { message: 'Incorrect username.' });
+            return done(null, false, { status: 'failure', message: 'Incorrect username.' });
           }
 
-          if (user[0].password != password ) {
-            return done(null, false, { message: 'Incorrect password.' });
-          }
+          crypt.comparePassword(user[0].password, password,
+            function(err,isPasswordMatch) {
+              if (err) {
+                return done(err);
+              }
 
-          return done(null, user);
+              if (!isPasswordMatch) {
+                return done(null, false, { status:'failure',  message: 'Incorrect password.' });
+              }
+
+              return done(null, user);
+            }
+          );
         });
       }
   ));
@@ -29,16 +38,35 @@ module.exports = function() {
   // Bearer Strategy used to authenticate after login
   passport.use(new BearerStrategy ({},
     function(token, done) {
-      User.getUserByToken(token, function(err, user) {
-        if (err) {
-          return done(err);
+
+      User.getTokenTimestamp(token, function(err,timestampResult){
+        if (err){
+          return(done(err));
         }
 
-        if (user === false || user.length === 0) {
-          return done(null, false, { message: 'Token not found.' });
+        if ((new Date()-timestampResult[0].timestamp)/(1000*60) < 30 ) {
+          User.getUserByToken(token, function(err, user) {
+            if (err) {
+              return done(err);
+            }
+
+            if (user === false || user.length === 0) {
+              return done(null, false, { status: 'failure', message: 'Token not found.' });
+            }
+
+            // User Token timestamp gets updated with every request
+            User.updateToken(token, function(err,result){
+              if (err) {
+                return done(err);
+              }
+
+              return done(null, user, {status: 'success', message: 'token valid'});
+            });
+          });
+        } else {
+          return done(null, false, {status: 'failure', message: 'expired token'});
         }
 
-        return done(null, user);
       });
     }
   ));

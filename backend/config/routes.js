@@ -1,5 +1,5 @@
 var auth           = require('./auth');
-// TODO require all user controller here
+// TODO require all controller here
 var userController = require('../controllers/users');
 var passport = require('passport');
 
@@ -12,14 +12,16 @@ module.exports = function(app) {
     res.json({ 'message' : 'Bow Wow'});
   });
 
+  app.post('/api/user/signup', userController.signup);
+
   // Protected Routes (All Roles)
-  app.post('/api/login', auth.loginAuthenticate, userController.test);
+  app.post('/api/user/login', auth.loginAuthenticate, userController.login);
 
   app.get('/api/user/all', userController.getUsers);
 
-  app.get('/api/user/dav', auth.tokenAuthenticate, userController.test);
+  app.get('/api/user/test', auth.tokenAuthenticate, auth.requiresRole('participant'), userController.getUsers);
 
-  //app.post('/api/signup');
+  app.post('/api/user/add', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.addUser);
   // Tutor Routes
 
 

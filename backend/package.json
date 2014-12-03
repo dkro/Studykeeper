@@ -9,13 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^0.8.0",
     "fs": "0.0.2",
     "mysql": "^2.5.3",
+    "node-uuid": "^1.4.1",
     "passport": "^0.2.1",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
     "path": "^0.4.9",
-    "restify": "^2.8.3"
+    "restify": "^2.8.3",
+    "validator": "^3.22.1"
   }
 }
