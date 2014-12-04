@@ -17,6 +17,8 @@ module.exports = function(app) {
   // Protected Routes (All Roles)
   app.post('/api/user/login', auth.loginAuthenticate, userController.login);
 
+  app.post('/api/user/logout', auth.tokenAuthenticate, userController.logout);
+
   app.get('/api/user/all', userController.getUsers);
 
   app.get('/api/user/test', auth.tokenAuthenticate, userController.getUsers);

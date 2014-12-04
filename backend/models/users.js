@@ -56,6 +56,15 @@ exports.getUserRole = function(data, callback){
     "id=(SELECT role FROM users WHERE username=?);",queryData.username,callback);
 };
 
+
+// ------------------- TOKENS -------------------------------
+
+exports.getToken = function (token, callback){
+  connection.query("SELECT token FROM auth WHERE token=?",
+    token,
+    callback);
+};
+
 exports.createTokenForUser = function (data,callback) {
   var queryData = {
       username: data.username,
@@ -76,18 +85,22 @@ exports.getTokensForUser = function (data,callback) {
     callback);
 };
 
-exports.deleteInvalidTokensForUser = function (data, callback) {
+exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp, callback) {
   var queryData = {
-    username: data.username,
-    timestamp: data.timestamp
+    username: username,
+    timestamp: timestamp,
   };
-  connection.query("",
+  connection.query("DELETE FROM auth " +
+    "WHERE userId=(SELECT id FROM users WHERE username=?) " +
+    "AND timestamp < ?",
     [queryData.username,queryData.timestamp],
-    callback)
+    callback);
 };
 
-exports.deleteToken = function (token) {
-  connection.query("DELETE FROM auth WHERE token=?", token);
+exports.deleteToken = function (token, callback) {
+  connection.query("DELETE FROM auth WHERE token=?",
+    token,
+    callback);
 };
 
 exports.updateToken = function(token, callback) {
@@ -104,4 +117,7 @@ exports.getTokenTimestamp = function(token, callback) {
     token,
     callback);
 };
+
+// ------------------------- END --------------------------
+
 

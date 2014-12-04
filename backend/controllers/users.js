@@ -85,6 +85,11 @@ exports.login = function(req, res) {
       if (err) {
         res.send(err);
       } else {
+
+        var now = new Date();
+        var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
+        User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow);
+
         User.getTokensForUser(user, function (err, tokenResult) {
           if (err) {
             res.send(err);
@@ -94,6 +99,7 @@ exports.login = function(req, res) {
                 res.send(err);
               } else {
                 res.json({
+                  // TODO send newest token( the one just created )
                   message: 'Login successful',
                   username: userResult[0].username,
                   role: roleResult[0].name,
@@ -105,6 +111,30 @@ exports.login = function(req, res) {
         });
       }
     });
+  });
+};
+
+exports.logout = function(req, res) {
+  User.deleteToken(req.token, function(err){
+    if (err) {
+      res.send(err);
+    } else {
+
+      var now = new Date();
+      var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
+
+      User.deleteTokensForUserBeforeTimestamp(req.user[0].username, ThirtyMinutesFromNow, function(err){
+        if (err) {
+          res.send(err);
+        } else {
+          res.json({
+            status: 'success',
+            username: req.user[0].username,
+            message: 'Logged out.'
+          });
+        }
+      });
+    }
   });
 };
 

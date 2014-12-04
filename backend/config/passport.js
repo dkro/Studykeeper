@@ -38,39 +38,44 @@ module.exports = function() {
   // Bearer Strategy used to authenticate after login
   passport.use(new BearerStrategy ({},
     function(token, done) {
-
-      User.getTokenTimestamp(token, function(err,timestampResult){
-        if (err){
-          return(done(err));
-        }
-
-        if ((new Date()-timestampResult[0].timestamp)/(1000*60) < 30 ) {
-          User.getUserByToken(token, function(err, user) {
-            if (err) {
-              return done(err);
-            }
-
-            if (user === false || user.length === 0) {
-              return done(null, false, { status: 'failure', message: 'Token not found.' });
-            }
-
-            // User Token timestamp gets updated with every request
-            User.updateToken(token, function(err,result){
-              if (err) {
-                return done(err);
-              }
-
-              return done(null, user, {status: 'success', message: 'Token valid.'});
-            });
-          });
+      User.getToken(token, function(err) {
+// TODO correct messages from API
+        if (err) {
+          return done(err, false, {status: 'failure', message: 'Token not found.'});
         } else {
+          User.getTokenTimestamp(token, function (err, timestampResult) {
+            if (err) {
+              return (done(err));
+            }
 
-          // clean up old token
-          User.deleteToken(token);
+            if ((new Date() - timestampResult[0].timestamp) / (1000 * 60) < 30) {
+              User.getUserByToken(token, function (err, user) {
+                if (err) {
+                  return done(err);
+                }
 
-          return done(null, false, {status: 'failure', message: 'Token expired.'});
+                if (user === false || user.length === 0) {
+                  return done(null, false, {status: 'failure', message: 'User not found.'});
+                }
+
+                // User Token timestamp gets updated with every request
+                User.updateToken(token, function (err, result) {
+                  if (err) {
+                    return done(err);
+                  }
+
+                  return done(null, user, token, {status: 'success', message: 'Token valid.'});
+                });
+              });
+            } else {
+
+              // clean up old token
+              User.deleteToken(token);
+
+              return done(null, false, {status: 'failure', message: 'Token expired.'});
+            }
+          });
         }
-
       });
     }
   ));

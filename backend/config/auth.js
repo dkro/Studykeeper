@@ -19,7 +19,7 @@ exports.loginAuthenticate = function(req, res, next) {
 
 exports.tokenAuthenticate = function(req, res, next) {
   passport.authenticate('bearer', {session: false},
-    function(err, user, info) {
+    function(err, user, token, info) {
       if (err) {
         return next(err);
       }
@@ -27,6 +27,8 @@ exports.tokenAuthenticate = function(req, res, next) {
       if (user === false || user.length === 0) {
         return res.send(info);
       } else {
+        req.user = user;
+        req.token = token;
         next();
       }
     }
