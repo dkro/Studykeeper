@@ -19,7 +19,7 @@ module.exports = function(app) {
 
   app.get('/api/user/all', userController.getUsers);
 
-  app.get('/api/user/test', auth.tokenAuthenticate, auth.requiresRole('participant'), userController.getUsers);
+  app.get('/api/user/test', auth.tokenAuthenticate, userController.getUsers);
 
   app.post('/api/user/add', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.addUser);
   // Tutor Routes

@@ -60,11 +60,15 @@ module.exports = function() {
                 return done(err);
               }
 
-              return done(null, user, {status: 'success', message: 'token valid'});
+              return done(null, user, {status: 'success', message: 'Token valid.'});
             });
           });
         } else {
-          return done(null, false, {status: 'failure', message: 'expired token'});
+
+          // clean up old token
+          User.deleteToken(token);
+
+          return done(null, false, {status: 'failure', message: 'Token expired.'});
         }
 
       });

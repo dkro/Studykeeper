@@ -79,11 +79,15 @@ exports.getTokensForUser = function (data,callback) {
 exports.deleteInvalidTokensForUser = function (data, callback) {
   var queryData = {
     username: data.username,
-    timestamp: new Date()
+    timestamp: data.timestamp
   };
   connection.query("",
     [queryData.username,queryData.timestamp],
     callback)
+};
+
+exports.deleteToken = function (token) {
+  connection.query("DELETE FROM auth WHERE token=?", token);
 };
 
 exports.updateToken = function(token, callback) {
@@ -101,5 +105,3 @@ exports.getTokenTimestamp = function(token, callback) {
     callback);
 };
 
-// TODO validate Tokens... delete old + update new
-// make roles work.

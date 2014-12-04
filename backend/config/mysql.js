@@ -6,7 +6,7 @@ module.exports = function(config) {
     user     : 'root',
     password : '',
     port     : 3306,
-    database : 'test'
+    database : 'UserstudyManager'
   });
 
   connection.connect(function(err) {
