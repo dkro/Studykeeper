@@ -37,7 +37,7 @@ exports.saveUser = function(data, callback) {
     }
 
     queryData.password = hash;
-    var query = connection.query( "INSERT INTO users (username,password,role) " +
+    connection.query( "INSERT INTO users (username,password,role) " +
       "VALUES (?,?,(SELECT id FROM roles WHERE name=?));",
       [queryData.username,queryData.password,queryData.role],
       callback);
@@ -50,10 +50,9 @@ exports.setRole = function(data, callback) {
   var query = connection.query("INSERT INTO", queryData, callback);
 };
 
-exports.getUserRole = function(data, callback){
-  var queryData = {username: data.username};
+exports.getUserRole = function(username, callback){
   connection.query("SELECT name FROM roles WHERE " +
-    "id=(SELECT role FROM users WHERE username=?);",queryData.username,callback);
+    "id=(SELECT role FROM users WHERE username=?);",username,callback);
 };
 
 
@@ -79,7 +78,7 @@ exports.createTokenForUser = function (data,callback) {
 exports.getTokensForUser = function (data,callback) {
   var queryData = {
     username: data.username};
-  connection.query("SELECT token FROM auth WHERE " +
+  connection.query("SELECT token, timestamp FROM auth WHERE " +
     "userId=(SELECT id FROM users WHERE username=?);",
     queryData.username,
     callback);
@@ -116,6 +115,33 @@ exports.getTokenTimestamp = function(token, callback) {
   connection.query("SELECT timestamp FROM auth WHERE token=?;",
     token,
     callback);
+};
+
+// ------------------------- MISC -------------------------
+
+exports.setLMUStaff = function(username, isLMUstaff, callback) {
+  var flag = 0;
+  if (isLMUstaff) {
+    flag = 1;
+  }
+  connection.query("UPDATE users SET lmuStaff=? WHERE username=?",
+    [flag,username],
+    callback);
+};
+
+exports.setPassword = function(password, username, callback) {
+  crypt.cryptPassword(password, function(err,hash){
+    if (err) {
+      callback(err);
+    }
+
+    password = hash;
+    connection.query( "UPDATE users " +
+      "SET password=? " +
+      "WHERE username=?;",
+      [password,username],
+      callback);
+  });
 };
 
 // ------------------------- END --------------------------

@@ -5,11 +5,11 @@ exports.loginAuthenticate = function(req, res, next) {
   passport.authenticate('local', {session: false},
       function(err, user, info){
         if(err) {
-          return next(err);
+          res.json(err);
         }
 
         if(user.length === 0 || user === false) {
-          return res.send(info);
+          res.json(info);
         } else {
           next ();
         }
@@ -19,16 +19,16 @@ exports.loginAuthenticate = function(req, res, next) {
 
 exports.tokenAuthenticate = function(req, res, next) {
   passport.authenticate('bearer', {session: false},
-    function(err, user, token, info) {
+    function(err, user, info) {
       if (err) {
-        return next(err);
+        res.json({status: "failure", message: err});
       }
 
       if (user === false || user.length === 0) {
-        return res.send(info);
+        res.json({status: "failure", message: info});
       } else {
         req.user = user;
-        req.token = token;
+        req.token = info;
         next();
       }
     }
@@ -37,10 +37,9 @@ exports.tokenAuthenticate = function(req, res, next) {
 
 exports.requiresRole = function(role) {
   return function (req, res, next) {
-    userController.validateRole(role, token, function(roleValidated){
+    userController.validateRole(role, req.user[0].username, res, function(roleValidated){
       if(!roleValidated) {
-        res.status(403);
-        res.send();
+        res.send(403, {status: 'failure', message: 'Your role is not allowed to this resource.'});
       } else {
         next();
       }
