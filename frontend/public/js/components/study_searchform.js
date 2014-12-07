@@ -27,6 +27,18 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
 
     hasTagsSelected: false,
 
+    buttonText: "Zeige alle Studien",
+
+    changeButtonText: function() {
+        var res = "Filter Studien";
+
+        if (this.selectedValues.length === 0) {
+            res = "Zeige alle Studien" ;
+        }
+
+        this.set('buttonText', res);
+    }.observes('selectedValues.length'),
+
     reset: function () {
         this.set('hasTagsSelected', false);
         this.set('currentSelected', this.defaultOption);

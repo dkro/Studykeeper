@@ -1,5 +1,5 @@
 StudyManager.LoginController = Ember.Controller.extend({
-    needs: 'application',
+    needs: ['application'],
 
     usermail: null,
 
@@ -56,14 +56,14 @@ StudyManager.LoginController = Ember.Controller.extend({
         },
 
         signUp: function() {
-            this.transitionToRoute('sign-up');
+            this.transitionToRoute('signup');
         }
     },
 
     reset: function() {
         this.setProperties({
             errorMessage: '',
-            username: '',
+            usermail: '',
             password: ''
         });
     },

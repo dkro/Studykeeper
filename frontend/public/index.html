@@ -19,7 +19,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Project name</a>
+                        <a class="navbar-brand" href="#">Study Manager</a>
                     </div>
                     <div id="navbar" class="collapse navbar-collapse">
                         <ul class="nav navbar-nav">
@@ -65,31 +65,51 @@
             <button class="btn btn-primary center-block login__signUpButton" {{action 'signUp'}}>Account erstellen</button>
         </script>
 
-        <script type="text/x-handlebars" id="sign-up">
+        <script type="text/x-handlebars" id="signup">
             <h2 class="signUp__header">Einen neuen Account anlegen</h2>
             <form role="form" class="signUp__form">
-                <div class="form-group">
-                    <label for="firstNameSignUpInput">Vorname</label>
-                    {{input type="text" id="firstNameSignUpInput" placeholder="Vorname" classNames="form-control"}}
+                <div {{bind-attr class=":form-group firstNameValidationClass"}}>
+                    <label class="control-label" for="firstNameSignUpInput">Vorname</label>
+                    {{input type="text" id="firstNameSignUpInput" focus-out="validateFirstNameAction" value=firstName classNames="form-control" placeholder="Vorname"}}
+
+                    {{#if firstNameHelpText}}
+                        <span class="help-block">{{firstNameHelpText}}</span>
+                    {{/if}}
                 </div>
-                <div class="form-group">
-                    <label for="lastNameSignUpInput">Nachname</label>
-                    {{input type="text" id="lastNameSignUpInput" placeholder="Nachname" classNames="form-control"}}
+                <div {{bind-attr class=":form-group lastNameValidationClass"}}>
+                    <label class="control-label" for="lastNameSignUpInput">Nachname</label>
+                    {{input type="text" id="lastNameSignUpInput" focus-out="validateLastNameAction" value=lastName classNames="form-control" placeholder="Nachname"}}
+
+                    {{#if lastNameHelpText}}
+                        <span class="help-block">{{lastNameHelpText}}</span>
+                    {{/if}}
                 </div>
-                <div class="form-group">
-                    <label for="emailSignUpInput">Email</label>
-                    {{input type="email" id="emailSignUpInput" placeholder="Email" classNames="form-control"}}
+                <div {{bind-attr class=":form-group emailValidationClass"}}>
+                    <label class="control-label" for="emailSignUpInput">Email</label>
+                    {{input type="email" id="emailSignUpInput" focus-out="validateEmailAction" value=email classNames="form-control" placeholder="student@campus.lmu.de"}}
+
+                    {{#if emailHelpText}}
+                        <span class="help-block">{{emailHelpText}}</span>
+                    {{/if}}
                 </div>
-                <div class="form-group">
-                    <label for="passwordSignUpInput">Passwort</label>
-                    {{input type="password" id="passwordSignUpInput" placeholder="Passwort" classNames="form-control"}}
+                <div {{bind-attr class=":form-group passwordValidationClass"}}>
+                    <label class="control-label" for="passwordSignUpInput">Passwort</label>
+                    {{input type="password" id="passwordSignUpInput" focus-out="validatePasswordAction" value=password classNames="form-control" placeholder="Passwort"}}
+
+                    {{#if passwordHelpText}}
+                        <span class="help-block">{{passwordHelpText}}</span>
+                    {{/if}}
                 </div>
-                <div class="form-group">
-                    <label for="passwordConfirmSignUpInput">Passwort bestätigen</label>
-                    {{input type="password" id="passwordConfirmSignUpInput" placeholder="Passwort bestätigen" classNames="form-control"}}
+                <div {{bind-attr class=":form-group passwordConfirmValidationClass"}}>
+                    <label class="control-label" for="passwordConfirmSignUpInput">Passwort wiederholen</label>
+                    {{input type="password" id="passwordConfirmSignUpInput" focus-out="validatePasswordConfirmAction" value=passwordConfirm classNames="form-control" placeholder="Passwort wiederholen"}}
+
+                    {{#if passwordConfirmHelpText}}
+                        <span class="help-block">{{passwordConfirmHelpText}}</span>
+                    {{/if}}
                 </div>
 
-                <button class="btn btn-default signUp__button">Account anlegen</button>
+                <button class="btn btn-default signUp__button" {{action 'validateAllAction'}}>Account anlegen</button>
             </form>
         </script>
 
@@ -129,7 +149,7 @@
                     {{/each}}
                 </div>
             {{/if}}
-            <button type="button" class="btn btn-default studySearch__button">Search</button>
+            <button type="button" class="btn btn-default studySearch__button">{{buttonText}}</button>
         </script>
 
         <script type="text/x-handlebars" id="components/study-searchtag">
@@ -166,7 +186,7 @@
         <script src="js/adapter.js"></script>
         <script src="js/controllers/application_controller.js"></script>
         <script src="js/controllers/login_controller.js"></script>
-        <script src="js/controllers/signUp_controller.js"></script>
+        <script src="js/controllers/signup_controller.js"></script>
         <script src="js/controllers/accConfig_controller.js"></script>
         <script src="js/controllers/user_controller.js"></script>
         <script src="js/components/study_searchform.js"></script>
