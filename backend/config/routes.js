@@ -11,7 +11,8 @@ module.exports = function(app) {
 
   // Basic Routes
   var directory = path.resolve('./frontend/public/');
-  app.get(/.*/, restify.serveStatic({
+  // All routes mapped to frontend/publich except for /api/* routes
+  app.get(/^(api).*/, restify.serveStatic({
     'directory': directory,
     'default' : 'index.html'
   }));
