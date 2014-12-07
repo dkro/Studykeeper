@@ -1,16 +1,20 @@
+var restify        = require('restify');
 var auth           = require('./auth');
 // TODO require all controller here
 var userController = require('../controllers/users');
-var passport = require('passport');
+var passport       = require('passport');
+var path           = require('path');
 
 module.exports = function(app) {
 
   app.use(passport.initialize());
 
   // Basic Routes
-  app.get('/', function(req, res){
-    res.json({ 'message' : 'Bow Wow'});
-  });
+  var directory = path.resolve('./frontend/public/');
+  app.get(/.*/, restify.serveStatic({
+    'directory': directory,
+    'default' : 'index.html'
+  }));
 
   app.post('/api/user/signup', userController.signup);
 
