@@ -180,14 +180,72 @@ exports.logout = function(req, res) {
   });
 };
 
-exports.addUser = function(req, res) {
+exports.createUser = function(req, res) {
+  var user = {
+    username: req.body.username,
+    password: req.body.password,
+    confirmPassword : req.body.confirmPassword,
+    role    : req.body.role
+  };
+
+  // TODO check for missing values
+
+  if (user.password !== user.confirmPassword) {
+    res.json({
+      status: "failure",
+      message: "The passwords don't match."
+    });
+  } else {
+    User.getUserByName(user, function(err,result){
+      if (result.length > 0) {
+        res.json({
+          status: "failure",
+          message: "Email already in use."});
+      } else {
+        if (validator.isEmail(user.username)) {
+          if (user.password.length >= passwordMinimumLength) {
+            User.saveUser(user, function (err) {
+              if (err) {
+                res.send(err);
+              } else {
+                if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
+                  User.setLMUStaff(user.username, true, function(err) {
+                    if (err) {
+                      // TODO log error correctly
+                      console.log(err);
+                    }
+                  });
+                }
+
+                res.json({
+                  status: 'success',
+                  message: 'New user has been created successfully',
+                  username: user.username,
+                  role: user.role
+                });
+              }
+            });
+          } else {
+            res.json({
+              status: 'failure',
+              message: "Password too short. 7 chars minimum."});
+          }
+        } else {
+          res.json({
+            status: 'failure',
+            message: "Invalid email address."});
+        }
+      }
+    });
+  }
+};
+
+exports.deleteUser = function(req, res) {
   var user = new User({
     username: req.body.username,
     password: req.body.password,
     role    : req.body.role
   });
-
-  // TODO check for email username, user password existing
 
   user.saveUser(user,function(err) {
     if (err){
@@ -198,8 +256,8 @@ exports.addUser = function(req, res) {
           res.send(err);
         } else {
           res.json({message: 'New user has been created successfully',
-                    username: user.username,
-                    role: user.role});
+            username: user.username,
+            role: user.role});
         }
       });
     }

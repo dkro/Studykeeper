@@ -32,7 +32,9 @@ module.exports = function(app) {
 
   app.get('/api/user/test', auth.tokenAuthenticate, auth.requiresRole('executor'), userController.getUsers);
 
-  app.post('/api/user/add', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.addUser);
+  app.post('/api/user/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
+
+  app.post('/api/user/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
   // Tutor Routes
 
 

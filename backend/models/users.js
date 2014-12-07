@@ -45,9 +45,11 @@ exports.saveUser = function(data, callback) {
 };
 
 exports.setRole = function(data, callback) {
-  var queryData = {username: data.username,
-     role: data.role};
-  var query = connection.query("INSERT INTO", queryData, callback);
+  connection.query("UPDATE users " +
+    "SET role=(SELECT name FROM roles WHERE name=?) " +
+    "WHERE username=?;",
+    [data.role, data.username],
+    callback);
 };
 
 exports.getUserRole = function(username, callback){
