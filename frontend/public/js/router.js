@@ -1,10 +1,10 @@
 StudyManager.Router.map(function() {
-  // TODO: Change this!
   this.route('login', { path: '/' });
   this.route('signup');
   this.route('acc-config');
   this.route('logout');
   this.route('user');
+  this.route('studiesList');
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -25,7 +25,7 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   redirectToLogin: function(transition) {
     this.controllerFor('login').set('errorMessage', 'You must be logged in to view that page.');
     this.controllerFor('login').set('attemptedTransition', transition);
-    this.transitionTo('login');
+    this.transitionToRoute('login');
   }
 });
 
@@ -43,11 +43,11 @@ StudyManager.SignupRoute = Ember.Route.extend({
   }
 });
 
-StudyManager.AccConfigRoute = Ember.Route.extend({
+StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 
 });
 
-StudyManager.UserRoute = Ember.Route.extend({
+StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
   /*model: function () {
     return this.store.find('SearchOption');
   },
@@ -56,6 +56,9 @@ StudyManager.UserRoute = Ember.Route.extend({
     this._super(controller, model);
     controller.set('allOptions', this.store.find('SearchOption'));
   }*/
+});
+
+StudyManager.StudiesListRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 

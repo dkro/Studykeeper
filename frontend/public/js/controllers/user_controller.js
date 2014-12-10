@@ -1,5 +1,12 @@
 StudyManager.UserController = Ember.Controller.extend({
-    needs: 'application',
+    needs: ['application', 'studiesList'],
+
+    actions: {
+        displayStudies: function(selectedTags) {
+            this.get('controllers.studiesList').set('searchTags', selectedTags);
+            this.transitionToRoute('studiesList');
+        }
+    },
 
     allOptions: ["ABC", "BCDEFGH", "C", "DEFGHIJKL"],
 

@@ -93,3 +93,25 @@
 .studyDisplay__study {
     cursor: pointer;
 }
+
+.createStudyButton--adviser {
+    float: right;
+    margin-bottom: 2em !important;
+}
+
+.studiesList__row {
+    cursor: pointer;
+}
+
+.studiesList__tableWrapper {
+}
+
+.studiesList__filterButton {
+    display: block !important;
+    margin-top: 3em;
+    margin-bottom: 1em !important;
+}
+
+.studiesList__filterInput {
+    width: 95%;
+}

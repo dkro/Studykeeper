@@ -6,6 +6,9 @@
         <title>Study Manager</title>
         <link rel="stylesheet" href="style.css">
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="http://momentjs.com/downloads/moment.min.js"></script>
+        <script src="http://dbushell.github.io/Pikaday/pikaday.js"></script>
+        <link rel="stylesheet" href="http://dbushell.github.io/Pikaday/css/pikaday.css">
     </head>
 
     <body>
@@ -119,7 +122,11 @@
         </script>
 
         <script type="text/x-handlebars" id="user">
-            {{study-searchform allOptions=allOptions classNames='studySearch'}}
+            {{#if isAdviser}}
+                <button class="btn btn-primary createStudyButton--adviser">Neue Studie erstellen</button>
+            {{/if}}
+
+            {{study-searchform allOptions=allOptions classNames='studySearch' action="displayStudies"}}
 
             <div>
                 <div class="panel panel-default registered--participant">
@@ -130,15 +137,69 @@
                 </div>
 
                 {{#if isCreator}}
-                <div class="panel panel-default registered--creator">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Erstellte Studien</h3>
+                    <div class="panel panel-default registered--creator">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Erstellte Studien</h3>
+                        </div>
+                        {{study-display studies=createdStudies classNames='registered--participant__studyDisplay panel-body'}}
                     </div>
-                    {{study-display studies=createdStudies classNames='registered--participant__studyDisplay panel-body'}}
-                </div>
                 {{/if}}
             </div>
         </script>
+
+        <script type="text/x-handlebars" id="studiesList">
+            <h2>Anzeige aller Studien</h2>
+
+            {{#if searchTags}}
+                <span>für die Searchtags:
+                    {{#each tag in searchTags}}
+                        <span class="label label-default">{{tag}}</span>
+                    {{/each}}
+                </span>
+            {{/if}}
+
+            <button type="button" class="btn btn-default btn-sm studiesList__filterButton" {{action 'enableDisableFilter'}}>
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> {{filterButtonText}}
+            </button>
+
+            <div class="table-responsive studiesList__tableWrapper">
+                <table class="table table-hover">
+                    <thead>
+                        {{#if isFilterVisible}}
+                            <tr>
+                                <th>
+                                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Name"}}
+                                </th>
+                                <th>
+                                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Datum"}}
+                                </th>
+                                <th>
+                                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Ort"}}
+                                </th>
+                            </tr>
+                        {{/if}}
+                            <tr>
+                                <th>Name</th>
+                                <th>Datum</th>
+                                <th>Ort</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        {{#each study in studies}}
+                            <tr class="studiesList__row">
+                                <td>{{study.name}}</td>
+                                <td>{{study.date}}</td>
+                                <td>{{study.location}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </script>
+
+
+
+        <!--COMPONENTS-->
 
         <script type="text/x-handlebars" id="components/study-searchform">
             {{view "select" content=unselectedValues selection=currentSelected classNames="form-control"}}
@@ -149,7 +210,7 @@
                     {{/each}}
                 </div>
             {{/if}}
-            <button type="button" class="btn btn-default studySearch__button">{{buttonText}}</button>
+            <button type="button" class="btn btn-default studySearch__button" {{action 'buttonClick'}}>{{buttonText}}</button>
         </script>
 
         <script type="text/x-handlebars" id="components/study-searchtag">
@@ -189,6 +250,7 @@
         <script src="js/controllers/signup_controller.js"></script>
         <script src="js/controllers/accConfig_controller.js"></script>
         <script src="js/controllers/user_controller.js"></script>
+        <script src="js/controllers/studiesList_controller.js"></script>
         <script src="js/components/study_searchform.js"></script>
         <script src="js/components/study_searchtag.js"></script>
         <script src="js/models/studysearch_option.js"></script>

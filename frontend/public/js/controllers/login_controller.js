@@ -24,10 +24,10 @@ StudyManager.LoginController = Ember.Controller.extend({
                     attemptedTransition.retry();
                     that.set('attemptedTransition', null);
                 } else {
-                    /*that.transitionToRoute('pins');*/
-                   /* that.alert("Login worked!")
+                    that.transitionToRoute('pins');
+                    that.alert("Login worked!");
                 }
-            /*}, function(error) {
+            }, function(error) {
                 if (401 === error.status) {
                     that.set('errorMessage', 'Login failed!');
                 }
@@ -51,6 +51,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             } else {
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
+                this.set('token', "Das funzt!");
                 this.transitionToRoute('user');
             }
         },

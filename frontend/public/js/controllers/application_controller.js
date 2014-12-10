@@ -20,8 +20,9 @@ StudyManager.ApplicationController = Ember.Controller.extend({
             );
         }*/
         logout: function() {
-            this.transitionToRoute('login');
+            this.get('controllers.login').set('token', null);
             this.set('isLoggedIn', false);
+            this.transitionToRoute('login');
         },
 
         openAccountSettings: function() {
