@@ -1,4 +1,4 @@
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 
 exports.cryptPassword = function(password, callback) {
   bcrypt.genSalt(10, function(err, salt) {
@@ -7,7 +7,7 @@ exports.cryptPassword = function(password, callback) {
       return callback(err);
     }
 
-    bcrypt.hash(password, salt, function(err, hash) {
+    bcrypt.hash(password, salt, function(){}, function(err, hash) {
       return callback(err, hash);
     });
 

@@ -45,6 +45,10 @@ exports.signup = function(req, res) {
   };
 
   User.getUserByName(user, function(err,result){
+    if (err) {
+      return res.json(err);
+    }
+
     if (result.length > 0) {
       res.json({
         status: "failure",
