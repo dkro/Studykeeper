@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^0.8.0",
     "fs": "0.0.2",
     "mysql": "^2.5.3",
     "node-uuid": "^1.4.1",
