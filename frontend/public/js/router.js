@@ -48,17 +48,12 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
-  /*model: function () {
-    return this.store.find('SearchOption');
-  },
-
-  setupController: function(controller, model){
-    this._super(controller, model);
-    controller.set('allOptions', this.store.find('SearchOption'));
-  }*/
 });
 
 StudyManager.StudiesListRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    return this.ApplicationStore.find('study-minimal');
+  }
 });
 
 

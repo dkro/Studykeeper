@@ -228,7 +228,7 @@
                             </tr>
                     </thead>
                     <tbody>
-                        {{#each study in studies}}
+                        {{#each study in model}}
                             <tr {{bind-attr class=":studiesList__row study.expired:studiesList__row--expired:studiesList__row--notExpired"}}>
                                 <td>
                                     {{#if study.expired}}
