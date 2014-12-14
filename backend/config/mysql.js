@@ -2,11 +2,11 @@ var mysql     = require('mysql');
 
 module.exports = function(config) {
   this.connection = mysql.createConnection({
-    host     : '127.0.0.1',
+    host     : '0.0.0.0',
     user     : 'root',
-    password : '1234',
+    password : '',
     port     : 3306,
-    database : 'userstudymanager'
+    database : 'UserstudyManager'
   });
 
   connection.connect(function(err) {
