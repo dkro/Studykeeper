@@ -1,3 +1,37 @@
+/* standard navbar */
+@media (min-width: 768px) {
+    .accountDropDown {
+        display: block;
+    }
+
+    .accountDefault {
+        display: none !important;
+    }
+}
+
+/* mobile navbar */
+@media (max-width: 767px) {
+    .accountDropDown {
+        display: none !important;
+    }
+
+    .accountIcon {
+        display: block;
+    }
+}
+
+.accountIcon {
+    font-size: 1.5em;
+}
+
+.accountCaret {
+    vertical-align: middle !important;
+    font-size: 0.5em;
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 .login__container {
     margin: 0 auto;
     margin-top: 2em;
@@ -101,6 +135,30 @@
 
 .studiesList__row {
     cursor: pointer;
+}
+
+.studiesList__row--expired:hover > td:nth-child(2), .studiesList__row--expired:hover > td:nth-child(3) {
+    color: darkred;
+}
+
+.studiesList__row--expired > td:first-child {
+    color: darkred;
+}
+
+.studiesList__row--notExpired {
+    background-color: #ededed;
+}
+
+.studiesList__header--state {
+    min-width: 9em;
+}
+
+.studiesList__header--mmi {
+    min-width: 5em;
+}
+
+.studiesList__header--amazon {
+    min-width: 6em;
 }
 
 .studiesList__tableWrapper {
