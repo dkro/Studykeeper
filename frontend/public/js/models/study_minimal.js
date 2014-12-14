@@ -9,7 +9,7 @@ StudyManager.StudyMinimal = DS.Model.extend({
     expired: DS.attr('boolean')
 });
 
-StudyManager.SearchOption.FIXTURES = [
+StudyManager.StudyMinimal.FIXTURES = [
     {
         id: 0,
         name: "Studie 0000000",

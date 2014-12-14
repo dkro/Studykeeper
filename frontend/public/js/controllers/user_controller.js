@@ -50,6 +50,8 @@ StudyManager.UserController = Ember.Controller.extend({
 
     isCreator: false,
 
+    isMMIStudent: false,
+
     changeOfUserRole: function(userRole) {
         if (userRole === 0) {
             this.set('isCreator', false);

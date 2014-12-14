@@ -1,5 +1,5 @@
 StudyManager.LoginController = Ember.Controller.extend({
-    needs: ['application'],
+    needs: ['application', 'user'],
 
     usermail: null,
 
@@ -52,6 +52,11 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
                 this.set('token', "Das funzt!");
+
+                if (userRole === 1) {
+                    this.get('controllers.user').set('isMMIStudent', true);
+                }
+
                 this.transitionToRoute('user');
             }
         },

@@ -51,9 +51,9 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.StudiesListRoute = StudyManager.AuthenticationRoute.extend({
-  model: function() {
+  /*model: function() {
     return this.ApplicationStore.find('study-minimal');
-  }
+  }*/
 });
 
 

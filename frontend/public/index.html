@@ -151,6 +151,10 @@
 
             {{study-searchform allOptions=allOptions classNames='studySearch' action="displayStudies"}}
 
+            {{#if isMMIStudent}}
+                <div>MMI Student</div>
+            {{/if}}
+
             <div>
                 <div class="panel panel-default registered--participant">
                     <div class="panel-heading">
@@ -228,7 +232,7 @@
                             </tr>
                     </thead>
                     <tbody>
-                        {{#each study in model}}
+                        {{#each study in studies}}
                             <tr {{bind-attr class=":studiesList__row study.expired:studiesList__row--expired:studiesList__row--notExpired"}}>
                                 <td>
                                     {{#if study.expired}}
