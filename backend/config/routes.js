@@ -11,10 +11,9 @@ module.exports = function(app) {
 
   // Basic Routes
   var directory = path.resolve('./frontend/public/');
-  var BA = directory.replace(new RegExp("\\\\", 'g'), "/");
   // All routes mapped to frontend/publich except for /api/* routes
   app.get(/^\/(?!api).*/, restify.serveStatic({
-    'directory': BA,
+    'directory': directory,
     'default' : 'index.html'
   }));
 

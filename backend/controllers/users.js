@@ -45,9 +45,7 @@ exports.signup = function(req, res) {
   };
 
   User.getUserByName(user, function(err,result){
-    if (err) {
-      return res.json(err);
-    }
+    //TODO error
 
     if (result.length > 0) {
       res.json({
