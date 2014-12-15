@@ -1,4 +1,5 @@
 backend/node_modules/*
+backend/coverage/*
 .idea/*
 frontend/public/bower_components
 

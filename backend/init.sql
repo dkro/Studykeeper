@@ -7,7 +7,7 @@
 #
 # Host: 0.0.0.0 (MySQL 5.6.22)
 # Database: UserstudyManager
-# Generation Time: 2014-12-07 18:17:59 +0000
+# Generation Time: 2014-12-15 16:24:10 +0000
 # ************************************************************
 
 
@@ -64,6 +64,18 @@ CREATE TABLE `roles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+
+INSERT INTO `roles` (`id`, `name`)
+VALUES
+	(1,'admin'),
+	(2,'tutor'),
+	(3,'executor'),
+	(4,'participant');
+
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table users
@@ -82,6 +94,54 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   KEY `role` (`role`),
   CONSTRAINT `role` FOREIGN KEY (`role`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table users_studies_rel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users_studies_rel`;
+
+CREATE TABLE `users_studies_rel` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `studyId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `registered` tinyint(1) NOT NULL DEFAULT '0',
+  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `study_user_rel` (`studyId`),
+  KEY `user_study_rel` (`userId`),
+  CONSTRAINT `study_user_rel` FOREIGN KEY (`studyId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_study_rel` FOREIGN KEY (`userId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table userstudies
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `userstudies`;
+
+CREATE TABLE `userstudies` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tutorId` int(11) unsigned NOT NULL,
+  `executorId` int(11) unsigned NOT NULL,
+  `from` date NOT NULL,
+  `until` date NOT NULL,
+  `title` varchar(32) DEFAULT '',
+  `description` text,
+  `link` varchar(255) DEFAULT NULL,
+  `paper` varchar(255) DEFAULT NULL,
+  `mmi` tinyint(1) unsigned NOT NULL,
+  `compensation` tinyint(2) unsigned NOT NULL,
+  `location` int(64) NOT NULL,
+  `closed` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tutor_userstudy_rel` (`tutorId`),
+  KEY `executor_userstudy_rel` (`executorId`),
+  CONSTRAINT `executor_userstudy_rel` FOREIGN KEY (`executorId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `tutor_userstudy_rel` FOREIGN KEY (`tutorId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
