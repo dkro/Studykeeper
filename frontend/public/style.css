@@ -15,21 +15,13 @@
         display: none !important;
     }
 
-    .accountIcon {
+    .accountDefault {
         display: block;
     }
 }
 
 .accountIcon {
     font-size: 1.5em;
-}
-
-.accountCaret {
-    vertical-align: middle !important;
-    font-size: 0.5em;
-    -ms-transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
 }
 
 .login__container {
@@ -133,43 +125,39 @@
     margin-bottom: 2em !important;
 }
 
-.studiesList__row {
+.studies__row {
     cursor: pointer;
 }
 
-.studiesList__row--expired:hover > td:nth-child(2), .studiesList__row--expired:hover > td:nth-child(3) {
+.studies__row--expired:hover > td:nth-child(2), .studies__row--expired:hover > td:nth-child(3) {
     color: darkred;
 }
 
-.studiesList__row--expired > td:first-child {
+.studies__row--expired > td:first-child {
     color: darkred;
 }
 
-.studiesList__row--notExpired {
+.studies__row--notExpired {
     background-color: #ededed;
 }
 
-.studiesList__header--state {
+.studies__header--state {
     min-width: 9em;
 }
 
-.studiesList__header--mmi {
+.studies__header--mmi {
     min-width: 5em;
 }
 
-.studiesList__header--amazon {
+.studies__header--amazon {
     min-width: 6em;
 }
 
-.studiesList__tableWrapper {
+.studies__tableWrapper {
 }
 
-.studiesList__filterButton {
+.studies__filterButton {
     display: block !important;
     margin-top: 3em;
     margin-bottom: 1em !important;
-}
-
-.studiesList__filterInput {
-    width: 95%;
 }

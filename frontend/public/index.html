@@ -34,7 +34,6 @@
                                 <li class="dropdown accountDropDown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                         <span class="glyphicon glyphicon-user accountIcon"></span>
-                                        <span class="glyphicon glyphicon-play accountCaret"></span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li {{action 'openAccountSettings'}}>
@@ -144,7 +143,7 @@
             <h2>Acc config</h2>
         </script>
 
-        <script type="text/x-handlebars" id="user">
+        <script type="text/x-handlebars" id="dashboard">
             {{#if isAdviser}}
                 <button class="btn btn-primary createStudyButton--adviser">Neue Studie erstellen</button>
             {{/if}}
@@ -174,7 +173,7 @@
             </div>
         </script>
 
-        <script type="text/x-handlebars" id="studiesList">
+        <script type="text/x-handlebars" id="studies">
             <h2>Anzeige aller Studien</h2>
 
             {{#if searchTags}}
@@ -185,16 +184,16 @@
                 </span>
             {{/if}}
 
-            <button type="button" class="btn btn-default btn-sm studiesList__filterButton" {{action 'enableDisableFilter'}}>
+            <button type="button" class="btn btn-default btn-sm studies__filterButton" {{action 'enableDisableFilter'}}>
                 <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> {{filterButtonText}}
             </button>
 
-            <div class="table-responsive studiesList__tableWrapper">
+            <div class="table-responsive studies__tableWrapper">
                 <table class="table table-hover">
                     <thead>
                         {{#if isFilterVisible}}
                             <tr>
-                                <th class="studiesList__header--state">
+                                <th class="studies__header--state">
                                     {{custom-select values=stateFilterOptions currentSelected=selectedStateFilter}}
                                 </th>
                                 <th>
@@ -212,10 +211,10 @@
                                 <th>
                                     {{input type="text" classNames="form-control input-sm" placeholder="Filter Person" value=selectedPersonFilter}}
                                 </th>
-                                <th class="studiesList__header--mmi">
+                                <th class="studies__header--mmi">
                                     {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter}}
                                 </th>
-                                <th class="studiesList__header--amazon">
+                                <th class="studies__header--amazon">
                                     {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
                                 </th>
                             </tr>
@@ -232,8 +231,8 @@
                             </tr>
                     </thead>
                     <tbody>
-                        {{#each study in studies}}
-                            <tr {{bind-attr class=":studiesList__row study.expired:studiesList__row--expired:studiesList__row--notExpired"}}>
+                        {{#each study in model}}
+                            <tr {{bind-attr class=":studies__row study.expired:studies__row--expired:studies__row--notExpired"}}>
                                 <td>
                                     {{#if study.expired}}
                                         Abgelaufen
@@ -308,13 +307,16 @@
         <script src="js/application.js"></script>
         <script src="js/router.js"></script>
         <script src="js/adapter.js"></script>
+        <script src="js/models/dashboard_data.js"></script>
+        <script src="js/models/dashboard_study.js"></script>
+        <script src="js/models/study.js"></script>
         <script src="js/models/studysearch_option.js"></script>
         <script src="js/controllers/application_controller.js"></script>
         <script src="js/controllers/login_controller.js"></script>
         <script src="js/controllers/signup_controller.js"></script>
         <script src="js/controllers/accConfig_controller.js"></script>
-        <script src="js/controllers/user_controller.js"></script>
-        <script src="js/controllers/studiesList_controller.js"></script>
+        <script src="js/controllers/dashboard_controller.js"></script>
+        <script src="js/controllers/studies_controller.js"></script>
         <script src="js/components/study_searchform.js"></script>
         <script src="js/components/study_searchtag.js"></script>
         <script src="js/components/custom_select.js"></script>

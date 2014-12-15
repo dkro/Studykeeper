@@ -3,8 +3,8 @@ StudyManager.Router.map(function() {
   this.route('signup');
   this.route('acc-config');
   this.route('logout');
-  this.route('user');
-  this.route('studiesList');
+  this.resource('dashboard');
+  this.resource('studies');
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -47,13 +47,18 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 
 });
 
-StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
+StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    /*
+    return this.store.find('dashboardData');
+    */
+  }
 });
 
-StudyManager.StudiesListRoute = StudyManager.AuthenticationRoute.extend({
-  /*model: function() {
-    return this.ApplicationStore.find('study-minimal');
-  }*/
+StudyManager.StudiesRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    return this.store.find('study');
+  }
 });
 
 
