@@ -1,5 +1,6 @@
 var User       = require('../models/users');
 var crypt      = require('../utilities/encryption');
+var validator  = require('validator');
 
 var passwordMinimumLength = 7;
 
