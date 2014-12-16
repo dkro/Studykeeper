@@ -9,6 +9,8 @@ var path           = require('path');
 module.exports = function(app) {
 
   app.use(passport.initialize());
+  app.use(restify.CORS());
+  app.use(restify.fullResponse());
 
   // Basic Routes
   var directory = path.resolve('./frontend/public/');
