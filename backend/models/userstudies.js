@@ -29,10 +29,21 @@ module.exports.addUserStudy = function (data, callback) {
 };
 
 module.exports.deleteUserStudy = function (data, callback) {
-  connection.query('SELECT * FROM users;', callback);
+  // TODO set visible false
 };
 
 module.exports.editUserStudy = function (data, callback) {
-  // set visible true
-  connection.query('SELECT * FROM users;', callback);
+  // TODO
+};
+
+module.exports.startUserStudy = function(title, callback){
+  // TODO set published true
+};
+
+module.exports.getUserstudyById = function (id, callback) {
+  connection.query('SELECT * FROM userstudies WHERE id=?',id, callback);
+};
+
+module.exports.getAllUserstudies = function (callback) {
+  connection.query('SELECT * FROM userstudies', callback);
 };

@@ -99,11 +99,28 @@ module.exports.publishUserstudy = function(req, res) {
 };
 
 module.exports.userstudyList = function(req, res) {
-  //todo
+  UserStudy.getAllUserstudies(function(err, list){
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(list);
+    }
+  })
 };
 
 module.exports.getUserstudy = function(req, res) {
-  //todo
+  var userStudy = {
+    id: validator.toString(req.body.id)
+  };
+  UserStudy.getUserstudyById(userStudy.id, function(err, study){
+    if (err) {
+      res.json(err);
+    } else if (study.length === 0) {
+      res.json({status: 'failure', message: 'Userstudy not found'});
+    } else {
+      res.json(study);
+    }
+  });
 };
 
 

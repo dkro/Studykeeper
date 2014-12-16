@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   app.post('/api/user/retrievePassword', userController.retrievePW);
 
-  // Protected Routes (All Roles)
+  // Protected Routes
   app.post('/api/user/login', auth.loginAuthenticate, userController.login);
 
   app.post('/api/user/logout', auth.tokenAuthenticate, userController.logout);
@@ -37,22 +37,17 @@ module.exports = function(app) {
 
   app.post('/api/user/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
 
-  app.post('/api/userstudy/test', userStudyController.createUserstudy);
+  app.post('/api/userstudy/test', userStudyController.userstudyList);
 
   app.post('/api/userstudy/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userStudyController.createUserstudy);
 
   app.post('/api/userstudy/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userStudyController.deleteUserstudy);
 
   app.post('/api/userstudy/edit', auth.tokenAuthenticate, auth.requiresRole('tutor'), userStudyController.editUserstudy);
-  // Tutor Routes
 
+  app.get('/api/userstudy/single', auth.tokenAuthenticate, userStudyController.getUserstudy);
 
-  // Creator Routes
+  app.get('/api/userstudy/all', auth.tokenAuthenticate, userStudyController.userstudyList);
 
-
-  // Participant Routes
-
-
-  // Super-Admin Routes
 
 };
