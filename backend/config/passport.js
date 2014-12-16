@@ -9,7 +9,7 @@ module.exports = function() {
   // Local Strategy used to initially login the user
   passport.use(new LocalStrategy(
       function(username, password, done) {
-        User.getUserByName({ username: username }, function(err, user) {
+        User.getUserByName(username, function(err, user) {
           if (err) {
             return done(err);
           }

@@ -1,6 +1,5 @@
-var User = require('../models/users');
+var User       = require('../models/users');
 var crypt      = require('../utilities/encryption');
-var validator = require('validator');
 
 var passwordMinimumLength = 7;
 
@@ -44,7 +43,7 @@ exports.signup = function(req, res) {
     role    : 'participant'
   };
 
-  User.getUserByName(user, function(err,result){
+  User.getUserByName(user.username, function(err,result){
     //TODO error
 
     if (result.length > 0) {
@@ -115,7 +114,7 @@ exports.login = function(req, res) {
     username: req.body.username
   };
 
-  User.getUserByName(user,function(err,userResult) {
+  User.getUserByName(user.username,function(err,userResult) {
 
     User.createTokenForUser(user, function (err) {
       if (err) {
@@ -198,7 +197,7 @@ exports.createUser = function(req, res) {
       message: "The passwords don't match."
     });
   } else {
-    User.getUserByName(user, function(err,result){
+    User.getUserByName(user.username, function(err,result){
       if (result.length > 0) {
         res.json({
           status: "failure",
@@ -305,7 +304,7 @@ exports.changePW = function(req, res) {
       message: "New password is too short. Minimum of 7 chars."
     });
   } else {
-      User.getUserByName(user, function(err, userResult) {
+      User.getUserByName(user.username, function(err, userResult) {
         if (err) {
           res.send(err);
         } else {

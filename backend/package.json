@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bycrypt-nodejs" : "0.0.3",
+    "bcrypt-nodejs": "0.0.3",
+    "es6-promise": "^2.0.1",
     "fs": "0.0.2",
     "mysql": "^2.5.3",
     "node-uuid": "^1.4.1",
@@ -18,6 +19,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.4.9",
     "restify": "^2.8.3",
-    "validator": "^3.22.1"
+    "utils": "0.0.2",
+    "validator": "^3.24.0"
   }
 }

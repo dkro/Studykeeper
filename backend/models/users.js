@@ -1,4 +1,4 @@
-var mysql      = require('../config/mysql');
+var connection = require('../config/mysql').connection;
 var crypt      = require('../utilities/encryption');
 var uuid       = require('node-uuid');
 
@@ -7,12 +7,9 @@ exports.getUsers = function(callback) {
 };
 
 
-exports.getUserByName = function(data, callback) {
-  var queryData = [
-    {UserName : data.username}
-  ];
+exports.getUserByName = function(username, callback) {
   connection.query("SELECT * FROM users WHERE username=?;",
-                    queryData[0].UserName, callback);
+                    username, callback);
 };
 
 exports.getUserByToken = function(data, callback) {

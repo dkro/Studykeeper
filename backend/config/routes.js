@@ -2,6 +2,7 @@ var restify        = require('restify');
 var auth           = require('./auth');
 // TODO require all controller here
 var userController = require('../controllers/users');
+var userStudyController = require ('../controllers/userstudies');
 var passport       = require('passport');
 var path           = require('path');
 
@@ -35,6 +36,14 @@ module.exports = function(app) {
   app.post('/api/user/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
 
   app.post('/api/user/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
+
+  app.post('/api/userstudy/test', userStudyController.createUserstudy);
+
+  app.post('/api/userstudy/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userStudyController.createUserstudy);
+
+  app.post('/api/userstudy/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userStudyController.deleteUserstudy);
+
+  app.post('/api/userstudy/edit', auth.tokenAuthenticate, auth.requiresRole('tutor'), userStudyController.editUserstudy);
   // Tutor Routes
 
 
