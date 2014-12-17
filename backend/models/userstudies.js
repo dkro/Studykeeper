@@ -15,7 +15,8 @@ module.exports.addUserStudy = function (data, callback) {
     location: data.location
   };
   connection.query('INSERT INTO userstudies ' +
-  '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,mmi,compensation,location,visible,published) ' +
+  '(tutorId,executorId,fromDate,untilDate,title,description,' +
+    'link,paper,mmi,compensation,location,visible,published) ' +
   'VALUES (' +
     '(SELECT id FROM users WHERE username=?),' +
     '(SELECT id FROM users WHERE username=?),' +
