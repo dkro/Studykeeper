@@ -50,7 +50,7 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
 
-    return this.store.find('dashboardData');
+    //return this.store.find('dashboardData');
 
   }
 });
