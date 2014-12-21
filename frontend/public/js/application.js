@@ -1,6 +1,7 @@
 window.StudyManager = Ember.Application.create();
 
-StudyManager.ApplicationAdapter = DS.FixtureAdapter;
+//StudyManager.ApplicationAdapter = DS.FixtureAdapter;
+
 
 StudyManager.ApplicationStore = DS.Store.extend({
     adapter: StudyManager.ApplicationAdapter
