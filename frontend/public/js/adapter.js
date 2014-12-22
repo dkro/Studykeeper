@@ -1,6 +1,4 @@
-/*StudyManager.ApplicationAdapter = DS.RESTAdapter.extend({
-    // namespace: 'api/v1'
-
+StudyManager.ApplicationAdapter = DS.RESTAdapter.extend({
     ajax: function(url, type, hash) {
         if (Ember.isEmpty(hash)) {
             hash = {};
@@ -16,4 +14,4 @@
 
         return this._super(url, type, hash);
     }
-});*/
+});

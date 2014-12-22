@@ -87,7 +87,7 @@
                     </p>
                 {{/if}}
             </div>
-            <button class="btn btn-primary center-block login__signUpButton" {{action 'signUp'}}>Account erstellen</button>
+            <button class="btn btn-primary center-block login__signUpButton" {{action 'toSignUp'}}>Account erstellen</button>
         </script>
 
         <script type="text/x-handlebars" id="signup">
@@ -111,7 +111,7 @@
                 </div>
                 <div {{bind-attr class=":form-group emailValidationClass"}}>
                     <label class="control-label" for="emailSignUpInput">Email</label>
-                    {{input type="email" id="emailSignUpInput" focus-out="validateEmailAction" value=email classNames="form-control" placeholder="student@campus.lmu.de"}}
+                    {{input type="email" id="emailSignUpInput" focus-out="validateEmailAction" value=username classNames="form-control" placeholder="student@campus.lmu.de"}}
 
                     {{#if emailHelpText}}
                         <span class="help-block">{{emailHelpText}}</span>
@@ -134,7 +134,9 @@
                     {{/if}}
                 </div>
 
-                <button class="btn btn-default signUp__button" {{action 'validateAllAction'}}>Account anlegen</button>
+                <button class="btn btn-default signUp__button" {{action 'validateAllAction'}}>
+                    Account anlegen
+                </button>
             </form>
         </script>
 
@@ -306,7 +308,7 @@
         <script src="bower_components/pikaday/pikaday.js"></script>
         <script src="js/application.js"></script>
         <script src="js/router.js"></script>
-        <script src="js/adapter.js"></script>
+       <!-- <script src="js/adapter.js"></script>-->
         <script src="js/models/dashboard_data.js"></script>
         <script src="js/models/dashboard_study.js"></script>
         <script src="js/models/study.js"></script>

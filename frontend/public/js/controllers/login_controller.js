@@ -61,7 +61,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             }
         },
 
-        signUp: function() {
+        toSignUp: function() {
             this.transitionToRoute('signup');
         }
     },

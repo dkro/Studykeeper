@@ -2,8 +2,9 @@ window.StudyManager = Ember.Application.create();
 
 StudyManager.ApplicationAdapter = DS.FixtureAdapter;
 
+
 StudyManager.ApplicationStore = DS.Store.extend({
-    adapter: StudyManager.ApplicationAdapter
+    //adapter: StudyManager.ApplicationAdapter
 });
 
 var validationInput = Ember.TextField.extend({
