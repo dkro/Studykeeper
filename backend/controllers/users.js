@@ -1,3 +1,4 @@
+"use strict";
 var User       = require('../models/users');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
@@ -23,17 +24,21 @@ exports.createUser = function(req, res) {
 
 exports.getUsers = function(req, res) {
   User.getUsers(function(err,result){
-              if (err) throw err;
-              console.log(result);
-              return res.json(result);
+              if (err) {
+                res.json(err);
+              } else {
+               res.json(result);
+              }
             });
 };
 
 exports.getUser = function(name, res) {
   User.getUserByName(name, function(err,result){
-              if (err) throw err;
-              console.log(result);
-              return res.json(result);
+              if (err) {
+                res.json(err);
+              } else {
+                res.json(result);
+              }
             });
 };
 
@@ -41,6 +46,7 @@ exports.signup = function(req, res) {
   var user = {
     username: req.body.username,
     password: req.body.password,
+    // todo confirm password
     role    : 'participant'
   };
 
@@ -56,7 +62,7 @@ exports.signup = function(req, res) {
         if (user.password.length >= passwordMinimumLength) {
           User.saveUser(user, function (err) {
             if (err) {
-              res.send(err);
+              res.send(500, err);
             } else {
 
               if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
@@ -70,7 +76,7 @@ exports.signup = function(req, res) {
 
               User.createTokenForUser(user, function (err) {
                 if (err) {
-                  res.send(err);
+                  res.send(500, err);
                 } else {
                   User.getTokensForUser(user, function (err, result) {
                     if (err) {
@@ -97,12 +103,12 @@ exports.signup = function(req, res) {
             }
           });
         } else {
-          res.json({
+          res.json(500, {
             status: 'failure',
             message: "Password too short. 7 chars minimum."});
         }
       } else {
-        res.json({
+        res.json(500, {
           status: 'failure',
           message: "Invalid email address."});
       }
@@ -140,7 +146,7 @@ exports.login = function(req, res) {
 
             User.getUserRole(user.username, function (err, roleResult) {
               if (err) {
-                res.send(err);
+                res.send(500, err);
               } else {
                 res.json({
                   status: 'success',
@@ -228,12 +234,12 @@ exports.createUser = function(req, res) {
               }
             });
           } else {
-            res.json({
+            res.json(500, {
               status: 'failure',
               message: "Password too short. 7 chars minimum."});
           }
         } else {
-          res.json({
+          res.json(500, {
             status: 'failure',
             message: "Invalid email address."});
         }

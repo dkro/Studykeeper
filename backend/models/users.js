@@ -1,18 +1,19 @@
+"use strict";
 var connection = require('../config/mysql').connection;
 var crypt      = require('../utilities/encryption');
 var uuid       = require('node-uuid');
 
-exports.getUsers = function(callback) {
-  var query = connection.query('SELECT * FROM users;', callback);
+module.exports.getUsers = function(callback) {
+  connection.query('SELECT * FROM users;', callback);
 };
 
 
-exports.getUserByName = function(username, callback) {
+module.exports.getUserByName = function(username, callback) {
   connection.query("SELECT * FROM users WHERE username=?;",
                     username, callback);
 };
 
-exports.getUserByToken = function(data, callback) {
+module.exports.getUserByToken = function(data, callback) {
   var queryData = [
     {token : data}
   ];
@@ -23,7 +24,7 @@ exports.getUserByToken = function(data, callback) {
                     callback);
 };
 
-exports.saveUser = function(data, callback) {
+module.exports.saveUser = function(data, callback) {
   var queryData = {username: data.username,
                    password: data.password,
                    role: data.role};
@@ -41,7 +42,7 @@ exports.saveUser = function(data, callback) {
   });
 };
 
-exports.setRole = function(data, callback) {
+module.exports.setRole = function(data, callback) {
   connection.query("UPDATE users " +
     "SET role=(SELECT name FROM roles WHERE name=?) " +
     "WHERE username=?;",
@@ -49,7 +50,7 @@ exports.setRole = function(data, callback) {
     callback);
 };
 
-exports.getUserRole = function(username, callback){
+module.exports.getUserRole = function(username, callback){
   connection.query("SELECT name FROM roles WHERE " +
     "id=(SELECT role FROM users WHERE username=?);",username,callback);
 };
@@ -57,13 +58,13 @@ exports.getUserRole = function(username, callback){
 
 // ------------------- TOKENS -------------------------------
 
-exports.getToken = function (token, callback){
+module.exports.getToken = function (token, callback){
   connection.query("SELECT token FROM auth WHERE token=?",
     token,
     callback);
 };
 
-exports.createTokenForUser = function (data,callback) {
+module.exports.createTokenForUser = function (data,callback) {
   var queryData = {
       username: data.username,
       token: uuid.v1(),
@@ -74,7 +75,7 @@ exports.createTokenForUser = function (data,callback) {
     callback);
 };
 
-exports.getTokensForUser = function (data,callback) {
+module.exports.getTokensForUser = function (data,callback) {
   var queryData = {
     username: data.username};
   connection.query("SELECT token, timestamp FROM auth WHERE " +
@@ -83,10 +84,10 @@ exports.getTokensForUser = function (data,callback) {
     callback);
 };
 
-exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp, callback) {
+module.exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp, callback) {
   var queryData = {
     username: username,
-    timestamp: timestamp,
+    timestamp: timestamp
   };
   connection.query("DELETE FROM auth " +
     "WHERE userId=(SELECT id FROM users WHERE username=?) " +
@@ -95,13 +96,13 @@ exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp, callb
     callback);
 };
 
-exports.deleteToken = function (token, callback) {
+module.exports.deleteToken = function (token, callback) {
   connection.query("DELETE FROM auth WHERE token=?",
     token,
     callback);
 };
 
-exports.updateToken = function(token, callback) {
+module.exports.updateToken = function(token, callback) {
   var queryData = {
     token: token,
     timestamp: new Date()};
@@ -110,7 +111,7 @@ exports.updateToken = function(token, callback) {
     callback);
 };
 
-exports.getTokenTimestamp = function(token, callback) {
+module.exports.getTokenTimestamp = function(token, callback) {
   connection.query("SELECT timestamp FROM auth WHERE token=?;",
     token,
     callback);
@@ -118,7 +119,7 @@ exports.getTokenTimestamp = function(token, callback) {
 
 // ------------------------- MISC -------------------------
 
-exports.setLMUStaff = function(username, isLMUstaff, callback) {
+module.exports.setLMUStaff = function(username, isLMUstaff, callback) {
   var flag = 0;
   if (isLMUstaff) {
     flag = 1;
@@ -128,7 +129,7 @@ exports.setLMUStaff = function(username, isLMUstaff, callback) {
     callback);
 };
 
-exports.setPassword = function(password, username, callback) {
+module.exports.setPassword = function(password, username, callback) {
   crypt.cryptPassword(password, function(err,hash){
     if (err) {
       callback(err);
