@@ -98,8 +98,11 @@ module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudy(userstudy,function(err,result){
       if (err) {reject(err);}
-      if (result.length === 0) {reject({message: 'userstudy:' + userstudy + ' not found'});}
-      resolve(result[0]);
+      if (result.length === 0) {
+        reject({message: 'userstudy:' + userstudy + ' not found'});
+      } else {
+        resolve(result[0]);
+      }
     });
   });
 };
@@ -108,11 +111,23 @@ module.exports.userstudyHasSpace = function(userstudy) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudy(userstudy,function(err,result){
       if (err) {reject(err);}
-      var space = [];
+      var space = result[0].space;
       //TODO
 
       if (result.length === 0) {reject({message: 'userstudy:' + userstudy + ' not found'});}
       resolve(result[0]);
     });
+  });
+};
+
+module.exports.userIsRegisteredToStudy = function(user, userstudy){
+  return new Promise(function(resolve, reject){
+    //todo
+  });
+};
+
+module.exports.userIsNOTRegisteredToStudy = function(user,userstudy){
+  return new Promise(function(resolve, reject){
+    // todo
   });
 };

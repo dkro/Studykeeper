@@ -29,7 +29,7 @@ module.exports.createUserstudy = function(req, res) {
 module.exports.editUserstudy = function(req, res) {
 
   var promises = [UserstudyPromise.validFullUserstudyReq(req),
-  UserPromise.userstudyExists(req.body.id,req.body.userstudyTitle)];
+  UserPromise.userstudyExists(req.body.id,req.body.title)];
 
   Promise.all(promises).then(function(results){
     UserStudy.editUserStudy(results[0], function(err){
@@ -51,7 +51,7 @@ module.exports.deleteUserstudy = function(req, res) {
       return UserPromise.userstudyExists(userstudy);
     })
     .then(function(userstudy){
-      UserStudy.deleteUserStudy(userstudy, function(err){
+      UserStudy.deleteUserstudy(userstudy, function(err){
         if (err) {
           throw err;
         } else {
@@ -71,7 +71,7 @@ module.exports.publishUserstudy = function(req, res) {
       return UserPromise.userstudyExists(userstudy);
     })
     .then(function(userstudy){
-      UserStudy.publishUserStudy(userstudy, function(err) {
+      UserStudy.publishUserstudy(userstudy, function(err) {
         if (err) {
           throw err;
         } else {
@@ -152,50 +152,27 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
   });
 };
 
-module.exports.addLabeltoUserstudy = function(req, res){
-  var validationPromises = [UserstudyPromise.validUserstudyReq(req),
-    UserstudyPromise.validLabelReq(req)];
-
-  Promise.all(validationPromises).then(function(results){
-
-    var existencePromises = [UserstudyPromise.userstudyExists(results[0]),
-      UserstudyPromise.labelExists(results[1])];
-
-    Promise.all(existencePromises).then(function(results){
-      var userstudyLabel = results;// TODO
-
-      UserStudy.addLabel(userstudyLabel, function(err){
-        if (err) {
-          throw err;
-        } else {
-          res.json({status: 'success', message: 'label edited.'});
-        }
-      });
-    })
-    .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
-    });
-  });
-};
-
-module.exports.createLabel = function(req, res){
-
-};
-
 module.exports.registerUserToStudy = function(req, res){
   var promises = [UserstudyPromise.validUserstudyReq(req),
     UserPromise.userFromToken(req)];
 
-  Promise.all(promises).then(function(result){
-    var user = result[0];
-    var userstudy = result[1];
+  var user;
+  var userstudy;
 
-    UserStudy.mapUserToStudy(user,userstudy, function(err){
-      if (err) {
-        throw err;
-      } else {
-        res.json({status: 'success', message: 'User ' + user + ' registered to userstudy ' + userstudy});
-      }
+  Promise.all(promises)
+    .then(function(result){
+      user = result[0];
+      userstudy = result[1];
+
+      return UserstudyPromise.userIsNOTRegisteredToStudy(user,userstudy);
+    })
+    .then(function(){
+      UserStudy.mapUserToStudy(user, userstudy, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'User ' + user + ' registered to userstudy ' + userstudy});
+        }
     });
   })
   .catch(function (err){
@@ -225,14 +202,68 @@ module.exports.removeUserFromStudy = function(req, res){
 };
 
 module.exports.confirmUserParticipation = function(req, res){
+  var promises = [UserPromise.userExists,
+  UserstudyPromise.userstudyExists];
 
+  var user;
+  var userstudy;
+
+  Promise.all(promises)
+    .then(function(result){
+      user = result[0];
+      userstudy = result[1];
+
+      UserPromise.userIsRegisteredToStudy(user,userstudy);
+    })
+    .then(function(){
+      UserStudy.confirmUser(user, userstudy, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'User ' + user + ' confirmed participation of userstudy ' + userstudy});
+        }
+    }).catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+  });
 };
 
-module.exports.getUsersRegisteredToStudy = function(req, res){
+module.exports.usersRegisteredToStudy = function(req, res){
 
+  UserstudyPromise.validUserstudyReq(req)
+    .then(function(userstudy){
+      return UserstudyPromise.userstudyExists(userstudy);
+    })
+    .then(function(userstudy){
+      UserStudy.getUsersRegisteredToStudy(userstudy, userstudy, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json(list);
+        }
+    }).catch(function(err){
+        res.json(500, {status: 'failure', errors: err});
+      });
+  });
 };
 
 module.exports.closeUserstudy = function(req, res){
 
+  UserstudyPromise.validUserstudyReq(req)
+    .then(function(userstudy){
+      return UserstudyPromise.userstudyExists(userstudy);
+    })
+    .then(function(userstudy){
+
+      UserStudy.closeUserstudy(userstudy, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json(list);
+        }
+      }).catch(function(err){
+        res.json(500, {status: 'failure', errors: err});
+      });
+    });
 };
 

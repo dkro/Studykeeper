@@ -5,7 +5,9 @@ module.exports.addUserStudy = function (data, callback) {
   var queryData = {
     title: data.title,
     tutorname: data.tutorname,
+    tutorId: data.tutorId,
     executorname : data.executorname,
+    executorId: data.executorId,
     from: data.fromDate,
     until: data.untilDate,
     description: data.description,
@@ -24,12 +26,14 @@ module.exports.addUserStudy = function (data, callback) {
     'space,' +
     'mmi,compensation,' +
     'location,' +
-    'visible,published) ' +
+    'visible,published,closed) ' +
   'VALUES (' +
-    '(SELECT id FROM users WHERE username=?),(SELECT id FROM users WHERE username=?),' +
+    '(SELECT id FROM users WHERE username=? AND id=?),' +
+    '(SELECT id FROM users WHERE username=? AND id=?),' +
     '?,?,?,?,?,?,?,?,?,?,' +
-    '1,0);',
+    '1,0,0);',
     [queryData.tutorname,queryData.executorname,
+      queryData.tutorId,queryData.executorId,
       queryData.from,queryData.until,
       queryData.title,queryData.description,
       queryData.link,queryData.paper,
@@ -39,12 +43,46 @@ module.exports.addUserStudy = function (data, callback) {
     callback);
 };
 
-module.exports.deleteUserStudy = function (data, callback) {
-  // TODO set visible false
-};
-
 module.exports.editUserStudy = function (data, callback) {
-  // TODO
+  var queryData = {
+    id: data.id,
+    title: data.title,
+    tutorname: data.tutorname,
+    tutorId: data.tutorId,
+    executorname : data.executorname,
+    executorId: data.executorId,
+    from: data.fromDate,
+    until: data.untilDate,
+    description: data.description,
+    link: data.doodleLink,
+    paper: data.paper,
+    space: data.space,
+    mmi: data.mmi,
+    compensation: data.compensation,
+    location: data.location
+  };
+
+  connection.query('UPDATE userstudies ' +
+  'SET tutorId=(SELECT id FROM users WHERE id=? AND username=?)' +
+    ',executorId=(SELECT id FROM users WHERE id=? AND username=?),' +
+  'fromDate=?,untilDate=?,' +
+  'title=?,description=?,' +
+  'link=?,paper=?,' +
+  'space=?,' +
+  'mmi=?,compensation=?,' +
+  'location=?,' +
+  'visible=?,published=? ' +
+  'WHERE id=? ' +
+  'AND title=?;',
+    [queryData.tutorname,queryData.tutorId,
+      queryData.executorname, queryData.executorId,
+      queryData.from,queryData.until,
+      queryData.title,queryData.description,
+      queryData.link,queryData.paper,
+      queryData.space,
+      queryData.mmi,queryData.compensation,
+      queryData.location],
+    callback);
 };
 
 module.exports.getUserstudy = function (userstudy, callback) {
@@ -70,13 +108,68 @@ module.exports.getAllUserstudiesFilteredForUser = function (filters, callback) {
   //todo
 };
 
-module.exports.publishUserStudy = function(title, callback){
-  // TODO set published true
+module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
+  connection.query('SELECT * FROM users ' +
+    'WHERE id=' +
+      '(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
+    userstudy.id,
+    callback);
 };
 
-module.exports.mapUserToStudy = function(user, study, callback){
-  connection.query('',
-  [user.id,user.username,
-  study.id,study.title,
-    callback]);
+module.exports.publishUserstudy = function(userstudy, callback){
+  connection.query('UPDATE userstudies ' +
+    'SET published=1 ' +
+    'WHERE id=? AND title=?',
+    [userstudy.id,userstudy.title],
+    callback);
 };
+
+module.exports.deleteUserstudy = function (userstudy, callback) {
+  connection.query('UPDATE userstudies ' +
+    'SET visible=0 ' +
+    'WHERE id=? AND title=?',
+    [userstudy.id,userstudy.title],
+    callback);
+};
+
+module.exports.closeUserstudy = function(userstudy, callback){
+  connection.query('UPDATE userstudies ' +
+    'SET closed=1 ' +
+    'WHERE id=? AND title=?',
+    [userstudy.id,userstudy.title],
+    callback);
+};
+
+module.exports.mapUserToStudy = function(user, userstudy, callback){
+  connection.query('INSERT INTO users_studies_rel ' +
+    '(studyId,userId,registered,confirmed) ' +
+    'VALUES (' +
+    '(SELECT id FROM users WHERE id=? AND username=?),' +
+    '(SELECT id FROM userstudies WHERE id=? AND username=?),' +
+    '1,0);',
+    [user.id,user.username,
+      userstudy.id,userstudy.title],
+    callback);
+};
+
+module.exports.unmapUserFromStudy = function(user, userstudy, callback){
+  connection.query('UPDATE users_studies_rel ' +
+    'SET confirmed=0 ' +
+    'WHERE userId=(SELECT * FROM users WHERE id=? AND username=?) ' +
+    'AND studyId=(SELECT * FROM userstudies WHERE id=? AND title=?)',
+    [user.id,user.username,
+      userstudy.id,userstudy.title],
+    callback);
+};
+
+module.exports.confirmUser = function(user, userstudy, callback){
+  connection.query('UPDATE users_studies_rel ' +
+    'SET confirmed=1 ' +
+    'WHERE studyId=(SELECT id FROM users WHERE id=? AND username=?) ' +
+    'AND userId=(SELECT id FROM userstudies WHERE id=? AND title=?)',
+    [user.id,user.username,
+      userstudy.id,userstudy.title],
+    callback);
+};
+
+
