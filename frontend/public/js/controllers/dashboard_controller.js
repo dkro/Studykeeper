@@ -8,7 +8,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
         }
     },
 
-    allOptions: ["ABC", "BCDEFGH", "C", "DEFGHIJKL"],
+    /*allOptions: ["ABC", "BCDEFGH", "C", "DEFGHIJKL"],
 
     registeredStudies: [
         {
@@ -44,13 +44,17 @@ StudyManager.DashboardController = Ember.Controller.extend({
             date: "25.06.2015",
             location: "Amalienstraße, Raum 5"
         }
-    ],
+    ],*/
 
     isAdviser: false,
 
     isCreator: false,
 
     isMMIStudent: false,
+
+    searchTags: [],
+
+    bla: ["122", "222"],
 
     changeOfUserRole: function(userRole) {
         if (userRole === 0) {

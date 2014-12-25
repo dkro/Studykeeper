@@ -35,11 +35,11 @@ StudyManager.SignupController = Ember.Controller.extend({
         }
     },
 
-    isDataNotValid: false,
-
     reset: function() {
         // Properties are created the first time this method is called (usually from the according route) if they're not
         // already existing! If they're already existing, only their values will be reset.
+        this.set('isDataNotValid', false);
+
         this.set('firstName', "");
         this.set('firstNameValidationClass', "");
         this.set('firstNameHelpText', null);
@@ -77,7 +77,7 @@ StudyManager.SignupController = Ember.Controller.extend({
 
     validateFirstName: function() {
         if (Ember.empty(this.firstName)) {
-            this.set('firstNameHelpText', "Vorname darf nicht leer sein!");
+            this.set('firstNameHelpText', "Bitte geben Sie einen Vornamen an!");
             this.set('firstNameValidationClass', "has-error");
             this.set('isDataNotValid', true);
         } else {
@@ -88,7 +88,7 @@ StudyManager.SignupController = Ember.Controller.extend({
 
     validateLastName: function() {
         if (Ember.empty(this.lastName)) {
-            this.set('lastNameHelpText', "Name darf nicht leer sein!");
+            this.set('lastNameHelpText', "Bitte geben Sie einen Nachnamen an!");
             this.set('lastNameValidationClass', "has-error");
             this.set('isDataNotValid', true);
         } else {
@@ -98,8 +98,8 @@ StudyManager.SignupController = Ember.Controller.extend({
     }.observes('lastName'),
 
     validateEmail: function() {
-        if (Ember.empty(this.username)) {
-            this.set('emailHelpText', "Dies ist keine zulässige Email!");
+        if (Ember.empty(this.username) || !this.isRegularEmail(this.username)) {
+            this.set('emailHelpText', "Bitte geben Sie eine Email-Adresse an!");
             this.set('emailValidationClass', "has-error");
             this.set('isDataNotValid', true);
         } else {
@@ -107,6 +107,11 @@ StudyManager.SignupController = Ember.Controller.extend({
             this.set('emailValidationClass', "has-success");
         }
     }.observes('username'),
+
+    isRegularEmail: function(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    },
 
     validatePassword: function() {
         if (this.password.length < 7) {
@@ -123,7 +128,7 @@ StudyManager.SignupController = Ember.Controller.extend({
         if (this.passwordConfirm.length === 0) {
             this.set('passwordConfirmHelpText', "Das Passwort muss mindestens 7 Zeichen enthalten!");
             this.set('passwordConfirmValidationClass', "has-error");
-            this.set('isDataNotValid', true);;
+            this.set('isDataNotValid', true);
         } else if (this.password !== this.passwordConfirm) {
             this.set('passwordConfirmHelpText', "Die Passwörter stimmen nicht überein!");
             this.set('passwordConfirmValidationClass', "has-error");

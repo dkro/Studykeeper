@@ -23,7 +23,9 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
 
     currentSelected: this.defaultOption,
 
-    allOptions: null,
+    allOptions: [],
+
+    abc: [],
 
     unselectedValues: [],
 

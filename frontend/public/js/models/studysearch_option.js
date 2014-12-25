@@ -13,10 +13,10 @@ StudyManager.SearchOption.FIXTURES = [
     },
     {
         id: 3,
-        title: 'Option C'
+        name: 'Option C'
     },
     {
         id: 4,
-        title: 'Option D'
+        name: 'Option D'
     }
 ];

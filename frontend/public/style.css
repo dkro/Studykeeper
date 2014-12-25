@@ -120,6 +120,28 @@
     cursor: pointer;
 }
 
+.studyDisplay__study__header {
+    color: darkslateblue !important;
+}
+
+.studyDisplay__study__body {
+    display: table;
+    border-spacing: 0.5em 0;
+}
+
+.studyDisplay__study__body__row {
+    display: table-row;
+}
+
+.studyDisplay__study__body__cell--description {
+    display: table-cell;
+    font-weight: bold;
+}
+
+.studyDisplay__study__body__cell--value {
+    display: table-cell;
+}
+
 .createStudyButton--adviser {
     float: right;
     margin-bottom: 2em !important;

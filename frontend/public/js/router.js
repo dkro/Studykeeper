@@ -49,9 +49,11 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-
-    //return this.store.find('dashboardData');
-
+      return Ember.RSVP.hash({
+        searchTags: this.store.findAll('search-option'),
+        registeredStudies: this.store.findAll('study'),
+        createdStudies: this.store.findAll('study')
+      });
   }
 });
 
