@@ -165,7 +165,7 @@
                             <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.name}} <small>{{n.date}}</small></h3>
                             <div class="list-group-item-text dashboardNews__item__body">
                                 <div>{{n.description}}</div>
-                                <a {{bind-attr href=":n.link"}}>{{n.link}}</a>
+                                <a target="_blank" {{bindAttr href="n.link"}}>Link zur Studie</a>
                             </div>
                         </li>
                         {{/each}}
@@ -173,11 +173,12 @@
                 </div>
             </div>
 
-            <div>
-                {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='registered--participant'}}
+            <div class="studyDisplay__wrapper">
+                {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='studyDisplay--participant'}}
 
+                {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay__history'}}
                 {{#if isCreator}}
-                    {{study-display title="Erstellte Studien" studies=model.createdStudies additionalClassNames='registered--creator'}}
+                    {{study-display title="Erstellte Studien" studies=model.createdStudies additionalClassNames='studyDisplay--creator'}}
                 {{/if}}
             </div>
         </script>

@@ -94,17 +94,28 @@
     margin-left: 0.4em;
 }
 
-.registered--participant {
-    margin-top: 1em;
+.studyDisplay--participant {
     max-width: 30em;
+    margin-right: 12em;
+    vertical-align: top;
     clear: left;
     float: left;
 }
 
-.registered--creator {
-    margin-top: 5em;
+.studyDisplay__wrapper {
+    margin-top: 3em;
+}
+
+.studyDisplay__history {
     max-width: 30em;
-    float: right;
+    margin-right: 12em;
+    vertical-align: top;
+    float: left;
+}
+
+.studyDisplay--creator {
+    max-width: 30em;
+    float: left;
     vertical-align: top;
 }
 

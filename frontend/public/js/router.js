@@ -53,7 +53,8 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
         searchTags: this.store.findAll('searchOption'),
         registeredStudies: this.store.findAll('study'),
         createdStudies: this.store.findAll('study'),
-        news: this.store.findAll('dashboardNews')
+        news: this.store.findAll('dashboardNews'),
+        history: this.store.findAll('study')
       });
   },
 
