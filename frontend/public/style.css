@@ -95,7 +95,7 @@
 }
 
 .registered--participant {
-    margin-top: 5em;
+    margin-top: 1em;
     max-width: 30em;
     clear: left;
     float: left;
@@ -108,11 +108,31 @@
     vertical-align: top;
 }
 
-.registered--participant__studyDisplay {
+.dashboardNews {
+    margin-top: 6em;
+}
+
+.dashboardNews__item {
+    cursor: pointer;
+}
+
+.dashboardNews__item:hover {
+    background-color: #f7f7f7;
+}
+
+.dashboardNews__item__body {
+    margin-top: 1em;
+}
+
+.dashboardNews__item__heading {
+    color: darkslateblue;
+}
+
+.customizedPanel {
     padding: 0 !important;
 }
 
-.studyDisplay__list {
+.panelDisplay__list {
     margin-bottom: 0 !important;
 }
 

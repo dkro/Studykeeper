@@ -52,6 +52,9 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
         this.unselectedValues.clear();
         this.unselectedValues.pushObject(this.defaultOption);
         this.unselectedValues.pushObjects(this.allOptions.slice());
+        /*this.unselectedValues.pushObjects(this.allOptions.map(function (item) {
+            return item.get('name');
+        }));*/
     },
 
     selectLabel: function () {

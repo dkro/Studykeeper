@@ -50,10 +50,21 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
       return Ember.RSVP.hash({
-        searchTags: this.store.findAll('search-option'),
+        searchTags: this.store.findAll('searchOption'),
         registeredStudies: this.store.findAll('study'),
-        createdStudies: this.store.findAll('study')
+        createdStudies: this.store.findAll('study'),
+        news: this.store.findAll('dashboardNews')
       });
+  },
+
+  setupController: function(controller, model) {
+    // needed so that the search form component can operate only on string arrays
+    var transformedTags = model.searchTags.map(function (item) {
+      return item.get('name');
+    });
+
+    controller.set('searchTags', transformedTags);
+    controller.set('model', model);
   }
 });
 
@@ -62,5 +73,4 @@ StudyManager.StudiesRoute = StudyManager.AuthenticationRoute.extend({
     return this.store.find('study');
   }
 });
-
 

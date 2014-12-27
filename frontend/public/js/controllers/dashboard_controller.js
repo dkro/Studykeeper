@@ -54,7 +54,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
 
     searchTags: [],
 
-    bla: ["122", "222"],
+    bla: [],
 
     changeOfUserRole: function(userRole) {
         if (userRole === 0) {
