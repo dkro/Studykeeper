@@ -1,8 +1,8 @@
 StudyManager.Study = DS.Model.extend({
     name: DS.attr('string'),
     executor: DS.attr('string'),
-    from: DS.attr('string'),
-    to: DS.attr('string'),
+    from: DS.attr('isodate'),
+    to: DS.attr('isodate'),
     location: DS.attr('string'),
     amazon: DS.attr('number'),
     mmi: DS.attr('number'),
