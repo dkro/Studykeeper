@@ -1,0 +1,76 @@
+<h2>Anzeige aller Studien</h2>
+
+{{#if searchTags}}
+    <span>für die Searchtags:
+        {{#each tag in searchTags}}
+            <span class="label label-default">{{tag}}</span>
+        {{/each}}
+                </span>
+{{/if}}
+
+<button type="button" class="btn btn-default btn-sm studies__filterButton" {{action 'enableDisableFilter'}}>
+    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> {{filterButtonText}}
+</button>
+
+<div class="table-responsive studies__tableWrapper">
+    <table class="table table-hover">
+        <thead>
+        {{#if isFilterVisible}}
+            <tr>
+                <th class="studies__header--state">
+                    {{custom-select values=stateFilterOptions currentSelected=selectedStateFilter}}
+                </th>
+                <th>
+                    {{view "date-picker" classNames="form-control input-sm" placeholder="Filter Von" value=selectedFromFilter}}
+                </th>
+                <th>
+                    {{view "date-picker" classNames="form-control input-sm" placeholder="Filter Bis" value=selectedToFilter}}
+                </th>
+                <th>
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Name" value=selectedNameFilter}}
+                </th>
+                <th>
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Ort" value=selectedLocationFilter}}
+                </th>
+                <th>
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Person" value=selectedPersonFilter}}
+                </th>
+                <th class="studies__header--mmi">
+                    {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter}}
+                </th>
+                <th class="studies__header--amazon">
+                    {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
+                </th>
+            </tr>
+        {{/if}}
+        <tr>
+            <th>Status</th>
+            <th>Von</th>
+            <th>Bis</th>
+            <th>Name</th>
+            <th>Ort</th>
+            <th>Durchführung</th>
+            <th>MMI</th>
+            <th>Amazon</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each study in model}}
+            <tr {{bind-attr class=":studies__row study.expired:studies__row--expired:studies__row--notExpired"}}>
+                <td>
+                    {{#if study.expired}}
+                        Abgelaufen
+                    {{/if}}
+                </td>
+                <td>{{study.from}}</td>
+                <td>{{study.to}}</td>
+                <td>{{study.name}}</td>
+                <td>{{study.location}}</td>
+                <td>{{study.executor}}</td>
+                <td>{{study.mmi}}</td>
+                <td>{{study.amazon}}€</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>

@@ -2,4 +2,8 @@ backend/node_modules/*
 backend/coverage/*
 .idea/*
 frontend/public/bower_components
+frontend/node_modules/*
+frontend/public/userstudy-manager-ember.js
+frontend/public/userstudy-manager-ember.min.js
+frontend/public/js/templates.js
 

@@ -6,6 +6,6 @@ StudyManager.StudyDisplayComponent = Ember.Component.extend({
 
     title: null,
 
-    additionalClassNames: ""
+    additionalClassNames: ''
 
 });

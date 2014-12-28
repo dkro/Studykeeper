@@ -35,23 +35,23 @@ StudyManager.LoginController = Ember.Controller.extend({
             this.set('errorMessage', null);
             var userRole = null;
 
-            if (this.get('usermail') === "studycreator" &&
-                this.get('password') === "creator") {
+            if (this.get('usermail') === 'studycreator' &&
+                this.get('password') === 'creator') {
                 userRole = 1;
-            } else if (this.get('usermail') === "studyadviser" &&
-                this.get('password') === "adviser") {
+            } else if (this.get('usermail') === 'studyadviser' &&
+                this.get('password') === 'adviser') {
                 userRole = 2;
-            } else if (this.get('usermail') === "student" &&
-                this.get('password') === "abc") {
+            } else if (this.get('usermail') === 'student' &&
+                this.get('password') === 'abc') {
                 userRole = 0;
             }
 
-            if (userRole == null) {
-                this.set('errorMessage', "Passwort falsch oder User existiert nicht!");
+            if (userRole === null) {
+                this.set('errorMessage', 'Passwort falsch oder User existiert nicht!');
             } else {
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
-                this.set('token', "Das funzt!");
+                this.set('token', 'Das funzt!');
 
                 if (userRole === 1) {
                     this.get('controllers.dashboard').set('isMMIStudent', true);

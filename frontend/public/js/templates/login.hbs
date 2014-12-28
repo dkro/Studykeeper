@@ -1,0 +1,19 @@
+<div class="login__container">
+    <form role="form">
+        <div class="form-group">
+            <label for="emailLoginInput">Email</label>
+            {{input value=usermail type="email" id="emailLoginInput" placeholder="abc@campus.lmu.de" classNames="form-control" action="login"}}
+        </div>
+        <div class="form-group">
+            <label for="passwordLoginInput">Password</label>
+            {{input value=password type="password" id="passwordLoginInput" placeholder="Password" classNames="form-control" action="login"}}
+        </div>
+    </form>
+    <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
+    {{#if errorMessage}}
+        <p class="alert alert-danger login__alert">
+            {{errorMessage}}
+        </p>
+    {{/if}}
+</div>
+<button class="btn btn-primary center-block login__signUpButton" {{action 'toSignUp'}}>Account erstellen</button>

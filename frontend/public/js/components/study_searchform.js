@@ -19,7 +19,7 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
         this.reset();
     },
 
-    defaultOption: "Studientag auswählen...",
+    defaultOption: 'Studientag auswählen...',
 
     currentSelected: this.defaultOption,
 
@@ -33,13 +33,13 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
 
     hasTagsSelected: false,
 
-    buttonText: "Zeige alle Studien",
+    buttonText: 'Zeige alle Studien',
 
     changeButtonText: function() {
-        var res = "Filter Studien";
+        var res = 'Filter Studien';
 
         if (this.selectedValues.length === 0) {
-            res = "Zeige alle Studien" ;
+            res = 'Zeige alle Studien';
         }
 
         this.set('buttonText', res);

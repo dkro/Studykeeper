@@ -8,13 +8,13 @@ StudyManager.StudiesController = Ember.Controller.extend({
 
     searchTags: null,
 
-    stateFilterOptions: ["", "Zukünftig", "Abgelaufen"],
+    stateFilterOptions: ['', 'Zukünftig', 'Abgelaufen'],
 
-    mmiFilterOptions: ["", "1", "2", "3", "4", "5"],
+    mmiFilterOptions: ['', '1', '2', '3', '4', '5'],
 
-    amazonFilterOptions: ["", "5€", "10€", "15€", "20€", "25€"],
+    amazonFilterOptions: ['', '5€', '10€', '15€', '20€', '25€'],
 
-    selectedStateFilter: "",
+    selectedStateFilter: '',
 
     selectedFromFilter: null,
 
@@ -26,19 +26,19 @@ StudyManager.StudiesController = Ember.Controller.extend({
 
     selectedPersonFilter: null,
 
-    selectedMMIFilter: "",
+    selectedMMIFilter: '',
 
-    selectedAmazonFilter: "",
+    selectedAmazonFilter: '',
 
     isFilterVisible: false,
 
-    filterButtonText: "Filter einblenden",
+    filterButtonText: 'Filter einblenden',
 
     adaptFilterButtonText: function() {
         if (this.get('isFilterVisible')) {
-            this.set('filterButtonText', "Filter ausblenden");
+            this.set('filterButtonText', 'Filter ausblenden');
         } else {
-            this.set('filterButtonText', "Filter einblenden");
+            this.set('filterButtonText', 'Filter einblenden');
         }
     }.observes('isFilterVisible')
 });

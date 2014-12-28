@@ -1,0 +1,11 @@
+compile:
+  - js
+default:
+    - compile
+js:
+  - templates
+  - concat
+  - uglify
+templates:
+  - emberTemplates
+  - replace

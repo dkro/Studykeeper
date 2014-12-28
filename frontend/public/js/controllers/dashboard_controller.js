@@ -63,7 +63,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
         } else if (userRole === 1) {
             this.set('isCreator', true);
             this.set('isAdviser', false);
-        } else if (userRole == 2) {
+        } else if (userRole === 2) {
             this.set('isCreator', false);
             this.set('isAdviser', true);
         }
