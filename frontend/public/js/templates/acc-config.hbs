@@ -1,1 +1,52 @@
-<h2>Acc config</h2>
+<h2 class="accountConfig__header">Account konfigurieren</h2>
+
+<div class="accountConfig__body">
+    <div class="accountConfig__row">
+        <div class="accountConfig__cell--description">
+            Nutzertyp auswählen:
+        </div>
+        <div class="accountConfig__cell--value">
+            {{view "select" content=studentTypeOptions selection=selectedStudentType classNames="form-control input-sm accountConfig__studentType__select"}}
+        </div>
+    </div>
+
+    <div class="accountConfig__row">
+        <div class="accountConfig__cell--description">
+            Passwort ändern:
+        </div>
+        <div class="accountConfig__cell--value">
+            {{#if isEditIcon}}
+                <div class="accountConfig__passwordEdit--closed" {{action 'showPasswordEdit'}}>
+                    Ändern <span class="glyphicon glyphicon-edit"></span>
+                </div>
+            {{else}}
+                <div class="accountConfig__passwordEdit--open">
+                    <div class="accountConfig__passwordEdit--open__row">
+                        <div class="accountConfig__passwordEdit--open__description">
+                            Altes Passwort:
+                        </div>
+                        <div class="accountConfig__passwordEdit--open__value">
+                            {{input type="password" value=oldPassword classNames="form-control input-sm"}}
+                        </div>
+                    </div>
+                    <div class="accountConfig__passwordEdit--open__row">
+                        <div class="accountConfig__passwordEdit--open__description">
+                            Neues Passwort:
+                        </div>
+                        <div class="accountConfig__passwordEdit--open__value">
+                            {{input type="password" value=newPassword classNames="form-control input-sm"}}
+                        </div>
+                    </div>
+                    <div class="accountConfig__passwordEdit--open__row">
+                        <div class="accountConfig__passwordEdit--open__description">
+                            Neues Passwort bestätigen:
+                        </div>
+                        <div class="accountConfig__passwordEdit--open__value">
+                            {{input type="password" value=newPasswordConfirm classNames="form-control input-sm"}}
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

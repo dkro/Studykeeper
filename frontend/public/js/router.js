@@ -44,7 +44,10 @@ StudyManager.SignupRoute = Ember.Route.extend({
 });
 
 StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
-
+  setupController: function(controller) {
+    // reset properties so that old states are not shown by transitioning to this route
+    controller.reset();
+  }
 });
 
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({

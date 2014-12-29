@@ -48,6 +48,54 @@
     margin-top: 3em;
 }
 
+
+.accountConfig__header {
+    margin-bottom: 1em;
+}
+
+.accountConfig__body {
+    display: table;
+    border-spacing: 3em 2em;
+}
+
+.accountConfig__row {
+    display: table-row;
+}
+
+.accountConfig__cell--description {
+    font-weight: bold;
+    display: table-cell;
+}
+
+.accountConfig__cell--value {
+    font-weight: bold;
+    display: table-cell;
+}
+
+.accountConfig__studentType__select {
+    width: 10em;
+}
+
+.accountConfig__passwordEdit--closed {
+    cursor: pointer;
+}
+
+.accountConfig__passwordEdit--open {
+    display: table;
+}
+
+.accountConfig__passwordEdit--open__row {
+    display: table-row;
+}
+
+.accountConfig__passwordEdit--open__description {
+    display: table-cell;
+}
+
+.accountConfig__passwordEdit--open__value {
+    display: table-cell;
+}
+
 .signUp__header {
     margin-bottom: 1.5em;
 }
