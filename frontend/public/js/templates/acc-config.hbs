@@ -1,52 +1,66 @@
 <h2 class="accountConfig__header">Account konfigurieren</h2>
 
-<div class="accountConfig__body">
-    <div class="accountConfig__row">
-        <div class="accountConfig__cell--description">
-            Nutzertyp auswählen:
-        </div>
-        <div class="accountConfig__cell--value">
-            {{view "select" content=studentTypeOptions selection=selectedStudentType classNames="form-control input-sm accountConfig__studentType__select"}}
+<form class="form-horizontal blabla">
+    <div class="form-group">
+        <label class="col-sm-2 control-label accountConfig__body__label">Name:</label>
+        <div class="col-sm-10">
+            <p class="form-control-static accountConfig__body--uneditableValue">Mein Name</p>
         </div>
     </div>
-
-    <div class="accountConfig__row">
-        <div class="accountConfig__cell--description">
-            Passwort ändern:
+    <div class="form-group">
+        <label class="col-sm-2 control-label accountConfig__body__label">Email:</label>
+        <div class="col-sm-10">
+            <p class="form-control-static accountConfig__body--uneditableValue">mein_name@gmail.com</p>
         </div>
-        <div class="accountConfig__cell--value">
+    </div>
+    <div class="form-group">
+        <label for="accConfigTypeSelect" class="col-sm-2 control-label accountConfig__body__label">Nutzertyp:</label>
+        <div class="col-sm-10">
+            {{view "select" id="accConfigTypeSelect" content=studentTypeOptions selection=selectedStudentType classNames="form-control input-sm accountConfig__body__typeSelect"}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label accountConfig__body__label">Passwort</label>
+        <div class="col-sm-10">
             {{#if isEditIcon}}
-                <div class="accountConfig__passwordEdit--closed" {{action 'showPasswordEdit'}}>
+                <p class="form-control-static accountConfig__body__passwordEditIcon" {{action 'showPasswordEdit'}}>
                     Ändern <span class="glyphicon glyphicon-edit"></span>
-                </div>
+                </p>
             {{else}}
-                <div class="accountConfig__passwordEdit--open">
-                    <div class="accountConfig__passwordEdit--open__row">
-                        <div class="accountConfig__passwordEdit--open__description">
-                            Altes Passwort:
+                <div class="accountConfig__body__passwordEdit">
+                    <div class="accountConfig__body__passwordEdit__wrapper">
+                        <div class="accountConfig__body__passwordEdit__row">
+                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isOldPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Altes Passwort:</div>
+                            <div class="accountConfig__body__passwordEdit__valueCell">
+                                {{input type="password" id="accConfigOldPassword" value=oldPassword classBinding=":form-control :input-sm isOldPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}
+                            </div>
                         </div>
-                        <div class="accountConfig__passwordEdit--open__value">
-                            {{input type="password" value=oldPassword classNames="form-control input-sm"}}
+                        <div class="accountConfig__body__passwordEdit__row">
+                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isNewPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Neues Passwort:</div>
+                            <div class="accountConfig__body__passwordEdit__valueCell">
+                                {{input type="password" id="accConfigNewPassword" value=newPassword classBinding=":form-control :input-sm isNewPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}
+                            </div>
+                        </div>
+                        <div class="accountConfig__body__passwordEdit__row">
+                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isNewPasswordConfirmValid::accountConfig__body__passwordEdit__row--invalid"}}>Passwort bestätigen:</div>
+                            <div class="accountConfig__body__passwordEdit__valueCell">
+                                {{input type="password" id="accConfigNewPasswordConfirm" value=newPasswordConfirm classBinding=":form-control :input-sm isNewPasswordConfirmValid::accountConfig__body__passwordEdit__row--invalid"}}
+                            </div>
+                        </div>
+                        <div class="ccountConfig__body__passwordEdit__descriptionCell"></div>
+                        <div class="accountConfig__body__passwordEdit__valueCell accountConfig__body__passwordEdit__button">
+                            <button type="submit" class="btn btn-default" {{action 'validatePasswordChange'}}>Speichern</button>
                         </div>
                     </div>
-                    <div class="accountConfig__passwordEdit--open__row">
-                        <div class="accountConfig__passwordEdit--open__description">
-                            Neues Passwort:
-                        </div>
-                        <div class="accountConfig__passwordEdit--open__value">
-                            {{input type="password" value=newPassword classNames="form-control input-sm"}}
-                        </div>
-                    </div>
-                    <div class="accountConfig__passwordEdit--open__row">
-                        <div class="accountConfig__passwordEdit--open__description">
-                            Neues Passwort bestätigen:
-                        </div>
-                        <div class="accountConfig__passwordEdit--open__value">
-                            {{input type="password" value=newPasswordConfirm classNames="form-control input-sm"}}
-                        </div>
-                    </div>
+                    {{#if passwordValidationMessages}}
+                        <p class="alert alert-danger accountConfig__error">
+                            {{#each message in passwordValidationMessages}}
+                                &bull; {{message}} <br/>
+                            {{/each}}
+                        </p>
+                    {{/if}}
                 </div>
             {{/if}}
         </div>
     </div>
-</div>
+</form>

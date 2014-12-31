@@ -48,52 +48,78 @@
     margin-top: 3em;
 }
 
-
 .accountConfig__header {
     margin-bottom: 1em;
 }
 
-.accountConfig__body {
-    display: table;
-    border-spacing: 3em 2em;
+.accountConfig__body__label {
+    font-weight: bold !important;
+    color: darkslategrey;
 }
 
-.accountConfig__row {
-    display: table-row;
-}
-
-.accountConfig__cell--description {
+.accountConfig__body--uneditableValue {
+    color: slategray;
     font-weight: bold;
-    display: table-cell;
 }
 
-.accountConfig__cell--value {
-    font-weight: bold;
-    display: table-cell;
+.accountConfig__body__typeSelect {
+    min-width: 10em;
+    max-width: 10em;
 }
 
-.accountConfig__studentType__select {
-    width: 10em;
-}
-
-.accountConfig__passwordEdit--closed {
+.accountConfig__body__passwordEditIcon {
     cursor: pointer;
 }
 
-.accountConfig__passwordEdit--open {
-    display: table;
+.accountConfig__body__passwordEdit {
+    border: 2px solid lightslategray;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    max-width: 30em;
+    -webkit-border-radius: 0.3em;
+    -moz-border-radius: 0.3em;
+    border-radius: 0.3em;
 }
 
-.accountConfig__passwordEdit--open__row {
+.accountConfig__body__passwordEdit__wrapper {
+    display: table;
+    border-spacing: 1em 0.5em;
+    padding-top: 1em;
+}
+
+.accountConfig__body__passwordEdit__row {
     display: table-row;
 }
 
-.accountConfig__passwordEdit--open__description {
+.accountConfig__body__passwordEdit__row--invalid {
+    color: #a94442;
+    border-color: #a94442 !important;
+}
+
+.accountConfig__body__passwordEdit__valueCell {
     display: table-cell;
 }
 
-.accountConfig__passwordEdit--open__value {
+.accountConfig__body__passwordEdit__valueCell {
     display: table-cell;
+}
+
+.accountConfig__body__passwordEdit__valueCell button {
+    margin-top: 2em;
+}
+
+.ccountConfig__body__passwordEdit__descriptionCell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.accountConfig__body__passwordEdit__button {
+    text-align: right;
+}
+
+.accountConfig__error {
+    margin-top: 1.5em;
 }
 
 .signUp__header {

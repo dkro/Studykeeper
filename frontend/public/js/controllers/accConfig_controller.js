@@ -2,6 +2,32 @@ StudyManager.AccConfigController = Ember.Controller.extend({
     actions: {
         showPasswordEdit: function() {
             this.set('isEditIcon', false);
+        },
+
+        validatePasswordChange: function() {
+            this.resetValidation();
+            var errorTexts = [];
+            var index = 0;
+
+            if (Ember.empty(this.get('oldPassword'))) {
+                errorTexts[index] = "Ihr altes Passwort kann nicht leer sein!";
+                index++;
+                this.set('isOldPasswordValid', false);
+            }
+
+            if (this.get('newPassword') === null || this.get('newPassword').length < 7) {
+                errorTexts[index] = 'Das Passwort muss mindestens 7 Zeichen enthalten!';
+                index++;
+                this.set('isNewPasswordValid', false);
+            }
+
+            if (this.get('newPasswordConfirm') === null || this.get('newPassword') !== this.get('newPasswordConfirm')) {
+                errorTexts[index] = 'Die Passwörter stimmen nicht überein!';
+                index++;
+                this.set('isNewPasswordConfirmValid', false);
+            }
+
+            this.set('passwordValidationMessages', errorTexts);
         }
     },
 
@@ -13,6 +39,14 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         this.set('oldPassword', null);
         this.set('newPassword', null);
         this.set('newPasswordConfirm', null);
+        this.resetValidation();
+    },
+
+    resetValidation: function() {
+        this.set('isOldPasswordValid', true);
+        this.set('isNewPasswordValid', true);
+        this.set('isNewPasswordConfirmValid', true);
+        this.set('passwordValidationMessages', []);
     },
 
     studentTypeOptions: ['Default', 'MMI Student']
