@@ -54,6 +54,8 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('name', model.get('name'));
     controller.set('surname', model.get('surname'));
     controller.set('email', model.get('email'));
+
+    controller.set('model', model);
   }
 });
 
@@ -64,7 +66,8 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
         registeredStudies: this.store.findAll('study'),
         createdStudies: this.store.findAll('study'),
         news: this.store.findAll('dashboardNews'),
-        history: this.store.findAll('study')
+        history: this.store.findAll('study'),
+        currentUser: this.store.find('user', 1)
       });
   },
 
@@ -75,6 +78,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     });
 
     controller.set('searchTags', transformedTags);
+    controller.set('mmiPoints', model.currentUser.get('mmiTotal'));
     controller.set('model', model);
   }
 });

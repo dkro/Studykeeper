@@ -11,7 +11,7 @@
 
     <body>
         <script type="text/x-handlebars" id="components/study-searchform">
-            {{view "select" content=unselectedValues selection=currentSelected classNames="form-control"}}
+            {{view "select" content=unselectedValues selection=currentSelected classNames="form-control studySearch__select"}}
             {{#if hasTagsSelected}}
                 <div class="studySearch__tagWrapper">
                     {{#each value in selectedValues}}

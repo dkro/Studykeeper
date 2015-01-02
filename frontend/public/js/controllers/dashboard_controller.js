@@ -50,11 +50,9 @@ StudyManager.DashboardController = Ember.Controller.extend({
 
     isCreator: false,
 
-    isMMIStudent: false,
-
     searchTags: [],
 
-    bla: [],
+    mmiPoints: null,
 
     changeOfUserRole: function(userRole) {
         if (userRole === 0) {

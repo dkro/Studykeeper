@@ -2,11 +2,13 @@
     <button class="btn btn-primary createStudyButton--adviser">Neue Studie erstellen</button>
 {{/if}}
 
-{{study-searchform allOptions=searchTags classNames='studySearch' action="displayStudies"}}
+<div>
+    {{study-searchform allOptions=searchTags classNames='studySearch' action="displayStudies"}}
+    <div class="dashboard_mmiPoints">
+        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{mmiPoints}}</span></span>
+    </div>
+</div>
 
-{{#if isMMIStudent}}
-    <div>MMI Student</div>
-{{/if}}
 
 <div class="dashboardNews panel panel-default">
     <div class="panel-heading">Newsfeed</div>
