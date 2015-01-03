@@ -5,6 +5,7 @@ StudyManager.Router.map(function() {
   this.route('logout');
   this.resource('dashboard');
   this.resource('studies');
+  this.resource('study', { path: '/study/:study_id' });
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -51,10 +52,6 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     // reset properties so that old states are not shown by transitioning to this route
     controller.reset();
-    controller.set('name', model.get('name'));
-    controller.set('surname', model.get('surname'));
-    controller.set('email', model.get('email'));
-
     controller.set('model', model);
   }
 });
@@ -67,6 +64,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
         createdStudies: this.store.findAll('study'),
         news: this.store.findAll('dashboardNews'),
         history: this.store.findAll('study'),
+        // TODO: change this!
         currentUser: this.store.find('user', 1)
       });
   },
@@ -78,7 +76,6 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     });
 
     controller.set('searchTags', transformedTags);
-    controller.set('mmiPoints', model.currentUser.get('mmiTotal'));
     controller.set('model', model);
   }
 });
@@ -86,6 +83,12 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
 StudyManager.StudiesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
     return this.store.find('study');
+  }
+});
+
+StudyManager.StudyRoute = StudyManager.AuthenticationRoute.extend({
+  model: function(params) {
+    return this.store.find('study', params.study_id);
   }
 });
 

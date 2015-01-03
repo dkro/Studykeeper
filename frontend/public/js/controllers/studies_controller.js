@@ -3,6 +3,10 @@ StudyManager.StudiesController = Ember.Controller.extend({
         enableDisableFilter: function() {
             var enabled = this.get('isFilterVisible');
             this.set('isFilterVisible', !enabled);
+        },
+
+        showStudy: function(study) {
+            this.transitionToRoute('study', study);
         }
     },
 

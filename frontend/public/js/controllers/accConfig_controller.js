@@ -34,9 +34,6 @@ StudyManager.AccConfigController = Ember.Controller.extend({
     reset: function() {
         // Properties are created the first time this method is called (usually from the according route) if they're not
         // already existing! If they're already existing, only their values will be reset.
-        this.set('name', null);
-        this.set('surname', null);
-        this.set('email', null);
         this.set('selectedStudentType', null);
         this.set('isEditIcon', true);
         this.set('oldPassword', null);

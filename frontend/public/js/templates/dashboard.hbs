@@ -5,7 +5,7 @@
 <div>
     {{study-searchform allOptions=searchTags classNames='studySearch' action="displayStudies"}}
     <div class="dashboard_mmiPoints">
-        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{mmiPoints}}</span></span>
+        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{model.currentUser.mmiTotal}}</span></span>
     </div>
 </div>
 
