@@ -1,5 +1,5 @@
 /* standard navbar */
-@media screen and (min-device-width: 768px) {
+@media screen and (min-width: 768px) {
     .accountDropDown {
         display: block;
     }
@@ -10,7 +10,7 @@
 }
 
 /* mobile navbar */
-@media screen and (max-device-width: 767px) {
+@media screen and (max-width: 767px) {
     .accountDropDown {
         display: none !important;
     }
@@ -132,7 +132,7 @@
 
 .signUp__button {
     margin-top: 2em;
-    margin-bottom: 2em;
+    margin-bottom: 2em !important;
 }
 
 .studySearch {
@@ -145,7 +145,7 @@
 }
 
 
-@media screen and (min-device-width: 768px) {
+@media screen and (min-width: 768px) {
     .dashboard_mmiPoints {
         display: inline-block;
         vertical-align: top;
@@ -182,7 +182,7 @@
     }
 }
 
-@media screen and (max-device-width: 767px) {
+@media screen and (max-width: 767px) {
     .dashboard_mmiPoints {
         display: inline-block;
         vertical-align: top;
@@ -217,6 +217,7 @@
 
     .studySearch__select {
         min-width: 14em;
+        max-width: 14em;
     }
 }
 
@@ -270,13 +271,13 @@
     vertical-align: top;
 }
 
-@media screen and (min-device-width: 768px) {
+@media screen and (min-width: 768px) {
     .dashboardNews {
         margin-top: 5em;
     }
 }
 
-@media screen and (max-device-width: 767px) {
+@media screen and (max-width: 767px) {
     .dashboardNews {
         margin-top: 10em;
     }
