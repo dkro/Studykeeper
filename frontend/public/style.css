@@ -1,5 +1,5 @@
 /* standard navbar */
-@media (min-width: 768px) {
+@media screen and (min-device-width: 768px) {
     .accountDropDown {
         display: block;
     }
@@ -10,7 +10,7 @@
 }
 
 /* mobile navbar */
-@media (max-width: 767px) {
+@media screen and (max-device-width: 767px) {
     .accountDropDown {
         display: none !important;
     }
@@ -145,7 +145,7 @@
 }
 
 
-@media (min-width: 768px) {
+@media screen and (min-device-width: 768px) {
     .dashboard_mmiPoints {
         display: inline-block;
         vertical-align: top;
@@ -182,11 +182,11 @@
     }
 }
 
-@media (max-width: 767px) {
+@media screen and (max-device-width: 767px) {
     .dashboard_mmiPoints {
         display: inline-block;
         vertical-align: top;
-        float: right;
+        float: left;
         background-color: lightgray;
         padding: 0.8em;
         border: 2px solid darkgrey;
@@ -270,13 +270,13 @@
     vertical-align: top;
 }
 
-@media (min-width: 768px) {
+@media screen and (min-device-width: 768px) {
     .dashboardNews {
         margin-top: 5em;
     }
 }
 
-@media (max-width: 767px) {
+@media screen and (max-device-width: 767px) {
     .dashboardNews {
         margin-top: 10em;
     }
