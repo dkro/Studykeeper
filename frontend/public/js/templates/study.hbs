@@ -1,3 +1,24 @@
-<h2>{{model.name}}</h2>
+<h1 class="study__name">{{model.name}}</h1>
 
-<p>{{model.amazon}}</p>
+<div class="study__dateRange">
+    <span class="glyphicon glyphicon-calendar study__dateRange--delimiter"></span> {{model.from}} - {{model.to}}
+</div>
+
+<div class="data__wrapper">
+    <div class="data__row">
+        <div class="data__cell--description">Ausführung: </div>
+        <div class="data__cell--value data--person">{{model.executor}}</div>
+    </div>
+    <div class="data__row">
+        <div class="data__cell--description">Ort: </div>
+        <div class="data__cell--value">{{model.location}}</div>
+    </div>
+    <div class="data__row">
+        <div class="data__cell--description">Entlohnung: </div>
+        <div class="data__cell--value"><span class="data--payment">{{model.amazon}}€ Amazon-Gutschein</span> oder
+                                        <br/><span class="data--payment">{{model.mmi}} MMI-Punkte</span>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-primary study__button">Zu dieser Studie anmelden</button>
