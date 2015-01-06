@@ -10,6 +10,9 @@ var auth                = require('./auth');
 // controllers
 var userController      = require('../controllers/users');
 var userStudyController = require('../controllers/userstudies');
+var labelController     = require('../controllers/labels');
+//var newsfeedController  = require('../controllers/newsfeed');
+//var templateController = require('../controllers/templates');
 
 module.exports = function(app) {
 
@@ -32,8 +35,7 @@ module.exports = function(app) {
 
 
   // --------------- User routes ---------------
-  app.get('/api/user/test', userController.getUsers);
-  app.get('/api/user/single', auth.tokenAuthenticate, userController.getUser);
+  //app.get('/api/user/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
   app.get('/api/user/all', auth.tokenAuthenticate, userController.getUsers);
 
   app.post('/api/user/login', auth.loginAuthenticate, userController.login);
@@ -44,12 +46,12 @@ module.exports = function(app) {
 
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudy/single', userStudyController.getUserstudy);
-  app.get('/api/userstudy/all', userStudyController.allUserstudies);
-  //app.get('/api/userstudy/allFiltered', userStudyController.allUserstudiesFiltered);
+  //app.get('/api/userstudy/single', userStudyController.getUserstudy); // todo add newsfeed and label to these
+  app.get('/api/userstudy/all', userStudyController.allUserstudies); // todo also add templates mapped to these
   //app.get('/api/userstudy/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
   app.get('/api/userstudy/registeredUsers', userStudyController.usersRegisteredToStudy);
 
+  app.post('/api/userstudy/allFiltered', userStudyController.allUserstudiesFiltered);
   app.post('/api/userstudy/create',  userStudyController.createUserstudy);
   app.post('/api/userstudy/edit', userStudyController.editUserstudy);
   app.post('/api/userstudy/delete', userStudyController.deleteUserstudy);
@@ -59,11 +61,29 @@ module.exports = function(app) {
   app.post('/api/userstudy/confirmUserParticipation',  userStudyController.confirmUserParticipation);
   app.post('/api/userstudy/close',  userStudyController.closeUserstudy);
 
+
   // --------------- Label routes ---------------
+  app.get('/api/label/all', labelController.allLabels);
+
+  app.post('/api/label/create', labelController.createLabel);
+  app.post('/api/userstudy/addLabel',  labelController.addLabeltoUserstudy);
+
 
   // --------------- Newsfeed routes ---------------
+  //app.get('/api/newsfeed/all, newsfeedController.all);
+
+  //app.post('/api/newsfeed/create', newsfeedController.createNews);
+  //app.post('/api/newsfeed/delete', newsfeedController.deleteNews);
+  //app.post('/api/newsfeed/edit', newsfeedController.editNews);
+  //app.post('/api/userstudy/addNews', newsfeedController.allNewsToUserstudy);
+
 
   // --------------- Templates routes ---------------
+  //app.get('/api/template/all', templateController.all)
 
+  //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
+  //app.post('/api/template/createTemplate', templateController.createTemplate);
+  //app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
+  //app.post('/api/template/edit', templateController.editTemplate);
 
 };

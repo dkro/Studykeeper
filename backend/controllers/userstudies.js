@@ -92,16 +92,23 @@ module.exports.publishUserstudy = function(req, res) {
 };
 
 module.exports.getUserstudy = function(req, res) {
-  UserPromise.validUserstudyReq(req)
-    .then(function(userstudy){
-      return UserPromise.userstudyExists(userstudy);
+  var userstudy;
+
+  UserstudyPromise.validUserstudyReq(req)
+    .then(function(result){
+      userstudy = result;
+      return UserstudyPromise.userstudyExists(userstudy);
     })
-    .then(function(userstudy){
+    .then(function(){
+      return UserstudyPromise.labelsForUserstudy(userstudy);
+    })
+    .then(function(labels){
       UserStudy.getUserstudy(userstudy, function(err, result){
         if (err) {
           throw err;
         } else {
-          res.json(result[0]);
+          var study = {userstudy: result[0], label: labels};
+          res.json(study);
         }
       });
     })
@@ -137,25 +144,26 @@ module.exports.allUserstudiesFiltered = function(req, res) {
 };
 
 module.exports.allUserstudiesFilteredForUser = function(req, res) {
-  var promises = [
-    UserstudyPromise.validFilterReq(req),
-    UserPromise.validUserReq(req)
-  ];
-// TODO need to rewrite this to get user from token and filter from there.
-  Promise.all(promises).then(function(filters){
+  var filter;
 
+  UserstudyPromise.validFilterReq(req)
+    .then(function(result){
+        filter = result;
 
-    UserStudy.getAllUserstudiesFilteredForUser(filters, function(err, list){
-      if (err) {
-        throw err;
-      } else {
-        res.json(list);
-      }
+        return UserPromise.userFromToken(req);
+    })
+    .then(function(user){
+      UserStudy.getAllUserstudiesFilteredForUser(user, filter, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json(list);
+        }
+      });
+    })
+    .catch(function (err){
+      res.json(500, {status: 'failure', errors: err});
     });
-  })
-  .catch(function (err){
-    res.json(500, {status: 'failure', errors: err});
-  });
 };
 
 module.exports.registerUserToStudy = function(req, res){

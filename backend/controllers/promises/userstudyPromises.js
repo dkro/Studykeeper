@@ -105,6 +105,29 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
   });
 };
 
+module.exports.validFilterReq = function(req){
+  return new Promise(function(resolve,reject) {
+    var validationErrors = [];
+
+    var order;
+    if (req.body.order===undefined){
+      order = "desc";
+    }
+
+    if (validationErrors.length > 0) {
+      reject(validationErrors);
+    } else {
+      var filterData = {
+        order: Validator.toString(req.body.filter.order),
+        limit: Validator.toString(req.body.filter.limit),
+        label: req.body.filter.label,
+        field: Validator.toString(req.body.filter.field)
+      };
+      resolve(filterData);
+    }
+  });
+};
+
 module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudy(userstudy,function(err,result){
@@ -181,6 +204,18 @@ module.exports.userIsNOTRegisteredToStudy = function(user,userstudy){
         reject({message: 'user: ' + user.username + ' is registered to userstudy: ' + userstudy.title});
       } else {
         resolve(user);
+      }
+    });
+  });
+};
+
+module.exports.labelsForUserstudy = function(userstudy){
+  return new Promise(function(resolve, reject){
+    Userstudy.getLabelsForStudy(userstudy, function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
       }
     });
   });

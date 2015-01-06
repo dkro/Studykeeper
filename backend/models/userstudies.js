@@ -86,23 +86,43 @@ module.exports.editUserStudy = function (data, callback) {
 };
 
 module.exports.getUserstudy = function (userstudy, callback) {
-  connection.query('SELECT * FROM userstudies ' +
+  connection.query(
+    'SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+    'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+    'us.location ' +
+    'FROM userstudies us '+
+    'LEFT JOIN users u '+
+    'ON us.tutorId=u.id '+
+    'LEFT JOIN users u2 '+
+    'ON us.executorId=u2.id '+
     'WHERE id=? AND title=?',
     [userstudy.id,userstudy.title],
     callback);
 };
 
 module.exports.getAllUserstudies = function (callback) {
-  connection.query('SELECT * FROM userstudies', callback);
+  connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+  'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+  'us.location ' +
+  'FROM userstudies us ' +
+  'LEFT JOIN users u ' +
+  'ON us.tutorId=u.id ' +
+  'LEFT JOIN users u2 ' +
+  'ON us.executorId=u2.id'
+  , callback);
 };
 
-module.exports.getAllUserstudiesFiltered = function (filters, callback) {
-  var queryFilters = filters;
-  connection.query('SELECT * FROM userstudies', callback);
-  //todo
+module.exports.getAllUserstudiesFiltered = function (filter, callback) {
+  var labelstring = "LEFT JOIN studies_labels_rel slrel ON slrel.studyId=us.id " +
+                    "LEFT JOIN labels la ON slrel.labelId=la.id " +
+                    "WHERE la.title=\"" + filter.label + "\" ";
+  var orderstring = "ORDER BY " + filter.field + " " + filter.order + " ";
+  var limitstring = "LIMIT " + filter.limit + " ";
+
+  connection.query('SELECT us.title FROM userstudies us ' + labelstring + orderstring + limitstring, callback);
 };
 
-module.exports.getAllUserstudiesFilteredForUser = function (filters, callback) {
+module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callback) {
   var queryFilters = filters;
   connection.query('SELECT * FROM userstudies', callback);
   //todo
@@ -114,6 +134,13 @@ module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
       '(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
     userstudy.id,
     callback);
+};
+
+module.exports.getLabelsForStudy = function(userstudy, callback){
+  connection,query('SELECT title FROM labels ' +
+  'WHERE id=(SELECT labelId FROM studies_labels_rel WHERE studyId=?',
+  userstudy.id,
+  callback);
 };
 
 module.exports.publishUserstudy = function(userstudy, callback){
