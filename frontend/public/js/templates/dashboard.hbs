@@ -28,10 +28,10 @@
 </div>
 
 <div class="studyDisplay__wrapper">
-    {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='studyDisplay--participant'}}
+    {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
 
-    {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay__history'}}
+    {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay__history' action='displayStudy'}}
     {{#if isCreator}}
-        {{study-display title="Erstellte Studien" studies=model.createdStudies additionalClassNames='studyDisplay--creator'}}
+        {{study-display title="Erstellte Studien" studies=model.createdStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
     {{/if}}
 </div>

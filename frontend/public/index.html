@@ -46,7 +46,7 @@
                 <div class="customizedPanel panel-body">
                     <div class="panelDisplay__list list-group">
                         {{#each study in studies}}
-                        <a class="list-group-item studyDisplay__study">
+                        <a class="list-group-item studyDisplay__study" {{action 'displayStudy' study}}>
                             <h4 class="list-group-item-heading studyDisplay__study__header">{{study.name}}</h4>
                             <div class="list-group-item-text studyDisplay__study__body">
                                 <span class="studyDisplay__study__body__row">

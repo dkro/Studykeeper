@@ -5,6 +5,10 @@ StudyManager.DashboardController = Ember.Controller.extend({
         displayStudies: function(selectedTags) {
             this.get('controllers.studies').set('searchTags', selectedTags);
             this.transitionToRoute('studies');
+        },
+
+        displayStudy: function(study) {
+            this.transitionToRoute('study', study);
         }
     },
 
