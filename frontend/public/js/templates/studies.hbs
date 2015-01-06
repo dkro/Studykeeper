@@ -21,10 +21,10 @@
                     {{custom-select values=stateFilterOptions currentSelected=selectedStateFilter}}
                 </th>
                 <th>
-                    {{view "date-picker" classNames="form-control input-sm" placeholder="Filter Von" value=selectedFromFilter}}
+                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm studies__datePicker" placeholder="Filter Von" value=selectedFromFilter}}
                 </th>
                 <th>
-                    {{view "date-picker" classNames="form-control input-sm" placeholder="Filter Bis" value=selectedToFilter}}
+                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm studies__datePicker" placeholder="Filter Bis" value=selectedToFilter}}
                 </th>
                 <th>
                     {{input type="text" classNames="form-control input-sm" placeholder="Filter Name" value=selectedNameFilter}}

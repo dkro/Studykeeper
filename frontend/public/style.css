@@ -355,6 +355,11 @@
     background-color: #ededed;
 }
 
+.studies__datePicker {
+    background-color: white !important;
+    cursor: pointer !important;
+}
+
 .studies__header--state {
     min-width: 9em;
 }
