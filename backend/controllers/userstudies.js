@@ -8,17 +8,17 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 
 module.exports.createUserstudy = function(req, res) {
 
-  var promises = [UserPromise.validFullUserstudyReq(req),
-    UserPromise.userExists(req.body.tutorname),
-    UserPromise.userExists(req.body.executorname)];
+  // TODO check for user roles ... create promise
+  var promises = [UserstudyPromise.validFullUserstudyReq(req,false),
+    UserPromise.userExists(req.body.userstudy.tutorname),
+    UserPromise.userExists(req.body.userstudy.executorname)];
 
   Promise.all(promises).then(function(results){
     UserStudy.addUserStudy(results[0], function (err) {
       if (err) {
         throw err;
       } else {
-        res.json({status: 'success', message: 'userstudy created.',
-          userstudy: results[0]});
+        res.json({status: 'success', message: 'Userstudy created.', userstudy: results[0]});
       }
     });
   }).catch(function(err){
@@ -28,20 +28,26 @@ module.exports.createUserstudy = function(req, res) {
 
 module.exports.editUserstudy = function(req, res) {
 
-  var promises = [UserstudyPromise.validFullUserstudyReq(req),
-  UserPromise.userstudyExists(req.body.id,req.body.title)];
+  var userstudy;
 
-  Promise.all(promises).then(function(results){
-    UserStudy.editUserStudy(results[0], function(err){
-      if (err) {
-        throw err;
-      } else {
-        res.json({status: 'success', message: 'userstudy edited.'});
-      }
-    }).catch(function(err){
+  UserstudyPromise.validFullUserstudyReq(req,true)
+    .then(function(result){
+      userstudy = result;
+
+      return UserstudyPromise.userstudyExists(userstudy);
+    })
+    .then(function() {
+      UserStudy.editUserStudy(userstudy, function (err) {
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'Userstudy edited.', userstudy: userstudy});
+        }
+      });
+    })
+    .catch(function(err){
       res.json(500, {status: 'failure', errors: err});
     });
-  });
 };
 
 module.exports.deleteUserstudy = function(req, res) {
@@ -55,7 +61,7 @@ module.exports.deleteUserstudy = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'userstudy deleted.'});
+          res.json({status: 'success', message: 'Userstudy deleted.', userstudy: userstudy});
         }
       });
     })
@@ -75,7 +81,7 @@ module.exports.publishUserstudy = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'userstudy published.'});
+          res.json({status: 'success', message: 'Userstudy published.'});
         }
       });
     })
@@ -153,8 +159,7 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
 };
 
 module.exports.registerUserToStudy = function(req, res){
-  var promises = [UserstudyPromise.validUserstudyReq(req),
-    UserPromise.userFromToken(req)];
+  var promises = [UserstudyPromise.validUserstudyReq(req), UserPromise.userFromToken(req)];
 
   var user;
   var userstudy;
@@ -171,7 +176,8 @@ module.exports.registerUserToStudy = function(req, res){
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'User ' + user + ' registered to userstudy ' + userstudy});
+          res.json({status: 'success', message: 'User registered to userstudy.',
+                    user: user, userstudy: userstudy});
         }
     });
   })
@@ -181,19 +187,26 @@ module.exports.registerUserToStudy = function(req, res){
 };
 
 module.exports.removeUserFromStudy = function(req, res){
-  var promises = [UserstudyPromise.validUserstudyReq(req),
-    UserPromise.userFromToken(req)];
+  var promises = [UserstudyPromise.validUserstudyReq(req), UserPromise.userFromToken(req)];
 
-  Promise.all(promises).then(function(result){
-    var user = result[0];
-    var userstudy = result[1];
+  var user;
+  var userstudy;
 
-    UserStudy.unmapUserFromStudy(user,userstudy, function(err){
-      if (err) {
-        throw err;
-      } else {
-        res.json({status: 'success', message: 'User ' + user + ' registered to userstudy ' + userstudy});
-      }
+  Promise.all(promises)
+    .then(function(result){
+      user = result[0];
+      userstudy = result[1];
+
+      return UserstudyPromise.userIsRegisteredToStudy(user,userstudy);
+     })
+    .then(function(){
+      UserStudy.unmapUserFromStudy(user,userstudy, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'User removed from userstudy.',
+                    user: user, userstudy: userstudy});
+        }
     });
   })
   .catch(function (err){
@@ -220,7 +233,8 @@ module.exports.confirmUserParticipation = function(req, res){
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'User ' + user + ' confirmed participation of userstudy ' + userstudy});
+          res.json({status: 'success', message: 'Confirmed user participation of userstudy',
+            user: user, userstudy: userstudy});
         }
     }).catch(function(err){
       res.json(500, {status: 'failure', errors: err});

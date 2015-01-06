@@ -5,21 +5,8 @@ var validator  = require('validator');
 
 var passwordMinimumLength = 7;
 
-exports.createUser = function(req, res) {
-    var user = new User({
-      username: req.body.username,
-      password: req.body.password
-    });
-
-    user.save(function(err) {
-      if (err){
-        res.send(err);
-      } else {
-        res.json({
-          status: 'success',
-          message: 'New user has been created'});
-      }
-    });
+exports.deleteUser = function(req, res) {
+    //todo
 };
 
 exports.getUsers = function(req, res) {
@@ -248,7 +235,7 @@ exports.createUser = function(req, res) {
   }
 };
 
-exports.deleteUser = function(req, res) {
+exports.createUser = function(req, res) {
   var user = new User({
     username: req.body.username,
     password: req.body.password,

@@ -1,13 +1,19 @@
 {
-  "title":"userstudyTitle123",
-  "tutorname":"david@david.com",
-  "executorname":"david@david.com",
-  "fromDate":"2014-12-12",
-  "untilDate":"2014-12-12",
-  "description":"userstudy description",
-  "doodleLink":"http://www.doodlelink.com",
-  "paper":"http://www.linktopaper.com",
-  "mmi":"1",
-  "compensation":"22",
-  "location":"san francisco"
+  "userstudy": {
+    "id": 6,
+    "title": "bowWow",
+    "tutorname": "david@david.com",
+    "executorname": "david@david.com",
+    "tutorId": 1,
+    "executorId": 1,
+    "fromDate": "2014-12-12",
+    "untilDate": "2014-12-12",
+    "description": "userstudy description wowow",
+    "doodleLink": "http://www.doodlelink.com",
+    "paper": "http://www.linktopaper.com",
+    "mmi": "1",
+    "compensation": "22",
+    "location": "san francisco",
+    "space": 20
+  }
 }

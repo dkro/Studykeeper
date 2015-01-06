@@ -44,14 +44,24 @@ module.exports = function(app) {
 
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudy/test', userStudyController.allUserstudies);
-  app.get('/api/userstudy/single', auth.tokenAuthenticate, userStudyController.getUserstudy);
-  app.get('/api/userstudy/all', auth.tokenAuthenticate, userStudyController.allUserstudies);
-//auth.tokenAuthenticate, auth.requiresRole('tutor'),
-  app.post('/api/userstudy/create',  userStudyController.createUserstudy);
-  app.post('/api/userstudy/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userStudyController.deleteUserstudy);
-  app.post('/api/userstudy/edit', auth.tokenAuthenticate, auth.requiresRole('tutor'), userStudyController.editUserstudy);
+  app.get('/api/userstudy/single', userStudyController.getUserstudy);
+  app.get('/api/userstudy/all', userStudyController.allUserstudies);
+  //app.get('/api/userstudy/allFiltered', userStudyController.allUserstudiesFiltered);
+  //app.get('/api/userstudy/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
+  app.get('/api/userstudy/registeredUsers', userStudyController.usersRegisteredToStudy);
 
+  app.post('/api/userstudy/create',  userStudyController.createUserstudy);
+  app.post('/api/userstudy/edit', userStudyController.editUserstudy);
+  app.post('/api/userstudy/delete', userStudyController.deleteUserstudy);
+  app.post('/api/userstudy/publish',  userStudyController.publishUserstudy);
+  app.post('/api/userstudy/registerUser',  userStudyController.registerUserToStudy);
+  app.post('/api/userstudy/removeUser',  userStudyController.removeUserFromStudy);
+  app.post('/api/userstudy/confirmUserParticipation',  userStudyController.confirmUserParticipation);
+  app.post('/api/userstudy/close',  userStudyController.closeUserstudy);
+
+  // --------------- Label routes ---------------
+
+  // --------------- Newsfeed routes ---------------
 
   // --------------- Templates routes ---------------
 

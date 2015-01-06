@@ -32,8 +32,8 @@ module.exports.addUserStudy = function (data, callback) {
     '(SELECT id FROM users WHERE username=? AND id=?),' +
     '?,?,?,?,?,?,?,?,?,?,' +
     '1,0,0);',
-    [queryData.tutorname,queryData.executorname,
-      queryData.tutorId,queryData.executorId,
+    [queryData.tutorname,queryData.tutorId,
+      queryData.executorname,queryData.executorId,
       queryData.from,queryData.until,
       queryData.title,queryData.description,
       queryData.link,queryData.paper,
@@ -70,18 +70,18 @@ module.exports.editUserStudy = function (data, callback) {
   'link=?,paper=?,' +
   'space=?,' +
   'mmi=?,compensation=?,' +
-  'location=?,' +
-  'visible=?,published=? ' +
+  'location=? ' +
   'WHERE id=? ' +
   'AND title=?;',
-    [queryData.tutorname,queryData.tutorId,
-      queryData.executorname, queryData.executorId,
+    [queryData.tutorId,queryData.tutorname,
+      queryData.executorId,queryData.executorname,
       queryData.from,queryData.until,
       queryData.title,queryData.description,
       queryData.link,queryData.paper,
       queryData.space,
       queryData.mmi,queryData.compensation,
-      queryData.location],
+      queryData.location,
+      queryData.id, queryData.title],
     callback);
 };
 
@@ -170,6 +170,12 @@ module.exports.confirmUser = function(user, userstudy, callback){
     [user.id,user.username,
       userstudy.id,userstudy.title],
     callback);
+};
+
+module.exports.getUserRegisteredToStudy = function(userstudy, callback){
+  connection.query('SELECT username,id FROM users' +
+  'WHERE id=(SELECT userId FROM users_studies_rel WHERE id=?)'
+  ,userstudy.id,callback);
 };
 
 
