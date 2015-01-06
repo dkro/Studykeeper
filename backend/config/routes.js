@@ -12,7 +12,7 @@ var userController      = require('../controllers/users');
 var userStudyController = require('../controllers/userstudies');
 var labelController     = require('../controllers/labels');
 //var newsfeedController  = require('../controllers/newsfeed');
-//var templateController = require('../controllers/templates');
+var templateController  = require('../controllers/templates');
 
 module.exports = function(app) {
 
@@ -81,7 +81,7 @@ module.exports = function(app) {
   // --------------- Templates routes ---------------
   //app.get('/api/template/all', templateController.all)
 
-  //app.post('/api/template/createTemplate', templateController.createTemplate);
+  app.post('/api/template/createTemplate', templateController.createTemplate);
   //app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
   //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);

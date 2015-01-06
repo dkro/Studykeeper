@@ -136,7 +136,7 @@ module.exports.getAllUserstudiesFiltered = function (filter, callback) {
       labels = labels + "," + connection.escape(filter.label[i].title);
     }
   }
-  // Take only the one which has every label from array
+  // Take only the userstudy which has every label from array
   if (filter.label !== "") {
     labelstring = "AND la.title IN (" + labels + ") ";
     countString = "GROUP BY us.id HAVING count(us.title)>=" + filter.label.length + " ";

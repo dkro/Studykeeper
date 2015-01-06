@@ -8,7 +8,7 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 
 module.exports.createUserstudy = function(req, res) {
 
-  // TODO check for user roles ... create promise
+  // TODO check for user (tutor, executor) roles ... create promise
   var promises = [UserstudyPromise.validFullUserstudyReq(req,false),
     UserPromise.userExists(req.body.userstudy.tutorname),
     UserPromise.userExists(req.body.userstudy.executorname)];

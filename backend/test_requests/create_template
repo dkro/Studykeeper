@@ -1,3 +1,17 @@
 {
-  
+  "template" : {
+    "title" : "template title5",
+    "fields" : [
+      {
+        "fieldtype" : "text",
+        "title" : "field1 title",
+        "description" : "field1 descr"
+      },
+      {
+        "fieldtype" : "text",
+        "title" : "field2 title",
+        "description" : "field2 descr"
+      }
+    ]
+  }
 }
