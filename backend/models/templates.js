@@ -29,7 +29,7 @@ module.exports.addTemplate = function (template, callback) {
         for (var i = 0; i < queryData.fields.length; i += 1) {
           promises.push(new Promise(function(resolve, reject){
 
-            connection.query('INSERT INTO template_fieldssss ' +
+            connection.query('INSERT INTO template_fields ' +
               '(templateId,fieldtypeId,title,description) ' +
               'VALUES (' +
               '(SELECT id FROM templates WHERE title=?),' +
