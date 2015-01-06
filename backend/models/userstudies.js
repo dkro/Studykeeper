@@ -113,13 +113,77 @@ module.exports.getAllUserstudies = function (callback) {
 };
 
 module.exports.getAllUserstudiesFiltered = function (filter, callback) {
-  var labelstring = "LEFT JOIN studies_labels_rel slrel ON slrel.studyId=us.id " +
-                    "LEFT JOIN labels la ON slrel.labelId=la.id " +
-                    "WHERE la.title=\"" + filter.label + "\" ";
-  var orderstring = "ORDER BY " + filter.field + " " + filter.order + " ";
-  var limitstring = "LIMIT " + filter.limit + " ";
+  var labelstring = "";
+  var tutorstring = "";
+  var executorstring = "";
+  var fromDatestring = "";
+  var untilDatestring = "";
+  var titlestring = "";
+  var descrstring = "";
+  var visiblestr = "";
+  var publishedstr = "";
+  var closedstr = "";
+  var countString = "GROUP BY us.id ";
+  var orderstring = "";
+  var limitstring = "";
 
-  connection.query('SELECT us.title FROM userstudies us ' + labelstring + orderstring + limitstring, callback);
+  // Parse label array for mysql syntax
+  var labels = "";
+  for (var i = 0; i < filter.label.length; i++){
+    if (i===0){
+      labels = connection.escape(filter.label[i].title);
+    } else {
+      labels = labels + "," + connection.escape(filter.label[i].title);
+    }
+  }
+  // Take only the one which has every label from array
+  if (filter.label !== "") {
+    labelstring = "AND la.title IN (" + labels + ") ";
+    countString = "GROUP BY us.id HAVING count(us.title)>=" + filter.label.length + " ";
+  }
+
+  if (filter.tutor !== "") {tutorstring = "AND user1.username=" + connection.escape(filter.tutor) + " " ;}
+  if (filter.executor !== "") {executorstring = "AND user2.username=" + connection.escape(filter.executor) + " ";}
+  if (filter.fromDate !== "") {fromDatestring = "AND us.fromDate=" + connection.escape(filter.fromDate) + " ";}
+  if (filter.untilDate !== "") {untilDatestring = "AND us.untilDate=" + connection.escape(filter.untilDate) + " ";}
+  if (filter.title !== "") {titlestring = "AND us.title=" + connection.escape(filter.title) + " ";}
+  if (filter.description !== "") {descrstring = "AND us.description=" + connection.escape(filter.description) + " ";}
+  if (filter.visible !== "") {visiblestr = "AND us.visible=" + connection.escape(filter.visible) + " ";}
+  if (filter.published !== "") {publishedstr = "AND us.published=" + connection.escape(filter.published) + " ";}
+  if (filter.closed !== "") {closedstr = "AND us.closed=" + connection.escape(filter.closed) + " ";}
+
+  if (filter.order !== "" && filter.orderBy !== "") {
+    orderstring = "ORDER BY us." + filter.orderBy + " " + filter.order + " ";
+  } else {
+    orderstring = "ORDER BY fromDate DESC ";
+  }
+  if (filter.limit !== "") {
+    limitstring = "LIMIT " + filter.limit + " ";
+  } else {
+    limitstring = "LIMIT 20 ";
+  }
+
+  connection.query('SELECT us.title, user1.username, user2.username, us.description, us.untilDate, us.fromDate, us.location, ' +
+                  'us.visible, us.published, us.closed ' +
+                  'FROM userstudies us ' +
+                  'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                  'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                  'LEFT JOIN studies_labels_rel slrel ON slrel.studyId=us.id ' +
+                  'LEFT JOIN labels la ON slrel.labelId=la.id ' +
+                  'WHERE 1=1 '
+                  + labelstring
+                  + tutorstring
+                  + executorstring
+                  + fromDatestring
+                  + untilDatestring
+                  + titlestring
+                  + descrstring
+                  + visiblestr
+                  + publishedstr
+                  + closedstr
+                  + countString
+                  + orderstring
+                  + limitstring, callback);
 };
 
 module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callback) {

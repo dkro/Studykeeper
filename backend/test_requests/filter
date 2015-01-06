@@ -1,8 +1,18 @@
 {
   "filter": {
     "order" : "desc",
-    "field" : "title",
-    "limit" : "2",
-    "label" : "title"
+    "orderBy" : "title",
+    "limit" : "5",
+    "label" : [{"title":"label"},{"title":"bowWow"}],
+    "limit" : 20,
+    "fromDate" : "2014-12-12",
+    "untilDate" : "2014-12-13",
+    "title" : "userstudyTitle",
+    "description" : "userstudy description",
+    "tutor" : "david@david.com",
+    "executor" : "david2@david.com",
+    "visible" : 1,
+    "published" : 0,
+    "closed": 0
   }
 }

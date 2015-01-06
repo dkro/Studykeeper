@@ -81,9 +81,9 @@ module.exports = function(app) {
   // --------------- Templates routes ---------------
   //app.get('/api/template/all', templateController.all)
 
-  //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
   //app.post('/api/template/createTemplate', templateController.createTemplate);
   //app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
+  //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
 
 };

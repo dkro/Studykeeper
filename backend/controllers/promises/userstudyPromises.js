@@ -110,18 +110,75 @@ module.exports.validFilterReq = function(req){
     var validationErrors = [];
 
     var order;
-    if (req.body.order===undefined){
-      order = "desc";
+    if (req.body.filter.order && req.body.filter.order!=="desc" && req.body.filter.order!=="asc") {
+      validationErrors.push({message: "Invalid filter-order. \"asc\" or \"desc\" required"});
+    } else {
+      order = Validator.toString(req.body.filter.order);
+    }
+
+    var orderBy;
+    var arr = ["title","fromDate","untilDate","tutorname","executorname","space","location"];
+    if (req.body.filter.orderBy && arr.indexOf(req.body.filter.orderBy) === -1) {
+      validationErrors.push({message: "Invalid filter-orderBy. " + arr + " required"});
+    } else {
+      orderBy = Validator.toString(req.body.filter.orderBy);
+    }
+
+    // todo regex for limit
+
+    // todo correct labe check
+    var label;
+    if (!req.body.label){
+      label = "";
+    } else {
+      label = req.body.label;
+    }
+
+    if (req.body.filter.title && !Validator.isAlpha(req.body.filter.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
+      validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.filter.title});
+    }
+    if (req.body.filter.tutorname && !Validator.isEmail(req.body.filter.tutorname)) {
+      validationErrors.push({message: "Tutorname invalid, has be an email: " + req.body.filter.tutorname});
+    }
+    if (req.body.filter.executorname && !Validator.isEmail(req.body.filter.executorname)) {
+      validationErrors.push({message: "Executorname invalid, has be an email:: " + req.body.filter.executorname});
+    }
+    if (req.body.filter.fromDate && !Validator.isDate(req.body.filter.fromDate)) {
+      validationErrors.push({message: "FromDate invalid, has to be of form YYYY-MM-DD: " + req.body.filter.fromDate});
+    }
+    if (req.body.filter.untilDate && !Validator.isDate(req.body.filter.untilDate)) {
+      validationErrors.push({message: "UntilDate invalid, has to be of form YYYY-MM-DD: " + req.body.filter.untilDate});
+    }
+    if (req.body.filter.description && !Validator.isLength(req.body.filter.description, 3)) {
+      validationErrors.push({message: "Description invalid, minimum 3 characters: " + req.body.filter.description});
+    }
+    if (req.body.filter.visible && !Validator.isNumeric(req.body.filter.visible)) {
+      validationErrors.push({message: "Visible invalid, has to be numeric: " + req.body.filter.visible});
+    }
+    if (req.body.filter.published && !Validator.isNumeric(req.body.filter.published)) {
+      validationErrors.push({message: "Published invalid, has to be numeric: " + req.body.filter.published});
+    }
+    if (req.body.filter.closed && !Validator.isNumeric(req.body.filter.closed)) {
+      validationErrors.push({message: "Closed invalid, has to be numeric: " + req.body.filter.closed});
     }
 
     if (validationErrors.length > 0) {
       reject(validationErrors);
     } else {
       var filterData = {
-        order: Validator.toString(req.body.filter.order),
+        order: order,
+        orderBy: orderBy,
+        label: label,
         limit: Validator.toString(req.body.filter.limit),
-        label: req.body.filter.label,
-        field: Validator.toString(req.body.filter.field)
+        fromDate: Validator.toString(req.body.filter.fromDate),
+        untilDate:Validator.toString(req.body.filter.untilDate),
+        title: Validator.toString(req.body.filter.title),
+        description: Validator.toString(req.body.filter.description),
+        tutor: Validator.toString(req.body.filter.tutor),
+        executor: Validator.toString(req.body.filter.executor),
+        visible: Validator.toString(req.body.filter.visible),
+        published: Validator.toString(req.body.filter.published),
+        closed: Validator.toString(req.body.filter.closed)
       };
       resolve(filterData);
     }
