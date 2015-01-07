@@ -29,7 +29,7 @@ StudyManager.Study.FIXTURES = [
     },
     {
         id: 1,
-        name: 'Studie A',
+        name: 'Studie A ist super etc und es macht keinen Sinn, was ich hier schreibe',
         tutor: 'Tutor A',
         executor: 'Person A',
         description: 'Short description.',

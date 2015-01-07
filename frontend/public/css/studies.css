@@ -1,0 +1,103 @@
+.studies__row {
+    cursor: pointer;
+}
+
+.studies__row--expired:hover > td:nth-child(2), .studies__row--expired:hover > td:nth-child(3) {
+    color: darkred;
+}
+
+.studies__row--expired > td:first-child {
+    color: darkred;
+}
+
+.studies__row--notExpired {
+    background-color: #ededed;
+}
+
+.studies__datePicker {
+    background-color: white !important;
+    cursor: pointer !important;
+}
+
+.studies__filter--state {
+    min-width: 9em;
+}
+
+.studies__filter--mmi {
+    min-width: 5em;
+}
+
+.studies__filter--amazon {
+    min-width: 6em;
+}
+
+.studies__tableWrapper {
+}
+
+.studies__filterButton {
+    display: block !important;
+    margin-top: 3em;
+    margin-bottom: 1em !important;
+}
+
+@media screen and (min-width: 768px) {
+    .studies__column--status {
+    }
+
+    .studies__column--location {
+    }
+
+    .studies__column--executor {
+    }
+
+    .studies__column--mmi{
+    }
+
+    .studies__column--amazon {
+    }
+
+    .studies__filterInput--name {
+    }
+
+    .studies__datePicker {
+        background-color: white !important;
+        cursor: pointer !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .studies__column--status {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .studies__column--location {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .studies__column--executor {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .studies__column--mmi{
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .studies__column--amazon {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .studies__filterInput--name {
+        font-size: 0.7em !important;
+    }
+
+    .studies__datePicker {
+        background-color: white !important;
+        cursor: pointer !important;
+        font-size: 0.7em !important;
+    }
+}

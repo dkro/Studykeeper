@@ -17,7 +17,7 @@
         <thead>
         {{#if isFilterVisible}}
             <tr>
-                <th class="studies__header--state">
+                <th class="studies__column--status studies__filter--state">
                     {{custom-select values=stateFilterOptions currentSelected=selectedStateFilter}}
                 </th>
                 <th>
@@ -27,37 +27,37 @@
                     {{view "date-picker" readonly="readonly" classNames="form-control input-sm studies__datePicker" placeholder="Filter Bis" value=selectedToFilter}}
                 </th>
                 <th>
-                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Name" value=selectedNameFilter}}
+                    {{input type="text" classNames="form-control input-sm studies__filterInput--name" placeholder="Filter Name" value=selectedNameFilter}}
                 </th>
-                <th>
+                <th class="studies__column--location">
                     {{input type="text" classNames="form-control input-sm" placeholder="Filter Ort" value=selectedLocationFilter}}
                 </th>
-                <th>
+                <th class="studies__column--executor">
                     {{input type="text" classNames="form-control input-sm" placeholder="Filter Person" value=selectedPersonFilter}}
                 </th>
-                <th class="studies__header--mmi">
+                <th class="studies__filter--mmi studies__column--mmi">
                     {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter}}
                 </th>
-                <th class="studies__header--amazon">
+                <th class="studies__filter--amazon studies__column--amazon">
                     {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
                 </th>
             </tr>
         {{/if}}
         <tr>
-            <th>Status</th>
+            <th class="studies__column--status">Status</th>
             <th>Von</th>
             <th>Bis</th>
             <th>Name</th>
-            <th>Ort</th>
-            <th>Durchführung</th>
-            <th>MMI</th>
-            <th>Amazon</th>
+            <th class="studies__column--location">Ort</th>
+            <th class="studies__column--executor">Durchführung</th>
+            <th class="studies__column--mmi">MMI</th>
+            <th class="studies__column--amazon">Amazon</th>
         </tr>
         </thead>
         <tbody>
         {{#each study in model}}
             <tr {{bind-attr class=":studies__row study.expired:studies__row--expired:studies__row--notExpired"}} {{action 'showStudy' study}}>
-                <td>
+                <td class="studies__column--status">
                     {{#if study.expired}}
                         Abgelaufen
                     {{/if}}
@@ -65,10 +65,10 @@
                 <td>{{study.from}}</td>
                 <td>{{study.to}}</td>
                 <td>{{study.name}}</td>
-                <td>{{study.location}}</td>
-                <td>{{study.executor}}</td>
-                <td>{{study.mmi}}</td>
-                <td>{{study.amazon}}€</td>
+                <td class="studies__column--location">{{study.location}}</td>
+                <td class="studies__column--executor">{{study.executor}}</td>
+                <td class="studies__column--mmi">{{study.mmi}}</td>
+                <td class="studies__column--amazon">{{study.amazon}}€</td>
             </tr>
         {{/each}}
         </tbody>
