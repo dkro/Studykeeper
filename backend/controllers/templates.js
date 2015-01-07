@@ -46,3 +46,13 @@ module.exports.deleteTemplate = function(req, res){
       res.json(500, {status: 'failure', errors: err});
     });
 };
+
+module.exports.allTemplates = function (req, res){
+  Template.getAllTemplates(function(err,result){
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  })
+};

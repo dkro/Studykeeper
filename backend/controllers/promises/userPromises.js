@@ -3,6 +3,49 @@ var User         = require('../../models/users');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
+module.exports.validSignupReq = function(req){
+  return new Promise(function(resolve, reject){
+    var validationErrors = [];
+
+    if (!Validator.isEmail(req.body.user.username)) {
+      validationErrors.push({message: "Username invalid, email format required: " + req.body.user.title});
+    }
+    if (!Validator.isLength(req.body.user.firstname,1)) {
+      validationErrors.push({message: "Firstname invalid, minimum 1 chars required."});
+    }
+    if (!Validator.isLength(req.body.user.surname,1)) {
+      validationErrors.push({message: "Surname invalid, minimum 1 chars required."});
+    }
+    if (!Validator.isLength(req.body.user.password,7)) {
+      validationErrors.push({message: "Password invalid, minimum 7 chars required."});
+    }
+    if (!Validator.isLength(req.body.user.confirmPassword,7)) {
+      validationErrors.push({message: "Confirm Password invalid, minimum 7 chars required."});
+    }
+    if (req.body.user.password !== req.body.user.confirmPassword){
+      validationErrors.push({message: "Passwords dont match"});
+    }
+    if (req.body.user.mmi !== 0 && req.body.user.mmi !== 1) {
+      validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
+    }
+    if (validationErrors.length > 0) {
+      reject(validationErrors);
+    } else {
+      var userData = {
+        username: Validator.toString(req.body.user.username),
+        firstname: Validator.toString(req.body.user.firstname),
+        surname: Validator.toString(req.body.user.surname),
+        password: Validator.toString(req.body.user.password),
+        confirmPassword : Validator.toString(req.body.user.confirmPassword),
+        mmi: Validator.toString(req.body.user.mmi),
+        role    : 'participant',
+        lmuStaff: 0
+      };
+      resolve(userData);
+    }
+  });
+};
+
 module.exports.validUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -67,9 +110,10 @@ module.exports.usernameAvailable = function(username){
   return new Promise(function(resolve, reject){
     User.getUserByName(username, function(err, result){
       if (err) {reject(err);}
-      if (result.length === 0) {resolve(result[0]);
+      if (result.length === 0) {
+        resolve();
       } else {
-        reject({message: 'Username already taken.', username: username});
+        reject({message: 'Email already in use.', username: username});
       }
     });
   });

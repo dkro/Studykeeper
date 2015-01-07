@@ -31,45 +31,45 @@ module.exports = function(app) {
   }));
 
   // --------------- Public routes ---------------
-  app.post('/api/user/signup', userController.signup);
-  app.post('/api/user/retrievePassword', userController.retrievePW);
+  app.post('/api/users/signup', userController.signup);
+  app.post('/api/users/retrievePassword', userController.retrievePW);
 
 
   // --------------- User routes ---------------
-  //app.get('/api/user/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
-  app.get('/api/user/all', auth.tokenAuthenticate, userController.getUsers);
-  //app.get('/api/user/allTutors', auth.tokenAuthenticate, userController.getUsers);
-  //app.get('/api/user/allExecutors', auth.tokenAuthenticate, userController.getUsers);
+  //app.get('/api/users/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
+  app.get('/api/users', auth.tokenAuthenticate, userController.getUsers);
+  //app.get('/api/users/allTutors', auth.tokenAuthenticate, userController.getUsers);
+  //app.get('/api/users/allExecutors', auth.tokenAuthenticate, userController.getUsers);
 
-  app.post('/api/user/login', auth.loginAuthenticate, userController.login);
-  app.post('/api/user/logout', auth.tokenAuthenticate, userController.logout);
-  app.post('/api/user/changePassword', auth.tokenAuthenticate, userController.changePW);
-  app.post('/api/user/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
-  app.post('/api/user/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
+  app.post('/api/users/login', auth.loginAuthenticate, userController.login);
+  app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
+  app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
+  app.post('/api/users/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
+  app.post('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
 
 
   // --------------- Userstudy routes ---------------
-  //app.get('/api/userstudy/single', userStudyController.getUserstudy); // todo add newsfeed and label to these
-  app.get('/api/userstudy/all', userStudyController.allUserstudies); // todo also add templates mapped to these
-  //app.get('/api/userstudy/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
-  app.get('/api/userstudy/registeredUsers', userStudyController.usersRegisteredToStudy);
+  //app.get('/api/userstudies/single', userStudyController.getUserstudy); // todo add newsfeed and label to these
+  app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
+  //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
+  app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
 
-  app.post('/api/userstudy/allFiltered', userStudyController.allUserstudiesFiltered);
-  app.post('/api/userstudy/create',  userStudyController.createUserstudy);
-  app.post('/api/userstudy/edit', userStudyController.editUserstudy);
-  app.post('/api/userstudy/delete', userStudyController.deleteUserstudy);
-  app.post('/api/userstudy/publish',  userStudyController.publishUserstudy);
-  app.post('/api/userstudy/registerUser',  userStudyController.registerUserToStudy);
-  app.post('/api/userstudy/removeUser',  userStudyController.removeUserFromStudy);
-  app.post('/api/userstudy/confirmUserParticipation',  userStudyController.confirmUserParticipation);
-  app.post('/api/userstudy/close',  userStudyController.closeUserstudy);
+  app.post('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
+  app.post('/api/userstudies/create',  userStudyController.createUserstudy);
+  app.post('/api/userstudies/edit', userStudyController.editUserstudy);
+  app.post('/api/userstudies/delete', userStudyController.deleteUserstudy);
+  app.post('/api/userstudies/publish',  userStudyController.publishUserstudy);
+  app.post('/api/userstudies/registerUser',  userStudyController.registerUserToStudy);
+  app.post('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
+  app.post('/api/userstudies/confirmUserParticipation',  userStudyController.confirmUserParticipation);
+  app.post('/api/userstudies/close',  userStudyController.closeUserstudy);
 
 
   // --------------- Label routes ---------------
-  app.get('/api/label/all', labelController.allLabels);
+  app.get('/api/labels', labelController.allLabels);
 
-  app.post('/api/label/create', labelController.createLabel);
-  app.post('/api/userstudy/addLabel',  labelController.addLabeltoUserstudy);
+  app.post('/api/labels/create', labelController.createLabel);
+  app.post('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
 
 
   // --------------- Newsfeed routes ---------------
@@ -82,10 +82,10 @@ module.exports = function(app) {
 
 
   // --------------- Templates routes ---------------
-  //app.get('/api/template/all', templateController.all)
+  app.get('/api/templates', templateController.allTemplates); //todo smarter query results
 
-  app.post('/api/template/createTemplate', templateController.createTemplate);
-  app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
+  app.post('/api/templates/createTemplate', templateController.createTemplate);
+  app.post('/api/templates/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
   //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
 

@@ -1,0 +1,10 @@
+{
+  "user": {
+    "username": "email@email.com",
+    "firstname": "firstname",
+    "surname": "lastname",
+    "password": "7charpassword",
+    "confirmPassword" : "7charpassword",
+    "mmi": 0
+  }
+}

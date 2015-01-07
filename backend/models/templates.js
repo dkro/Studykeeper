@@ -109,7 +109,9 @@ module.exports.removeTemplate = function (template, callback) {
 };
 
 module.exports.getAllTemplates = function (callback) {
-
+  connection.query('SELECT * FROM templates t ' +
+    'LEFT JOIN template_fields tf ON t.id=tf.templateId ',
+    callback);
 };
 
 module.exports.getTemplate = function (template, callback) {

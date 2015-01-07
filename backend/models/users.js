@@ -26,8 +26,12 @@ module.exports.getUserByToken = function(data, callback) {
 
 module.exports.saveUser = function(data, callback) {
   var queryData = {username: data.username,
+                   firstname: data.firstname,
+                   surname: data.surname,
                    password: data.password,
-                   role: data.role};
+                   role: data.role,
+                   lmuStaff: data.lmuStaff,
+                   mmi: data.mmi};
 
   crypt.cryptPassword(queryData.password, function(err,hash){
     if (err) {
@@ -35,9 +39,15 @@ module.exports.saveUser = function(data, callback) {
     }
 
     queryData.password = hash;
-    connection.query( "INSERT INTO users (username,password,role) " +
-      "VALUES (?,?,(SELECT id FROM roles WHERE name=?));",
-      [queryData.username,queryData.password,queryData.role],
+    connection.query( "INSERT INTO users (username,password,role,firstname,surname,lmuStaff,mmi) " +
+      "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?);",
+      [queryData.username,
+        queryData.password,
+        queryData.role,
+        queryData.firstname,
+        queryData.surname,
+        queryData.lmuStaff,
+        queryData.mmi],
       callback);
   });
 };

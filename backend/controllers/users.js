@@ -1,5 +1,7 @@
 "use strict";
 var User       = require('../models/users');
+var Promise      = require('es6-promise').Promise;
+var UserPromise = require('./promises/userPromises');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
 
@@ -30,77 +32,61 @@ exports.getUser = function(name, res) {
 };
 
 exports.signup = function(req, res) {
-  var user = {
-    username: req.body.username,
-    password: req.body.password,
-    // todo confirm password
-    role    : 'participant'
-  };
 
-  User.getUserByName(user.username, function(err,result){
-    //TODO error
+  var user;
+  var promises = [UserPromise.validSignupReq(req), UserPromise.usernameAvailable(req.body.user.username)];
 
-    if (result.length > 0) {
-      res.json({
-        status: "failure",
-        message: "Email already in use."});
-    } else {
-      if (validator.isEmail(user.username)) {
-        if (user.password.length >= passwordMinimumLength) {
-          User.saveUser(user, function (err) {
+  Promise.all(promises)
+    .then(function(results) {
+      user = results[0];
+      return new Promise(function (resolve, reject) {
+        if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
+          user.lmuStaff = 1;
+        }
+
+        resolve();
+      });
+
+    })
+    .then(function(){
+
+      User.saveUser(user, function (err) {
+        if (err) {
+          throw err;
+        } else {
+          User.createTokenForUser(user, function (err) {
             if (err) {
               res.send(500, err);
             } else {
-
-              if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
-                User.setLMUStaff(user.username, true, function(err) {
-                  if (err) {
-                    // TODO log error correctly
-                    console.log(err);
-                  }
-                });
-              }
-
-              User.createTokenForUser(user, function (err) {
+              User.getTokensForUser(user, function (err, result) {
                 if (err) {
-                  res.send(500, err);
+                  res.send(err);
                 } else {
-                  User.getTokensForUser(user, function (err, result) {
-                    if (err) {
-                      res.send(err);
-                    } else {
-                      // Sort tokenresult so that newest token is the first in array
-                      result.sort(function (a, b) {
-                        a = new Date(a.timestamp);
-                        b = new Date(b.timestamp);
-                        return a > b ? -1 : a < b ? 1 : 0;
-                      });
+                  // Sort token result so that newest token is the first in array
+                  result.sort(function (a, b) {
+                    a = new Date(a.timestamp);
+                    b = new Date(b.timestamp);
+                    return a > b ? -1 : a < b ? 1 : 0;
+                  });
 
-                      res.json({
-                        status: 'success',
-                        message: 'New user has been created successfully',
-                        username: user.username,
-                        role: user.role,
-                        token: result[0].token
-                      });
-                    }
+                  res.json({
+                    status: 'success',
+                    message: 'New user has been created successfully',
+                    username: user.username,
+                    role: user.role,
+                    token: result[0].token
                   });
                 }
               });
             }
           });
-        } else {
-          res.json(500, {
-            status: 'failure',
-            message: "Password too short. 7 chars minimum."});
         }
-      } else {
-        res.json(500, {
-          status: 'failure',
-          message: "Invalid email address."});
-      }
-    }
-  });
+      });
+    })
+   .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+
 };
 
 exports.login = function(req, res) {
