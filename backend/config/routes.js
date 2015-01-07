@@ -20,6 +20,7 @@ module.exports = function(app) {
   // todo remove this... this is a hack for Ama to be able to use the backend from windows
   app.use(restify.CORS());
   app.use(restify.fullResponse());
+  restify.CORS.ALLOW_HEADERS.push('authorization');
 
   var directory = path.resolve('./frontend/public/');
   // All routes are mapped to frontend/public except for /api/* routes

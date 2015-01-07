@@ -32,7 +32,7 @@ module.exports.allLabels = function(req, res){
     if (err){
       res.json(500,{status: 'failure', errors: {message: 'Internal error, please try again.'}});
     } else {
-      res.json({label: list});
+      res.json({labels: list});
     }
   });
 };

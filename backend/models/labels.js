@@ -8,7 +8,7 @@ module.exports.addLabel = function (label, callback) {
 };
 
 module.exports.getAllLabels = function (callback) {
-  connection.query('SELECT title FROM labels',callback);
+  connection.query('SELECT * FROM labels',callback);
 };
 
 module.exports.getLabel = function (label, callback) {
