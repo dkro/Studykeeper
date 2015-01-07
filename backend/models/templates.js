@@ -66,12 +66,56 @@ module.exports.addTemplate = function (template, callback) {
   }
 };
 
+module.exports.removeTemplate = function (template, callback) {
+  var queryData = {
+    id: template.id,
+    title: template.title,
+    fields: template.fields
+  };
+  connection.beginTransaction(function (err) {
+    if (err) {
+      throw err;
+    }
+    // Put dummy data into template
+    connection.query('UPDATE templates SET title=\"removed\" WHERE id=?',
+      queryData.id,
+      function (err) {
+      if (err) {
+        connection.rollback(function () {
+          throw err;
+        });
+      }
+
+      // remove all fields connected to template
+      connection.query('DELETE FROM template_fields WHERE templateId=?',
+        queryData.id,
+        function (err) {
+          if (err) {
+            connection.rollback(function () {
+              throw err;
+            });
+          }
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                throw err;
+              });
+            }
+            callback();
+          });
+        });
+    });
+  });
+};
+
 module.exports.getAllTemplates = function (callback) {
 
 };
 
 module.exports.getTemplate = function (template, callback) {
-  connection.query('SELECT title FROM templates WHERE title=?',template.title,callback);
+  connection.query('SELECT * FROM templates WHERE title=? AND id=?',
+    [template.title,template.id],
+    callback);
 };
 
 module.exports.mapTemplatetoUserstudy = function (template, userstudy, callback) {

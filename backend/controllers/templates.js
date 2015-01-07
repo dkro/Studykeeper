@@ -25,3 +25,24 @@ module.exports.createTemplate = function(req, res){
       res.json(500, {status: 'failure', errors: err});
     });
 };
+
+module.exports.deleteTemplate = function(req, res){
+  var template;
+  TemplatePromise.validTemplateReq(req)
+    .then(function(result){
+      template = result;
+      return TemplatePromise.templateExists(template);
+    })
+    .then(function(){
+      Template.removeTemplate(template, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'Template removed.', template: template});
+        }
+      });
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};

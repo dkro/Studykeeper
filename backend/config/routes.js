@@ -17,6 +17,7 @@ var templateController  = require('../controllers/templates');
 module.exports = function(app) {
 
   app.use(passport.initialize());
+  // todo remove this... this is a hack for Ama to be able to use the backend from windows
   app.use(restify.CORS());
   app.use(restify.fullResponse());
 
@@ -37,6 +38,8 @@ module.exports = function(app) {
   // --------------- User routes ---------------
   //app.get('/api/user/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
   app.get('/api/user/all', auth.tokenAuthenticate, userController.getUsers);
+  //app.get('/api/user/allTutors', auth.tokenAuthenticate, userController.getUsers);
+  //app.get('/api/user/allExecutors', auth.tokenAuthenticate, userController.getUsers);
 
   app.post('/api/user/login', auth.loginAuthenticate, userController.login);
   app.post('/api/user/logout', auth.tokenAuthenticate, userController.logout);
@@ -82,8 +85,11 @@ module.exports = function(app) {
   //app.get('/api/template/all', templateController.all)
 
   app.post('/api/template/createTemplate', templateController.createTemplate);
-  //app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
+  app.post('/api/template/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
   //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
+
+  // Mails
+  // tutore sind sueradmins. Mails enden bei loeschen von nutzerstudien
 
 };

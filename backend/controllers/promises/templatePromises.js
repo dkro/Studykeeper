@@ -27,9 +27,9 @@ module.exports.validFullTemplateReq = function(req){
             validationErrors.push({message: "Template Field Fieldtype required."});
           }
           fields.push({
-            title: req.body.template.fields[i].title,
-            fieldtype: req.body.template.fields[i].fieldtype,
-            description: req.body.template.fields[i].description
+            title: Validator.toString(req.body.template.fields[i].title),
+            fieldtype: Validator.toString(req.body.template.fields[i].fieldtype),
+            description: Validator.toString(req.body.template.fields[i].description)
           });
         }
     }
@@ -49,6 +49,10 @@ module.exports.validFullTemplateReq = function(req){
 module.exports.validTemplateReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
+
+    if (!Validator.isNumeric(req.body.template.id)) {
+      validationErrors.push({message: "Template Id invalid, numeric required: " + req.body.template.id});
+    }
     if (!Validator.isLength(req.body.template.title, 3)) {
       validationErrors.push({message: "Template Title invalid, minimum 3 characters: " + req.body.template.title});
     }
@@ -57,6 +61,7 @@ module.exports.validTemplateReq = function(req){
       reject(validationErrors);
     } else {
       var templateData = {
+        id: Validator.toString(req.body.template.id),
         title: Validator.toString(req.body.template.title)
       };
       resolve(templateData);
