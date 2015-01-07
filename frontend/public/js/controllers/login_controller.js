@@ -1,7 +1,7 @@
 StudyManager.LoginController = Ember.Controller.extend({
     needs: ['application', 'dashboard'],
 
-    usermail: null,
+    username: null,
 
     password: null,
 
@@ -11,37 +11,36 @@ StudyManager.LoginController = Ember.Controller.extend({
 
     actions: {
         login: function() {
-            /*var userData = this.getProperties('username', 'password');
+            // DEFAULT
+            /*
+            var userData = this.getProperties('username', 'password');
             var that = this;
 
             that.set('errorMessage', null);
 
-            Ember.$.post('/login', userData).then(function(response) {
+            Ember.$.post('http://localhost:8080/api/users/login', userData).then(function(response) {
                 that.set('token', response.token);
 
-                var attemptedTransition = that.get('attemptedTransition');
-                if (attemptedTransition) {
-                    attemptedTransition.retry();
-                    that.set('attemptedTransition', null);
-                } else {
-                    that.transitionToRoute('pins');
-                    that.alert("Login worked!");
-                }
+                that.get('controllers.application').set('userRole', 0);
+                that.get('controllers.application').set('isLoggedIn', true);
+                that.transitionToRoute('dashboard');
             }, function(error) {
-                if (401 === error.status) {
                     that.set('errorMessage', 'Login failed!');
-                }
-            });*/
+            });
+            */
+
+
+            // MOCK
             this.set('errorMessage', null);
             var userRole = null;
 
-            if (this.get('usermail') === 'studycreator' &&
+            if (this.get('username') === 'studycreator' &&
                 this.get('password') === 'creator') {
                 userRole = 1;
-            } else if (this.get('usermail') === 'studyadviser' &&
+            } else if (this.get('username') === 'studyadviser' &&
                 this.get('password') === 'adviser') {
                 userRole = 2;
-            } else if (this.get('usermail') === 'student' &&
+            } else if (this.get('username') === 'student' &&
                 this.get('password') === 'abc') {
                 userRole = 0;
             }
@@ -53,9 +52,6 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.get('controllers.application').set('isLoggedIn', true);
                 this.set('token', 'Das funzt!');
 
-                /*if (userRole === 1 || userRole === 0) {
-                    this.get('controllers.dashboard').set('isMMIStudent', true);
-                }*/
 
                 this.transitionToRoute('dashboard');
             }
@@ -69,7 +65,7 @@ StudyManager.LoginController = Ember.Controller.extend({
     reset: function() {
         this.setProperties({
             errorMessage: '',
-            usermail: '',
+            username: '',
             password: ''
         });
     },

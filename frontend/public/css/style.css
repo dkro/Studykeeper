@@ -259,8 +259,8 @@
 }
 
 .studyDisplay--participant {
-    max-width: 30em;
-    margin-right: 12em;
+    max-width: 23em;
+    margin-right: 5em;
     vertical-align: top;
     clear: left;
     float: left;
@@ -270,15 +270,15 @@
     margin-top: 3em;
 }
 
-.studyDisplay__history {
-    max-width: 30em;
-    margin-right: 12em;
+.studyDisplay--history {
+    max-width: 23em;
+    margin-right: 5em;
     vertical-align: top;
     float: left;
 }
 
 .studyDisplay--creator {
-    max-width: 30em;
+    max-width: 23em;
     float: left;
     vertical-align: top;
 }

@@ -9,7 +9,6 @@
     </div>
 </div>
 
-
 <div class="dashboardNews panel panel-default">
     <div class="panel-heading">Newsfeed</div>
     <div class="panel-body customizedPanel">
@@ -30,7 +29,7 @@
 <div class="studyDisplay__wrapper">
     {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
 
-    {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay__history' action='displayStudy'}}
+    {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay--history' action='displayStudy'}}
     {{#if isCreator}}
         {{study-display title="Erstellte Studien" studies=model.createdStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
     {{/if}}

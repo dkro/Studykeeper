@@ -69,15 +69,25 @@ StudyManager.SignupController = Ember.Controller.extend({
 
 
     doSignUp: function() {
-        var userData = this.getProperties('username', 'password');
+        var userData = {
+            "user": {
+                firstname:  this.get('firstName'),
+                surname:  this.get('lastName'),
+                username:  this.get('username'),
+                password:  this.get('password'),
+                confirmPassword:  this.get('passwordConfirm'),
+                mmi: 0
+            }
+        };
+
         var that = this;
 
-        Ember.$.post('http://localhost:8080/api/user/signup', userData).then(function(response) {
+        // TODO: Remove hardcoded server stuff!
+        Ember.$.post('http://localhost:8080/api/users/signup', userData).then(function(response) {
             alert('Success!');
         }, function(error) {
-            if (401 === error.status) {
-                alert('Fail!');
-            }
+            var a = error.responseJSON.errors.message;
+            var c = error.responseJSON.errors.username;
         });
     },
 
