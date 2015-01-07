@@ -26,7 +26,7 @@
                 <th>
                     {{view "date-picker" readonly="readonly" classNames="form-control input-sm studies__datePicker" placeholder="Filter Bis" value=selectedToFilter}}
                 </th>
-                <th>
+                <th class="studies__column--name">
                     {{input type="text" classNames="form-control input-sm studies__filterInput--name" placeholder="Filter Name" value=selectedNameFilter}}
                 </th>
                 <th class="studies__column--location">
@@ -47,7 +47,7 @@
             <th class="studies__column--status">Status</th>
             <th>Von</th>
             <th>Bis</th>
-            <th>Name</th>
+            <th class="studies__column--name">Name</th>
             <th class="studies__column--location">Ort</th>
             <th class="studies__column--executor">Durchführung</th>
             <th class="studies__column--mmi">MMI</th>
@@ -64,7 +64,7 @@
                 </td>
                 <td>{{study.from}}</td>
                 <td>{{study.to}}</td>
-                <td>{{study.name}}</td>
+                <td class="studies__column--name">{{study.name}}</td>
                 <td class="studies__column--location">{{study.location}}</td>
                 <td class="studies__column--executor">{{study.executor}}</td>
                 <td class="studies__column--mmi">{{study.mmi}}</td>

@@ -40,8 +40,14 @@
     margin-bottom: 1em !important;
 }
 
+
 @media screen and (min-width: 768px) {
     .studies__column--status {
+    }
+
+    .studies__column--name {
+        max-width: 10em !important;
+        white-space: normal !important;
     }
 
     .studies__column--location {
@@ -69,6 +75,11 @@
     .studies__column--status {
         display: none !important;
         visibility: hidden !important;
+    }
+
+    .studies__column--name {
+        max-width: 15em !important;
+        white-space: normal !important;
     }
 
     .studies__column--location {

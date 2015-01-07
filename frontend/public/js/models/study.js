@@ -29,7 +29,7 @@ StudyManager.Study.FIXTURES = [
     },
     {
         id: 1,
-        name: 'Studie A ist super etc und es macht keinen Sinn, was ich hier schreibe sadfasdf asasdfsadfasdf asdfasdfasdfas sadasd',
+        name: 'Studie A Studie A Studie A Studie A Studie A Studie A',
         tutor: 'Tutor A',
         executor: 'Person A',
         description: 'Short description.',
@@ -55,7 +55,7 @@ StudyManager.Study.FIXTURES = [
         doodle: 'http://www.ifi.lmu.de',
         amazon: 5,
         mmi: 1,
-        expired: false
+        expired: true
     },
     {
         id: 3,
