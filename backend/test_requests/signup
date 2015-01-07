@@ -5,6 +5,6 @@
     "surname": "lastname",
     "password": "7charpassword",
     "confirmPassword" : "7charpassword",
-    "mmi": 0
+    "mmi": "0"
   }
 }

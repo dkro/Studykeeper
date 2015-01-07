@@ -25,7 +25,7 @@ module.exports.validSignupReq = function(req){
     if (req.body.user.password !== req.body.user.confirmPassword){
       validationErrors.push({message: "Passwords dont match"});
     }
-    if (req.body.user.mmi !== 0 && req.body.user.mmi !== 1) {
+    if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
       validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
     }
     if (validationErrors.length > 0) {
