@@ -32,6 +32,10 @@ StudyManager.SignupController = Ember.Controller.extend({
 
         validatePasswordConfirmAction: function() {
             this.validatePasswordConfirm();
+        },
+
+        showMMIHelpText: function() {
+            this.set('isShowingMMIHelpText', true);
         }
     },
 
@@ -59,6 +63,8 @@ StudyManager.SignupController = Ember.Controller.extend({
         this.set('passwordConfirm', '');
         this.set('passwordConfirmValidationClass', '');
         this.set('passwordConfirmHelpText', null);
+
+        this.set('isShowingMMIHelpText', false);
     },
 
 

@@ -24,6 +24,20 @@
             <span class="help-block">{{emailHelpText}}</span>
         {{/if}}
     </div>
+    <div class="form-group ">
+        <label class="control-label" for="mmiCheckbox">Nutzertyp</label>
+        <div id="mmiCheckbox" class="checkbox signUp__field--mmiFlag">
+            <label>
+                <input type="checkbox" value="">
+                Ich möchte <strong class="signUp__field--mmiFlag--highlighting" {{action 'showMMIHelpText'}}>MMI-Punkte <span class="glyphicon glyphicon-question-sign signUp__field--mmiFlag__helpTextIcon"></span></strong> sammeln!
+            </label>
+        </div>
+        {{#if isShowingMMIHelpText}}
+            <span id="helpBlock" class="help-block signUp__field--mmiFlag">
+            <span class="glyphicon glyphicon-info-sign"></span> MMI-Punkte werden für das Modul X im Anwedungsfach Mensch-Maschine-Interaktion für den Studiengang Medieninformatik benötigt.
+        </span>
+        {{/if}}
+    </div>
     <div {{bind-attr class=":form-group passwordValidationClass"}}>
         <label class="control-label" for="passwordSignUpInput">Passwort</label>
         {{input type="password" id="passwordSignUpInput" focus-out="validatePasswordAction" value=password classNames="form-control" placeholder="Passwort"}}

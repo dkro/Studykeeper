@@ -135,6 +135,18 @@
     margin-bottom: 2em !important;
 }
 
+.signUp__field--mmiFlag {
+    margin-left: 1em;
+}
+
+.signUp__field--mmiFlag--highlighting {
+    color: midnightblue;
+}
+
+.signUp__field--mmiFlag__helpTextIcon {
+    font-size: 0.95em;
+}
+
 .studySearch {
     display: inline-block;
     max-width: 45em;
