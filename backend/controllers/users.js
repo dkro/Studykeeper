@@ -24,7 +24,7 @@ exports.getUsers = function(req, res) {
 exports.getUser = function(req, res) {
   UserPromise.userFromToken(req)
     .then(function(user){
-        res.json(user);
+        res.json({user: user});
     })
     .catch(function(err){
       res.json(500, {status: 'failure', errors: err});
