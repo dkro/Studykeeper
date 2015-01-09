@@ -129,8 +129,9 @@ module.exports.userFromToken = function(req){
         if (/^Bearer$/i.test(scheme)) {
 
           User.getUserByToken(token, function(err, result){
-            if (err) {reject(err);}
-            if (result.length > 0) {resolve(result[0]);
+            if (err) {
+              reject(err);
+            } else if (result.length > 0) {resolve(result[0]);
             } else {
               reject({message: 'User not found'});
             }

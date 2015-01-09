@@ -21,14 +21,14 @@ exports.getUsers = function(req, res) {
             });
 };
 
-exports.getUser = function(name, res) {
-  User.getUserByName(name, function(err,result){
-              if (err) {
-                res.json(err);
-              } else {
-                res.json(result);
-              }
-            });
+exports.getUser = function(req, res) {
+  UserPromise.userFromToken(req)
+    .then(function(user){
+        res.json(user);
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
 };
 
 exports.signup = function(req, res) {
