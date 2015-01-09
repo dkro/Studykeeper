@@ -233,6 +233,19 @@ module.exports.getStudiesCurrentByUser = function(user, callback){
     callback);
 };
 
+module.exports.getStudiesCreatedByUser = function(user, callback){
+  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+    'FROM userstudies us ' +
+    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+    'WHERE us.creator=? ',
+    user.id,
+    callback);
+};
+
+
+
 module.exports.getLabelsForStudy = function(userstudy, callback){
   connection,query('SELECT id,title FROM labels ' +
   'WHERE id=(SELECT labelId FROM studies_labels_rel WHERE studyId=?',

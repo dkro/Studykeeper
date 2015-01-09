@@ -9,6 +9,7 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 module.exports.createUserstudy = function(req, res) {
 
   // TODO check for user (tutor, executor) roles ... create promise
+  // TODO add the creator id to the database
   var promises = [UserstudyPromise.validFullUserstudyReq(req,false),
     UserPromise.userExists(req.body.userstudy.tutorname),
     UserPromise.userExists(req.body.userstudy.executorname)];
@@ -182,6 +183,24 @@ module.exports.allUserstudiesCurrentForUser = function(req, res) {
       res.json(500, {status: 'failure', errors: err});
     });
 };
+
+module.exports.allUserstudiesCreatedByUser = function(req, res) {
+
+  UserPromise.userFromToken(req)
+    .then(function(user){
+      UserStudy.getStudiesCreatedByUser(user, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json({userstudies: list});
+        }
+      });
+    })
+    .catch(function (err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
 
 module.exports.allUserstudiesHistoryForUser = function(req, res) {
 

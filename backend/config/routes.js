@@ -59,6 +59,7 @@ module.exports = function(app) {
   app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
   app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
+  app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
 
   app.post('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered); // todo this get with query params
   app.post('/api/userstudies/create',  userStudyController.createUserstudy);
