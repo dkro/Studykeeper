@@ -22,7 +22,7 @@ module.exports = function(app) {
   app.use(restify.fullResponse());
   restify.CORS.ALLOW_HEADERS.push('authorization');
 
-  var directory = path.resolve('./frontend/public/');
+  var directory = path.resolve('../frontend/public/');
   // All routes are mapped to frontend/public except for /api/* routes
   // This supplies the static content of the frontend.
   // This also means all new routes need to be added with a /api/* prefix!!!
@@ -36,13 +36,16 @@ module.exports = function(app) {
   app.post('/api/users/retrievePassword', userController.retrievePW);
 
 
+  // --------------- Login routes ---------------
+  app.post('/api/users/login', auth.loginAuthenticate, userController.login);
+
+
   // --------------- User routes ---------------
   //app.get('/api/users/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
   app.get('/api/users', auth.tokenAuthenticate, userController.getUsers);
   //app.get('/api/users/allTutors', auth.tokenAuthenticate, userController.getUsers);
   //app.get('/api/users/allExecutors', auth.tokenAuthenticate, userController.getUsers);
 
-  app.post('/api/users/login', auth.loginAuthenticate, userController.login);
   app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
   app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
   app.post('/api/users/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
@@ -54,8 +57,10 @@ module.exports = function(app) {
   app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
   //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
   app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
+  app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
+  app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
 
-  app.post('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
+  app.post('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered); // todo this get with query params
   app.post('/api/userstudies/create',  userStudyController.createUserstudy);
   app.post('/api/userstudies/edit', userStudyController.editUserstudy);
   app.post('/api/userstudies/delete', userStudyController.deleteUserstudy);
@@ -74,12 +79,12 @@ module.exports = function(app) {
 
 
   // --------------- Newsfeed routes ---------------
-  //app.get('/api/newsfeed/all, newsfeedController.all);
+  //app.get('/api/newsfeeds/all, newsfeedController.all);
 
-  //app.post('/api/newsfeed/create', newsfeedController.createNews);
-  //app.post('/api/newsfeed/delete', newsfeedController.deleteNews);
-  //app.post('/api/newsfeed/edit', newsfeedController.editNews);
-  //app.post('/api/userstudy/addNews', newsfeedController.allNewsToUserstudy);
+  //app.post('/api/newsfeeds/create', newsfeedController.createNews);
+  //app.post('/api/newsfeeds/delete', newsfeedController.deleteNews);
+  //app.post('/api/newsfeeds/edit', newsfeedController.editNews);
+  //app.post('/api/userstudies/addNews', newsfeedController.allNewsToUserstudy);
 
 
   // --------------- Templates routes ---------------

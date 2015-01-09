@@ -200,8 +200,41 @@ module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
     callback);
 };
 
+module.exports.getStudiesFinishedByUser = function(user, callback){
+  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+                    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+                    'FROM userstudies us ' +
+                    'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
+                    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                    'WHERE usrel.userId=? ' +
+                    'AND usrel.registered=1 ' +
+                    'AND usrel.confirmed=1 ' +
+                    'AND us.visible=1 ' +
+                    'AND us.published=1 ' +
+                    'AND us.closed=1' ,
+    user.id,
+    callback);
+};
+
+module.exports.getStudiesCurrentByUser = function(user, callback){
+  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+                    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+                    'FROM userstudies us ' +
+                    'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
+                    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                    'WHERE usrel.userId=? ' +
+                    'AND usrel.registered=1 ' +
+                    'AND us.visible=1 ' +
+                    'AND us.published=1 ' +
+                    'AND us.closed=0' ,
+    user.id,
+    callback);
+};
+
 module.exports.getLabelsForStudy = function(userstudy, callback){
-  connection,query('SELECT title FROM labels ' +
+  connection,query('SELECT id,title FROM labels ' +
   'WHERE id=(SELECT labelId FROM studies_labels_rel WHERE studyId=?',
   userstudy.id,
   callback);
@@ -264,7 +297,7 @@ module.exports.confirmUser = function(user, userstudy, callback){
 };
 
 module.exports.getUserRegisteredToStudy = function(userstudy, callback){
-  connection.query('SELECT username,id FROM users' +
+  connection.query('SELECT id,username FROM users' +
   'WHERE id=(SELECT userId FROM users_studies_rel WHERE id=?)'
   ,userstudy.id,callback);
 };

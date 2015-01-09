@@ -17,7 +17,7 @@ module.exports.getUserByToken = function(data, callback) {
   var queryData = [
     {token : data}
   ];
-  connection.query( "SELECT u.username FROM users u " +
+  connection.query( "SELECT u.id, u.role, u.lmuStaff, u.mmi, u.firstname, u.surname FROM users u " +
                     "INNER JOIN auth a ON u.id=a.userId " +
                     "WHERE token=?;",
                     queryData[0].token,

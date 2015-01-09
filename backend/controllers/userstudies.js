@@ -134,7 +134,7 @@ module.exports.allUserstudiesFiltered = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json(list);
+          res.json({userstudies:list});
         }
       });
     })
@@ -157,7 +157,7 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json(list);
+          res.json({userstudies: list});
         }
       });
     })
@@ -165,6 +165,41 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
       res.json(500, {status: 'failure', errors: err});
     });
 };
+
+module.exports.allUserstudiesCurrentForUser = function(req, res) {
+
+  UserPromise.userFromToken(req)
+    .then(function(user){
+      UserStudy.getStudiesCurrentByUser(user, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json({userstudies: list});
+        }
+      });
+    })
+    .catch(function (err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
+module.exports.allUserstudiesHistoryForUser = function(req, res) {
+
+  UserPromise.userFromToken(req)
+    .then(function(user){
+      UserStudy.getStudiesFinishedByUser(user, function(err, list){
+        if (err) {
+          throw err;
+        } else {
+          res.json({userstudies: list});
+        }
+      });
+    })
+    .catch(function (err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
 
 module.exports.registerUserToStudy = function(req, res){
   var promises = [UserstudyPromise.validUserstudyReq(req), UserPromise.userFromToken(req)];
