@@ -7,6 +7,10 @@ module.exports.getUsers = function(callback) {
   connection.query('SELECT * FROM users;', callback);
 };
 
+module.exports.getUserById = function(id, callback) {
+  connection.query("SELECT * FROM users WHERE id=?;",
+    id, callback);
+};
 
 module.exports.getUserByName = function(username, callback) {
   connection.query("SELECT * FROM users WHERE username=?;",

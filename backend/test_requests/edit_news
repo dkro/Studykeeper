@@ -1,0 +1,9 @@
+{
+  "news": {
+    "id": "1",
+    "title": "News 1",
+    "date": "2014-12-12",
+    "description": "This news is very interesting. Come on, take a look!",
+    "link": "http://www.amazon.com"
+  }
+}

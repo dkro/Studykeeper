@@ -8,7 +8,7 @@ var LabelPromise = require('./promises/labelPromises');
 module.exports.createLabel = function(req, res){
   var label;
 
-  LabelPromise.validLabelReq(req)
+  LabelPromise.validLabelReq(req,false)
   .then(function(result){
     label = result;
     return LabelPromise.labelAvailable(label);
@@ -27,6 +27,23 @@ module.exports.createLabel = function(req, res){
   });
 };
 
+module.exports.deleteLabel = function(req, res){
+    var label = {id:req.params.id};
+    LabelPromise.labelExists(label)
+    .then(function(){
+      Label.deleteLabel(label, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'label deleted', label: label});
+        }
+      });
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
 module.exports.allLabels = function(req, res){
   Label.getAllLabels(function(err, list){
     if (err){
@@ -37,8 +54,20 @@ module.exports.allLabels = function(req, res){
   });
 };
 
+module.exports.getLabelById = function(req, res){
+  Label.getLabelById(req.params.id, function(err,result){
+    if (err) {
+      res.json(500, {status: 'failure', errors: err});
+    } else if (result.length === 0 ){
+      res.jon({status: 'failure', errors: [{message: 'Label not found'}]});
+    } else {
+      res.json(result);
+    }
+  });
+};
+
 module.exports.addLabeltoUserstudy = function(req, res){
-  var validationPromises = [UserstudyPromise.validUserstudyReq(req), LabelPromise.validLabelReq(req)];
+  var validationPromises = [UserstudyPromise.validUserstudyReq(req), LabelPromise.validLabelReq(req,true)];
 
   Promise.all(validationPromises).then(function(results){
     var userstudy = results[0];

@@ -3,9 +3,15 @@ var Label         = require('../../models/labels');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
-module.exports.validLabelReq = function(req){
+module.exports.validLabelReq = function(req,hasId){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
+
+    if (hasId){
+      if (!Validator.isNumeric(req.body.label.id)) {
+        validationErrors.push({message: "Label Id invalid, numeric required: " + req.body.label.title});
+      }
+    }
     if (!Validator.isLength(req.body.label.title, 3)) {
       validationErrors.push({message: "Label Title invalid, minimum 3 characters: " + req.body.label.title});
     }
@@ -15,6 +21,9 @@ module.exports.validLabelReq = function(req){
       var labelData = {
         title: Validator.toString(req.body.label.title)
       };
+      if (hasId) {
+        labelData.id = req.body.label.id;
+      }
       resolve(labelData);
     }
   });
@@ -22,7 +31,7 @@ module.exports.validLabelReq = function(req){
 
 module.exports.labelExists = function(label){
   return new Promise(function(resolve, reject){
-    Label.getLabel(label, function(err, result){
+    Label.getLabelById(label.id, function(err, result){
       if (err) {
         reject({message: 'Internal error, please try again.'});
       }
@@ -38,7 +47,7 @@ module.exports.labelExists = function(label){
 
 module.exports.labelAvailable = function(label) {
   return new Promise(function(resolve, reject){
-    Label.getLabel(label,function(err, result){
+    Label.getLabelById(label.id,function(err, result){
       if (err){
        reject({message: 'Internal error, please try again.'});
       }

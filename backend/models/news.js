@@ -7,13 +7,24 @@ module.exports.addNews = function (news, callback) {
     callback);
 };
 
+module.exports.editNews = function (news, callback) {
+  connection.query('UPDATE news SET ' +
+    'title=?, ' +
+    'date=?, ' +
+    'description=?, ' +
+    'link=? ' +
+    'WHERE id=?',
+    [news.title,news.date,news.description,news.link,news.id],
+    callback);
+};
+
 module.exports.getAllNews = function (callback) {
   connection.query('SELECT * FROM news ', callback);
 };
 
-module.exports.getNews = function (news, callback) {
-  connection.query('SELECT * FROM news WHERE title=? AND id=?',
-    [news.title,news.id],
+module.exports.getNewsById = function (id, callback) {
+  connection.query('SELECT * FROM news WHERE id=?',
+    id,
     callback);
 };
 

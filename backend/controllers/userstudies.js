@@ -128,6 +128,18 @@ module.exports.allUserstudies = function(req, res) {
   });
 };
 
+module.exports.getUserstudyById = function(req, res) {
+  UserStudy.getUserstudyById(req.params.id, function(err,result){
+    if (err) {
+      res.json(500, {status: 'failure', errors: err});
+    } else if (result.length === 0 ){
+      res.jon({status: 'failure', errors: [{message: 'Userstudy not found'}]});
+    } else {
+      res.json(result);
+    }
+  });
+};
+
 module.exports.allUserstudiesFiltered = function(req, res) {
   UserstudyPromise.validFilterReq(req)
     .then(function(filters){

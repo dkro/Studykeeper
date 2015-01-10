@@ -100,6 +100,19 @@ module.exports.getUserstudy = function (userstudy, callback) {
     callback);
 };
 
+module.exports.getUserstudyById = function (id, callback) {
+  connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+    'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+    'us.location ' +
+    'FROM userstudies us ' +
+    'LEFT JOIN users u ' +
+    'ON us.tutorId=u.id ' +
+    'LEFT JOIN users u2 ' +
+    'ON us.executorId=u2.id ' +
+    'WHERE us.id=?',
+    id, callback);
+};
+
 module.exports.getAllUserstudies = function (callback) {
   connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
   'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +

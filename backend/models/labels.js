@@ -7,14 +7,20 @@ module.exports.addLabel = function (label, callback) {
     callback);
 };
 
+module.exports.deleteLabel = function (label, callback) {
+  connection.query('DELETE FROM labels ' +
+                    'WHERE id=?',
+    [label.id,label.title],
+    callback);
+};
+
 module.exports.getAllLabels = function (callback) {
   connection.query('SELECT * FROM labels',callback);
 };
 
-module.exports.getLabel = function (label, callback) {
-  connection.query('SELECT * FROM labels WHERE title=?',
-    label.title,
-    callback);
+module.exports.getLabelById = function (id, callback) {
+  connection.query('SELECT * FROM labels WHERE id=?',
+    id, callback);
 };
 
 module.exports.mapLabeltoUserstudy = function (label, userstudy, callback) {
@@ -22,7 +28,7 @@ module.exports.mapLabeltoUserstudy = function (label, userstudy, callback) {
     '(studyId,labelId) ' +
     'VALUES (' +
     '(SELECT id FROM userstudies WHERE id=? AND title=?),' +
-    '(SELECT id FROM labels WHERE title=?));',
-    [userstudy.id,userstudy.title,label.title],
+    '(SELECT id FROM labels WHERE id=? AND title=?));',
+    [userstudy.id,userstudy.title,label.id,label.title],
     callback);
 };

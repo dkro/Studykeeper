@@ -43,7 +43,9 @@ module.exports = function(app) {
   // --------------- User routes ---------------
   //app.get('/api/users/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
   app.get('/api/users', auth.tokenAuthenticate, userController.getUsers);
+  app.get('/api/users/:id', userController.getUserById);
   app.get('/api/users/self', userController.getUser);
+
   //app.get('/api/users/allTutors', auth.tokenAuthenticate, userController.getUsers);
   //app.get('/api/users/allExecutors', auth.tokenAuthenticate, userController.getUsers);
 
@@ -56,6 +58,7 @@ module.exports = function(app) {
   // --------------- Userstudy routes ---------------
   //app.get('/api/userstudies/single', userStudyController.getUserstudy); // todo add newsfeed and label to these
   app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
+  app.get('/api/userstudies/:id', userStudyController.getUserstudyById);
   //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
   app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
@@ -71,22 +74,25 @@ module.exports = function(app) {
   app.post('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
   app.post('/api/userstudies/confirmUserParticipation',  userStudyController.confirmUserParticipation);
   app.post('/api/userstudies/close',  userStudyController.closeUserstudy);
+  app.post('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
+  app.post('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
 
 
   // --------------- Label routes ---------------
   app.get('/api/labels', labelController.allLabels);
+  app.get('/api/labels/:id', labelController.getLabelById);
 
-  app.post('/api/labels/create', labelController.createLabel);
-  app.post('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
-  //app.post('/api/userstudies/removeLabel',  labelController.addLabeltoUserstudy);
+  app.put('/api/labels', labelController.createLabel);
+  app.del('/api/labels/:id', labelController.deleteLabel);
+
 
   // --------------- Newsfeed routes ---------------
   app.get('/api/news', newsfeedController.allNews);
+  app.get('/api/news/:id', newsfeedController.getNewsById);
 
-  app.post('/api/news/create', newsfeedController.createNews);
-  //app.post('/api/newsfeeds/delete', newsfeedController.deleteNews);
-  //app.post('/api/newsfeeds/edit', newsfeedController.editNews);
-  app.post('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
+  app.put('/api/news', newsfeedController.createNews);
+  //app.del('/api/news', newsfeedController.deleteNews);
+  app.post('/api/news/edit', newsfeedController.editNews);
 
 
   // --------------- Templates routes ---------------

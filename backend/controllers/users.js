@@ -22,13 +22,25 @@ exports.getUsers = function(req, res) {
 };
 
 exports.getUser = function(req, res) {
-  UserPromise.userFromToken(req)
-    .then(function(user){
-        res.json({user: user});
-    })
-    .catch(function(err){
+  User.getUserById(req.params.id,function(err,result){
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+};
+
+exports.getUserById = function(req, res) {
+  User.getUserById(req.params.id, function(err,result){
+    if (err) {
       res.json(500, {status: 'failure', errors: err});
-    });
+    } else if (result.length === 0 ){
+      res.jon({status: 'failure', errors: [{message: 'User not found'}]});
+    } else {
+      res.json(result);
+    }
+  });
 };
 
 exports.signup = function(req, res) {
@@ -124,6 +136,7 @@ exports.login = function(req, res) {
                 res.json({
                   status: 'success',
                   message: 'Login successful',
+                  id: userResult[0].id,
                   username: userResult[0].username,
                   role: roleResult[0].name,
                   token: tokenResult[0].token

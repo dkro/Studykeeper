@@ -25,9 +25,14 @@ module.exports.validNewsReq = function(req){
   });
 };
 
-module.exports.validFullNewsReq = function(req){
+module.exports.validFullNewsReq = function(req,hasId){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
+    if (hasId){
+      if (!Validator.isNumeric(req.body.news.id)) {
+        validationErrors.push({message: "News Id invalid, numeric required: " + req.body.news.title});
+      }
+    }
     if (!Validator.isLength(req.body.news.title, 3)) {
       validationErrors.push({message: "News Title invalid, minimum 3 characters: " + req.body.news.title});
     }
@@ -50,6 +55,9 @@ module.exports.validFullNewsReq = function(req){
         description: Validator.toString(req.body.news.description),
         link: Validator.toString(req.body.news.link)
       };
+      if (hasId) {
+        newsData.id = req.body.news.id;
+      }
       resolve(newsData);
     }
   });
@@ -57,7 +65,7 @@ module.exports.validFullNewsReq = function(req){
 
 module.exports.newsExists = function(news){
   return new Promise(function(resolve, reject){
-    News.getNews(news, function(err, result){
+    News.getNewsById(news.id, function(err, result){
       if (err) {
         reject({message: 'Internal error, please try again.'});
       }
