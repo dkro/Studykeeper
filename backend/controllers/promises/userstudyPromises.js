@@ -187,8 +187,10 @@ module.exports.validFilterReq = function(req){
 
 module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
+
     Userstudy.getUserstudy(userstudy,function(err,result){
       if (err) {reject(err);}
+
       if (result.length === 0) {
         reject({message: 'userstudy not found', userstudy: {
           id: userstudy.id,
@@ -198,6 +200,7 @@ module.exports.userstudyExists = function(userstudy) {
         resolve(result[0]);
       }
     });
+
   });
 };
 

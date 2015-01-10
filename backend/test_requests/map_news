@@ -1,0 +1,11 @@
+{
+  "news": {
+    "id": "1",
+    "title": "news"
+  },
+
+  "userstudy": {
+    "id": "1",
+    "title": "userstudyTitle"
+  }
+}

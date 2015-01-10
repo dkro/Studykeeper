@@ -95,7 +95,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
     'ON us.tutorId=u.id '+
     'LEFT JOIN users u2 '+
     'ON us.executorId=u2.id '+
-    'WHERE id=? AND title=?',
+    'WHERE us.id=? AND us.title=?',
     [userstudy.id,userstudy.title],
     callback);
 };

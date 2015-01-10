@@ -11,8 +11,8 @@ var auth                = require('./auth');
 var userController      = require('../controllers/users');
 var userStudyController = require('../controllers/userstudies');
 var labelController     = require('../controllers/labels');
-//var newsfeedController  = require('../controllers/newsfeed');
 var templateController  = require('../controllers/templates');
+var newsfeedController  = require('../controllers/news');
 
 module.exports = function(app) {
 
@@ -78,15 +78,15 @@ module.exports = function(app) {
 
   app.post('/api/labels/create', labelController.createLabel);
   app.post('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
-
+  //app.post('/api/userstudies/removeLabel',  labelController.addLabeltoUserstudy);
 
   // --------------- Newsfeed routes ---------------
-  //app.get('/api/newsfeeds/all, newsfeedController.all);
+  app.get('/api/news', newsfeedController.allNews);
 
-  //app.post('/api/newsfeeds/create', newsfeedController.createNews);
+  app.post('/api/news/create', newsfeedController.createNews);
   //app.post('/api/newsfeeds/delete', newsfeedController.deleteNews);
   //app.post('/api/newsfeeds/edit', newsfeedController.editNews);
-  //app.post('/api/userstudies/addNews', newsfeedController.allNewsToUserstudy);
+  app.post('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
 
 
   // --------------- Templates routes ---------------
