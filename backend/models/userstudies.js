@@ -218,9 +218,7 @@ module.exports.getStudiesUserIsExecutor = function(user, callback){
     'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
     'FROM userstudies us ' +
     'WHERE us.executorId=? ' +
-    'AND us.visible=1 ' +
-    'AND us.published=1 ' +
-    'AND us.closed=1' ,
+    'AND us.visible=1',
     user.id,
     callback);
 };
@@ -230,9 +228,7 @@ module.exports.getStudiesUserIsTutor = function(user, callback){
     'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
     'FROM userstudies us ' +
     'WHERE us.tutorId=? ' +
-    'AND us.visible=1 ' +
-    'AND us.published=1 ' +
-    'AND us.closed=1' ,
+    'AND us.visible=1',
     user.id,
     callback);
 };
