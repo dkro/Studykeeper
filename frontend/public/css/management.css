@@ -1,0 +1,45 @@
+.labels__heading {
+    margin-bottom: 1.5em;
+}
+
+.labels__creationWrapper {
+   max-width: 40em;
+}
+
+.labels__errorMessage {
+    max-width: 40em;
+}
+
+.labels__list {
+    margin-top: 1em;
+    max-width: 40em;
+}
+
+.labels__label {
+    cursor: pointer;
+}
+
+.labels__label:hover {
+    background-color: #f5f5f5;
+}
+
+.labels__label--active {
+    background-color: lightsteelblue !important;
+}
+
+.labels__label__removeIcon__wrapper {
+    display: inline-block;
+    float: right;
+}
+
+.labels__label__removeIcon {
+    font-size: 1.7em;
+    color: crimson;
+    vertical-align: text-top;
+}
+
+.labels__label__editInput {
+    color: #000000;
+    max-width: 80%;
+    display: inline-block !important;
+}
