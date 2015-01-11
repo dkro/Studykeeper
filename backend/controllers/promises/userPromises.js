@@ -46,6 +46,28 @@ module.exports.validSignupReq = function(req){
   });
 };
 
+module.exports.validLoginReq = function(req){
+  return new Promise(function(resolve, reject){
+    var validationErrors = [];
+
+    if (!Validator.isLength(req.body.username,1)) {
+      validationErrors.push({message: "Username required."});
+    }
+    if (!Validator.isLength(req.body.password,1)) {
+      validationErrors.push({message: "Password required."});
+    }
+
+    if (validationErrors.length > 0) {
+      reject(validationErrors);
+    } else {
+      var userData = {
+        username: Validator.toString(req.body.username)
+      };
+      resolve(userData);
+    }
+  });
+};
+
 module.exports.validUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -141,5 +163,65 @@ module.exports.userFromToken = function(req){
         reject({message: 'Authorization header is invalid'});
       }
     }
+  });
+};
+
+module.exports.userFromName = function(user){
+  return new Promise(function(resolve, reject){
+    User.getUserByName(user.username, function(err, result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {resolve(result[0]);
+      } else {
+        reject({message: 'User not found'});
+      }
+    });
+  });
+};
+
+module.exports.createTokensForUser = function(user){
+  return new Promise(function(resolve, reject){
+    User.createTokenForUser(user, function(err, result){
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+module.exports.deleteOldTokensForUser = function(user){
+  var now = new Date();
+  var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
+
+  return new Promise(function(resolve, reject){
+    User.deleteTokensForUserBeforeTimestamp(user.username,
+      ThirtyMinutesFromNow,
+      function(err){
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+module.exports.getTokensForUserOrderedByDate = function(user){
+  return new Promise(function(resolve, reject){
+    User.getTokensForUser(user, function(err, result){
+      if (err) {
+        reject(err);
+      } else {
+        result.sort(function(a, b) {
+          a = new Date(a.timestamp);
+          b = new Date(b.timestamp);
+          return a>b ? -1 : a<b ? 1 : 0;
+        });
+
+        resolve(result);
+      }
+    });
   });
 };

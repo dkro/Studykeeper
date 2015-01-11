@@ -33,16 +33,21 @@ module.exports.getUserById = function(id, callback) {
   });
 };
 
+// used by passport. password has to be included
 module.exports.getUserByName = function(username, callback) {
   mysql.getConnection(function(connection) {
-    connection.query("SELECT u.id, r.name AS role, u.password, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
+    connection.query("SELECT u.id, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
                       "FROM users u " +
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE u.username=?;",
                       username,
       function(err,result) {
-        connection.release();
-        callback(err,result);
+        if (err) {
+          callback(err)
+        } else {
+          connection.release();
+          callback(err,result);
+        }
       }
     );
   });

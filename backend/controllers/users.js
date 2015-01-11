@@ -14,12 +14,12 @@ exports.deleteUser = function(req, res) {
 
 exports.getUsers = function(req, res) {
   User.getUsers(function(err,result){
-              if (err) {
-                res.json(500, {status: 'failure', errors: err});
-              } else {
-               res.json({users: result});
-              }
-            });
+      if (err) {
+        res.json(500, {status: 'failure', errors: err});
+      } else {
+       res.json({users: result});
+    }
+  });
 };
 
 exports.getUser = function(req, res) {
@@ -138,50 +138,38 @@ exports.signup = function(req, res) {
 };
 
 exports.login = function(req, res) {
-  var user = {
-    username: req.body.username
-  };
+  var user;
 
-  User.getUserByName(user.username,function(err,userResult) {
-    if (err) {
-      res.send(err);
-    }
+  UserPromise.validLoginReq(req)
+    .then(function (result){
+      user = result;
+      return UserPromise.userFromName(user);
+    })
+    .then(function (){
+        var promises = [UserPromise.createTokensForUser(user),
+          UserPromise.deleteOldTokensForUser(user)];
 
-    User.createTokenForUser(user, function (err) {
-      if (err) {
-        res.send(err);
-      } else {
-
-        var now = new Date();
-        var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
-        //User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow);
-
-        User.getTokensForUser(user, function (err, tokenResult) {
-
-          if (err) {
-            res.send(500, err);
-          } else {
-            // Sort tokenresult so that newest token is the first in array
-            tokenResult.sort(function(a, b) {
-              a = new Date(a.timestamp);
-              b = new Date(b.timestamp);
-              return a>b ? -1 : a<b ? 1 : 0;
-            });
-
+        Promise.all(promises).then(function(){
+          return UserPromise.getTokensForUserOrderedByDate(user);
+        })
+        .then(function(tokens){
             res.json({
               status: 'success',
               message: 'Login successful',
-              id: userResult[0].id,
-              username: userResult[0].username,
-              role: userResult[0].role,
-              token: tokenResult[0].token
+              id: user.id,
+              username: user.username,
+              role: user.role,
+              token: tokens[0].token
             });
-          }
-
+        })
+        .catch(function(err){
+          res.json(500, {status: 'failure', errors: err});
         });
-      }
+
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
     });
-  });
 };
 
 exports.logout = function(req, res) {
