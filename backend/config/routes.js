@@ -41,7 +41,6 @@ module.exports = function(app) {
 
 
   // --------------- User routes ---------------
-  //app.get('/api/users/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
   app.get('/api/users', userController.getUsers);
   app.get('/api/users/:id', userController.getUserById);
   app.get('/api/users/self', userController.getUser);
@@ -56,9 +55,8 @@ module.exports = function(app) {
 
 
   // --------------- Userstudy routes ---------------
-  //app.get('/api/userstudies/single', userStudyController.getUserstudy); // todo add newsfeed and label to these
   app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
-  app.get('/api/userstudies/:id', userStudyController.getUserstudyById);
+  app.get('/api/userstudies/:id', userStudyController.getUserstudyById); // todo add newsfeed and label to these
   //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
   app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
