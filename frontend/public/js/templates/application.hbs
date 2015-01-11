@@ -17,6 +17,11 @@
                 <li>
                     <a href="#about">About</a>
                 </li>
+                {{#if isTutor}}
+                    <li>
+                        {{#link-to 'management'}}Management{{/link-to}}
+                    </li>
+                {{/if}}
                 {{#if isLoggedIn}}
                     <li class="dropdown accountDropDown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

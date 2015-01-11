@@ -3,7 +3,9 @@ StudyManager.ApplicationController = Ember.Controller.extend({
 
     isLoggedIn: false,
 
-    userRole: 0,
+    userRole: null,
+
+    isTutor: false,
 
     actions: {
         /*logout: function() {
@@ -31,6 +33,8 @@ StudyManager.ApplicationController = Ember.Controller.extend({
     },
 
     userRoleChanged: function() {
-        this.get('controllers.dashboard').changeOfUserRole(this.get('userRole'));
+        var isTutor = this.get('userRole') === 'TUTOR';
+        this.set('isTutor', isTutor);
+        this.get('controllers.dashboard').set('isTutor', isTutor);
     }.observes('userRole')
 });

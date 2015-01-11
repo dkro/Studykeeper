@@ -56,7 +56,7 @@
         </thead>
         <tbody>
         {{#each study in model}}
-            <tr {{bind-attr class=":studies__row study.expired:studies__row--expired:studies__row--notExpired"}} {{action 'showStudy' study}}>
+            <tr {{bind-attr class=":studies__row study.closed:studies__row--expired:studies__row--notExpired"}} {{action 'showStudy' study}}>
                 <td class="studies__column--status">
                     {{#if study.closed}}
                         Abgelaufen

@@ -1,16 +1,6 @@
 StudyManager.LoginController = Ember.Controller.extend({
     needs: ['application', 'dashboard'],
 
-    username: null,
-
-    password: null,
-
-    errorMessage: null,
-
-    attemptedTransition: null,
-
-    currentUserId: null,
-
     actions: {
         login: function() {
             // DEFAULT
@@ -23,9 +13,9 @@ StudyManager.LoginController = Ember.Controller.extend({
             Ember.$.post('http://localhost:8080/api/users/login', userData).then(function(response) {
                 that.set('token', response.token);
                 that.set('currentUserId', response.id);
-
-                that.get('controllers.application').set('userRole', 0);
+                that.get('controllers.application').set('userRole', response.role);
                 that.get('controllers.application').set('isLoggedIn', true);
+
                 that.transitionToRoute('dashboard');
             }, function(error) {
                     that.set('errorMessage', 'Login failed!');
@@ -39,13 +29,13 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             if (this.get('username') === 'studycreator' &&
                 this.get('password') === 'creator') {
-                userRole = 1;
-            } else if (this.get('username') === 'studyadviser' &&
-                this.get('password') === 'adviser') {
-                userRole = 2;
+                userRole = 'EXECUTOR';
+            } else if (this.get('username') === 'student' &&
+                this.get('password') === '123') {
+                userRole = 'TUTOR';
             } else if (this.get('username') === 'student' &&
                 this.get('password') === 'abc') {
-                userRole = 0;
+                userRole = 'DEFAULT';
             }
 
             if (userRole === null) {
@@ -53,9 +43,8 @@ StudyManager.LoginController = Ember.Controller.extend({
             } else {
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
-                this.set('token', 'Das funzt!');
+                this.set('token', 'EinToken');
                 this.set('currentUserId', 1);
-
 
                 this.transitionToRoute('dashboard');
             }
@@ -70,7 +59,8 @@ StudyManager.LoginController = Ember.Controller.extend({
         this.setProperties({
             errorMessage: '',
             username: '',
-            password: ''
+            password: '',
+            currentUserId: null
         });
     },
 

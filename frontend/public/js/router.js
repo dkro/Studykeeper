@@ -6,6 +6,7 @@ StudyManager.Router.map(function() {
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudy/:userstudy_id' });
+  this.resource('management');
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -95,4 +96,14 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
     return this.store.find('userstudy', params.userstudy_id);
   }
 });
+
+StudyManager.ManagementRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+      return Ember.RSVP.hash({
+        allUser: this.store.find('user'),
+        allStudies: this.store.find('userstudy')
+      });
+  }
+});
+
 
