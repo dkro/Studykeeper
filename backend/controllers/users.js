@@ -2,6 +2,7 @@
 var User       = require('../models/users');
 var Promise      = require('es6-promise').Promise;
 var UserPromise = require('./promises/userPromises');
+var UserstudyPromise = require('./promises/userstudyPromises');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
 
@@ -32,13 +33,48 @@ exports.getUser = function(req, res) {
 };
 
 exports.getUserById = function(req, res) {
-  User.getUserById(req.params.id, function(err,result){
+  User.getUserById(req.params.id,function(err,result){
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else if (result.length === 0 ){
-      res.jon({status: 'failure', errors: [{message: 'User not found'}]});
+      res.json({status: 'failure', errors: [{message: 'User not found'}]});
     } else {
-      res.json(result);
+
+      var user = result[0];
+      // Add arrays of Ids for mapping for ember-data
+      var promises = [UserstudyPromise.userIsExecutorFor(user),
+        UserstudyPromise.userIsTutorFor(user),
+        UserstudyPromise.userStudyHistory(user),
+        UserstudyPromise.userRegisteredStudies(user)];
+
+      Promise.all(promises).then(function(results){
+        var executorIds = [];
+        for (var i = 0; i < results[0].length; i += 1) {
+          executorIds.push(results[0][i].id);
+        }
+        var tutorIds = [];
+        for (var j = 0; j < results[1].length; j += 1) {
+          tutorIds.push(results[1][j].id);
+        }
+        var historyIds = [];
+        for (var l = 0; l < results[2].length; l += 1) {
+          historyIds.push(results[2][l].id);
+        }
+        var futureIds = [];
+        for (var k = 0; k < results[3].length; k += 1) {
+          futureIds.push(results[3][k].id);
+        }
+
+        user.isExecutorFor = executorIds;
+        user.isTutorFor = tutorIds;
+        user.studyHistory = historyIds;
+        user.futureRegisteredStudies = futureIds;
+        res.json(result);
+      })
+        .catch(function(err){
+          res.json(500, {status: 'failure', errors: err});
+        });
+
     }
   });
 };

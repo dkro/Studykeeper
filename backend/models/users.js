@@ -32,7 +32,7 @@ module.exports.getUserByToken = function(data, callback) {
 module.exports.saveUser = function(data, callback) {
   var queryData = {username: data.username,
                    firstname: data.firstname,
-                   surname: data.surname,
+                   lastname: data.lastname,
                    password: data.password,
                    role: data.role,
                    lmuStaff: data.lmuStaff,
@@ -50,7 +50,7 @@ module.exports.saveUser = function(data, callback) {
         queryData.password,
         queryData.role,
         queryData.firstname,
-        queryData.surname,
+        queryData.lastname,
         queryData.lmuStaff,
         queryData.mmi],
       callback);

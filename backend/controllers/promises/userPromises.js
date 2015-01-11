@@ -13,7 +13,7 @@ module.exports.validSignupReq = function(req){
     if (!Validator.isLength(req.body.user.firstname,1)) {
       validationErrors.push({message: "Firstname invalid, minimum 1 chars required."});
     }
-    if (!Validator.isLength(req.body.user.surname,1)) {
+    if (!Validator.isLength(req.body.user.lastname,1)) {
       validationErrors.push({message: "Surname invalid, minimum 1 chars required."});
     }
     if (!Validator.isLength(req.body.user.password,7)) {
@@ -34,7 +34,7 @@ module.exports.validSignupReq = function(req){
       var userData = {
         username: Validator.toString(req.body.user.username),
         firstname: Validator.toString(req.body.user.firstname),
-        surname: Validator.toString(req.body.user.surname),
+        lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
         mmi: Validator.toString(req.body.user.mmi),

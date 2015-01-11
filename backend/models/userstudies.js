@@ -89,7 +89,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
   connection.query(
     'SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
     'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-    'us.location ' +
+    'us.location, us.closed ' +
     'FROM userstudies us '+
     'LEFT JOIN users u '+
     'ON us.tutorId=u.id '+
@@ -116,7 +116,7 @@ module.exports.getUserstudyById = function (id, callback) {
 module.exports.getAllUserstudies = function (callback) {
   connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
   'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-  'us.location ' +
+  'us.location, us.closed ' +
   'FROM userstudies us ' +
   'LEFT JOIN users u ' +
   'ON us.tutorId=u.id ' +
@@ -176,7 +176,7 @@ module.exports.getAllUserstudiesFiltered = function (filter, callback) {
     limitstring = "LIMIT 20 ";
   }
 
-  connection.query('SELECT us.title, user1.username, user2.username, us.description, us.untilDate, us.fromDate, us.location, ' +
+  connection.query('SELECT us.id, us.title, user1.username, user2.username, us.description, us.untilDate, us.fromDate, us.location, ' +
                   'us.visible, us.published, us.closed ' +
                   'FROM userstudies us ' +
                   'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
@@ -213,8 +213,32 @@ module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
     callback);
 };
 
+module.exports.getStudiesUserIsExecutor = function(user, callback){
+  connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
+    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+    'FROM userstudies us ' +
+    'WHERE us.executorId=? ' +
+    'AND us.visible=1 ' +
+    'AND us.published=1 ' +
+    'AND us.closed=1' ,
+    user.id,
+    callback);
+};
+
+module.exports.getStudiesUserIsTutor = function(user, callback){
+  connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
+    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+    'FROM userstudies us ' +
+    'WHERE us.tutorId=? ' +
+    'AND us.visible=1 ' +
+    'AND us.published=1 ' +
+    'AND us.closed=1' ,
+    user.id,
+    callback);
+};
+
 module.exports.getStudiesFinishedByUser = function(user, callback){
-  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
                     'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
                     'FROM userstudies us ' +
                     'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
@@ -231,7 +255,7 @@ module.exports.getStudiesFinishedByUser = function(user, callback){
 };
 
 module.exports.getStudiesCurrentByUser = function(user, callback){
-  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
                     'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
                     'FROM userstudies us ' +
                     'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
@@ -247,7 +271,7 @@ module.exports.getStudiesCurrentByUser = function(user, callback){
 };
 
 module.exports.getStudiesCreatedByUser = function(user, callback){
-  connection.query('SELECT us.title, user1.username AS tutor, user2.username AS executor, ' +
+  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
     'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
     'FROM userstudies us ' +
     'LEFT JOIN users user1 ON us.tutorId=user1.id ' +

@@ -280,3 +280,51 @@ module.exports.labelsForUserstudy = function(userstudy){
     });
   });
 };
+
+module.exports.userIsExecutorFor = function(user) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesUserIsExecutor(user, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports.userIsTutorFor = function(user) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesUserIsTutor(user, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports.userStudyHistory = function(user) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesFinishedByUser(user, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports.userRegisteredStudies = function(user) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesCurrentByUser(user, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};

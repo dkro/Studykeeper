@@ -136,6 +136,9 @@ module.exports.getUserstudyById = function(req, res) {
       res.jon({status: 'failure', errors: [{message: 'Userstudy not found'}]});
     } else {
       res.json(result);
+      // closed has to be true or false
+      // isHistoryFor: [1],
+      // isFutureStudyFor: []
     }
   });
 };
