@@ -5,7 +5,10 @@ var uuid       = require('node-uuid');
 
 module.exports.getUsers = function(callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM users;',
+    connection.query("SELECT u.id, u.username, r.name, u.lmuStaff, u.mmi," +
+      "u.firstname,u.lastname " +
+      "FROM users u " +
+      "LEFT JOIN roles r ON r.id=u.role ",
       function(err,result){
         connection.release();
         callback(err,result);
@@ -16,7 +19,11 @@ module.exports.getUsers = function(callback) {
 
 module.exports.getUserById = function(id, callback) {
   mysql.getConnection(function(connection) {
-    connection.query("SELECT * FROM users WHERE id=?;",
+    connection.query("SELECT u.id, u.username, r.name, u.lmuStaff, u.mmi," +
+      "u.firstname,u.lastname " +
+      "FROM users u " +
+      "LEFT JOIN roles r ON r.id=u.role " +
+      "WHERE u.id=?;",
       id,
       function(err,result){
         connection.release();

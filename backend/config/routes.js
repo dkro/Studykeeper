@@ -42,7 +42,7 @@ module.exports = function(app) {
 
   // --------------- User routes ---------------
   //app.get('/api/users/single', auth.tokenAuthenticate, userController.getUser); // todo make this work with query
-  app.get('/api/users', auth.tokenAuthenticate, userController.getUsers);
+  app.get('/api/users', userController.getUsers);
   app.get('/api/users/:id', userController.getUserById);
   app.get('/api/users/self', userController.getUser);
 

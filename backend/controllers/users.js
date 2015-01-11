@@ -15,9 +15,9 @@ exports.deleteUser = function(req, res) {
 exports.getUsers = function(req, res) {
   User.getUsers(function(err,result){
               if (err) {
-                res.json(err);
+                res.json(500, {status: 'failure', errors: err});
               } else {
-               res.json(result);
+               res.json({users: result});
               }
             });
 };
@@ -25,7 +25,7 @@ exports.getUsers = function(req, res) {
 exports.getUser = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
-      res.json(err);
+      res.json(500, {status: 'failure', errors: err});
     } else {
       res.json(result);
     }

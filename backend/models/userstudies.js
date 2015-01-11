@@ -99,14 +99,10 @@ module.exports.editUserStudy = function (data, callback) {
 module.exports.getUserstudy = function (userstudy, callback) {
   mysql.getConnection(function(connection) {
     connection.query(
-      'SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+      'SELECT us.id, u.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
       'us.location, us.closed ' +
       'FROM userstudies us '+
-      'LEFT JOIN users u '+
-      'ON us.tutorId=u.id '+
-      'LEFT JOIN users u2 '+
-      'ON us.executorId=u2.id '+
       'WHERE us.id=? AND us.title=?',
       [userstudy.id,userstudy.title],
       function(err,result){
@@ -119,14 +115,10 @@ module.exports.getUserstudy = function (userstudy, callback) {
 
 module.exports.getUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
-    connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
       'us.location ' +
       'FROM userstudies us ' +
-      'LEFT JOIN users u ' +
-      'ON us.tutorId=u.id ' +
-      'LEFT JOIN users u2 ' +
-      'ON us.executorId=u2.id ' +
       'WHERE us.id=?',
       id, function(err,result){
         connection.release();
@@ -138,14 +130,10 @@ module.exports.getUserstudyById = function (id, callback) {
 
 module.exports.getAllUserstudies = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
     'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
     'us.location, us.closed ' +
-    'FROM userstudies us ' +
-    'LEFT JOIN users u ' +
-    'ON us.tutorId=u.id ' +
-    'LEFT JOIN users u2 ' +
-    'ON us.executorId=u2.id',
+    'FROM userstudies us ',
       function(err,result){
         connection.release();
         callback(err,result);
