@@ -29,6 +29,10 @@ StudyManager.ApplicationController = Ember.Controller.extend({
 
         openAccountSettings: function() {
             this.transitionToRoute('acc-config');
+        },
+
+        goToStudyConfig: function() {
+            this.transitionToRoute('userstudies');
         }
     },
 
