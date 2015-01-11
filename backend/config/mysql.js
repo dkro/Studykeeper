@@ -1,7 +1,8 @@
+"use strict";
 var mysql     = require('mysql');
-var connection;
 
-connection = mysql.createConnection({
+var pool = mysql.createPool({
+  connectionlimit: 10,
   host     : '127.0.0.1',
   user     : 'root',
   password : '',
@@ -9,14 +10,16 @@ connection = mysql.createConnection({
   database : 'UserstudyManager'
 });
 
-connection.connect(function(err) {
-if (err) {
-  console.error('error connecting to the database: ' + err.stack);
-  return;
-}
+module.exports.getConnection = function(callback) {
+  pool.getConnection(function(err, connection) {
+    if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      callback(err);
+    } else {
+      console.log('Mysql: Using connection ' + connection.threadId + ' from pool');
+      callback(connection);
+    }
+  });
+};
 
-console.log('mysql: connected as id ' + connection.threadId);
-});
-
-
-module.exports.connection = connection;
+module.exports.pool = pool;

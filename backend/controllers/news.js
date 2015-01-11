@@ -49,7 +49,7 @@ module.exports.getNewsById = function(req, res){
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else if (result.length === 0 ){
-      res.jon({status: 'failure', errors: [{message: 'Label not found'}]});
+      res.json({status: 'failure', errors: [{message: 'Label not found'}]});
     } else {
       res.json(result);
     }

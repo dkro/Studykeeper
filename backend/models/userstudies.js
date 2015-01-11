@@ -1,5 +1,5 @@
 "use strict";
-var connection      = require('../config/mysql').connection;
+var mysql      = require('../config/mysql');
 
 module.exports.addUserStudy = function (data, callback) {
   var queryData = {
@@ -18,29 +18,35 @@ module.exports.addUserStudy = function (data, callback) {
     compensation: data.compensation,
     location: data.location
   };
-  connection.query('INSERT INTO userstudies ' +
-  '(tutorId,executorId,' +
-    'fromDate,untilDate,' +
-    'title,description,' +
-    'link,paper,' +
-    'space,' +
-    'mmi,compensation,' +
-    'location,' +
-    'visible,published,closed) ' +
-  'VALUES (' +
-    '(SELECT id FROM users WHERE username=? AND id=?),' +
-    '(SELECT id FROM users WHERE username=? AND id=?),' +
-    '?,?,?,?,?,?,?,?,?,?,' +
-    '1,0,0);',
-    [queryData.tutorname,queryData.tutorId,
-      queryData.executorname,queryData.executorId,
-      queryData.from,queryData.until,
-      queryData.title,queryData.description,
-      queryData.link,queryData.paper,
-      queryData.space,
-      queryData.mmi,queryData.compensation,
-      queryData.location],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('INSERT INTO userstudies ' +
+    '(tutorId,executorId,' +
+      'fromDate,untilDate,' +
+      'title,description,' +
+      'link,paper,' +
+      'space,' +
+      'mmi,compensation,' +
+      'location,' +
+      'visible,published,closed) ' +
+    'VALUES (' +
+      '(SELECT id FROM users WHERE username=? AND id=?),' +
+      '(SELECT id FROM users WHERE username=? AND id=?),' +
+      '?,?,?,?,?,?,?,?,?,?,' +
+      '1,0,0);',
+      [queryData.tutorname,queryData.tutorId,
+        queryData.executorname,queryData.executorId,
+        queryData.from,queryData.until,
+        queryData.title,queryData.description,
+        queryData.link,queryData.paper,
+        queryData.space,
+        queryData.mmi,queryData.compensation,
+        queryData.location],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.editUserStudy = function (data, callback) {
@@ -61,68 +67,91 @@ module.exports.editUserStudy = function (data, callback) {
     compensation: data.compensation,
     location: data.location
   };
-
-  connection.query('UPDATE userstudies ' +
-  'SET tutorId=(SELECT id FROM users WHERE id=? AND username=?)' +
-    ',executorId=(SELECT id FROM users WHERE id=? AND username=?),' +
-  'fromDate=?,untilDate=?,' +
-  'title=?,description=?,' +
-  'link=?,paper=?,' +
-  'space=?,' +
-  'mmi=?,compensation=?,' +
-  'location=? ' +
-  'WHERE id=? ' +
-  'AND title=?;',
-    [queryData.tutorId,queryData.tutorname,
-      queryData.executorId,queryData.executorname,
-      queryData.from,queryData.until,
-      queryData.title,queryData.description,
-      queryData.link,queryData.paper,
-      queryData.space,
-      queryData.mmi,queryData.compensation,
-      queryData.location,
-      queryData.id, queryData.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE userstudies ' +
+    'SET tutorId=(SELECT id FROM users WHERE id=? AND username=?)' +
+      ',executorId=(SELECT id FROM users WHERE id=? AND username=?),' +
+    'fromDate=?,untilDate=?,' +
+    'title=?,description=?,' +
+    'link=?,paper=?,' +
+    'space=?,' +
+    'mmi=?,compensation=?,' +
+    'location=? ' +
+    'WHERE id=? ' +
+    'AND title=?;',
+      [queryData.tutorId,queryData.tutorname,
+        queryData.executorId,queryData.executorname,
+        queryData.from,queryData.until,
+        queryData.title,queryData.description,
+        queryData.link,queryData.paper,
+        queryData.space,
+        queryData.mmi,queryData.compensation,
+        queryData.location,
+        queryData.id, queryData.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserstudy = function (userstudy, callback) {
-  connection.query(
-    'SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
-    'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-    'us.location, us.closed ' +
-    'FROM userstudies us '+
-    'LEFT JOIN users u '+
-    'ON us.tutorId=u.id '+
-    'LEFT JOIN users u2 '+
-    'ON us.executorId=u2.id '+
-    'WHERE us.id=? AND us.title=?',
-    [userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query(
+      'SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+      'us.location, us.closed ' +
+      'FROM userstudies us '+
+      'LEFT JOIN users u '+
+      'ON us.tutorId=u.id '+
+      'LEFT JOIN users u2 '+
+      'ON us.executorId=u2.id '+
+      'WHERE us.id=? AND us.title=?',
+      [userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserstudyById = function (id, callback) {
-  connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+  mysql.getConnection(function(connection){
+    connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+      'us.location ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN users u ' +
+      'ON us.tutorId=u.id ' +
+      'LEFT JOIN users u2 ' +
+      'ON us.executorId=u2.id ' +
+      'WHERE us.id=?',
+      id, function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  })
+};
+
+module.exports.getAllUserstudies = function (callback) {
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
     'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-    'us.location ' +
+    'us.location, us.closed ' +
     'FROM userstudies us ' +
     'LEFT JOIN users u ' +
     'ON us.tutorId=u.id ' +
     'LEFT JOIN users u2 ' +
-    'ON us.executorId=u2.id ' +
-    'WHERE us.id=?',
-    id, callback);
-};
-
-module.exports.getAllUserstudies = function (callback) {
-  connection.query('SELECT us.id, u.username AS tutor, u2.username AS executor, us.fromDate, us.untilDate, ' +
-  'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-  'us.location, us.closed ' +
-  'FROM userstudies us ' +
-  'LEFT JOIN users u ' +
-  'ON us.tutorId=u.id ' +
-  'LEFT JOIN users u2 ' +
-  'ON us.executorId=u2.id'
-  , callback);
+    'ON us.executorId=u2.id',
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getAllUserstudiesFiltered = function (filter, callback) {
@@ -175,177 +204,300 @@ module.exports.getAllUserstudiesFiltered = function (filter, callback) {
   } else {
     limitstring = "LIMIT 20 ";
   }
-
-  connection.query('SELECT us.id, us.title, user1.username, user2.username, us.description, us.untilDate, us.fromDate, us.location, ' +
-                  'us.visible, us.published, us.closed ' +
-                  'FROM userstudies us ' +
-                  'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
-                  'LEFT JOIN users user2 ON us.executorId=user2.id ' +
-                  'LEFT JOIN studies_labels_rel slrel ON slrel.studyId=us.id ' +
-                  'LEFT JOIN labels la ON slrel.labelId=la.id ' +
-                  'WHERE 1=1 '
-                  + labelstring
-                  + tutorstring
-                  + executorstring
-                  + fromDatestring
-                  + untilDatestring
-                  + titlestring
-                  + descrstring
-                  + visiblestr
-                  + publishedstr
-                  + closedstr
-                  + countString
-                  + orderstring
-                  + limitstring, callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, user1.username, user2.username, us.description, us.untilDate, us.fromDate, us.location, ' +
+                    'us.visible, us.published, us.closed ' +
+                    'FROM userstudies us ' +
+                    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                    'LEFT JOIN studies_labels_rel slrel ON slrel.studyId=us.id ' +
+                    'LEFT JOIN labels la ON slrel.labelId=la.id ' +
+                    'WHERE 1=1 '
+                    + labelstring
+                    + tutorstring
+                    + executorstring
+                    + fromDatestring
+                    + untilDatestring
+                    + titlestring
+                    + descrstring
+                    + visiblestr
+                    + publishedstr
+                    + closedstr
+                    + countString
+                    + orderstring
+                    + limitstring,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callback) {
   var queryFilters = filters;
-  connection.query('SELECT * FROM userstudies', callback);
-  //todo
+  // todo
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT * FROM userstudies',
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
-  connection.query('SELECT * FROM users ' +
-    'WHERE id=' +
-      '(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
-    userstudy.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT * FROM users ' +
+      'WHERE id=' +
+        '(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
+      userstudy.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getStudiesUserIsExecutor = function(user, callback){
-  connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
-    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-    'FROM userstudies us ' +
-    'WHERE us.executorId=? ' +
-    'AND us.visible=1',
-    user.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
+      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+      'FROM userstudies us ' +
+      'WHERE us.executorId=? ' +
+      'AND us.visible=1',
+      user.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getStudiesUserIsTutor = function(user, callback){
-  connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
-    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-    'FROM userstudies us ' +
-    'WHERE us.tutorId=? ' +
-    'AND us.visible=1',
-    user.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, us.tutorId, us.executorId, ' +
+      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+      'FROM userstudies us ' +
+      'WHERE us.tutorId=? ' +
+      'AND us.visible=1',
+      user.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getStudiesFinishedByUser = function(user, callback){
-  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
-                    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-                    'FROM userstudies us ' +
-                    'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
-                    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
-                    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
-                    'WHERE usrel.userId=? ' +
-                    'AND usrel.registered=1 ' +
-                    'AND usrel.confirmed=1 ' +
-                    'AND us.visible=1 ' +
-                    'AND us.published=1 ' +
-                    'AND us.closed=1' ,
-    user.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
+                      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+                      'FROM userstudies us ' +
+                      'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
+                      'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                      'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                      'WHERE usrel.userId=? ' +
+                      'AND usrel.registered=1 ' +
+                      'AND usrel.confirmed=1 ' +
+                      'AND us.visible=1 ' +
+                      'AND us.published=1 ' +
+                      'AND us.closed=1' ,
+      user.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getStudiesCurrentByUser = function(user, callback){
-  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
-                    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-                    'FROM userstudies us ' +
-                    'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
-                    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
-                    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
-                    'WHERE usrel.userId=? ' +
-                    'AND usrel.registered=1 ' +
-                    'AND us.visible=1 ' +
-                    'AND us.published=1 ' +
-                    'AND us.closed=0' ,
-    user.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
+                      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+                      'FROM userstudies us ' +
+                      'LEFT JOIN users_studies_rel usrel ON us.id=usrel.studyId ' +
+                      'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+                      'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+                      'WHERE usrel.userId=? ' +
+                      'AND usrel.registered=1 ' +
+                      'AND us.visible=1 ' +
+                      'AND us.published=1 ' +
+                      'AND us.closed=0' ,
+      user.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getStudiesCreatedByUser = function(user, callback){
-  connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
-    'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-    'FROM userstudies us ' +
-    'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
-    'LEFT JOIN users user2 ON us.executorId=user2.id ' +
-    'WHERE us.creator=? ',
-    user.id,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
+      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
+      'LEFT JOIN users user2 ON us.executorId=user2.id ' +
+      'WHERE us.creator=? ',
+      user.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
-
 
 
 module.exports.getLabelsForStudy = function(userstudy, callback){
-  connection,query('SELECT id,title FROM labels ' +
-  'WHERE id=(SELECT labelId FROM studies_labels_rel WHERE studyId=?',
-  userstudy.id,
-  callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT id,title FROM labels ' +
+    'WHERE id=(SELECT labelId FROM studies_labels_rel WHERE studyId=?)',
+    userstudy.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getStudiesRequiredFor = function(userstudy, callback){
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT requiresId AS id FROM studies_requires_rel ' +
+      'WHERE studyId=?',
+      userstudy.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getStudiesRestricedBy = function(userstudy, callback){
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT restrictsId AS id FROM studies_restricts_rel ' +
+      'WHERE studyId=?',
+      userstudy.id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.publishUserstudy = function(userstudy, callback){
-  connection.query('UPDATE userstudies ' +
-    'SET published=1 ' +
-    'WHERE id=? AND title=?',
-    [userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE userstudies ' +
+      'SET published=1 ' +
+      'WHERE id=? AND title=?',
+      [userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.deleteUserstudy = function (userstudy, callback) {
-  connection.query('UPDATE userstudies ' +
-    'SET visible=0 ' +
-    'WHERE id=? AND title=?',
-    [userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE userstudies ' +
+      'SET visible=0 ' +
+      'WHERE id=? AND title=?',
+      [userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.closeUserstudy = function(userstudy, callback){
-  connection.query('UPDATE userstudies ' +
-    'SET closed=1 ' +
-    'WHERE id=? AND title=?',
-    [userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE userstudies ' +
+      'SET closed=1 ' +
+      'WHERE id=? AND title=?',
+      [userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.mapUserToStudy = function(user, userstudy, callback){
-  connection.query('INSERT INTO users_studies_rel ' +
-    '(studyId,userId,registered,confirmed) ' +
-    'VALUES (' +
-    '(SELECT id FROM users WHERE id=? AND username=?),' +
-    '(SELECT id FROM userstudies WHERE id=? AND username=?),' +
-    '1,0);',
-    [user.id,user.username,
-      userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('INSERT INTO users_studies_rel ' +
+      '(studyId,userId,registered,confirmed) ' +
+      'VALUES (' +
+      '(SELECT id FROM users WHERE id=? AND username=?),' +
+      '(SELECT id FROM userstudies WHERE id=? AND username=?),' +
+      '1,0);',
+      [user.id,user.username,
+        userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.unmapUserFromStudy = function(user, userstudy, callback){
-  connection.query('UPDATE users_studies_rel ' +
-    'SET confirmed=0 ' +
-    'WHERE userId=(SELECT * FROM users WHERE id=? AND username=?) ' +
-    'AND studyId=(SELECT * FROM userstudies WHERE id=? AND title=?)',
-    [user.id,user.username,
-      userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE users_studies_rel ' +
+      'SET confirmed=0 ' +
+      'WHERE userId=(SELECT * FROM users WHERE id=? AND username=?) ' +
+      'AND studyId=(SELECT * FROM userstudies WHERE id=? AND title=?)',
+      [user.id,user.username,
+        userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.confirmUser = function(user, userstudy, callback){
-  connection.query('UPDATE users_studies_rel ' +
-    'SET confirmed=1 ' +
-    'WHERE studyId=(SELECT id FROM users WHERE id=? AND username=?) ' +
-    'AND userId=(SELECT id FROM userstudies WHERE id=? AND title=?)',
-    [user.id,user.username,
-      userstudy.id,userstudy.title],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query('UPDATE users_studies_rel ' +
+      'SET confirmed=1 ' +
+      'WHERE studyId=(SELECT id FROM users WHERE id=? AND username=?) ' +
+      'AND userId=(SELECT id FROM userstudies WHERE id=? AND title=?)',
+      [user.id,user.username,
+        userstudy.id,userstudy.title],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserRegisteredToStudy = function(userstudy, callback){
-  connection.query('SELECT id,username FROM users' +
-  'WHERE id=(SELECT userId FROM users_studies_rel WHERE id=?)'
-  ,userstudy.id,callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT id,username FROM users' +
+      'WHERE id=(SELECT userId FROM users_studies_rel WHERE id=?)',
+      userstudy.id,
+      function(err,result) {
+        connection.release();
+        callback(err, result);
+      }
+    );
+  });
 };
 
 

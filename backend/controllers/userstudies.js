@@ -133,12 +133,32 @@ module.exports.getUserstudyById = function(req, res) {
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else if (result.length === 0 ){
-      res.jon({status: 'failure', errors: [{message: 'Userstudy not found'}]});
+      res.json({status: 'failure', errors: [{message: 'Userstudy not found'}]});
     } else {
-      res.json(result);
-      // closed has to be true or false
-      // isHistoryFor: [1],
-      // isFutureStudyFor: []
+
+      var userstudy = result[0];
+      var promises = [UserstudyPromise.studiesRequiredByStudy(userstudy),
+        UserstudyPromise.studiesRestricedByStudy(userstudy)];
+
+      Promise.all(promises).then(function(results){
+
+        var requiredIds = [];
+        for (var i = 0; i < results[0].length; i += 1) {
+          requiredIds.push(results[0][i].id);
+        }
+        var restricedIds = [];
+        for (var j = 0; j < results[1].length; j += 1) {
+          restricedIds.push(results[1][j].id);
+        }
+
+        userstudy.isFutureStudyFor = requiredIds;
+        userstudy.isHistoryFor = restricedIds;
+        userstudy.closed = !!userstudy.closed;
+        res.json(userstudy);
+      })
+      .catch(function(err){
+        res.json(500, {status: 'failure', errors: err});
+      });
     }
   });
 };

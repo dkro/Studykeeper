@@ -71,9 +71,9 @@ exports.getUserById = function(req, res) {
         user.futureRegisteredStudies = futureIds;
         res.json(result);
       })
-        .catch(function(err){
-          res.json(500, {status: 'failure', errors: err});
-        });
+      .catch(function(err){
+        res.json(500, {status: 'failure', errors: err});
+      });
 
     }
   });

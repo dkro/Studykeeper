@@ -1,32 +1,59 @@
 "use strict";
-var connection = require('../config/mysql').connection;
+var mysql      = require('../config/mysql');
 var crypt      = require('../utilities/encryption');
 var uuid       = require('node-uuid');
 
 module.exports.getUsers = function(callback) {
-  connection.query('SELECT * FROM users;', callback);
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT * FROM users;',
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserById = function(id, callback) {
-  connection.query("SELECT * FROM users WHERE id=?;",
-    id, callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT * FROM users WHERE id=?;",
+      id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserByName = function(username, callback) {
-  connection.query("SELECT * FROM users WHERE username=?;",
-                    username, callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT * FROM users WHERE username=?;",
+                      username,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserByToken = function(data, callback) {
   var queryData = [
     {token : data}
   ];
-  connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.surname FROM users u " +
-                    "INNER JOIN auth a ON u.id=a.userId " +
-                    "LEFT JOIN roles r ON u.role=r.id " +
-                    "WHERE token=?;",
-                    queryData[0].token,
-                    callback);
+  mysql.getConnection(function(connection) {
+    connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.surname FROM users u " +
+                      "INNER JOIN auth a ON u.id=a.userId " +
+                      "LEFT JOIN roles r ON u.role=r.id " +
+                      "WHERE token=?;",
+                      queryData[0].token,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.saveUser = function(data, callback) {
@@ -44,39 +71,64 @@ module.exports.saveUser = function(data, callback) {
     }
 
     queryData.password = hash;
-    connection.query( "INSERT INTO users (username,password,role,firstname,surname,lmuStaff,mmi) " +
-      "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?);",
-      [queryData.username,
-        queryData.password,
-        queryData.role,
-        queryData.firstname,
-        queryData.lastname,
-        queryData.lmuStaff,
-        queryData.mmi],
-      callback);
+    mysql.getConnection(function(connection) {
+      connection.query( "INSERT INTO users (username,password,role,firstname,surname,lmuStaff,mmi) " +
+        "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?);",
+        [queryData.username,
+          queryData.password,
+          queryData.role,
+          queryData.firstname,
+          queryData.lastname,
+          queryData.lmuStaff,
+          queryData.mmi],
+        function(err,result){
+          connection.release();
+          callback(err,result);
+        }
+      );
+    });
   });
 };
 
 module.exports.setRole = function(data, callback) {
-  connection.query("UPDATE users " +
-    "SET role=(SELECT name FROM roles WHERE name=?) " +
-    "WHERE username=?;",
-    [data.role, data.username],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("UPDATE users " +
+      "SET role=(SELECT name FROM roles WHERE name=?) " +
+      "WHERE username=?;",
+      [data.role, data.username],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getUserRole = function(username, callback){
-  connection.query("SELECT name FROM roles WHERE " +
-    "id=(SELECT role FROM users WHERE username=?);",username,callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT name FROM roles WHERE " +
+      "id=(SELECT role FROM users WHERE username=?);",username,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 
 // ------------------- TOKENS -------------------------------
 
 module.exports.getToken = function (token, callback){
-  connection.query("SELECT token FROM auth WHERE token=?",
-    token,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT token FROM auth WHERE token=?",
+      token,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.createTokenForUser = function (data,callback) {
@@ -84,19 +136,31 @@ module.exports.createTokenForUser = function (data,callback) {
       username: data.username,
       token: uuid.v1(),
       timestamp: new Date()};
-  connection.query( "INSERT INTO auth (userId,token,timestamp) " +
-    "VALUES((SELECT id FROM users WHERE username=?),?,?);",
-    [queryData.username,queryData.token,queryData.timestamp],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query( "INSERT INTO auth (userId,token,timestamp) " +
+      "VALUES((SELECT id FROM users WHERE username=?),?,?);",
+      [queryData.username,queryData.token,queryData.timestamp],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getTokensForUser = function (data,callback) {
   var queryData = {
     username: data.username};
-  connection.query("SELECT token, timestamp FROM auth WHERE " +
-    "userId=(SELECT id FROM users WHERE username=?);",
-    queryData.username,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT token, timestamp FROM auth WHERE " +
+      "userId=(SELECT id FROM users WHERE username=?);",
+      queryData.username,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp, callback) {
@@ -104,32 +168,56 @@ module.exports.deleteTokensForUserBeforeTimestamp= function (username, timestamp
     username: username,
     timestamp: timestamp
   };
-  connection.query("DELETE FROM auth " +
-    "WHERE userId=(SELECT id FROM users WHERE username=?) " +
-    "AND timestamp < ?",
-    [queryData.username,queryData.timestamp],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("DELETE FROM auth " +
+      "WHERE userId=(SELECT id FROM users WHERE username=?) " +
+      "AND timestamp < ?",
+      [queryData.username,queryData.timestamp],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.deleteToken = function (token, callback) {
-  connection.query("DELETE FROM auth WHERE token=?",
-    token,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("DELETE FROM auth WHERE token=?",
+      token,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.updateToken = function(token, callback) {
   var queryData = {
     token: token,
     timestamp: new Date()};
-  connection.query("UPDATE auth SET timestamp=? WHERE token=?;",
-    [queryData.timestamp,queryData.token],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("UPDATE auth SET timestamp=? WHERE token=?;",
+      [queryData.timestamp,queryData.token],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.getTokenTimestamp = function(token, callback) {
-  connection.query("SELECT timestamp FROM auth WHERE token=?;",
-    token,
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT timestamp FROM auth WHERE token=?;",
+      token,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 // ------------------------- MISC -------------------------
@@ -139,9 +227,15 @@ module.exports.setLMUStaff = function(username, isLMUstaff, callback) {
   if (isLMUstaff) {
     flag = 1;
   }
-  connection.query("UPDATE users SET lmuStaff=? WHERE username=?",
-    [flag,username],
-    callback);
+  mysql.getConnection(function(connection) {
+    connection.query("UPDATE users SET lmuStaff=? WHERE username=?",
+      [flag,username],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 module.exports.setPassword = function(password, username, callback) {
@@ -151,11 +245,17 @@ module.exports.setPassword = function(password, username, callback) {
     }
 
     password = hash;
-    connection.query( "UPDATE users " +
-      "SET password=? " +
-      "WHERE username=?;",
-      [password,username],
-      callback);
+    mysql.getConnection(function(connection) {
+      connection.query( "UPDATE users " +
+        "SET password=? " +
+        "WHERE username=?;",
+        [password,username],
+        function(err,result){
+          connection.release();
+          callback(err,result);
+        }
+      );
+    });
   });
 };
 

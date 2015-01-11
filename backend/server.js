@@ -1,3 +1,4 @@
+"use strict";
 // Create Restify Server
 var restify   = require('restify');
 var port      = process.env.PORT || 8080;
@@ -9,7 +10,7 @@ app.use(restify.bodyParser({ mapParams: false}));
 // Bootstrap Application
 var config = require('./config/config.js');
 
-var mysql  = require('./config/mysql.js');
+var pool  = require('./config/mysql.js').pool;
 
 require('./config/passport.js')();
 
@@ -25,8 +26,12 @@ app.listen(port, function(){
 function exitHandler(options, err) {
   if (options.cleanup) {
     console.log('Cleaning up...');
-    connection.end(function(err) {
-      console.log('Ending the database connection safely.');
+    pool.end(function(err) {
+      if (err){
+        console.log(err);
+      } else {
+        console.log('Ending the database connection safely.');
+      }
     });
   }
   if (err) console.log(err.stack);
@@ -35,9 +40,7 @@ function exitHandler(options, err) {
 
 //do something when app is closing
 process.on('exit', exitHandler.bind(null,{cleanup:true}));
-
 //catches ctrl+c event
 process.on('SIGINT', exitHandler.bind(null, {cleanup:true, exit:true}));
-
 //catches uncaught exceptions
 process.on('uncaughtException', exitHandler.bind(null, {cleanup:true, exit:true}));

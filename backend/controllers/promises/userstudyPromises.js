@@ -328,3 +328,27 @@ module.exports.userRegisteredStudies = function(user) {
     });
   });
 };
+
+module.exports.studiesRequiredByStudy = function(userstudy) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesRequiredFor(userstudy, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports.studiesRestricedByStudy = function(userstudy) {
+  return new Promise(function (resolve, reject) {
+    Userstudy.getStudiesRestricedBy(userstudy, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
