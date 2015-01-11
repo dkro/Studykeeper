@@ -143,6 +143,9 @@ exports.login = function(req, res) {
   };
 
   User.getUserByName(user.username,function(err,userResult) {
+    if (err) {
+      res.send(err);
+    }
 
     User.createTokenForUser(user, function (err) {
       if (err) {
@@ -151,13 +154,13 @@ exports.login = function(req, res) {
 
         var now = new Date();
         var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
-        User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow);
+        //User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow);
 
         User.getTokensForUser(user, function (err, tokenResult) {
-          if (err) {
-            res.send(err);
-          } else {
 
+          if (err) {
+            res.send(500, err);
+          } else {
             // Sort tokenresult so that newest token is the first in array
             tokenResult.sort(function(a, b) {
               a = new Date(a.timestamp);
@@ -165,21 +168,16 @@ exports.login = function(req, res) {
               return a>b ? -1 : a<b ? 1 : 0;
             });
 
-            User.getUserRole(user.username, function (err, roleResult) {
-              if (err) {
-                res.send(500, err);
-              } else {
-                res.json({
-                  status: 'success',
-                  message: 'Login successful',
-                  id: userResult[0].id,
-                  username: userResult[0].username,
-                  role: roleResult[0].name,
-                  token: tokenResult[0].token
-                });
-              }
+            res.json({
+              status: 'success',
+              message: 'Login successful',
+              id: userResult[0].id,
+              username: userResult[0].username,
+              role: userResult[0].role,
+              token: tokenResult[0].token
             });
           }
+
         });
       }
     });

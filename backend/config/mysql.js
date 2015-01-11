@@ -14,7 +14,6 @@ module.exports.getConnection = function(callback) {
   pool.getConnection(function(err, connection) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
-      callback(err);
     } else {
       console.log('Mysql: Using connection ' + connection.threadId + ' from pool');
       callback(connection);

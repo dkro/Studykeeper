@@ -35,9 +35,12 @@ module.exports.getUserById = function(id, callback) {
 
 module.exports.getUserByName = function(username, callback) {
   mysql.getConnection(function(connection) {
-    connection.query("SELECT * FROM users WHERE username=?;",
+    connection.query("SELECT u.id, r.name AS role, u.password, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
+                      "FROM users u " +
+                      "LEFT JOIN roles r ON u.role=r.id " +
+                      "WHERE u.username=?;",
                       username,
-      function(err,result){
+      function(err,result) {
         connection.release();
         callback(err,result);
       }
@@ -50,7 +53,7 @@ module.exports.getUserByToken = function(data, callback) {
     {token : data}
   ];
   mysql.getConnection(function(connection) {
-    connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.surname FROM users u " +
+    connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname FROM users u " +
                       "INNER JOIN auth a ON u.id=a.userId " +
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE token=?;",
@@ -114,7 +117,8 @@ module.exports.setRole = function(data, callback) {
 module.exports.getUserRole = function(username, callback){
   mysql.getConnection(function(connection) {
     connection.query("SELECT name FROM roles WHERE " +
-      "id=(SELECT role FROM users WHERE username=?);",username,
+      "id=(SELECT role FROM users WHERE username=?);",
+      username,
       function(err,result){
         connection.release();
         callback(err,result);
