@@ -4,8 +4,8 @@ StudyManager.Router.map(function() {
   this.route('acc-config');
   this.route('logout');
   this.resource('dashboard');
-  this.resource('studies');
-  this.resource('study', { path: '/study/:study_id' });
+  this.resource('userstudies');
+  this.resource('userstudy', { path: '/userstudy/:userstudy_id' });
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -58,15 +58,19 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
+    var uId = this.controllerFor('login').get('currentUserId');
+    var that = this;
+
+    return this.store.find('user', uId).then(function(user) {
       return Ember.RSVP.hash({
-        searchTags: this.store.findAll('label'),
-        registeredStudies: this.store.findAll('study'),
-        createdStudies: this.store.findAll('study'),
-        news: this.store.findAll('dashboardNews'),
-        history: this.store.findAll('study'),
-        // TODO: change this!
-        currentUser: this.store.find('user', 1)
+        searchTags: that.store.find('label'),
+        registeredStudies: user.get('futureRegisteredStudies'),
+        createdStudies: user.get('isExecutorFor'),
+        history: user.get('studyHistory'),
+        mmiPoints: user.get('mmi'),
+        news: that.store.find('news')
       });
+    });
   },
 
   setupController: function(controller, model) {
@@ -80,15 +84,15 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   }
 });
 
-StudyManager.StudiesRoute = StudyManager.AuthenticationRoute.extend({
+StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    return this.store.find('study');
+    return this.store.find('userstudy');
   }
 });
 
-StudyManager.StudyRoute = StudyManager.AuthenticationRoute.extend({
+StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.find('study', params.study_id);
+    return this.store.find('userstudy', params.userstudy_id);
   }
 });
 

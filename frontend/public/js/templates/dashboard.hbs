@@ -5,7 +5,7 @@
 <div>
     {{study-searchform allOptions=searchTags classNames='studySearch' action="displayStudies"}}
     <div class="dashboard_mmiPoints">
-        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{model.currentUser.mmiTotal}}</span></span>
+        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{model.mmiPoints}}</span></span>
     </div>
 </div>
 
@@ -15,7 +15,7 @@
         <ul class="list-group panelDisplay__list">
             {{#each n in model.news}}
                 <li class="list-group-item dashboardNews__item">
-                    <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.name}} <small>{{n.date}}</small></h3>
+                    <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.title}} <small>{{n.date}}</small></h3>
                     <div class="list-group-item-text dashboardNews__item__body">
                         <div>{{n.description}}</div>
                         <a target="_blank" {{bind-attr href="n.link"}}>Link zur Studie</a>

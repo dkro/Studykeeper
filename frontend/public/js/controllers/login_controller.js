@@ -9,6 +9,8 @@ StudyManager.LoginController = Ember.Controller.extend({
 
     attemptedTransition: null,
 
+    currentUserId: null,
+
     actions: {
         login: function() {
             // DEFAULT
@@ -20,6 +22,7 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             Ember.$.post('http://localhost:8080/api/users/login', userData).then(function(response) {
                 that.set('token', response.token);
+                that.set('currentUserId', response.id);
 
                 that.get('controllers.application').set('userRole', 0);
                 that.get('controllers.application').set('isLoggedIn', true);
@@ -51,6 +54,7 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
                 this.set('token', 'Das funzt!');
+                this.set('currentUserId', 1);
 
 
                 this.transitionToRoute('dashboard');
