@@ -33,10 +33,6 @@ StudyManager.ApplicationController = Ember.Controller.extend({
 
         goToStudyConfig: function() {
             this.transitionToRoute('userstudies');
-        },
-
-        goToLabelsConfig: function() {
-            this.transitionToRoute('labels');
         }
     },
 
