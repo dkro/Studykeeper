@@ -10,7 +10,7 @@ app.use(restify.bodyParser({ mapParams: false}));
 // Bootstrap Application
 var config = require('./config/config.js');
 
-var pool  = require('./config/mysql.js').pool;
+var mysql  = require('./config/mysql.js');
 
 require('./config/passport.js')();
 
@@ -26,16 +26,14 @@ app.listen(port, function(){
 function exitHandler(options, err) {
   if (options.cleanup) {
     console.log('Cleaning up...');
-    pool.end(function(err) {
-      if (err){
-        console.log(err);
-      } else {
-        console.log('Ending the database connection safely.');
-      }
-    });
+    mysql.cleanup();
   }
-  if (err) console.log(err.stack);
-  if (options.exit) process.exit();
+  if (err) {
+    console.log(err.stack);
+  }
+  if (options.exit) {
+    process.exit();
+  }
 }
 
 //do something when app is closing

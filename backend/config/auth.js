@@ -11,7 +11,7 @@ exports.loginAuthenticate = function(req, res, next) {
         if(user.length === 0 || user === false) {
           res.json(401, {status: "failure", message: 'User not found.'});
         } else {
-          next ();
+          next();
         }
       }
   )(req, res, next);

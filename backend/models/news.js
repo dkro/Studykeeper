@@ -41,29 +41,23 @@ module.exports.getAllNews = function (callback) {
   });
 };
 
-module.exports.getNewsById = function (id, callback) {
-  mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM news WHERE id=?',
-      id,
-      function(err,result){
-        connection.release();
-        callback(err,result);
-      }
-    );
-  });
-};
+/**
+ *
+ * Get the database row from the news table
+ *
+ * @returns array for all news for id
+ * @params string newsid
+ * @type {function(this:exports.query)}
+ */
+module.exports.getNewsById = mysql.query.bind(mysql.query, 'SELECT * FROM news WHERE id=?');
+
 
 module.exports.mapNewstoUserstudy = function (news, userstudy, callback) {
-  mysql.getConnection(function(connection) {
-    connection.query('UPDATE userstudies ' +
+  mysql.query('UPDATE userstudies ' +
       'SET newsId=? ' +
       'WHERE id=? ',
       [news.id,userstudy.id],
-      function(err,result){
-        connection.release();
-        callback(err,result);
-      }
+       callback
     );
-  });
 };
 
