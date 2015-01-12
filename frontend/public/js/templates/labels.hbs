@@ -1,0 +1,22 @@
+<h2 class="labels__heading">Labels verwalten</h2>
+
+
+<div class="input-group labels__creationWrapper">
+    {{input type="text" value=newLabelValue placeholder="Neuer Labelname" classNames="form-control"}}
+    <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>Erstellen</button>
+    </span>
+</div>
+
+{{#if errorMessage}}
+    <div class="alert alert-danger labels__errorMessage">
+        {{errorMessage}}
+    </div>
+{{/if}}
+
+<ul class="list-group labels__list">
+    {{#each label in model}}
+        {{labels-item persistedName=label.title selfId=label.id currentlySelectedLabelId=currentlySelectedId gotSelected="setCurrentlySelectedId"}}
+    {{/each}}
+</ul>
+

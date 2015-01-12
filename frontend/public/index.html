@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/study.css">
         <link rel="stylesheet" href="css/studies.css">
+        <link rel="stylesheet" href="css/management.css">
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css">
     </head>
@@ -68,6 +69,17 @@
                     </div>
                 </div>
             </div>
+        </script>
+
+        <script type="text/x-handlebars" id="components/labels-item">
+            {{#if isSelected}}
+                {{input type="text" value=nameValue action="saveLabel" classNames="form-control input-sm labels__label__editInput"}}
+                <div class="labels__label__removeIcon__wrapper">
+                    <span class="glyphicon glyphicon-remove labels__label__removeIcon" {{action 'removeLabel'}}></span>
+                </div>
+            {{else}}
+                {{persistedName}}
+            {{/if}}
         </script>
 
 
