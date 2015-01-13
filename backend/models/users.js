@@ -36,7 +36,7 @@ module.exports.getUserById = function(id, callback) {
 // used by passport. password has to be included
 module.exports.getUserByName = function(username, callback) {
   mysql.getConnection(function(connection) {
-    connection.query("SELECT u.id, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
+    connection.query("SELECT u.id, u.username, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
                       "FROM users u " +
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE u.username=?;",

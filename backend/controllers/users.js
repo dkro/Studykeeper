@@ -141,11 +141,11 @@ exports.login = function(req, res) {
   var user;
 
   UserPromise.validLoginReq(req)
-    .then(function (result){
-      user = result;
+    .then(function (user){
       return UserPromise.userFromName(user);
     })
-    .then(function (){
+    .then(function (result){
+        user = result;
         var promises = [UserPromise.createTokensForUser(user),
           UserPromise.deleteOldTokensForUser(user)];
 
