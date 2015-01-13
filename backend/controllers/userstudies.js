@@ -111,8 +111,9 @@ module.exports.getUserstudy = function(req, res) {
         if (err) {
           throw err;
         } else {
-          var study = {userstudy: result[0], label: labels};
-          res.json(study);
+          var study = result[0];
+          study.labels = labels;
+          res.json({userstudy: study});
         }
       });
     })
@@ -157,7 +158,7 @@ module.exports.getUserstudyById = function(req, res) {
         userstudy.isFutureStudyFor = requiredIds;
         userstudy.isHistoryFor = restricedIds;
         userstudy.closed = !!userstudy.closed;
-        res.json(userstudy);
+        res.json({userstudy: userstudy});
       })
       .catch(function(err){
         res.json(500, {status: 'failure', errors: err});

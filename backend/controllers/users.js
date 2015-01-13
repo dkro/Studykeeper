@@ -69,7 +69,7 @@ exports.getUserById = function(req, res) {
         user.isTutorFor = tutorIds;
         user.studyHistory = historyIds;
         user.futureRegisteredStudies = futureIds;
-        res.json(user);
+        res.json({user: user});
       })
       .catch(function(err){
         res.json(500, {status: 'failure', errors: err});
@@ -120,9 +120,11 @@ exports.signup = function(req, res) {
                   res.json({
                     status: 'success',
                     message: 'New user has been created successfully',
-                    username: user.username,
-                    role: user.role,
-                    token: result[0].token
+                    user: {
+                      username: user.username,
+                      role: user.role,
+                      token: result[0].token
+                    }
                   });
                 }
               });
@@ -153,14 +155,15 @@ exports.login = function(req, res) {
           return UserPromise.getTokensForUserOrderedByDate(user);
         })
         .then(function(tokens){
-            res.json({ user: {
+            res.json({
               status: 'success',
               message: 'Login successful',
+              user: {
               id: user.id,
               username: user.username,
               role: user.role,
               token: tokens[0].token
-            }
+              }
             });
         })
         .catch(function(err){
@@ -188,8 +191,10 @@ exports.logout = function(req, res) {
         } else {
           res.json({
             status: 'success',
-            username: req.user[0].username,
-            message: 'Logged out.'
+            message: 'Logged out.',
+            user: {
+              username: req.user[0].username
+            }
           });
         }
       });
@@ -237,8 +242,9 @@ exports.createUser = function(req, res) {
                 res.json({
                   status: 'success',
                   message: 'New user has been created successfully',
-                  username: user.username,
-                  role: user.role
+                  user: {
+                    username: user.username,
+                    role: user.role}
                 });
               }
             });
@@ -273,8 +279,11 @@ exports.createUser = function(req, res) {
           res.send(err);
         } else {
           res.json({message: 'New user has been created successfully',
+          user:{
             username: user.username,
-            role: user.role});
+            role: user.role
+          }
+          });
         }
       });
     }
