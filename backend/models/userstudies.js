@@ -16,36 +16,70 @@ module.exports.addUserStudy = function (data, callback) {
     space: data.space,
     mmi: data.mmi,
     compensation: data.compensation,
-    location: data.location
+    location: data.location,
+    isFutureStudyFor: data.isFutureStudyFor,
+    isHistoryFor: data.isHistoryFor
   };
   mysql.getConnection(function(connection) {
-    connection.query('INSERT INTO userstudies ' +
-    '(tutorId,executorId,' +
-      'fromDate,untilDate,' +
-      'title,description,' +
-      'link,paper,' +
-      'space,' +
-      'mmi,compensation,' +
-      'location,' +
-      'visible,published,closed) ' +
-    'VALUES (' +
-      '(SELECT id FROM users WHERE username=? AND id=?),' +
-      '(SELECT id FROM users WHERE username=? AND id=?),' +
-      '?,?,?,?,?,?,?,?,?,?,' +
-      '1,0,0);',
-      [queryData.tutorname,queryData.tutorId,
-        queryData.executorname,queryData.executorId,
-        queryData.from,queryData.until,
-        queryData.title,queryData.description,
-        queryData.link,queryData.paper,
-        queryData.space,
-        queryData.mmi,queryData.compensation,
-        queryData.location],
-      function(err,result){
+    connection.beginTransaction(function (err) {
+      if (err) {
         connection.release();
-        callback(err,result);
+        throw err;
       }
-    );
+
+      connection.query('INSERT INTO userstudies ' +
+        '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,space,mmi,compensation,' +
+        'location,visible,published,closed,creatorId,newsId) ' +
+        'VALUES ((SELECT id FROM users WHERE id=?),(SELECT id FROM users WHERE id=?),' +
+        '?,?,?,?,?,?,?,?,?,?,1,0,0,1,1);',
+        // todo creator is hardcoded remove this
+        [queryData.tutorId,
+          queryData.executorId,queryData.from, queryData.until,
+          queryData.title, queryData.description,queryData.link, queryData.paper,
+          queryData.space,queryData.mmi, queryData.compensation,
+          queryData.location],
+        function (err, result) {
+          if (err) {
+            connection.rollback(function () {
+              connection.release();
+              throw err;
+            });
+          }
+
+          var userstudyId = result.insertId
+
+          addUserstudyHistory(userstudyId,queryData.isHistoryFor,function(err){
+            if (err){
+              connection.rollback(function () {
+                connection.release();
+                throw err;
+              });
+            } else {
+              addUserstudyRestrictions(userstudyId, queryData.isFutureStudyFor, function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    connection.release();
+                    throw err;
+                  });
+                } else {
+                  connection.commit(function (err) {
+                    if (err) {
+                      connection.rollback(function () {
+                        connection.release();
+                        throw err;
+                      });
+                    } else {
+                      connection.release();
+                      callback();
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      );
+    });
   });
 };
 
@@ -487,5 +521,44 @@ module.exports.getUserRegisteredToStudy = function(userstudy, callback){
     );
   });
 };
+
+/**
+ *
+ * Maps Userstudies to be required for another userstudie. Creates fields in studies_requires_rel
+ *
+ * @param userstudyId Id of the userstudy for which the history should be created
+ * @param historyIds Array of Userstudies to be referenced as history
+ */
+var addUserstudyHistory = function(userstudyId,historyIds,callback) {
+  if (historyIds.length === 0){
+    callback
+  } else {
+    var queryString = 'INSERT INTO studies_requires_rel (studyId, requiresId) ' +
+      'VALUES (' + userstudyId + ',' + historyIds[0] + ')'
+    for (var i = 1; i<historyIds.length; i += 1) {
+      queryString = queryString.concat(',(' + userstudyId + ',' + historyIds[i] + ')')
+    }
+
+    mysql.getConnection(function(connection) {
+      connection.query(queryString,callback);
+    });
+  }
+}
+
+var addUserstudyRestrictions = function(userstudyId,restrictionIds,callback) {
+  if (restrictionIds.length === 0){
+    callback
+  } else {
+    var queryString = 'INSERT INTO studies_restricts_rel (studyId, restrictsId) ' +
+      'VALUES (' + userstudyId + ',' + restrictionIds[0] + ')'
+    for (var i = 1; i<restrictionIds.length; i += 1) {
+      queryString = queryString.concat(',(' + userstudyId + ',' + restrictionIds[i] + ')')
+    }
+
+    mysql.getConnection(function(connection) {
+      connection.query(queryString,callback);
+    });
+  }
+}
 
 

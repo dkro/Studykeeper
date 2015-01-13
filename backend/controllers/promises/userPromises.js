@@ -179,6 +179,24 @@ module.exports.userFromName = function(user){
   });
 };
 
+module.exports.userHasRole = function(user, role){
+  return new Promise(function(resolve, reject){
+    User.getUserByName(user.username, function(err, result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {
+        if (result[0].role===role) {
+          resolve(result[0]);
+        } else {
+          reject({message: 'Userrole does not match. Expected: ' + role + " Recieved: " + result[0].role});
+        }
+      } else {
+        reject({message: 'User not found'});
+      }
+    });
+  });
+};
+
 module.exports.createTokensForUser = function(user){
   return new Promise(function(resolve, reject){
     User.createTokenForUser(user, function(err, result){

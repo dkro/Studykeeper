@@ -8,11 +8,14 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 
 module.exports.createUserstudy = function(req, res) {
 
-  // TODO check for user (tutor, executor) roles ... create promise
   // TODO add the creator id to the database
-  var promises = [UserstudyPromise.validFullUserstudyReq(req,false),
-    UserPromise.userExists(req.body.userstudy.tutorname),
-    UserPromise.userExists(req.body.userstudy.executorname)];
+  // TODO smarter promises... reduce database queries...
+  var promises = [UserstudyPromise.validFullUserstudyReq(req,false)];
+//,
+//  UserPromise.userExists(req.body.userstudy.tutorname),
+//    UserPromise.userExists(req.body.userstudy.executorname),
+//    UserPromise.userHasRole(req.body.userstudy.tutorname),
+//    UserPromise.userHasRole(req.body.userstudy.executorname)
 
   Promise.all(promises).then(function(results){
     UserStudy.addUserStudy(results[0], function (err) {

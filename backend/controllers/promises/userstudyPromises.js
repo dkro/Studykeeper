@@ -75,8 +75,24 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
     if (!Validator.isNumeric(req.body.userstudy.space, 3)) {
       validationErrors.push({message: "Space invalid, numeric required: " + req.body.userstudy.space});
     }
-
-
+    if (Array.isArray(req.body.userstudy.isFutureStudyFor)) {
+      for (var i=0; i<req.body.userstudy.isFutureStudyFor; i=+1){
+        if (!Validator.isNumeric(req.body.userstudy.isFutureStudyFor)) {
+          validationErrors.push({message: "isFutureStudyFor invalid, numeric required: " + req.body.userstudy.isFutureStudyFor});
+        }
+      }
+    } else {
+      validationErrors.push({message: "isFutureStudyFor invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
+    }
+    if (Array.isArray(req.body.userstudy.isHistoryFor)) {
+      for (var i=0; i<req.body.userstudy.isHistoryFor; i=+1){
+        if (!Validator.isNumeric(req.body.userstudy.isHistoryFor)) {
+          validationErrors.push({message: "isHistoryFor invalid, numeric required: " + req.body.userstudy.isHistoryFor});
+        }
+      }
+    } else {
+      validationErrors.push({message: "isHistoryFor invalid, Array of Ids required: " + req.body.userstudy.isHistoryFor});
+    }
     if (req.body.userstudy.fromDate > req.body.userstudy.untilDate) {
       validationErrors.push({message: 'The from-date needs to be before the until-date.'});
     }
@@ -98,7 +114,9 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
         mmi: Validator.toString(req.body.userstudy.mmi),
         compensation: Validator.toString(req.body.userstudy.compensation),
         location: Validator.toString(req.body.userstudy.location),
-        space: Validator.toString(req.body.userstudy.space)
+        space: Validator.toString(req.body.userstudy.space),
+        isFutureStudyFor: req.body.userstudy.isFutureStudyFor,
+        isHistoryFor: req.body.userstudy.isHistoryFor
       };
       resolve(userStudyData);
     }

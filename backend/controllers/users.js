@@ -69,7 +69,7 @@ exports.getUserById = function(req, res) {
         user.isTutorFor = tutorIds;
         user.studyHistory = historyIds;
         user.futureRegisteredStudies = futureIds;
-        res.json(result);
+        res.json(user);
       })
       .catch(function(err){
         res.json(500, {status: 'failure', errors: err});
