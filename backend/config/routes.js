@@ -51,7 +51,7 @@ module.exports = function(app) {
   app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
   app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
   app.post('/api/users/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
-  app.delete('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
+  app.del('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
 
 
   // --------------- Userstudy routes ---------------
@@ -66,7 +66,7 @@ module.exports = function(app) {
    // todo this get with query params
   app.post('/api/userstudies/create',  userStudyController.createUserstudy);
   app.put('/api/userstudies/edit', userStudyController.editUserstudy);
-  app.delete('/api/userstudies/delete', userStudyController.deleteUserstudy);
+  app.del('/api/userstudies/delete', userStudyController.deleteUserstudy);
   app.put('/api/userstudies/publish',  userStudyController.publishUserstudy);
   app.put('/api/userstudies/registerUser',  userStudyController.registerUserToStudy);
   app.put('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
@@ -97,7 +97,7 @@ module.exports = function(app) {
   app.get('/api/templates', templateController.allTemplates); //todo smarter query results
 
   app.post('/api/templates/createTemplate', templateController.createTemplate);
-  app.delete('/api/templates/deleteTemplate', templateController.deleteTemplate);
+  app.del('/api/templates/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
   //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
 
