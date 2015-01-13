@@ -127,7 +127,7 @@ module.exports.allUserstudies = function(req, res) {
     if (err) {
       res.json(err);
     } else {
-      res.json(list);
+      res.json({userstudies: list});
     }
   });
 };

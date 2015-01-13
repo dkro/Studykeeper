@@ -51,7 +51,7 @@ module.exports = function(app) {
   app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
   app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
   app.post('/api/users/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
-  app.post('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
+  app.delete('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
 
 
   // --------------- Userstudy routes ---------------
@@ -62,25 +62,25 @@ module.exports = function(app) {
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
   app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
   app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
-
-  app.post('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered); // todo this get with query params
+  app.get('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
+   // todo this get with query params
   app.post('/api/userstudies/create',  userStudyController.createUserstudy);
-  app.post('/api/userstudies/edit', userStudyController.editUserstudy);
-  app.post('/api/userstudies/delete', userStudyController.deleteUserstudy);
-  app.post('/api/userstudies/publish',  userStudyController.publishUserstudy);
-  app.post('/api/userstudies/registerUser',  userStudyController.registerUserToStudy);
-  app.post('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
-  app.post('/api/userstudies/confirmUserParticipation',  userStudyController.confirmUserParticipation);
-  app.post('/api/userstudies/close',  userStudyController.closeUserstudy);
-  app.post('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
-  app.post('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
+  app.put('/api/userstudies/edit', userStudyController.editUserstudy);
+  app.delete('/api/userstudies/delete', userStudyController.deleteUserstudy);
+  app.put('/api/userstudies/publish',  userStudyController.publishUserstudy);
+  app.put('/api/userstudies/registerUser',  userStudyController.registerUserToStudy);
+  app.put('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
+  app.put('/api/userstudies/confirmUserParticipation',  userStudyController.confirmUserParticipation);
+  app.put('/api/userstudies/close',  userStudyController.closeUserstudy);
+  app.put('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
+  app.put('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
 
 
   // --------------- Label routes ---------------
   app.get('/api/labels', labelController.allLabels);
   app.get('/api/labels/:id', labelController.getLabelById);
 
-  app.put('/api/labels', labelController.createLabel);
+  app.post('/api/labels', labelController.createLabel);
   app.del('/api/labels/:id', labelController.deleteLabel);
 
 
@@ -88,16 +88,16 @@ module.exports = function(app) {
   app.get('/api/news', newsfeedController.allNews);
   app.get('/api/news/:id', newsfeedController.getNewsById);
 
-  app.put('/api/news', newsfeedController.createNews);
+  app.post('/api/news', newsfeedController.createNews);
   //app.del('/api/news', newsfeedController.deleteNews);
-  app.post('/api/news/edit', newsfeedController.editNews);
+  app.put('/api/news/edit', newsfeedController.editNews);
 
 
   // --------------- Templates routes ---------------
   app.get('/api/templates', templateController.allTemplates); //todo smarter query results
 
   app.post('/api/templates/createTemplate', templateController.createTemplate);
-  app.post('/api/templates/deleteTemplate', templateController.deleteTemplate);
+  app.delete('/api/templates/deleteTemplate', templateController.deleteTemplate);
   //app.post('/api/template/edit', templateController.editTemplate);
   //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
 
