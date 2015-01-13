@@ -27,7 +27,7 @@ exports.getUser = function(req, res) {
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else {
-      res.json(result);
+      res.json({user: result});
     }
   });
 };
@@ -153,13 +153,14 @@ exports.login = function(req, res) {
           return UserPromise.getTokensForUserOrderedByDate(user);
         })
         .then(function(tokens){
-            res.json({
+            res.json({ user: {
               status: 'success',
               message: 'Login successful',
               id: user.id,
               username: user.username,
               role: user.role,
               token: tokens[0].token
+            }
             });
         })
         .catch(function(err){
