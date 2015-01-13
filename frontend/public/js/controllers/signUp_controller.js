@@ -72,7 +72,7 @@ StudyManager.SignupController = Ember.Controller.extend({
         var userData = {
             "user": {
                 firstname:  this.get('firstName'),
-                surname:  this.get('lastName'),
+                lastname:  this.get('lastName'),
                 username:  this.get('username'),
                 password:  this.get('password'),
                 confirmPassword:  this.get('passwordConfirm'),
