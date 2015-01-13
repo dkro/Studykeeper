@@ -1,5 +1,5 @@
 StudyManager.UserAdapter = DS.RESTAdapter.extend({
-    namespace: 'api/users',
+    namespace: 'api',
 
     host: 'http://localhost:8080',
 

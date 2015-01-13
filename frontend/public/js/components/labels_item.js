@@ -8,13 +8,21 @@ StudyManager.LabelsItemComponent = Ember.Component.extend({
             if (this.get('persistedName') === this.get('nameValue')) {
                 this.set('isSelected', false);
             } else if (!Ember.empty(this.get('nameValue'))) {
-                this.set('persistedName', this.get('nameValue'));
-                this.set('isSelected', false);
+                var store = this.get('targetObject.store');
+                var that = this;
+
+                store.find('label', this.get('selfId')).then(function (label) {
+                    label.set('title', that.get('nameValue'));
+                    label.save();
+
+                    that.set('persistedName', that.get('nameValue'));
+                    that.set('isSelected', false);
+                });
             }
         },
 
         removeLabel: function() {
-
+            this.sendAction('gotRemoved', this.get('selfId'));
         }
     },
 

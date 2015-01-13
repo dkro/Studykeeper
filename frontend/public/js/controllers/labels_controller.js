@@ -5,11 +5,19 @@ StudyManager.LabelsController = Ember.Controller.extend({
         },
 
         createLabel: function() {
-            this.store.createRecord('label', {
+            var newLabel = this.store.createRecord('label', {
                 title: this.get('newLabelValue')
             });
 
+            newLabel.save();
+
             this.set('newLabelValue', null);
+        },
+
+        deleteLabel: function(labelId) {
+            this.store.find('label', labelId).then(function (label) {
+                label.destroyRecord();
+            });
         }
     },
 

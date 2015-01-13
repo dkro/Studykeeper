@@ -16,7 +16,7 @@
 
 <ul class="list-group labels__list">
     {{#each label in model}}
-        {{labels-item persistedName=label.title selfId=label.id currentlySelectedLabelId=currentlySelectedId gotSelected="setCurrentlySelectedId"}}
+        {{labels-item persistedName=label.title selfId=label.id currentlySelectedLabelId=currentlySelectedId gotSelected="setCurrentlySelectedId" gotRemoved="deleteLabel"}}
     {{/each}}
 </ul>
 
