@@ -14,7 +14,7 @@ module.exports.validSignupReq = function(req){
       validationErrors.push({message: "Firstname invalid, minimum 1 chars required."});
     }
     if (!Validator.isLength(req.body.user.lastname,1)) {
-      validationErrors.push({message: "Surname invalid, minimum 1 chars required."});
+      validationErrors.push({message: "Lastname invalid, minimum 1 chars required."});
     }
     if (!Validator.isLength(req.body.user.password,7)) {
       validationErrors.push({message: "Password invalid, minimum 7 chars required."});

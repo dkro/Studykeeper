@@ -49,6 +49,18 @@ module.exports.getLabelById = function (id, callback) {
   });
 };
 
+module.exports.getLabelByName = function (title, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT * FROM labels WHERE title=?',
+      title,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
 module.exports.mapLabeltoUserstudy = function (label, userstudy, callback) {
   mysql.getConnection(function(connection) {
     connection.query('INSERT INTO studies_labels_rel ' +
