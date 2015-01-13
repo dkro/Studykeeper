@@ -1,5 +1,5 @@
 StudyManager.LabelAdapter = DS.RESTAdapter.extend({
-    namespace: 'api/labels',
+    namespace: 'api',
 
     host: 'http://localhost:8080',
 

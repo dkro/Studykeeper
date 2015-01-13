@@ -6,13 +6,13 @@
     <span class="input-group-btn">
         <button class="btn btn-primary" type="button" {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>Erstellen</button>
     </span>
+    {{#if errorMessage}}
+        <div class="alert alert-danger labels__errorMessage">
+            {{errorMessage}}
+        </div>
+    {{/if}}
 </div>
 
-{{#if errorMessage}}
-    <div class="alert alert-danger labels__errorMessage">
-        {{errorMessage}}
-    </div>
-{{/if}}
 
 <ul class="list-group labels__list">
     {{#each label in model}}

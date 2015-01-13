@@ -1,5 +1,5 @@
 StudyManager.NewsAdapter = DS.RESTAdapter.extend({
-    namespace: 'api/news',
+    namespace: 'api',
 
     host: 'http://localhost:8080',
 

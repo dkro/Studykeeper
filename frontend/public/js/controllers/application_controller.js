@@ -33,7 +33,7 @@ StudyManager.ApplicationController = Ember.Controller.extend({
     },
 
     userRoleChanged: function() {
-        var isTutor = this.get('userRole') === 'TUTOR';
+        var isTutor = this.get('userRole') === 'tutor';
         this.set('isTutor', isTutor);
         this.get('controllers.dashboard').set('isTutor', isTutor);
     }.observes('userRole')

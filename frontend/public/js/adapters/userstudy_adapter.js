@@ -1,5 +1,5 @@
 StudyManager.UserstudyAdapter = DS.RESTAdapter.extend({
-    namespace: 'api/userstudies',
+    namespace: 'api',
 
     host: 'http://localhost:8080',
 
@@ -17,5 +17,9 @@ StudyManager.UserstudyAdapter = DS.RESTAdapter.extend({
         };
 
         return this._super(url, type, hash);
+    },
+
+    pathForType: function(type) {
+        return 'userstudies';
     }
 });

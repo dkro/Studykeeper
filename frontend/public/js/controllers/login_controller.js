@@ -4,23 +4,23 @@ StudyManager.LoginController = Ember.Controller.extend({
     actions: {
         login: function() {
             // DEFAULT
-/*
+
             var userData = this.getProperties('username', 'password');
             var that = this;
 
             that.set('errorMessage', null);
 
             Ember.$.post('http://localhost:8080/api/users/login', userData).then(function(response) {
-                that.set('token', response.token);
-                that.set('currentUserId', 1);
-                that.get('controllers.application').set('userRole', response.role);
+                that.set('token', response.user.token);
+                that.set('currentUserId', response.user.id);
+                that.get('controllers.application').set('userRole', response.user.role);
                 that.get('controllers.application').set('isLoggedIn', true);
 
                 that.transitionToRoute('dashboard');
             }, function(error) {
                     that.set('errorMessage', 'Login failed!');
             });
-*/
+/*
 
             // MOCK
             this.set('errorMessage', null);
@@ -46,7 +46,7 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.set('currentUserId', 1);
 
                 this.transitionToRoute('dashboard');
-            }
+            }*/
         },
 
         toSignUp: function() {
