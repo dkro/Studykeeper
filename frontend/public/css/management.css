@@ -1,3 +1,34 @@
+.users__heading {
+}
+
+.users__createButton {
+    float: right;
+    margin-bottom: 1em;
+}
+
+.users__table {
+    margin-top: 1em;
+    clear: right;
+}
+
+.users__editIcon {
+    cursor: pointer;
+}
+
+.users__deleteIcon {
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/* LABELS */
+
 .labels__heading {
     margin-bottom: 1.5em;
 }

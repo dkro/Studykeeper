@@ -23,14 +23,14 @@
                             Management
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li {{action 'goToStudyConfig'}}>
-                                <a>Studien</a>
+                            <li>
+                                {{#link-to 'userstudies'}}Studien{{/link-to}}
                             </li>
                             <li>
-                                <a href="">User</a>
+                                {{#link-to 'users'}}User{{/link-to}}
                             </li>
-                            <li {{action 'goToLabelsConfig'}}>
-                                <a>Labels</a>
+                            <li>
+                                {{#link-to 'labels'}}Labels{{/link-to}}
                             </li>
                         </ul>
                     </li>
