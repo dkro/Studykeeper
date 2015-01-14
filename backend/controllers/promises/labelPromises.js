@@ -34,9 +34,7 @@ module.exports.labelExists = function(label){
     Label.getLabelById(label.id, function(err, result){
       if (err) {
         reject({message: 'Internal error, please try again.'});
-      }
-
-      if (result.length > 0){
+      } else if (result.length > 0){
         resolve(result[0]);
       } else {
         reject({message: 'Label not found.'});
