@@ -70,23 +70,32 @@ module.exports.validFullUserstudyReq = function(req){
     if (!Validator.isNumeric(req.body.userstudy.space, 3)) {
       validationErrors.push({message: "Space invalid, numeric required: " + req.body.userstudy.space});
     }
-    if (Array.isArray(req.body.userstudy.isFutureStudyFor)) {
-      for (var i=0; i<req.body.userstudy.isFutureStudyFor; i+=1){
-        if (!Validator.isNumeric(req.body.userstudy.isFutureStudyFor)) {
-          validationErrors.push({message: "isFutureStudyFor invalid, numeric required: " + req.body.userstudy.isFutureStudyFor});
+    if (Array.isArray(req.body.userstudy.requiredStudies)) {
+      for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
+        if (!Validator.isNumeric(req.body.userstudy.requiredStudies)) {
+          validationErrors.push({message: "requiredStudies invalid, numeric required: " + req.body.userstudy.requiredStudies});
         }
       }
     } else {
-      validationErrors.push({message: "isFutureStudyFor invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
+      validationErrors.push({message: "requiredStudies invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
     }
-    if (Array.isArray(req.body.userstudy.isHistoryFor)) {
-      for (var j=0; j<req.body.userstudy.isHistoryFor; j+=1){
-        if (!Validator.isNumeric(req.body.userstudy.isHistoryFor)) {
-          validationErrors.push({message: "isHistoryFor invalid, numeric required: " + req.body.userstudy.isHistoryFor});
+    if (Array.isArray(req.body.userstudy.news)) {
+      for (var i=0; i<req.body.userstudy.news; i+=1){
+        if (!Validator.isNumeric(req.body.userstudy.news)) {
+          validationErrors.push({message: "news invalid, numeric required: " + req.body.userstudy.news});
         }
       }
     } else {
-      validationErrors.push({message: "isHistoryFor invalid, Array of Ids required: " + req.body.userstudy.isHistoryFor});
+      validationErrors.push({message: "news invalid, Array of Ids required: " + req.body.userstudy.news});
+    }
+    if (Array.isArray(req.body.userstudy.labels)) {
+      for (var i=0; i<req.body.userstudy.labels; i+=1){
+        if (!Validator.isNumeric(req.body.userstudy.labels)) {
+          validationErrors.push({message: "labels invalid, numeric required: " + req.body.userstudy.labels});
+        }
+      }
+    } else {
+      validationErrors.push({message: "labels invalid, Array of Ids required: " + req.body.userstudy.labels});
     }
     if (req.body.userstudy.fromDate > req.body.userstudy.untilDate) {
       validationErrors.push({message: 'The from-date needs to be before the until-date.'});
@@ -109,90 +118,11 @@ module.exports.validFullUserstudyReq = function(req){
         compensation: Validator.toString(req.body.userstudy.compensation),
         location: Validator.toString(req.body.userstudy.location),
         space: Validator.toString(req.body.userstudy.space),
-        isFutureStudyFor: req.body.userstudy.isFutureStudyFor,
-        isHistoryFor: req.body.userstudy.isHistoryFor
+        requiredStudies: req.body.userstudy.requiredStudies,
+        news: req.body.userstudy.news,
+        labels: req.body.userstudy.labels
       };
       resolve(userStudyData);
-    }
-  });
-};
-
-module.exports.validFilterReq = function(req){
-  return new Promise(function(resolve,reject) {
-    var validationErrors = [];
-
-    var order;
-    if (req.body.filter.order && req.body.filter.order!=="desc" && req.body.filter.order!=="asc") {
-      validationErrors.push({message: "Invalid filter-order. \"asc\" or \"desc\" required"});
-    } else {
-      order = Validator.toString(req.body.filter.order);
-    }
-
-    var orderBy;
-    var arr = ["title","fromDate","untilDate","tutorname","executorname","space","location"];
-    if (req.body.filter.orderBy && arr.indexOf(req.body.filter.orderBy) === -1) {
-      validationErrors.push({message: "Invalid filter-orderBy. " + arr + " required"});
-    } else {
-      orderBy = Validator.toString(req.body.filter.orderBy);
-    }
-
-    // todo regex for limit
-
-    // todo correct labe check
-    var label;
-    if (!req.body.label){
-      label = "";
-    } else {
-      label = req.body.label;
-    }
-
-    if (req.body.filter.title && !Validator.isAlpha(req.body.filter.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
-      validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.filter.title});
-    }
-    if (req.body.filter.tutorname && !Validator.isEmail(req.body.filter.tutorname)) {
-      validationErrors.push({message: "Tutorname invalid, has be an email: " + req.body.filter.tutorname});
-    }
-    if (req.body.filter.executorname && !Validator.isEmail(req.body.filter.executorname)) {
-      validationErrors.push({message: "Executorname invalid, has be an email:: " + req.body.filter.executorname});
-    }
-    if (req.body.filter.fromDate && !Validator.isDate(req.body.filter.fromDate)) {
-      validationErrors.push({message: "FromDate invalid, has to be of form YYYY-MM-DD: " + req.body.filter.fromDate});
-    }
-    if (req.body.filter.untilDate && !Validator.isDate(req.body.filter.untilDate)) {
-      validationErrors.push({message: "UntilDate invalid, has to be of form YYYY-MM-DD: " + req.body.filter.untilDate});
-    }
-    if (req.body.filter.description && !Validator.isLength(req.body.filter.description, 3)) {
-      validationErrors.push({message: "Description invalid, minimum 3 characters: " + req.body.filter.description});
-    }
-    if (req.body.filter.visible && !Validator.isNumeric(req.body.filter.visible)) {
-      validationErrors.push({message: "Visible invalid, has to be numeric: " + req.body.filter.visible});
-    }
-    if (req.body.filter.published && !Validator.isNumeric(req.body.filter.published)) {
-      validationErrors.push({message: "Published invalid, has to be numeric: " + req.body.filter.published});
-    }
-    if (req.body.filter.closed && !Validator.isNumeric(req.body.filter.closed)) {
-      validationErrors.push({message: "Closed invalid, has to be numeric: " + req.body.filter.closed});
-    }
-
-    if (validationErrors.length > 0) {
-      reject(validationErrors);
-    } else {
-      var filterData = {
-        order: order,
-        orderBy: orderBy,
-        label: label,
-        limit: Validator.toString(req.body.filter.limit),
-        fromDate: Validator.toString(req.body.filter.fromDate),
-        untilDate:Validator.toString(req.body.filter.untilDate),
-        title: Validator.toString(req.body.filter.title),
-        description: Validator.toString(req.body.filter.description),
-        tutor: Validator.toString(req.body.filter.tutor),
-        executor: Validator.toString(req.body.filter.executor),
-        visible: Validator.toString(req.body.filter.visible),
-        published: Validator.toString(req.body.filter.published),
-        closed: Validator.toString(req.body.filter.closed)
-      };
-      resolve(filterData);
     }
   });
 };
@@ -341,26 +271,3 @@ module.exports.userRegisteredStudies = function(user) {
   });
 };
 
-module.exports.studiesRequiredByStudy = function(userstudy) {
-  return new Promise(function (resolve, reject) {
-    Userstudy.getStudiesRequiredFor(userstudy, function (err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
-module.exports.studiesRestricedByStudy = function(userstudy) {
-  return new Promise(function (resolve, reject) {
-    Userstudy.getStudiesRestricedBy(userstudy, function (err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};

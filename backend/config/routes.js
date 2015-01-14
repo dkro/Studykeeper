@@ -64,7 +64,7 @@ module.exports = function(app) {
   app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
   //app.get('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
    // todo this get with query params
-  app.post('/api/userstudies/create',  userStudyController.createUserstudy);
+  app.post('/api/userstudies',  userStudyController.createUserstudy);
   app.del('/api/userstudies/delete', userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', userStudyController.editUserstudy);
   app.put('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);

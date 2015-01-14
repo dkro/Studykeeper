@@ -4,13 +4,14 @@ var User         = require('../models/users');
 var Promise      = require('es6-promise').Promise;
 var UserPromise  = require('./promises/userPromises');
 var UserstudyPromise = require('./promises/userstudyPromises');
+var Async       = require('async');
 
 
 module.exports.createUserstudy = function(req, res) {
 
   // TODO add the creator id to the database
   // TODO smarter promises... reduce database queries...
-  var promises = [UserstudyPromise.validFullUserstudyReq(req,false)];
+  var promises = [UserstudyPromise.validFullUserstudyReq(req)];
 //,
 //  UserPromise.userExists(req.body.userstudy.tutorname),
 //    UserPromise.userExists(req.body.userstudy.executorname),
@@ -32,7 +33,7 @@ module.exports.createUserstudy = function(req, res) {
 
 module.exports.editUserstudy = function(req, res) {
   var userstudy;
-  UserstudyPromise.validFullUserstudyReq(req,true)
+  UserstudyPromise.validFullUserstudyReq(req)
     .then(function(result){
       userstudy = result;
       userstudy.id = req.params.id;
@@ -126,7 +127,31 @@ module.exports.allUserstudies = function(req, res) {
     if (err) {
       res.json(err);
     } else {
-      res.json({userstudies: list});
+      // each (withour series) will use mutliple database connectionts
+      // todo investigate if this has any negative side effects
+        Async.eachSeries(list, function(item, callback){
+          UserStudy.getStudiesRelationFor(item.id,'labels').then(function(results) {
+            var labelIds = [];
+            for (var j = 0; j < results.length; j += 1) {
+              labelIds.push(results[j].id);
+            }
+
+            // setting news and requireStudies empty for the all userstudy request
+            // This reduces the amount of database queries
+            // This data will be provided by a single get requiest for one userstudy
+            item.requiredStudies = [];
+            item.news = [];
+            item.labels = labelIds;
+            item.closed = !!item.closed;
+            callback();
+          });
+        }, function(err){
+          if(err){
+            res.json({status:'failure',message: err});
+          } else {
+            res.json(list);
+          }
+        });
     }
   });
 };
@@ -140,22 +165,31 @@ module.exports.getUserstudyById = function(req, res) {
     } else {
 
       var userstudy = result[0];
-      var promises = [UserstudyPromise.studiesRequiredByStudy(userstudy),
-        UserstudyPromise.studiesRestricedByStudy(userstudy)];
+      var promises = [
+        UserStudy.getStudiesRelationFor(req.params.id,'requires'),
+        UserStudy.getStudiesRelationFor(req.params.id,'labels'),
+        UserStudy.getStudiesRelationFor(req.params.id,'news')
+      ];
 
       Promise.all(promises).then(function(results){
 
-        var requiredIds = [];
+        var requiredStudiesIds = [];
         for (var i = 0; i < results[0].length; i += 1) {
-          requiredIds.push(results[0][i].id);
+          requiredStudiesIds.push(results[0][i].id);
         }
-        var restricedIds = [];
+        var labelIds = [];
         for (var j = 0; j < results[1].length; j += 1) {
-          restricedIds.push(results[1][j].id);
+          labelIds.push(results[1][j].id);
+        }
+        var newsIds = [];
+        for (var k = 0; j < results[2].length; k += 1) {
+          newsIds.push(results[2][j].id);
         }
 
-        userstudy.isFutureStudyFor = requiredIds;
-        userstudy.isHistoryFor = restricedIds;
+        userstudy.requiredStudies = requiredStudiesIds;
+        userstudy.news = newsIds;
+        userstudy.labels = labelIds;
+
         userstudy.closed = !!userstudy.closed;
         res.json({userstudy: userstudy});
       })

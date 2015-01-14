@@ -1,21 +1,22 @@
 {
   "userstudy": {
-    "id": 6,
-    "title": "bowWow",
-    "tutorname": "user6@studykeeper.com",
-    "executorname": "user7@studykeeper.com",
+    "title": "userstudy title x",
+    "tutorname": "userx@studykeeper.com",
+    "executorname": "userx@studykeeper.com",
     "tutorId": 6,
     "executorId": 7,
     "fromDate": "2014-12-12",
     "untilDate": "2014-12-12",
-    "description": "userstudy description wowow",
+    "description": "userstudy description x",
     "doodleLink": "http://www.doodlelink.com",
     "paper": "http://www.linktopaper.com",
     "mmi": "1",
     "compensation": "22",
-    "location": "san francisco",
+    "location": "location x",
     "space": 20,
-    "isFutureStudyFor" : [1],
-    "isHistoryFor" : [6,10]
+    "requiredStudies" : [1,6],
+    "labels" : [8],
+    "registeredUsers" : [],
+    "news" : [2]
   }
 }
