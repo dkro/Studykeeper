@@ -58,22 +58,22 @@ module.exports = function(app) {
   app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
   app.get('/api/userstudies/:id', userStudyController.getUserstudyById); // todo add newsfeed and label to these
   //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
-  app.get('/api/userstudies/registeredUsers', userStudyController.usersRegisteredToStudy);
+  app.get('/api/userstudies/:id/registeredUsers', userStudyController.usersRegisteredToStudy);
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
   app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
   app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
-  app.get('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
+  //app.get('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
    // todo this get with query params
   app.post('/api/userstudies/create',  userStudyController.createUserstudy);
-  app.put('/api/userstudies/edit', userStudyController.editUserstudy);
   app.del('/api/userstudies/delete', userStudyController.deleteUserstudy);
-  app.put('/api/userstudies/publish',  userStudyController.publishUserstudy);
-  app.put('/api/userstudies/registerUser',  userStudyController.registerUserToStudy);
-  app.put('/api/userstudies/removeUser',  userStudyController.removeUserFromStudy);
-  app.put('/api/userstudies/confirmUserParticipation',  userStudyController.confirmUserParticipation);
-  app.put('/api/userstudies/close',  userStudyController.closeUserstudy);
+  app.put('/api/userstudies/:id', userStudyController.editUserstudy);
+  app.put('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
+  app.put('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
+  app.put('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
+  app.put('/api/userstudies/:id/confirmUserParticipation',  userStudyController.confirmUserParticipation);
+  app.put('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
   app.put('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
-  app.put('/api/userstudies/addLabel',  labelController.addLabeltoUserstudy);
+  app.put('/api/userstudies/:id/addLabel',  labelController.addLabeltoUserstudy);
 
 
   // --------------- Label routes ---------------

@@ -25,14 +25,9 @@ module.exports.validUserstudyReq = function(req){
   });
 };
 
-module.exports.validFullUserstudyReq = function(req,idRequired){
+module.exports.validFullUserstudyReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (idRequired){
-      if (!Validator.isNumeric(req.body.userstudy.id)) {
-        validationErrors.push({message: "Id invalid, has to be numeric: " + req.body.userstudy.id});
-      }
-    }
     if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
       validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.userstudy.title});
     }
@@ -76,7 +71,7 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
       validationErrors.push({message: "Space invalid, numeric required: " + req.body.userstudy.space});
     }
     if (Array.isArray(req.body.userstudy.isFutureStudyFor)) {
-      for (var i=0; i<req.body.userstudy.isFutureStudyFor; i=+1){
+      for (var i=0; i<req.body.userstudy.isFutureStudyFor; i+=1){
         if (!Validator.isNumeric(req.body.userstudy.isFutureStudyFor)) {
           validationErrors.push({message: "isFutureStudyFor invalid, numeric required: " + req.body.userstudy.isFutureStudyFor});
         }
@@ -85,7 +80,7 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
       validationErrors.push({message: "isFutureStudyFor invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
     }
     if (Array.isArray(req.body.userstudy.isHistoryFor)) {
-      for (var i=0; i<req.body.userstudy.isHistoryFor; i=+1){
+      for (var j=0; j<req.body.userstudy.isHistoryFor; j+=1){
         if (!Validator.isNumeric(req.body.userstudy.isHistoryFor)) {
           validationErrors.push({message: "isHistoryFor invalid, numeric required: " + req.body.userstudy.isHistoryFor});
         }
@@ -100,7 +95,6 @@ module.exports.validFullUserstudyReq = function(req,idRequired){
       reject(validationErrors);
     } else {
       var userStudyData = {
-        id: Validator.toString(req.body.userstudy.id),
         title: Validator.toString(req.body.userstudy.title),
         tutorname: Validator.toString(req.body.userstudy.tutorname),
         executorname: Validator.toString(req.body.userstudy.executorname),
@@ -206,10 +200,10 @@ module.exports.validFilterReq = function(req){
 module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
 
-    Userstudy.getUserstudy(userstudy,function(err,result){
-      if (err) {reject(err);}
-
-      if (result.length === 0) {
+    Userstudy.getUserstudyById(userstudy.id,function(err,result){
+      if (err) {
+        reject(err);
+      } else if (result.length === 0) {
         reject({message: 'userstudy not found', userstudy: {
           id: userstudy.id,
           title: userstudy.title
@@ -243,45 +237,45 @@ module.exports.userstudyHasSpace = function(userstudy) {
   });
 };
 
-module.exports.userIsRegisteredToStudy = function(user, userstudy){
+module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
   return new Promise(function(resolve, reject){
-    Userstudy.getUsersRegisteredToStudy(userstudy, function(err,result){
+    Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
       if (err) {reject(err);}
 
       var registered = false;
-      for (var i= 0; i<result.length; i++) {
-        if (result[i].id === user.id) {
+      for (var i= 0; i<result.length; i+=1) {
+        if (result[i].id === userId) {
           registered = true;
           break;
         }
       }
 
       if (registered) {
-        resolve(user);
+        resolve(userId);
       } else {
-        reject({message: 'user: ' + user.username + ' is not registered to userstudy: ' + userstudy.title});
+        reject({message: 'user: ' + userId + ' is not registered to userstudy: ' + userstudyId});
       }
     });
   });
 };
 
-module.exports.userIsNOTRegisteredToStudy = function(user,userstudy){
+module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
   return new Promise(function(resolve, reject){
-    Userstudy.getUsersRegisteredToStudy(userstudy, function(err,result){
+    Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
       if (err) {reject(err);}
 
-      var registered = true;
-      for (var i= 0; i<result.length; i++) {
-        if (result[i].id === user.id) {
-          registered = false;
+      var registered = false;
+      for (var i= 0; i<result.length; i+=1) {
+        if (result[i].id === userId) {
+          registered = true;
           break;
         }
       }
 
       if (registered) {
-        reject({message: 'user: ' + user.username + ' is registered to userstudy: ' + userstudy.title});
+        reject({message: 'user: ' + userId + ' is registered already to userstudy: ' + userstudyId});
       } else {
-        resolve(user);
+        resolve(userId);
       }
     });
   });

@@ -31,7 +31,7 @@ module.exports.validLabelReq = function(req,hasId){
 
 module.exports.labelExists = function(label){
   return new Promise(function(resolve, reject){
-    Label.getLabelByName(label.title, function(err, result){
+    Label.getLabelById(label.id, function(err, result){
       if (err) {
         reject({message: 'Internal error, please try again.'});
       }

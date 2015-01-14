@@ -1,24 +1,96 @@
 "use strict";
 var mysql      = require('../config/mysql');
+var Promise      = require('es6-promise').Promise;
 
 module.exports.addUserStudy = function (data, callback) {
   var queryData = {
-    title: data.title,
-    tutorname: data.tutorname,
-    tutorId: data.tutorId,
-    executorname : data.executorname,
-    executorId: data.executorId,
-    from: data.fromDate,
-    until: data.untilDate,
-    description: data.description,
-    link: data.doodleLink,
-    paper: data.paper,
-    space: data.space,
-    mmi: data.mmi,
-    compensation: data.compensation,
-    location: data.location,
-    isFutureStudyFor: data.isFutureStudyFor,
-    isHistoryFor: data.isHistoryFor
+    title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
+    description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
+    compensation: data.compensation, location: data.location,
+    isFutureStudyFor: data.isFutureStudyFor, isHistoryFor: data.isHistoryFor
+  };
+  mysql.getConnection(function(connection) {
+    // Start a Transaction
+    connection.beginTransaction(function (err) {
+      if (err) {
+        connection.release();
+        throw err;
+      }
+      // Create the userstudy in userstudies Table
+      var pr = new Promise(function(resolve,reject){
+        connection.query('INSERT INTO userstudies ' +
+          '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,space,mmi,compensation,' +
+          'location,visible,published,closed,creatorId,newsId) ' +
+          'VALUES ((SELECT id FROM users WHERE id=?),(SELECT id FROM users WHERE id=?),' +
+          '?,?,?,?,?,?,?,?,?,?,1,0,0,1,1);',
+          // todo creator is hardcoded remove this
+          [queryData.tutorId,
+            queryData.executorId,queryData.from, queryData.until, queryData.title, queryData.description,
+            queryData.link, queryData.paper, queryData.space,queryData.mmi, queryData.compensation, queryData.location],
+          function(err,result){
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.insertId)
+            }
+          })
+      })
+        // Add the required userstudies to studies_requires_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            addUserstudyHistory(connection,userstudyId, queryData.isHistoryFor, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Add All restricted userstudies to studies_restricts_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            addUserstudyRestrictions(connection,userstudyId, queryData.isFutureStudyFor, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Finally commit
+        .then(function(userstudy){
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                connection.release();
+                throw err;
+              });
+            } else {
+              connection.release();
+              callback();
+            }
+          });
+        })
+        // Catch all erors
+        .catch(function(err){
+          connection.rollback(function () {
+            connection.release();
+            throw err;
+            callback(err);
+          });
+        })
+    });
+  });
+};
+
+module.exports.editUserStudy = function (data, callback) {
+  var queryData = {
+    id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
+    description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
+    compensation: data.compensation, location: data.location,
+    isFutureStudyFor: data.isFutureStudyFor, isHistoryFor: data.isHistoryFor
   };
   mysql.getConnection(function(connection) {
     connection.beginTransaction(function (err) {
@@ -26,114 +98,102 @@ module.exports.addUserStudy = function (data, callback) {
         connection.release();
         throw err;
       }
-
-      connection.query('INSERT INTO userstudies ' +
-        '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,space,mmi,compensation,' +
-        'location,visible,published,closed,creatorId,newsId) ' +
-        'VALUES ((SELECT id FROM users WHERE id=?),(SELECT id FROM users WHERE id=?),' +
-        '?,?,?,?,?,?,?,?,?,?,1,0,0,1,1);',
-        // todo creator is hardcoded remove this
-        [queryData.tutorId,
-          queryData.executorId,queryData.from, queryData.until,
-          queryData.title, queryData.description,queryData.link, queryData.paper,
-          queryData.space,queryData.mmi, queryData.compensation,
-          queryData.location],
-        function (err, result) {
-          if (err) {
-            connection.rollback(function () {
-              connection.release();
-              throw err;
-            });
+      // Create the userstudy in userstudies Table
+      var pr = new Promise(function(resolve,reject){
+        connection.query('UPDATE userstudies ' +
+          'SET tutorId=?,executorId=?,fromDate=?,untilDate=?,title=?,description=?,link=?,paper=?,' +
+          'space=?,mmi=?,compensation=?,location=?, creatorId=1, newsId=1 ' +
+          'WHERE id=?;',
+          [queryData.tutorId, queryData.executorId, queryData.from,queryData.until, queryData.title,queryData.description,
+            queryData.link,queryData.paper, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
+            queryData.id, queryData.title],
+          function(err,result){
+            if (err) {
+              reject(err)
+            } else {
+              resolve(queryData.id)
+            }
           }
-
-          var userstudyId = result.insertId
-
-          addUserstudyHistory(userstudyId,queryData.isHistoryFor,function(err){
-            if (err){
+        );
+      })
+        // Add the required userstudies to studies_requires_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            delUserstudyHistory(connection,userstudyId, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Add the required userstudies to studies_requires_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            delUserstudyRestrictions(connection,userstudyId, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Add the required userstudies to studies_requires_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            addUserstudyHistory(connection, userstudyId, queryData.isHistoryFor, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Add All restricted userstudies to studies_restricts_rel
+        .then(function(userstudyId){
+          return new Promise(function(resolve,reject) {
+            addUserstudyRestrictions(connection, userstudyId, queryData.isFutureStudyFor, function (err, result) {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(userstudyId)
+              }
+            })
+          })
+        })
+        // Finally commit
+        .then(function(userstudy){
+          connection.commit(function (err) {
+            if (err) {
               connection.rollback(function () {
                 connection.release();
                 throw err;
               });
             } else {
-              addUserstudyRestrictions(userstudyId, queryData.isFutureStudyFor, function (err) {
-                if (err) {
-                  connection.rollback(function () {
-                    connection.release();
-                    throw err;
-                  });
-                } else {
-                  connection.commit(function (err) {
-                    if (err) {
-                      connection.rollback(function () {
-                        connection.release();
-                        throw err;
-                      });
-                    } else {
-                      connection.release();
-                      callback();
-                    }
-                  });
-                }
-              });
+              connection.release();
+              callback();
             }
           });
-        }
-      );
+        })
+        // Catch all erors
+        .catch(function(err){
+          connection.rollback(function () {
+            connection.release();
+            throw err;
+            callback(err);
+          });
+        })
     });
-  });
-};
-
-module.exports.editUserStudy = function (data, callback) {
-  var queryData = {
-    id: data.id,
-    title: data.title,
-    tutorname: data.tutorname,
-    tutorId: data.tutorId,
-    executorname : data.executorname,
-    executorId: data.executorId,
-    from: data.fromDate,
-    until: data.untilDate,
-    description: data.description,
-    link: data.doodleLink,
-    paper: data.paper,
-    space: data.space,
-    mmi: data.mmi,
-    compensation: data.compensation,
-    location: data.location
-  };
-  mysql.getConnection(function(connection) {
-    connection.query('UPDATE userstudies ' +
-    'SET tutorId=(SELECT id FROM users WHERE id=? AND username=?)' +
-      ',executorId=(SELECT id FROM users WHERE id=? AND username=?),' +
-    'fromDate=?,untilDate=?,' +
-    'title=?,description=?,' +
-    'link=?,paper=?,' +
-    'space=?,' +
-    'mmi=?,compensation=?,' +
-    'location=? ' +
-    'WHERE id=? ' +
-    'AND title=?;',
-      [queryData.tutorId,queryData.tutorname,
-        queryData.executorId,queryData.executorname,
-        queryData.from,queryData.until,
-        queryData.title,queryData.description,
-        queryData.link,queryData.paper,
-        queryData.space,
-        queryData.mmi,queryData.compensation,
-        queryData.location,
-        queryData.id, queryData.title],
-      function(err,result){
-        connection.release();
-        callback(err,result);
-      }
-    );
   });
 };
 
 module.exports.getUserstudy = function (userstudy, callback) {
   mysql.getConnection(function(connection) {
     connection.query(
-      'SELECT us.id, u.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
+      'SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
       'us.location, us.closed ' +
       'FROM userstudies us '+
@@ -269,12 +329,11 @@ module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callb
   });
 };
 
-module.exports.getUsersRegisteredToStudy = function(userstudy, callback){
+module.exports.getUsersRegisteredToStudy = function(userstudyId, callback){
   mysql.getConnection(function(connection) {
     connection.query('SELECT * FROM users ' +
-      'WHERE id=' +
-        '(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
-      userstudy.id,
+      'WHERE id=(SELECT userId FROM users_studies_rel WHERE studyId=?)' ,
+      userstudyId,
       function(err,result){
         connection.release();
         callback(err,result);
@@ -459,16 +518,12 @@ module.exports.closeUserstudy = function(userstudy, callback){
   });
 };
 
-module.exports.mapUserToStudy = function(user, userstudy, callback){
+module.exports.mapUserToStudy = function(userId, userstudyId, callback){
   mysql.getConnection(function(connection) {
     connection.query('INSERT INTO users_studies_rel ' +
       '(studyId,userId,registered,confirmed) ' +
-      'VALUES (' +
-      '(SELECT id FROM users WHERE id=? AND username=?),' +
-      '(SELECT id FROM userstudies WHERE id=? AND username=?),' +
-      '1,0);',
-      [user.id,user.username,
-        userstudy.id,userstudy.title],
+      'VALUES (?,?,1,0);',
+      [userId,userstudyId],
       function(err,result){
         connection.release();
         callback(err,result);
@@ -477,14 +532,13 @@ module.exports.mapUserToStudy = function(user, userstudy, callback){
   });
 };
 
-module.exports.unmapUserFromStudy = function(user, userstudy, callback){
+module.exports.unmapUserFromStudy = function(userId, userstudyId, callback){
   mysql.getConnection(function(connection) {
-    connection.query('UPDATE users_studies_rel ' +
-      'SET confirmed=0 ' +
-      'WHERE userId=(SELECT * FROM users WHERE id=? AND username=?) ' +
-      'AND studyId=(SELECT * FROM userstudies WHERE id=? AND title=?)',
-      [user.id,user.username,
-        userstudy.id,userstudy.title],
+    connection.query('DELETE FROM users_studies_rel ' +
+      'WHERE userId=? ' +
+      'AND studyId=?',
+      [userId, userstudyId],
+      // todo what happens if the user is confirmed. Unmap or not?
       function(err,result){
         connection.release();
         callback(err,result);
@@ -529,25 +583,22 @@ module.exports.getUserRegisteredToStudy = function(userstudy, callback){
  * @param userstudyId Id of the userstudy for which the history should be created
  * @param historyIds Array of Userstudies to be referenced as history
  */
-var addUserstudyHistory = function(userstudyId,historyIds,callback) {
+var addUserstudyHistory = function(connection, userstudyId, historyIds, callback) {
   if (historyIds.length === 0){
-    callback
+    callback();
   } else {
     var queryString = 'INSERT INTO studies_requires_rel (studyId, requiresId) ' +
       'VALUES (' + userstudyId + ',' + historyIds[0] + ')'
     for (var i = 1; i<historyIds.length; i += 1) {
       queryString = queryString.concat(',(' + userstudyId + ',' + historyIds[i] + ')')
     }
-
-    mysql.getConnection(function(connection) {
-      connection.query(queryString,callback);
-    });
+    connection.query(queryString,callback);
   }
 }
 
-var addUserstudyRestrictions = function(userstudyId,restrictionIds,callback) {
+var addUserstudyRestrictions = function(connection, userstudyId, restrictionIds, callback) {
   if (restrictionIds.length === 0){
-    callback
+    callback();
   } else {
     var queryString = 'INSERT INTO studies_restricts_rel (studyId, restrictsId) ' +
       'VALUES (' + userstudyId + ',' + restrictionIds[0] + ')'
@@ -555,10 +606,15 @@ var addUserstudyRestrictions = function(userstudyId,restrictionIds,callback) {
       queryString = queryString.concat(',(' + userstudyId + ',' + restrictionIds[i] + ')')
     }
 
-    mysql.getConnection(function(connection) {
-      connection.query(queryString,callback);
-    });
+    connection.query(queryString,callback);
   }
 }
 
 
+var delUserstudyHistory = function(connection,userstudyId,callback) {
+  connection.query('DELETE FROM studies_requires_rel WHERE studyId=?',userstudyId,callback);
+}
+
+var delUserstudyRestrictions = function(connection,userstudyId,callback) {
+  connection.query('DELETE FROM studies_restricts_rel WHERE studyId=?',userstudyId,callback);
+}

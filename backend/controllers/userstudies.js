@@ -31,12 +31,11 @@ module.exports.createUserstudy = function(req, res) {
 };
 
 module.exports.editUserstudy = function(req, res) {
-
   var userstudy;
-
   UserstudyPromise.validFullUserstudyReq(req,true)
     .then(function(result){
       userstudy = result;
+      userstudy.id = req.params.id;
 
       return UserstudyPromise.userstudyExists(userstudy);
     })
@@ -260,25 +259,22 @@ module.exports.allUserstudiesHistoryForUser = function(req, res) {
 
 
 module.exports.registerUserToStudy = function(req, res){
-  var promises = [UserstudyPromise.validUserstudyReq(req), UserPromise.userFromToken(req)];
+  var userstudyId = req.params.id;
+  var userId;
 
-  var user;
-  var userstudy;
-
-  Promise.all(promises)
+  UserPromise.userFromToken(req)
     .then(function(result){
-      user = result[0];
-      userstudy = result[1];
+      userId = result.id;
 
-      return UserstudyPromise.userIsNOTRegisteredToStudy(user,userstudy);
+      return UserstudyPromise.userIsNOTRegisteredToStudy(userId,userstudyId);
     })
     .then(function(){
-      UserStudy.mapUserToStudy(user, userstudy, function(err){
+      UserStudy.mapUserToStudy(userId, userstudyId, function(err){
         if (err) {
           throw err;
         } else {
           res.json({status: 'success', message: 'User registered to userstudy.',
-                    user: user, userstudy: userstudy});
+                    user: userId, userstudy: userstudyId});
         }
     });
   })
@@ -288,25 +284,22 @@ module.exports.registerUserToStudy = function(req, res){
 };
 
 module.exports.removeUserFromStudy = function(req, res){
-  var promises = [UserstudyPromise.validUserstudyReq(req), UserPromise.userFromToken(req)];
+  var userstudyId = req.params.id;
+  var userId;
 
-  var user;
-  var userstudy;
-
-  Promise.all(promises)
+  UserPromise.userFromToken(req)
     .then(function(result){
-      user = result[0];
-      userstudy = result[1];
+      userId = result.id;
 
-      return UserstudyPromise.userIsRegisteredToStudy(user,userstudy);
+      return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
      })
     .then(function(){
-      UserStudy.unmapUserFromStudy(user,userstudy, function(err){
+      UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
         if (err) {
           throw err;
         } else {
           res.json({status: 'success', message: 'User removed from userstudy.',
-                    user: user, userstudy: userstudy});
+                    user: userId, userstudy: userstudyId});
         }
     });
   })

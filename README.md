@@ -2,5 +2,5 @@ UserstudyManager
 ================
 
 
-Miau miau miau miau
+Questions: Koennen Labels geloescht werden, die schon zu Nutzerstudien zugewiesen sind.
 
