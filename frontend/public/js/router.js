@@ -27,6 +27,7 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   },
 
   redirectToLogin: function(transition) {
+    this.controllerFor('application').resetLocalStorage();
     this.controllerFor('login').set('errorMessage', 'You must be logged in to view that page.');
     this.controllerFor('login').set('attemptedTransition', transition);
     this.transitionToRoute('login');
@@ -99,7 +100,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    return this.store.find('userstudy', params.userstudy_id);
+    return this.store.fetch('userstudy', params.userstudy_id);
   }
 });
 
@@ -117,7 +118,7 @@ StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.find('user', params.user_id);
+    return this.store.fetch('user', params.user_id);
   }
 });
 

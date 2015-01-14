@@ -58,8 +58,7 @@ StudyManager.LoginController = Ember.Controller.extend({
         this.setProperties({
             errorMessage: '',
             username: '',
-            password: '',
-            currentUserId: null
+            password: ''
         });
     },
 
@@ -68,5 +67,11 @@ StudyManager.LoginController = Ember.Controller.extend({
 
     tokenChanged: function() {
         localStorage.token = this.get('token');
-    }.observes('token')
+    }.observes('token'),
+
+    currentUserId: localStorage.currentUserId,
+
+    currentUserIdChanged: function() {
+        localStorage.currentUserId = this.get('currentUserId');
+    }.observes('currentUserId')
 });

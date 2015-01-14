@@ -23,12 +23,12 @@
 </div>
 
 <div class="studyDisplay__wrapper">
-    {{#if model.registeredStudies}}
-        {{study-display title="Angemeldete Studien" studies=model.registeredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
+    {{#if futureRegisteredStudies}}
+        {{study-display title="Angemeldete Studien" studies=futureRegisteredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
     {{/if}}
 
-    {{#if model.history}}
-        {{study-display title="Historie" studies=model.history additionalClassNames='studyDisplay--history' action='displayStudy'}}
+    {{#if history}}
+        {{study-display title="Historie" studies=history additionalClassNames='studyDisplay--history' action='displayStudy'}}
     {{/if}}
 
     {{#if model.createdStudies}}

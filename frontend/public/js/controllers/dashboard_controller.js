@@ -12,7 +12,11 @@ StudyManager.DashboardController = Ember.Controller.extend({
         }
     },
 
-    isTutor: false,
+    init: function() {
+        this._super();
+    },
+
+    isTutor: localStorage.isTutor,
 
     searchTags: []
 });
