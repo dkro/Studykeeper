@@ -8,7 +8,7 @@ module.exports = {
       'public/<%= package.name %>-ember.js': [
         'public/js/application.js',
         'public/js/router.js',
-        'public/js/adapters/**/*.js',
+        //'public/js/adapters/**/*.js',
         'public/js/serializer.js',
         'public/js/controllers/**/*.js',
         'public/js/models/**/*.js',

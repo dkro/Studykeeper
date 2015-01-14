@@ -8,10 +8,13 @@ StudyManager.Userstudy = DS.Model.extend({
     compensation: DS.attr('number'),
     mmi: DS.attr('number'),
     closed: DS.attr('boolean'),
+    space: DS.attr('number'),
+    news: DS.hasMany('news', { async: true }),
+    labels: DS.hasMany('label', { async: true }),
     executor: DS.belongsTo('user', { async: true, inverse: 'isExecutorFor' }),
     tutor: DS.belongsTo('user', { async: true, inverse: 'isTutorFor' }),
-    isHistoryFor: DS.hasMany('user', { async: true, inverse: 'studyHistory' }),
-    isFutureStudyFor: DS.hasMany('user', { async: true, inverse: 'futureRegisteredStudies' })
+    registeredUsers: DS.hasMany('user', { async: true, inverse: 'registeredFor' }),
+    requiredStudies: DS.hasMany('userstudy', { async: true, inverse: null})
 });
 
 StudyManager.Userstudy.FIXTURES = [
@@ -26,10 +29,13 @@ StudyManager.Userstudy.FIXTURES = [
         compensation: 5,
         mmi: 2,
         closed: true,
+        space: 30,
+        news: [1],
+        labels: [1, 2],
         executor: 1,
         tutor: 1,
-        isHistoryFor: [2],
-        isFutureStudyFor: []
+        registeredUsers: [1, 2],
+        requiredStudies: []
     },
     {
         id: 2,
@@ -42,10 +48,13 @@ StudyManager.Userstudy.FIXTURES = [
         compensation: 10,
         mmi: 3,
         closed: false,
+        space: 20,
+        news: [2, 3],
+        labels: [2],
         executor: 1,
         tutor: 1,
-        isHistoryFor: [2],
-        isFutureStudyFor: []
+        registeredUsers: [1, 2],
+        requiredStudies: []
     },
     {
         id: 3,
@@ -60,10 +69,13 @@ StudyManager.Userstudy.FIXTURES = [
         compensation: 5,
         mmi: 1,
         closed: true,
+        space: 50,
+        news: [3],
+        labels: [],
         executor: 2,
         tutor: 2,
-        isHistoryFor: [1],
-        isFutureStudyFor: []
+        registeredUsers: [1],
+        requiredStudies: [1]
     },
     {
         id: 4,
@@ -80,10 +92,13 @@ StudyManager.Userstudy.FIXTURES = [
         compensation: 20,
         mmi: 4,
         closed: true,
+        space: 10,
+        news: [],
+        labels: [1, 2, 3],
         executor: 2,
         tutor: 2,
-        isHistoryFor: [1],
-        isFutureStudyFor: []
+        registeredUsers: [2],
+        requiredStudies: [2]
     },
     {
         id: 5,
@@ -101,9 +116,12 @@ StudyManager.Userstudy.FIXTURES = [
         compensation: 5,
         mmi: 2,
         closed: false,
+        space: 25,
+        news: [1],
+        labels: [4],
         executor: 2,
         tutor: 2,
-        isHistoryFor: [],
-        isFutureStudyFor: [1, 2]
+        registeredUsers: [],
+        requiredStudies: [3, 4]
     }
 ];

@@ -73,12 +73,12 @@
 
         <script type="text/x-handlebars" id="components/labels-item">
             {{#if isSelected}}
-                {{input type="text" value=nameValue action="saveLabel" classNames="form-control input-sm labels__label__editInput"}}
+                <span class="labels__label__name">{{name}}</span>
                 <div class="labels__label__removeIcon__wrapper">
                     <span class="glyphicon glyphicon-remove labels__label__removeIcon" {{action 'removeLabel'}}></span>
                 </div>
             {{else}}
-                {{persistedName}}
+                {{name}}
             {{/if}}
         </script>
 

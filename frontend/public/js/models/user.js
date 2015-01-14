@@ -6,8 +6,7 @@ StudyManager.User = DS.Model.extend({
     mmi: DS.attr('number'),
     isExecutorFor: DS.hasMany('userstudy', { async: true }),
     isTutorFor: DS.hasMany('userstudy', { async: true }),
-    studyHistory: DS.hasMany('userstudy', { async: true }),
-    futureRegisteredStudies: DS.hasMany('userstudy', { async: true })
+    registeredFor: DS.hasMany('userstudy', { async: true })
 });
 
 StudyManager.User.FIXTURES = [
@@ -20,8 +19,7 @@ StudyManager.User.FIXTURES = [
         mmi: 2,
         isExecutorFor: [1, 2],
         isTutorFor: [1, 2],
-        studyHistory: [3, 4],
-        futureRegisteredStudies: [5]
+        registeredFor: [1, 2, 3]
     },
     {
         id: 2,
@@ -32,7 +30,6 @@ StudyManager.User.FIXTURES = [
         mmi: 4,
         isExecutorFor: [3, 4, 5],
         isTutorFor: [3, 4, 5],
-        studyHistory: [1, 2],
-        futureRegisteredStudies: [5]
+        registeredFor: [1, 2, 4]
     }
 ];

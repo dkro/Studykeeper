@@ -67,9 +67,8 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     return this.store.find('user', uId).then(function(user) {
       return Ember.RSVP.hash({
         searchTags: that.store.find('label'),
-        registeredStudies: user.get('futureRegisteredStudies'),
+        registeredStudies: user.get('registeredFor'),
         createdStudies: user.get('isExecutorFor'),
-        history: user.get('studyHistory'),
         mmiPoints: user.get('mmi'),
         news: that.store.find('news')
       });
@@ -82,7 +81,12 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
       return item.get('title');
     });
 
+    var history = model.registeredStudies.filterBy('closed', true);
+    var futureStudies = model.registeredStudies.filterBy('closed', false);
+
     controller.set('searchTags', transformedTags);
+    controller.set('history', history);
+    controller.set('futureRegisteredStudies', futureStudies);
     controller.set('model', model);
   }
 });

@@ -22,7 +22,11 @@ StudyManager.LabelsController = Ember.Controller.extend({
 
         deleteLabel: function(labelId) {
             this.store.find('label', labelId).then(function (label) {
-                label.destroyRecord();
+                label.deleteRecord();
+                label.save().then(function(response) {
+                }, function(error) {
+                    label.rollback();
+                })
             });
         }
     },

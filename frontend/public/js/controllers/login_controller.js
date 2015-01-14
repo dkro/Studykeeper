@@ -4,7 +4,7 @@ StudyManager.LoginController = Ember.Controller.extend({
     actions: {
         login: function() {
             // DEFAULT
-
+/*
             var userData = this.getProperties('username', 'password');
             var that = this;
 
@@ -20,7 +20,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             }, function(error) {
                     that.set('errorMessage', 'Login failed!');
             });
-/*
+*/
 
             // MOCK
             this.set('errorMessage', null);
@@ -28,13 +28,13 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             if (this.get('username') === 'studycreator' &&
                 this.get('password') === 'creator') {
-                userRole = 'EXECUTOR';
+                userRole = 'executor';
             } else if (this.get('username') === 'student' &&
                 this.get('password') === '123') {
-                userRole = 'TUTOR';
+                userRole = 'tutor';
             } else if (this.get('username') === 'student' &&
                 this.get('password') === 'abc') {
-                userRole = 'DEFAULT';
+                userRole = 'default';
             }
 
             if (userRole === null) {
@@ -46,7 +46,7 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.set('currentUserId', 1);
 
                 this.transitionToRoute('dashboard');
-            }*/
+            }
         },
 
         toSignUp: function() {
