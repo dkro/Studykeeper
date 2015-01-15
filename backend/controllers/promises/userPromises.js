@@ -153,7 +153,9 @@ module.exports.userFromToken = function(req){
           User.getUserByToken(token, function(err, result){
             if (err) {
               reject(err);
-            } else if (result.length > 0) {resolve(result[0]);
+            } else if (result.length > 0) {
+              result[0].token = token;
+              resolve(result[0]);
             } else {
               reject({message: 'User not found'});
             }

@@ -126,33 +126,34 @@ module.exports.allUserstudies = function(req, res) {
   UserStudy.getAllUserstudies(function(err, list){
     if (err) {
       res.json(err);
-    } else {
-      // each (withour series) will use mutliple database connectionts
-      // todo investigate if this has any negative side effects
-        Async.eachSeries(list, function(item, callback){
-          UserStudy.getStudiesRelationFor(item.id,'labels').then(function(results) {
-            var labelIds = [];
-            for (var j = 0; j < results.length; j += 1) {
-              labelIds.push(results[j].id);
+      } else {
+          Async.eachSeries(list, function(item, callback){
+            if (item.requiredStudies === null) {
+              item.requiredStudies = [];
+            } else {
+              item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
+            }
+            if (item.news === null) {
+              item.news = [];
+            } else {
+              item.news = item.news.split(",").map(function(x){return parseInt(x);});
+            }
+            if (item.labels === null) {
+              item.labels = [];
+            } else {
+              item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
             }
 
-            // setting news and requireStudies empty for the all userstudy request
-            // This reduces the amount of database queries
-            // This data will be provided by a single get requiest for one userstudy
-            item.requiredStudies = [];
-            item.news = [];
-            item.labels = labelIds;
             item.closed = !!item.closed;
             callback();
+          }, function(err){
+            if(err){
+              res.json({status:'failure',message: err});
+            } else {
+              res.json({userstudies:list});
+            }
           });
-        }, function(err){
-          if(err){
-            res.json({status:'failure',message: err});
-          } else {
-            res.json(list);
-          }
-        });
-    }
+      }
   });
 };
 
@@ -165,37 +166,24 @@ module.exports.getUserstudyById = function(req, res) {
     } else {
 
       var userstudy = result[0];
-      var promises = [
-        UserStudy.getStudiesRelationFor(req.params.id,'requires'),
-        UserStudy.getStudiesRelationFor(req.params.id,'labels'),
-        UserStudy.getStudiesRelationFor(req.params.id,'news')
-      ];
+      if (userstudy.requiredStudies === null) {
+        userstudy.requiredStudies = [];
+      } else {
+        userstudy.requiredStudies = userstudy.requiredStudies.split(",").map(function(x){return parseInt(x);});
+      }
+      if (userstudy.news === null) {
+        userstudy.news = [];
+      } else {
+        userstudy.news = userstudy.news.split(",").map(function(x){return parseInt(x);});
+      }
+      if (userstudy.labels === null) {
+        userstudy.labels = [];
+      } else {
+        userstudy.labels = userstudy.labels.split(",").map(function(x){return parseInt(x);});
+      }
 
-      Promise.all(promises).then(function(results){
-
-        var requiredStudiesIds = [];
-        for (var i = 0; i < results[0].length; i += 1) {
-          requiredStudiesIds.push(results[0][i].id);
-        }
-        var labelIds = [];
-        for (var j = 0; j < results[1].length; j += 1) {
-          labelIds.push(results[1][j].id);
-        }
-        var newsIds = [];
-        for (var k = 0; j < results[2].length; k += 1) {
-          newsIds.push(results[2][j].id);
-        }
-
-        userstudy.requiredStudies = requiredStudiesIds;
-        userstudy.news = newsIds;
-        userstudy.labels = labelIds;
-
-        userstudy.closed = !!userstudy.closed;
-        res.json({userstudy: userstudy});
-      })
-      .catch(function(err){
-        res.json(500, {status: 'failure', errors: err});
-      });
+      userstudy.closed = !!userstudy.closed;
+      res.json({userstudy: userstudy});
     }
   });
 };

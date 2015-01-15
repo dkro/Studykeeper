@@ -9,7 +9,7 @@ exports.loginAuthenticate = function(req, res, next) {
         }
 
         if(user.length === 0 || user === false) {
-          res.json(401, {status: "failure", message: 'User not found.'});
+          res.json(401, {status: "failure", message: 'Login: User not found.'});
         } else {
           next();
         }
@@ -25,7 +25,7 @@ exports.tokenAuthenticate = function(req, res, next) {
       }
 
       if (user === false || user.length === 0) {
-        res.json(401, {status: "failure", message: 'User not found'});
+        res.json(401, {status: "failure", message: 'Token: User not found'});
       } else {
         req.user = user;
         req.token = info;

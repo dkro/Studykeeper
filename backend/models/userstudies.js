@@ -162,10 +162,14 @@ module.exports.getUserstudy = function (userstudy, callback) {
 module.exports.getUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-      'us.location ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, ' +
+      'GROUP_CONCAT(slr.labelId) AS labels, GROUP_CONCAT(snr.newsId) AS news, GROUP_CONCAT(srr.requiresId) AS requiredStudies ' +
       'FROM userstudies us ' +
-      'WHERE us.id=?',
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'WHERE us.id=? ' +
+      'GROUP BY us.id;',
       id, function(err,result){
         connection.release();
         callback(err,result);
@@ -177,9 +181,13 @@ module.exports.getUserstudyById = function (id, callback) {
 module.exports.getAllUserstudies = function (callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-    'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
-    'us.location, us.closed ' +
-    'FROM userstudies us ',
+    'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+    'GROUP_CONCAT(slr.labelId) AS labels, GROUP_CONCAT(snr.newsId) AS news, GROUP_CONCAT(srr.requiresId) AS requiredStudies  ' +
+    'FROM userstudies us ' +
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'GROUP BY us.id;',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -190,10 +198,16 @@ module.exports.getAllUserstudies = function (callback) {
 
 
 module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callback) {
-  var queryFilters = filters;
-  // todo
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM userstudies',
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'GROUP_CONCAT(slr.labelId) AS labels, GROUP_CONCAT(snr.newsId) AS news, GROUP_CONCAT(srr.requiresId) AS requiredStudies  ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'WHERE us.visible=1, us.published=1 ' +
+      'GROUP BY us.id;',
       function(err,result){
         connection.release();
         callback(err,result);

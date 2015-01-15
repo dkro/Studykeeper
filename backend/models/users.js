@@ -53,16 +53,13 @@ module.exports.getUserByName = function(username, callback) {
   });
 };
 
-module.exports.getUserByToken = function(data, callback) {
-  var queryData = [
-    {token : data}
-  ];
+module.exports.getUserByToken = function(token, callback) {
   mysql.getConnection(function(connection) {
     connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname FROM users u " +
                       "INNER JOIN auth a ON u.id=a.userId " +
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE token=?;",
-                      queryData[0].token,
+                      token,
       function(err,result){
         connection.release();
         callback(err,result);

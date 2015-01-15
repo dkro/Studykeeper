@@ -8,11 +8,11 @@ var validator  = require('validator');
 
 var passwordMinimumLength = 7;
 
-exports.deleteUser = function(req, res) {
+module.exports.deleteUser = function(req, res) {
     //todo
 };
 
-exports.getUsers = function(req, res) {
+module.exports.getUsers = function(req, res) {
   User.getUsers(function(err,result){
       if (err) {
         res.json(500, {status: 'failure', errors: err});
@@ -22,7 +22,7 @@ exports.getUsers = function(req, res) {
   });
 };
 
-exports.getUser = function(req, res) {
+module.exports.getUser = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
       res.json(500, {status: 'failure', errors: err});
@@ -32,7 +32,7 @@ exports.getUser = function(req, res) {
   });
 };
 
-exports.getUserById = function(req, res) {
+module.exports.getUserById = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
       res.json(500, {status: 'failure', errors: err});
@@ -79,7 +79,7 @@ exports.getUserById = function(req, res) {
   });
 };
 
-exports.signup = function(req, res) {
+module.exports.signup = function(req, res) {
 
   var user;
   var promises = [UserPromise.validSignupReq(req), UserPromise.usernameAvailable(req.body.user.username)];
@@ -139,7 +139,7 @@ exports.signup = function(req, res) {
 
 };
 
-exports.login = function(req, res) {
+module.exports.login = function(req, res) {
   var user;
 
   UserPromise.validLoginReq(req)
@@ -176,33 +176,39 @@ exports.login = function(req, res) {
     });
 };
 
-exports.logout = function(req, res) {
-  User.deleteToken(req.token, function(err){
-    if (err) {
-      res.send(err);
-    } else {
-
-      var now = new Date();
-      var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
-
-      User.deleteTokensForUserBeforeTimestamp(req.user[0].username, ThirtyMinutesFromNow, function(err){
+module.exports.logout = function(req, res) {
+  UserPromise.userFromToken(req)
+    .then(function(user){
+      User.deleteToken(user.token, function(err){
         if (err) {
           res.send(err);
         } else {
-          res.json({
-            status: 'success',
-            message: 'Logged out.',
-            user: {
-              username: req.user[0].username
+
+          var now = new Date();
+          var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
+
+          User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow, function(err){
+            if (err) {
+              res.send(err);
+            } else {
+              res.json({
+                status: 'success',
+                message: 'Logged out.',
+                user: {
+                  username: user.username
+                }
+              });
             }
           });
         }
-      });
-    }
+      })
+    .catch(function(err){
+          res.json({status: 'failure', errors: err});
+    });
   });
 };
 
-exports.createUser = function(req, res) {
+module.exports.createUser = function(req, res) {
   var user = {
     username: req.body.username,
     password: req.body.password,
@@ -263,7 +269,7 @@ exports.createUser = function(req, res) {
   }
 };
 
-exports.createUser = function(req, res) {
+module.exports.createUser = function(req, res) {
   var user = new User({
     username: req.body.username,
     password: req.body.password,
@@ -290,7 +296,7 @@ exports.createUser = function(req, res) {
   });
 };
 
-exports.validateRole = function(role, username, res, callback) {
+module.exports.validateRole = function(role, username, res, callback) {
   var roleValidated = false;
   User.getUserRole(username, function(err, result){
     if (err) {
@@ -306,11 +312,11 @@ exports.validateRole = function(role, username, res, callback) {
 };
 
 
-exports.retrievePW = function(){
+module.exports.retrievePW = function(){
 
 };
 
-exports.changePW = function(req, res) {
+module.exports.changePW = function(req, res) {
   var user = {
     username: req.body.username,
     oldPassword: req.body.oldPassword,
