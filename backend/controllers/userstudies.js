@@ -143,6 +143,11 @@ module.exports.allUserstudies = function(req, res) {
             } else {
               item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
             }
+            if (item.registeredUsers === null) {
+              item.registeredUsers = [];
+            } else {
+              item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
+            }
 
             item.closed = !!item.closed;
             callback();
@@ -180,6 +185,11 @@ module.exports.getUserstudyById = function(req, res) {
         userstudy.labels = [];
       } else {
         userstudy.labels = userstudy.labels.split(",").map(function(x){return parseInt(x);});
+      }
+      if (userstudy.registeredUsers === null) {
+        userstudy.registeredUsers = [];
+      } else {
+        userstudy.registeredUsers = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
       }
 
       userstudy.closed = !!userstudy.closed;
