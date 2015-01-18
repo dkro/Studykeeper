@@ -6,9 +6,16 @@ var uuid       = require('node-uuid');
 module.exports.getUsers = function(callback) {
   mysql.getConnection(function(connection) {
     connection.query("SELECT u.id, u.username, r.name AS role, u.lmuStaff, u.mmi," +
-      "u.firstname,u.lastname " +
+      "u.firstname,u.lastname," +
+      "GROUP_CONCAT(DISTINCT sur.studyId) AS registeredFor, " +
+      "GROUP_CONCAT(DISTINCT ust.id) AS isTutorFor, " +
+      "GROUP_CONCAT(DISTINCT usex.id) AS isExecutorFor " +
       "FROM users u " +
-      "LEFT JOIN roles r ON r.id=u.role ",
+      "LEFT JOIN roles r ON r.id=u.role " +
+      "LEFT JOIN studies_users_rel sur ON u.id=sur.userId " +
+      "LEFT JOIN userstudies ust ON u.id=ust.tutorId " +
+      "LEFT JOIN userstudies usex ON u.id=usex.executorId " +
+      "GROUP BY u.id;",
       function(err,result){
         connection.release();
         callback(err,result);

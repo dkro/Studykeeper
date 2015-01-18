@@ -5,6 +5,7 @@ var UserPromise = require('./promises/userPromises');
 var UserstudyPromise = require('./promises/userstudyPromises');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
+var Async       = require('async');
 
 var passwordMinimumLength = 7;
 
@@ -13,11 +14,35 @@ module.exports.deleteUser = function(req, res) {
 };
 
 module.exports.getUsers = function(req, res) {
-  User.getUsers(function(err,result){
+  User.getUsers(function(err,list){
       if (err) {
         res.json(500, {status: 'failure', errors: err});
       } else {
-       res.json({users: result});
+        Async.eachSeries(list, function(item, callback){
+          if (item.isExecutorFor === null) {
+            item.isExecutorFor = [];
+          } else {
+            item.isExecutorFor = item.isExecutorFor.split(",").map(function(x){return parseInt(x);});
+          }
+          if (item.isTutorFor === null) {
+            item.isTutorFor = [];
+          } else {
+            item.isTutorFor = item.isTutorFor.split(",").map(function(x){return parseInt(x);});
+          }
+          if (item.registeredFor === null) {
+            item.registeredFor = [];
+          } else {
+            item.registeredFor = item.registeredFor.split(",").map(function(x){return parseInt(x);});
+          }
+
+          callback();
+        }, function(err){
+          if(err){
+            res.json({status:'failure',message: err});
+          } else {
+            res.json({users:list});
+          }
+        });
     }
   });
 };
@@ -44,7 +69,6 @@ module.exports.getUserById = function(req, res) {
       // Add arrays of Ids for mapping for ember-data
       var promises = [UserstudyPromise.userIsExecutorFor(user),
         UserstudyPromise.userIsTutorFor(user),
-        UserstudyPromise.userStudyHistory(user),
         UserstudyPromise.userRegisteredStudies(user)];
 
       Promise.all(promises).then(function(results){
@@ -56,19 +80,15 @@ module.exports.getUserById = function(req, res) {
         for (var j = 0; j < results[1].length; j += 1) {
           tutorIds.push(results[1][j].id);
         }
-        var historyIds = [];
+        var registeredStudies = [];
         for (var l = 0; l < results[2].length; l += 1) {
-          historyIds.push(results[2][l].id);
+          registeredStudies.push(results[2][l].id);
         }
-        var futureIds = [];
-        for (var k = 0; k < results[3].length; k += 1) {
-          futureIds.push(results[3][k].id);
-        }
+
 
         user.isExecutorFor = executorIds;
         user.isTutorFor = tutorIds;
-        user.studyHistory = historyIds;
-        user.futureRegisteredStudies = futureIds;
+        user.registeredStudies = registeredStudies;
         res.json({user: user});
       })
       .catch(function(err){

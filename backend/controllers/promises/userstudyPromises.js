@@ -247,21 +247,9 @@ module.exports.userIsTutorFor = function(user) {
   });
 };
 
-module.exports.userStudyHistory = function(user) {
-  return new Promise(function (resolve, reject) {
-    Userstudy.getStudiesFinishedByUser(user, function (err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
 module.exports.userRegisteredStudies = function(user) {
   return new Promise(function (resolve, reject) {
-    Userstudy.getStudiesCurrentByUser(user, function (err, result) {
+    Userstudy.getStudiesUserIsRegistered(user, function (err, result) {
       if (err) {
         reject(err);
       } else {

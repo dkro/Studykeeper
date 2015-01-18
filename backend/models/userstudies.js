@@ -268,30 +268,8 @@ module.exports.getStudiesUserIsTutor = function(user, callback){
   });
 };
 
-module.exports.getStudiesFinishedByUser = function(user, callback){
-  mysql.getConnection(function(connection) {
-    connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
-                      'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
-                      'FROM userstudies us ' +
-                      'LEFT JOIN studies_users_rel usrel ON us.id=usrel.studyId ' +
-                      'LEFT JOIN users user1 ON us.tutorId=user1.id ' +
-                      'LEFT JOIN users user2 ON us.executorId=user2.id ' +
-                      'WHERE usrel.userId=? ' +
-                      'AND usrel.registered=1 ' +
-                      'AND usrel.confirmed=1 ' +
-                      'AND us.visible=1 ' +
-                      'AND us.published=1 ' +
-                      'AND us.closed=1' ,
-      user.id,
-      function(err,result){
-        connection.release();
-        callback(err,result);
-      }
-    );
-  });
-};
 
-module.exports.getStudiesCurrentByUser = function(user, callback){
+module.exports.getStudiesUserIsRegistered = function(user, callback){
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.title, user1.username AS tutor, user2.username AS executor, ' +
                       'us.description, us.untilDate, us.fromDate, us.location, us.link, us.mmi, us.compensation, us.closed ' +
