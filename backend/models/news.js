@@ -62,12 +62,3 @@ module.exports.getNewsById = mysql.query.bind(mysql.query,
   'GROUP BY n.id;');
 
 
-module.exports.mapNewstoUserstudy = function (news, userstudy, callback) {
-  mysql.query('UPDATE userstudies ' +
-      'SET newsId=? ' +
-      'WHERE id=? ',
-      [news.id,userstudy.id],
-       callback
-    );
-};
-

@@ -123,9 +123,13 @@ module.exports.validCreateUserReq = function(req){
 module.exports.userExists = function(username){
   return new Promise(function(resolve, reject){
     User.getUserByName(username,function(err,result){
-      if (err) {reject(err);}
-      if (result.length === 0) {reject({message: 'User not found', user: username});}
-      resolve(result[0]);
+      if (err) {
+        reject(err);
+      } else if (result.length === 0) {
+        reject({message: 'User not found', user: username});
+      } else {
+        resolve(result[0]);
+      }
     });
   });
 };
@@ -133,9 +137,13 @@ module.exports.userExists = function(username){
 module.exports.userExistsById = function(userId){
   return new Promise(function(resolve, reject){
     User.getUserById(userId,function(err,result){
-      if (err) {reject(err);}
-      if (result.length === 0) {reject({message: 'User not found', user: userId});}
-      resolve(result[0]);
+      if (err) {
+        reject(err);
+      } else if (result.length === 0){
+        reject({message: 'User not found', user: userId});
+      } else {
+        resolve(result[0]);
+      }
     });
   });
 };
@@ -143,8 +151,9 @@ module.exports.userExistsById = function(userId){
 module.exports.usernameAvailable = function(username){
   return new Promise(function(resolve, reject){
     User.getUserByName(username, function(err, result){
-      if (err) {reject(err);}
-      if (result.length === 0) {
+      if (err) {
+        reject(err);
+      } else if (result.length === 0) {
         resolve();
       } else {
         reject({message: 'Email already in use.', username: username});

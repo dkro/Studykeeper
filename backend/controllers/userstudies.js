@@ -55,17 +55,15 @@ module.exports.editUserstudy = function(req, res) {
 };
 
 module.exports.deleteUserstudy = function(req, res) {
+  var userstudyId = req.params.id;
 
-  UserPromise.validUserstudyReq(req)
-    .then(function(userstudy){
-      return UserPromise.userstudyExists(userstudy);
-    })
-    .then(function(userstudy){
-      UserStudy.deleteUserstudy(userstudy, function(err){
+  UserstudyPromise.userstudyExists({id: userstudyId})
+    .then(function(){
+      UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Userstudy deleted.', userstudy: userstudy});
+          res.json({status: 'success', message: 'Userstudy deleted.', userstudy: userstudyId});
         }
       });
     })
@@ -76,16 +74,13 @@ module.exports.deleteUserstudy = function(req, res) {
 
 module.exports.publishUserstudy = function(req, res) {
 
-  UserPromise.validUserstudyReq(req)
-    .then(function(userstudy){
-      return UserPromise.userstudyExists(userstudy);
-    })
+    UserstudyPromise.userstudyExists({id:req.params.id})
     .then(function(userstudy){
       UserStudy.publishUserstudy(userstudy, function(err) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Userstudy published.'});
+          res.json({status: 'success', message: 'Userstudy published.', userstudy: req.params.id});
         }
       });
     })
@@ -245,46 +240,12 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
     });
 };
 
-module.exports.allUserstudiesCurrentForUser = function(req, res) {
-
-  UserPromise.userFromToken(req)
-    .then(function(user){
-      UserStudy.getStudiesCurrentByUser(user, function(err, list){
-        if (err) {
-          throw err;
-        } else {
-          res.json({userstudies: list});
-        }
-      });
-    })
-    .catch(function (err){
-      res.json(500, {status: 'failure', errors: err});
-    });
-};
 
 module.exports.allUserstudiesCreatedByUser = function(req, res) {
 
   UserPromise.userFromToken(req)
     .then(function(user){
       UserStudy.getStudiesCreatedByUser(user, function(err, list){
-        if (err) {
-          throw err;
-        } else {
-          res.json({userstudies: list});
-        }
-      });
-    })
-    .catch(function (err){
-      res.json(500, {status: 'failure', errors: err});
-    });
-};
-
-
-module.exports.allUserstudiesHistoryForUser = function(req, res) {
-
-  UserPromise.userFromToken(req)
-    .then(function(user){
-      UserStudy.getStudiesFinishedByUser(user, function(err, list){
         if (err) {
           throw err;
         } else {
@@ -349,8 +310,8 @@ module.exports.removeUserFromStudy = function(req, res){
 };
 
 module.exports.confirmUserParticipation = function(req, res){
-  var promises = [UserPromise.userExists,
-  UserstudyPromise.userstudyExists];
+  var promises = [UserPromise.userExistsById(req.params.userId),
+  UserstudyPromise.userstudyExists({id:req.params.id})];
 
   var user;
   var userstudy;
@@ -360,35 +321,35 @@ module.exports.confirmUserParticipation = function(req, res){
       user = result[0];
       userstudy = result[1];
 
-      UserPromise.userIsRegisteredToStudy(user,userstudy);
+      return UserstudyPromise.userIsRegisteredToStudy(user.id,userstudy.id);
     })
-    .then(function(){
-      UserStudy.confirmUser(user, userstudy, function(err){
+    .then(function() {
+      UserStudy.confirmUser(user, userstudy, function (err) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Confirmed user participation of userstudy',
-            user: user, userstudy: userstudy});
+          res.json({
+            status: 'success', message: 'Confirmed user participation of userstudy',
+            user: user, userstudy: userstudy
+          });
         }
-    }).catch(function(err){
+      });
+    })
+    .catch(function(err){
       res.json(500, {status: 'failure', errors: err});
     });
-  });
 };
 
 module.exports.closeUserstudy = function(req, res){
 
-  UserstudyPromise.validUserstudyReq(req)
-    .then(function(userstudy){
-      return UserstudyPromise.userstudyExists(userstudy);
-    })
+   UserstudyPromise.userstudyExists({id:req.params.id})
     .then(function(userstudy){
 
       UserStudy.closeUserstudy(userstudy, function(err, list){
         if (err) {
           throw err;
         } else {
-          res.json(list);
+          res.json({status: 'success', message: 'Userstudy closed.', userstudy: req.params.id});
         }
       }).catch(function(err){
         res.json(500, {status: 'failure', errors: err});

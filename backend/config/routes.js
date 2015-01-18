@@ -48,27 +48,21 @@ module.exports = function(app) {
   app.post('/api/users/create', userController.createUser);
   app.del('/api/users/:id', userController.deleteUser);
 
-
   // --------------- Userstudy routes ---------------
   app.get('/api/userstudies', userStudyController.allUserstudies); // todo template mapping
   app.get('/api/userstudies/:id', userStudyController.getUserstudyById);
   app.get('/api/userstudies/all', userStudyController.allUserstudiesFilteredForUser);
-  app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
-  app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
-  app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
+  //app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
 
   app.post('/api/userstudies',  userStudyController.createUserstudy);
   app.del('/api/userstudies/:id', userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', userStudyController.editUserstudy);
-
   app.put('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
+  app.put('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
+
   app.put('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
   app.put('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
-  app.put('/api/userstudies/:id/confirmUserParticipation',  userStudyController.confirmUserParticipation);
-  app.put('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
-  app.put('/api/userstudies/addNews', newsfeedController.addNewstoUserstudy);
-  app.put('/api/userstudies/:id/addLabel',  labelController.addLabeltoUserstudy);
-
+  app.put('/api/userstudies/:id/confirm/:userId',  userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------
   app.get('/api/labels', labelController.allLabels);
@@ -77,7 +71,6 @@ module.exports = function(app) {
   app.post('/api/labels', labelController.createLabel);
   app.del('/api/labels/:id', labelController.deleteLabel);
 
-
   // --------------- Newsfeed routes ---------------
   app.get('/api/news', newsfeedController.allNews);
   app.get('/api/news/:id', newsfeedController.getNewsById);
@@ -85,7 +78,6 @@ module.exports = function(app) {
   app.post('/api/news', newsfeedController.createNews);
   //app.del('/api/news', newsfeedController.deleteNews);
   app.put('/api/news/edit', newsfeedController.editNews);
-
 
   // --------------- Templates routes ---------------
   app.get('/api/templates', templateController.allTemplates); //todo smarter query results

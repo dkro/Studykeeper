@@ -80,7 +80,7 @@ module.exports.validFullUserstudyReq = function(req){
       validationErrors.push({message: "requiredStudies invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
     }
     if (Array.isArray(req.body.userstudy.news)) {
-      for (var i=0; i<req.body.userstudy.news; i+=1){
+      for (var j=0; j<req.body.userstudy.news; j+=1){
         if (!Validator.isNumeric(req.body.userstudy.news)) {
           validationErrors.push({message: "news invalid, numeric required: " + req.body.userstudy.news});
         }
@@ -89,7 +89,7 @@ module.exports.validFullUserstudyReq = function(req){
       validationErrors.push({message: "news invalid, Array of Ids required: " + req.body.userstudy.news});
     }
     if (Array.isArray(req.body.userstudy.labels)) {
-      for (var i=0; i<req.body.userstudy.labels; i+=1){
+      for (var k=0; k<req.body.userstudy.labels; k+=1){
         if (!Validator.isNumeric(req.body.userstudy.labels)) {
           validationErrors.push({message: "labels invalid, numeric required: " + req.body.userstudy.labels});
         }
@@ -170,20 +170,22 @@ module.exports.userstudyHasSpace = function(userstudy) {
 module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
   return new Promise(function(resolve, reject){
     Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
-      if (err) {reject(err);}
-
-      var registered = false;
-      for (var i= 0; i<result.length; i+=1) {
-        if (result[i].id === userId) {
-          registered = true;
-          break;
-        }
-      }
-
-      if (registered) {
-        resolve(userId);
+      if (err) {
+        reject(err);
       } else {
-        reject({message: 'user: ' + userId + ' is not registered to userstudy: ' + userstudyId});
+        var registered = false;
+        for (var i= 0; i<result.length; i+=1) {
+          if (result[i].id === userId) {
+            registered = true;
+            break;
+          }
+        }
+
+        if (registered) {
+          resolve(userId);
+        } else {
+          reject({message: 'user: ' + userId + ' is not registered to userstudy: ' + userstudyId});
+        }
       }
     });
   });
@@ -192,20 +194,22 @@ module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
 module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
   return new Promise(function(resolve, reject){
     Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
-      if (err) {reject(err);}
-
-      var registered = false;
-      for (var i= 0; i<result.length; i+=1) {
-        if (result[i].id === userId) {
-          registered = true;
-          break;
-        }
-      }
-
-      if (registered) {
-        reject({message: 'user: ' + userId + ' is registered already to userstudy: ' + userstudyId});
+      if (err) {
+        reject(err);
       } else {
-        resolve(userId);
+        var registered = false;
+        for (var i= 0; i<result.length; i+=1) {
+          if (result[i].id === userId) {
+            registered = true;
+            break;
+          }
+        }
+
+        if (registered) {
+          reject({message: 'user: ' + userId + ' is registered already to userstudy: ' + userstudyId});
+        } else {
+          resolve(userId);
+        }
       }
     });
   });

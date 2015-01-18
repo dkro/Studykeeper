@@ -170,7 +170,7 @@ module.exports.getUserstudyById = function (id, callback) {
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
-      'WHERE us.id=?' +
+      'WHERE us.id=? ' +
       'GROUP BY us.id;',
       id, function(err,result){
         connection.release();
@@ -225,8 +225,9 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, filter, callba
 
 module.exports.getUsersRegisteredToStudy = function(userstudyId, callback){
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM users ' +
-      'WHERE id=(SELECT userId FROM studies_users_rel WHERE studyId=?)' ,
+    connection.query("SELECT DISTINCT u.id FROM users u " +
+     "LEFT JOIN studies_users_rel sur ON sur.userId=u.id " +
+     "WHERE sur.studyId=?",
       userstudyId,
       function(err,result){
         connection.release();
@@ -337,12 +338,12 @@ module.exports.publishUserstudy = function(userstudy, callback){
   });
 };
 
-module.exports.deleteUserstudy = function (userstudy, callback) {
+module.exports.deleteUserstudy = function (userstudyId, callback) {
   mysql.getConnection(function(connection) {
     connection.query('UPDATE userstudies ' +
       'SET visible=0 ' +
-      'WHERE id=? AND title=?',
-      [userstudy.id,userstudy.title],
+      'WHERE id=? ',
+      userstudyId,
       function(err,result){
         connection.release();
         callback(err,result);
@@ -370,7 +371,7 @@ module.exports.mapUserToStudy = function(userId, userstudyId, callback){
     connection.query('INSERT INTO studies_users_rel ' +
       '(studyId,userId,registered,confirmed) ' +
       'VALUES (?,?,1,0);',
-      [userId,userstudyId],
+      [userstudyId,userId],
       function(err,result){
         connection.release();
         callback(err,result);
@@ -398,10 +399,9 @@ module.exports.confirmUser = function(user, userstudy, callback){
   mysql.getConnection(function(connection) {
     connection.query('UPDATE studies_users_rel ' +
       'SET confirmed=1 ' +
-      'WHERE studyId=(SELECT id FROM users WHERE id=? AND username=?) ' +
-      'AND userId=(SELECT id FROM userstudies WHERE id=? AND title=?)',
-      [user.id,user.username,
-        userstudy.id,userstudy.title],
+      'WHERE userId=(SELECT id FROM users WHERE id=?) ' +
+      'AND studyId=(SELECT id FROM userstudies WHERE id=?)',
+      [user.id, userstudy.id],
       function(err,result){
         connection.release();
         callback(err,result);

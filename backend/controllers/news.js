@@ -1,7 +1,6 @@
 "use strict";
 var News = require('../models/news');
 var Promise = require('es6-promise').Promise;
-var UserstudyPromise = require('./promises/userstudyPromises');
 var NewsPromise = require('./promises/newsPromises');
 var Async       = require('async');
 
@@ -50,7 +49,7 @@ module.exports.getNewsById = function (req, res) {
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else if (result.length === 0) {
-      res.json({status: 'failure', errors: [{message: 'Label not found'}]});
+      res.json({status: 'failure', errors: [{message: 'News not found'}]});
     } else {
       var news = result[0];
       if (news.userstudies === null) {
@@ -88,30 +87,5 @@ module.exports.allNews = function (req, res) {
   });
 };
 
-module.exports.addNewstoUserstudy = function (req, res) {
-  var validationPromises = [UserstudyPromise.validUserstudyReq(req), NewsPromise.validNewsReq(req)];
-  var userstudy;
-  var news;
-  Promise.all(validationPromises).then(function (results) {
-    userstudy = results[0];
-    news = results[1];
-
-    var existencePromises = [UserstudyPromise.userstudyExists(userstudy), NewsPromise.newsExists(news)];
-
-    return Promise.all(existencePromises);
-  })
-    .then(function () {
-      News.mapNewstoUserstudy(news, userstudy, function (err) {
-        if (err) {
-          throw err;
-        } else {
-          res.json({status: 'success', message: 'News added to userstudy', news: news, usertudy: userstudy});
-        }
-      });
-    })
-    .catch(function (err) {
-      res.json(500, {status: 'failure', errors: err});
-    });
-};
 
 

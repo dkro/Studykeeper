@@ -88,26 +88,4 @@ module.exports.getLabelById = function(req, res){
   });
 };
 
-module.exports.addLabeltoUserstudy = function(req, res){
-  var validationPromises = [UserstudyPromise.validUserstudyReq(req), LabelPromise.validLabelReq(req,true)];
 
-  Promise.all(validationPromises).then(function(results){
-    var userstudy = results[0];
-    var label = results[1];
-
-    var existencePromises = [UserstudyPromise.userstudyExists(userstudy), LabelPromise.labelExists(label)];
-
-    Promise.all(existencePromises).then(function(){
-      Label.mapLabeltoUserstudy(label, userstudy, function(err){
-        if (err) {
-          throw err;
-        } else {
-          res.json({status: 'success', message: 'label added to userstudy', label: label, usertudy: userstudy});
-        }
-      });
-    });
-  })
-  .catch(function(err){
-    res.json(500, {status: 'failure', errors: err});
-  });
-};
