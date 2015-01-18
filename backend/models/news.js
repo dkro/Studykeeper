@@ -32,7 +32,11 @@ module.exports.editNews = function (news, callback) {
 
 module.exports.getAllNews = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM news ',
+    connection.query('SELECT n.id, n.title, n.date, n.description, n.link, ' +
+    'GROUP_CONCAT(DISTINCT snr.studyId) AS userstudies ' +
+    'FROM news n ' +
+    'LEFT JOIN studies_news_rel snr ON n.id=snr.newsId ' +
+    'GROUP BY n.id;',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -49,7 +53,13 @@ module.exports.getAllNews = function (callback) {
  * @params string newsid
  * @type {function(this:exports.query)}
  */
-module.exports.getNewsById = mysql.query.bind(mysql.query, 'SELECT * FROM news WHERE id=?');
+module.exports.getNewsById = mysql.query.bind(mysql.query,
+  'SELECT n.id, n.title, n.date, n.description, n.link, ' +
+  'GROUP_CONCAT(DISTINCT snr.studyId) AS userstudies ' +
+  'FROM news n ' +
+  'LEFT JOIN studies_news_rel snr ON n.id=snr.newsId ' +
+  'WHERE n.id=? ' +
+  'GROUP BY n.id;');
 
 
 module.exports.mapNewstoUserstudy = function (news, userstudy, callback) {

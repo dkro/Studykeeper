@@ -28,7 +28,11 @@ module.exports.deleteLabel = function (label, callback) {
 
 module.exports.getAllLabels = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM labels',
+    connection.query('SELECT l.id, l.title, ' +
+      'GROUP_CONCAT(DISTINCT slr.studyId) AS userstudies ' +
+      'FROM labels l ' +
+      'LEFT JOIN studies_labels_rel slr ON l.id=slr.labelId ' +
+      'GROUP BY l.id;',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -39,7 +43,12 @@ module.exports.getAllLabels = function (callback) {
 
 module.exports.getLabelById = function (id, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM labels WHERE id=?',
+    connection.query('SELECT l.id, l.title, ' +
+      'GROUP_CONCAT(DISTINCT slr.studyId) AS userstudies ' +
+      'FROM labels l ' +
+      'LEFT JOIN studies_labels_rel slr ON l.id=slr.labelId ' +
+      'WHERE l.id=?' +
+      'GROUP BY l.id;',
       id,
       function(err,result){
         connection.release();

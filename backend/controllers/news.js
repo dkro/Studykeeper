@@ -3,6 +3,7 @@ var News = require('../models/news');
 var Promise = require('es6-promise').Promise;
 var UserstudyPromise = require('./promises/userstudyPromises');
 var NewsPromise = require('./promises/newsPromises');
+var Async       = require('async');
 
 
 module.exports.createNews = function (req, res) {
@@ -51,7 +52,14 @@ module.exports.getNewsById = function (req, res) {
     } else if (result.length === 0) {
       res.json({status: 'failure', errors: [{message: 'Label not found'}]});
     } else {
-      res.json(result);
+      var news = result[0];
+      if (news.userstudies === null) {
+        news.userstudies = [];
+      } else {
+        news.userstudies = news.userstudies.split(",").map(function(x){return parseInt(x);});
+      }
+
+      res.json({news: news});
     }
   });
 };
@@ -61,7 +69,21 @@ module.exports.allNews = function (req, res) {
     if (err) {
       res.json(500, {status: 'failure', errors: {message: 'Internal error, please try again.'}});
     } else {
-      res.json({news: list});
+      Async.eachSeries(list, function(item, callback){
+        if (item.userstudies === null) {
+          item.userstudies = [];
+        } else {
+          item.userstudies = item.userstudies.split(",").map(function(x){return parseInt(x);});
+        }
+
+        callback();
+      }, function(err){
+        if(err){
+          res.json({status:'failure',message: err});
+        } else {
+          res.json({news: list});
+        }
+      });
     }
   });
 };
