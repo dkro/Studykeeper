@@ -1,7 +1,7 @@
 "use strict";
 // Create Restify Server
 var restify   = require('restify');
-var port      = process.env.PORT || 8080;
+var port      = process.env.PORT || 10001;
 var app       = restify.createServer({
   name : 'UserstudyManager API'
 });

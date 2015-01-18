@@ -3,11 +3,11 @@ var mysql = require('mysql');
 
 var pool = mysql.createPool({
   connectionlimit: 10,
-  host: '127.0.0.1',
-  user: 'root',
+  host: 'localhost',
+  user: '',
   password: '',
   port: 3306,
-  database: 'UserstudyManager'
+  database: 'studykeeper'
 });
 
 
