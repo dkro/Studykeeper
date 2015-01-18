@@ -9,44 +9,6 @@ var Async       = require('async');
 
 var passwordMinimumLength = 7;
 
-module.exports.deleteUser = function(req, res) {
-    //todo
-};
-
-module.exports.getUsers = function(req, res) {
-  User.getUsers(function(err,list){
-      if (err) {
-        res.json(500, {status: 'failure', errors: err});
-      } else {
-        Async.eachSeries(list, function(item, callback){
-          if (item.isExecutorFor === null) {
-            item.isExecutorFor = [];
-          } else {
-            item.isExecutorFor = item.isExecutorFor.split(",").map(function(x){return parseInt(x);});
-          }
-          if (item.isTutorFor === null) {
-            item.isTutorFor = [];
-          } else {
-            item.isTutorFor = item.isTutorFor.split(",").map(function(x){return parseInt(x);});
-          }
-          if (item.registeredFor === null) {
-            item.registeredFor = [];
-          } else {
-            item.registeredFor = item.registeredFor.split(",").map(function(x){return parseInt(x);});
-          }
-
-          callback();
-        }, function(err){
-          if(err){
-            res.json({status:'failure',message: err});
-          } else {
-            res.json({users:list});
-          }
-        });
-    }
-  });
-};
-
 module.exports.getUser = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
@@ -91,10 +53,44 @@ module.exports.getUserById = function(req, res) {
         user.registeredStudies = registeredStudies;
         res.json({user: user});
       })
-      .catch(function(err){
-        res.json(500, {status: 'failure', errors: err});
-      });
+        .catch(function(err){
+          res.json(500, {status: 'failure', errors: err});
+        });
 
+    }
+  });
+};
+
+module.exports.getUsers = function(req, res) {
+  User.getUsers(function(err,list){
+      if (err) {
+        res.json(500, {status: 'failure', errors: err});
+      } else {
+        Async.eachSeries(list, function(item, callback){
+          if (item.isExecutorFor === null) {
+            item.isExecutorFor = [];
+          } else {
+            item.isExecutorFor = item.isExecutorFor.split(",").map(function(x){return parseInt(x);});
+          }
+          if (item.isTutorFor === null) {
+            item.isTutorFor = [];
+          } else {
+            item.isTutorFor = item.isTutorFor.split(",").map(function(x){return parseInt(x);});
+          }
+          if (item.registeredFor === null) {
+            item.registeredFor = [];
+          } else {
+            item.registeredFor = item.registeredFor.split(",").map(function(x){return parseInt(x);});
+          }
+
+          callback();
+        }, function(err){
+          if(err){
+            res.json({status:'failure',message: err});
+          } else {
+            res.json({users:list});
+          }
+        });
     }
   });
 };
@@ -118,7 +114,8 @@ module.exports.signup = function(req, res) {
     })
     .then(function(){
 
-      User.saveUser(user, function (err) {
+      User.saveUser(user, function (err,result) {
+        user.id = result.insertId;
         if (err) {
           throw err;
         } else {
@@ -141,6 +138,7 @@ module.exports.signup = function(req, res) {
                     status: 'success',
                     message: 'New user has been created successfully',
                     user: {
+                      id: user.id,
                       username: user.username,
                       role: user.role,
                       token: result[0].token
@@ -229,92 +227,50 @@ module.exports.logout = function(req, res) {
 };
 
 module.exports.createUser = function(req, res) {
-  var user = {
-    username: req.body.username,
-    password: req.body.password,
-    confirmPassword : req.body.confirmPassword,
-    role    : req.body.role
-  };
+  var user;
 
-  // TODO check for missing values
+  UserPromise.validCreateUserReq(req).then(function(result){
+    user = result;
 
-  if (user.password !== user.confirmPassword) {
-    res.json({
-      status: "failure",
-      message: "The passwords don't match."
-    });
-  } else {
-    User.getUserByName(user.username, function(err,result){
-      if (result.length > 0) {
-        res.json({
-          status: "failure",
-          message: "Email already in use."});
+    return UserPromise.usernameAvailable(user.username);
+  })
+  .then(function(result){
+    User.saveUser(user,function(err) {
+      if (err){
+        res.send(err);
       } else {
-        if (validator.isEmail(user.username)) {
-          if (user.password.length >= passwordMinimumLength) {
-            User.saveUser(user, function (err) {
-              if (err) {
-                res.send(err);
-              } else {
-                if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
-                  User.setLMUStaff(user.username, true, function(err) {
-                    if (err) {
-                      // TODO log error correctly
-                      console.log(err);
-                    }
-                  });
-                }
-
-                res.json({
-                  status: 'success',
-                  message: 'New user has been created successfully',
-                  user: {
-                    username: user.username,
-                    role: user.role}
-                });
-              }
-            });
-          } else {
-            res.json(500, {
-              status: 'failure',
-              message: "Password too short. 7 chars minimum."});
-          }
-        } else {
-          res.json(500, {
-            status: 'failure',
-            message: "Invalid email address."});
-        }
-      }
-    });
-  }
-};
-
-module.exports.createUser = function(req, res) {
-  var user = new User({
-    username: req.body.username,
-    password: req.body.password,
-    role    : req.body.role
-  });
-
-  user.saveUser(user,function(err) {
-    if (err){
-      res.send(err);
-    } else {
-      user.setRole(user, function(err) {
-        if (err){
-          res.send(err);
-        } else {
-          res.json({message: 'New user has been created successfully',
+        res.json({message: 'New user has been created successfully',
           user:{
+            id: user.id,
             username: user.username,
             role: user.role
           }
-          });
-        }
-      });
-    }
+        });
+      }
+    });
+  })
+  .catch(function(err){
+    res.json({status:'failure',message: err});
   });
 };
+
+module.exports.deleteUser = function(req, res) {
+  var userId = req.params.id;
+  UserPromise.userExistsById(userId)
+    .then(function(){
+      User.deleteUser(userId, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'user deleted', user: userId});
+        }
+      });
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
 
 module.exports.validateRole = function(role, username, res, callback) {
   var roleValidated = false;

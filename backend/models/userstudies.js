@@ -202,7 +202,7 @@ module.exports.getAllUserstudies = function (callback) {
 };
 
 
-module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callback) {
+module.exports.getAllUserstudiesFilteredForUser = function (user, filter, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
@@ -213,7 +213,7 @@ module.exports.getAllUserstudiesFilteredForUser = function (users, filter, callb
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
-      'WHERE us.visible=1, us.published=1 AND sur.confirmed=1 ' +
+      'WHERE us.visible=1, us.published=1 ' +
       'GROUP BY us.id;',
       function(err,result){
         connection.release();

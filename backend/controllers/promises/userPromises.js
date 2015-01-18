@@ -8,7 +8,7 @@ module.exports.validSignupReq = function(req){
     var validationErrors = [];
 
     if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Username invalid, email format required: " + req.body.user.title});
+      validationErrors.push({message: "Username invalid, email format required: " + req.body.user.username});
     }
     if (!Validator.isLength(req.body.user.firstname,1)) {
       validationErrors.push({message: "Firstname invalid, minimum 1 chars required."});
@@ -68,51 +68,53 @@ module.exports.validLoginReq = function(req){
   });
 };
 
-module.exports.validUserReq = function(req){
-  return new Promise(function(resolve,reject) {
-    var validationErrors = [];
-    if (!Validator.isNumeric(req.body.user.id)) {
-      validationErrors.push({message: "Id invalid, has to be numeric: " + req.body.user.id});
-    }
-    if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Username invalid, email format required: " + req.body.user.title});
-    }
-    if (validationErrors.length > 0) {
-      reject(validationErrors);
-    } else {
-      var userData = {
-        id: Validator.toString(req.body.user.id),
-        username: Validator.toString(req.body.user.username)
-      };
-      resolve(userData);
-    }
-  });
-};
-
 module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (!Validator.isNumeric(req.body.user.id)) {
-      validationErrors.push({message: "Id invalid, has to be numeric: " + req.body.user.id});
+    if (!Validator.isEmail(req.body.user.username)) {
+      validationErrors.push({message: "Username invalid, email required: " + req.body.user.username});
     }
-    if (!Validator.isAlpha(req.body.user.username)) {
-      validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.user.title});
+    if (!Validator.isLength(req.body.user.firstname, 3)) {
+      validationErrors.push({message: "Firstname invalid, minimum 3 characters: " + req.body.user.firstname});
     }
-    if (!Validator.isLength(req.body.user.title, 7)) {
+    if (!Validator.isLength(req.body.user.lastname, 3)) {
+      validationErrors.push({message: "Lastname invalid, minimum 3 characters: " + req.body.user.lastname});
+    }
+    if (!Validator.isLength(req.body.user.password, 7)) {
       validationErrors.push({message: "Password invalid, minimum 7 characters: " + req.body.user.password});
     }
-    if (!Validator.isLength(req.body.user.title, 7)) {
-      validationErrors.push({message: "Confirm Password invalid, minimum 7 characters: " + req.body.user.confirmPassword});
+    if (!Validator.isLength(req.body.user.confirmPassword,7)) {
+      validationErrors.push({message: "Confirm Password invalid, minimum 7 chars required."});
     }
+    if (req.body.user.password !== req.body.user.confirmPassword){
+      validationErrors.push({message: "Passwords dont match"});
+    }
+    if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
+      validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
+    }
+    var roleArr = ['participant','executor','tutor'];
+    if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
+      validationErrors.push({message: "Role invalid, " + roleArr  +" required : " + req.body.user.role});
+    }
+
     if (validationErrors.length > 0) {
       reject(validationErrors);
     } else {
       var userData = {
-        id: Validator.toString(req.body.user.id),
-        title: Validator.toString(req.body.user.title),
+        username: Validator.toString(req.body.user.username),
+        firstname: Validator.toString(req.body.user.firstname),
+        lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
-        confirmPassword: Validator.toString(req.body.user.confirmPassword)
+        confirmPassword : Validator.toString(req.body.user.confirmPassword),
+        mmi: Validator.toString(req.body.user.mmi),
+        role    : Validator.toString(req.body.user.role),
+        lmuStaff: 0
       };
+      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+        userData.lmuStaff = 1;
+      } else {
+        userData.lmuStaff = 0;
+      }
       resolve(userData);
     }
   });
@@ -123,6 +125,16 @@ module.exports.userExists = function(username){
     User.getUserByName(username,function(err,result){
       if (err) {reject(err);}
       if (result.length === 0) {reject({message: 'User not found', user: username});}
+      resolve(result[0]);
+    });
+  });
+};
+
+module.exports.userExistsById = function(userId){
+  return new Promise(function(resolve, reject){
+    User.getUserById(userId,function(err,result){
+      if (err) {reject(err);}
+      if (result.length === 0) {reject({message: 'User not found', user: userId});}
       resolve(result[0]);
     });
   });

@@ -62,7 +62,7 @@ module.exports.getUserByName = function(username, callback) {
 
 module.exports.getUserByToken = function(token, callback) {
   mysql.getConnection(function(connection) {
-    connection.query( "SELECT u.id, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname FROM users u " +
+    connection.query( "SELECT u.id, u.username, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname FROM users u " +
                       "INNER JOIN auth a ON u.id=a.userId " +
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE token=?;",
@@ -88,13 +88,11 @@ module.exports.saveUser = function(data, callback) {
     if (err) {
       callback(err);
     }
-
-    queryData.password = hash;
     mysql.getConnection(function(connection) {
-      connection.query( "INSERT INTO users (username,password,role,firstname,surname,lmuStaff,mmi) " +
+      connection.query( "INSERT INTO users (username,password,role,firstname,lastname,lmuStaff,mmi) " +
         "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?);",
         [queryData.username,
-          queryData.password,
+          hash,
           queryData.role,
           queryData.firstname,
           queryData.lastname,
@@ -134,6 +132,26 @@ module.exports.getUserRole = function(username, callback){
       }
     );
   });
+};
+
+module.exports.deleteUser = function(userId, callback){
+  var secret = uuid.v1();
+
+  crypt.cryptPassword(secret, function(err,hash){
+    if (err) {
+      callback(err);
+    }
+
+    mysql.getConnection(function(connection){
+      connection.query("UPDATE users SET username='deleted', firstname='deleted', lastname='deleted', " +
+        "password='" + hash + "' " +
+        "WHERE id=?",
+        userId,
+        callback);
+    });
+  });
+
+
 };
 
 

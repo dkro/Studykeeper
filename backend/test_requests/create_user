@@ -1,0 +1,11 @@
+{
+  "user": {
+    "username": "username2@studykeeper.com",
+    "firstname": "firstname",
+    "lastname": "lastname",
+    "password": "1234567",
+    "confirmPassword": "1234567",
+    "mmi": "1",
+    "role": "tutor"
+  }
+}

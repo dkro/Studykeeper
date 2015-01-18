@@ -38,35 +38,29 @@ module.exports = function(app) {
 
   // --------------- Login routes ---------------
   app.post('/api/users/login', auth.loginAuthenticate, userController.login);
-
+  app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
+  app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
 
   // --------------- User routes ---------------
   app.get('/api/users', userController.getUsers);
   app.get('/api/users/:id', userController.getUserById);
-  app.get('/api/users/self', userController.getUser);
 
-  //app.get('/api/users/allTutors', auth.tokenAuthenticate, userController.getUsers);
-  //app.get('/api/users/allExecutors', auth.tokenAuthenticate, userController.getUsers);
-
-  app.post('/api/users/logout', auth.tokenAuthenticate, userController.logout);
-  app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
-  app.post('/api/users/create', auth.tokenAuthenticate, auth.requiresRole('tutor'), userController.createUser);
-  app.del('/api/users/delete', auth.tokenAuthenticate, auth.requiresRole('admin'), userController.deleteUser);
+  app.post('/api/users/create', userController.createUser);
+  app.del('/api/users/:id', userController.deleteUser);
 
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudies', userStudyController.allUserstudies); // todo also add templates mapped to these
-  app.get('/api/userstudies/:id', userStudyController.getUserstudyById); // todo add newsfeed and label to these
-  //app.get('/api/userstudies/allFilteredForUser', userStudyController.allUserstudiesFilteredForUser);
-  app.get('/api/userstudies/:id/registeredUsers', userStudyController.usersRegisteredToStudy);
+  app.get('/api/userstudies', userStudyController.allUserstudies); // todo template mapping
+  app.get('/api/userstudies/:id', userStudyController.getUserstudyById);
+  app.get('/api/userstudies/all', userStudyController.allUserstudiesFilteredForUser);
   app.get('/api/userstudies/current', userStudyController.allUserstudiesCurrentForUser);
   app.get('/api/userstudies/history', userStudyController.allUserstudiesHistoryForUser);
   app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
-  //app.get('/api/userstudies/allFiltered', userStudyController.allUserstudiesFiltered);
-   // todo this get with query params
+
   app.post('/api/userstudies',  userStudyController.createUserstudy);
-  app.del('/api/userstudies/delete', userStudyController.deleteUserstudy);
+  app.del('/api/userstudies/:id', userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', userStudyController.editUserstudy);
+
   app.put('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
   app.put('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
   app.put('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
