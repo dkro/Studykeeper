@@ -26,7 +26,7 @@ StudyManager.UserController = Ember.Controller.extend({
                 });
             }, function(error) {
                 thisUser.rollback();
-                that.set('statusMessage', { message: 'Nutzer konnte nicht gespeichert werden!', isSuccess: false })
+                that.set('statusMessage', { message: 'Nutzer konnte nicht gespeichert werden!', isSuccess: false });
             });
         },
 
