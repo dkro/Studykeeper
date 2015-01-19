@@ -1,25 +1,32 @@
 <h2 class="users__heading">Alle User</h2>
 
-<button class="btn btn-primary users__createButton">User erstellen</button>
+<button class="btn btn-primary users__createButton" {{action 'createUser'}}>User erstellen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="users__statusMessage"}}
+{{/if}}
 
 <div class="table-responsive users__table">
     <table class="table table-hover">
         <thead>
             <tr>
                 <th>
-                    {{input type="text" classNames="form-control input-sm" placeholder="Filter User"}}
+                    {{input action="filterUsers" type="text" value=userNameFilter classNames="form-control input-sm" placeholder="Filter User"}}
                 </th>
                 <th>
-                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Vorname"}}
+                    {{input action="filterUsers" type="text" value=firstNameFilter classNames="form-control input-sm" placeholder="Filter Vorname"}}
                 </th>
                 <th>
-                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Nachname"}}
+                    {{input action="filterUsers" type="text" value=lastNameFilter classNames="form-control input-sm" placeholder="Filter Nachname"}}
                 </th>
                 <th>
-                    {{input type="text" classNames="form-control input-sm" placeholder="Filter MMI-Punkte"}}
+                    {{custom-select values=mmiFilterOptions currentSelected=mmiFilter}}
                 </th>
-                <th></th>
-                <th></th>
+                <th>
+                    {{#if isLoading}}
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    {{/if}}
+                </th>
             </tr>
             <tr>
                 <th>User</th>
@@ -27,18 +34,16 @@
                 <th>Nachname</th>
                 <th>MMI-Punkte</th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
-            {{#each user in model}}
-                <tr>
+            {{#each user in usersList}}
+                <tr class="users__row" {{action 'showUserConfig' user}}>
                     <td>{{user.username}}</td>
                     <td>{{user.firstname}}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{user.mmi}}</td>
-                    <td><span class="glyphicon glyphicon-edit users__editIcon" {{action 'showUserConfig' user}}></span></td>
-                    <td><span class="glyphicon glyphicon-remove users__deleteIcon"></span></td>
+                    <td><span class="glyphicon glyphicon-remove users__deleteIcon" {{action 'deleteUser' user}}></span></td>
                 </tr>
             {{/each}}
         </tbody>

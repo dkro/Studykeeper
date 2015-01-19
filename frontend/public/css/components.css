@@ -1,0 +1,53 @@
+.userConfig__form {
+    clear: right;
+    max-width: 80%;
+}
+
+@media screen and (min-width: 768px) {
+    .userConfig__select {
+        max-width: 15em;
+    }
+
+    .userConfig__button--save {
+        margin-right: 1em;
+    }
+
+    .userConfig__button-cancel {
+
+    }
+
+    .userConfig__buttonsWrapper {
+        padding-top: 2em;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .userConfig__select {
+        max-width: 100%;
+    }
+
+    .userConfig__button--cancel {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .userConfig__button--save {
+        margin-bottom: 2em;
+        display: inline-block;
+    }
+
+    .userConfig__buttonsWrapper {
+        padding-top: 2em;
+        text-align: center;
+    }
+}
+
+.statusMessage__icon {
+    float: right;
+    margin-left: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.statusMessage__message {
+
+}

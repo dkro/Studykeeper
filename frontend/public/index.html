@@ -4,12 +4,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>Study Manager</title>
+        <title>LMU Studykeeper</title>
+        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/study.css">
         <link rel="stylesheet" href="css/studies.css">
         <link rel="stylesheet" href="css/management.css">
-        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/components.css">
         <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css">
     </head>
 
@@ -37,7 +38,7 @@
         </script>
 
         <script type="text/x-handlebars" id="components/custom-select">
-            {{view "select" content=values selection=currentSelected classNames="form-control input-sm"}}
+            {{view "select" content=values value=currentSelected classNames="form-control input-sm"}}
         </script>
 
         <script type="text/x-handlebars" id="components/study-display">
@@ -80,6 +81,58 @@
             {{else}}
                 {{name}}
             {{/if}}
+        </script>
+
+        <script type="text/x-handlebars" id="components/user-config">
+            <form class="form-horizontal userConfig__form">
+                <div class="form-group">
+                    <label for="firstNameUserConfigInput" class="col-sm-2 control-label">Vorname:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastNameUserConfigInput" class="col-sm-2 control-label">Nachname:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="emailUserConfigInput" class="col-sm-2 control-label">Email:</label>
+                    <div class="col-sm-10">
+                        {{input type="email" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="typeUserConfigSelect" class="col-sm-2 control-label">Nutzertyp:</label>
+                    <div class="col-sm-10">
+                        {{view "select" id="typeUserConfigSelect" classNames="form-control userConfig__select"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mmiUserConfigSelect" class="col-sm-2 control-label">MMI-Punkte:</label>
+                    <div class="col-sm-10">
+                        {{view "select" id="mmiUserConfigSelect" content=mmiOptions value=selectedMMI classNames="form-control userConfig__select"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 userConfig__buttonsWrapper">
+                        <button type="submit" class="btn btn-primary userConfig__button--save" {{action 'saveClick'}}>
+                            {{#if isUserCreation}}
+                                Nutzer erstellen
+                            {{else}}
+                                Änderungen speichern
+                            {{/if}}
+                        </button>
+                        <button class="btn btn-default userConfig__button--cancel" {{action 'cancelClick'}}>Abbrechen</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+        <script type="text/x-handlebars" id="components/status-message">
+            <span {{bind-attr class=":glyphicon :statusMessage__icon isSuccess:glyphicon-ok:glyphicon-warning-sign"}}></span>
+            <span class="statusMessage__message">{{message}}</span>
         </script>
 
 

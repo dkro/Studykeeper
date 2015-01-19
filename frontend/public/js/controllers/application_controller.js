@@ -2,22 +2,18 @@ StudyManager.ApplicationController = Ember.Controller.extend({
     needs: ['login', 'dashboard'],
 
     actions: {
-        /*logout: function() {
+        logout: function() {
             var that = this;
 
-            Ember.$.get('/logout', { access_token: localStorage.token }).then(
+            /*Ember.$.post('http://localhost:8080/api/users/logout', { token: localStorage.token }).then(
                 function() {
-                    that.get('controllers.login').set('token', null);
-                    that.transitionToRoute('index');
+                    this.resetLocalStorage();
+                    this.transitionToRoute('login');
                 },
                 function() {
-                    that.alert("Logout failed!");
+                    alert("Logout failed!");
                 }
-            );
-        }*/
-        logout: function() {
-            this.get('controllers.login').set('token', null);
-            this.set('isLoggedIn', false);
+            );*/
             this.resetLocalStorage();
             this.transitionToRoute('login');
         },
@@ -25,10 +21,6 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         openAccountSettings: function() {
             this.transitionToRoute('acc-config');
         }
-    },
-
-    init: function() {
-        this._super();
     },
 
     userRole: localStorage.userRole,

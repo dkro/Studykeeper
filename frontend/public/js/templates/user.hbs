@@ -1,1 +1,10 @@
-<h2>User konfigurieren</h2>
+<h2 class="user__heading">User konfigurieren</h2>
+
+<button class="btn btn-danger user__button--delete" {{action 'deleteUser'}}>Nutzer löschen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+
+{{user-config isUserCreation=false firstName=firstName lastName=lastName userName=userName selectedMMI=mmiPoints save="updateUser" cancel="cancelView"}}

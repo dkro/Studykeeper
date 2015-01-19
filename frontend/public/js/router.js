@@ -9,6 +9,7 @@ StudyManager.Router.map(function() {
   this.resource('labels');
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
+  this.route('user-creation', { path: '/createUser' });
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -65,7 +66,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     var uId = this.controllerFor('login').get('currentUserId');
     var that = this;
 
-    return this.store.find('user', uId).then(function(user) {
+    return this.store.fetch('user', uId).then(function(user) {
       return Ember.RSVP.hash({
         searchTags: that.store.find('label'),
         registeredStudies: user.get('registeredFor'),
@@ -107,18 +108,42 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
 StudyManager.LabelsRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
     return this.store.find('label');
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.reset();
   }
 });
 
 StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
     return this.store.find('user');
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('usersList', model);
+    controller.reset();
   }
 });
 
 StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
     return this.store.fetch('user', params.user_id);
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('firstName', model.get('firstname'));
+    controller.set('lastName', model.get('lastname'));
+    controller.set('userName', model.get('username'));
+    controller.set('mmiPoints', model.get('mmi'));
+  }
+});
+
+StudyManager.UserCreationRoute = StudyManager.AuthenticationRoute.extend({
+  setupController: function(controller) {
   }
 });
 
