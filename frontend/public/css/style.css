@@ -7,6 +7,10 @@
     .accountDefault {
         display: none !important;
     }
+
+    .navBar__nav--account {
+        padding-bottom: 9px !important;
+    }
 }
 
 /* mobile navbar */
@@ -53,7 +57,7 @@
 }
 
 .accountConfig__body__label {
-    font-weight: bold !important;
+    font-weight: bold;
     color: darkslategrey;
 }
 
@@ -94,7 +98,7 @@
 
 .accountConfig__body__passwordEdit__row--invalid {
     color: #a94442;
-    border-color: #a94442 !important;
+    border-color: #a94442;
 }
 
 .accountConfig__body__passwordEdit__valueCell {
@@ -132,7 +136,7 @@
 
 .signUp__button {
     margin-top: 2em;
-    margin-bottom: 2em !important;
+    margin-bottom: 2em;
 }
 
 .signUp__field--mmiFlag {
@@ -313,11 +317,11 @@
 }
 
 .customizedPanel {
-    padding: 0 !important;
+    padding: 0;
 }
 
 .panelDisplay__list {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 
 .studyDisplay__study {
@@ -350,6 +354,8 @@
     float: right;
     margin-bottom: 2em !important;
 }
+
+/* GLOBAL STUFF */
 
 .tableFilter__emptyRow {
     text-align: center;

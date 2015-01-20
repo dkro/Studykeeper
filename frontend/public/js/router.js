@@ -5,7 +5,7 @@ StudyManager.Router.map(function() {
   this.route('logout');
   this.resource('dashboard');
   this.resource('userstudies');
-  this.resource('userstudy', { path: '/userstudy/:userstudy_id' });
+  this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
   this.resource('labels');
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
@@ -100,7 +100,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
-  model: function() {
+  model: function(params) {
     return this.store.fetch('userstudy', params.userstudy_id);
   }
 });

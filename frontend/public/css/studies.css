@@ -14,11 +14,6 @@
     background-color: #ededed;
 }
 
-.studies__datePicker {
-    background-color: white !important;
-    cursor: pointer !important;
-}
-
 .studies__filter--state {
     min-width: 9em;
 }
@@ -35,9 +30,9 @@
 }
 
 .studies__filterButton {
-    display: block !important;
+    display: block;
     margin-top: 3em;
-    margin-bottom: 1em !important;
+    margin-bottom: 1em;
 }
 
 
@@ -46,23 +41,8 @@
     }
 
     .studies__column--name {
-        max-width: 10em !important;
-        white-space: normal !important;
-    }
-
-    .studies__column--location {
-    }
-
-    .studies__column--executor {
-    }
-
-    .studies__column--mmi{
-    }
-
-    .studies__column--amazon {
-    }
-
-    .studies__filterInput--name {
+        max-width: 10em;
+        white-space: normal;
     }
 
     .studies__datePicker {
@@ -73,42 +53,42 @@
 
 @media screen and (max-width: 767px) {
     .studies__column--status {
-        display: none !important;
-        visibility: hidden !important;
+        display: none;
+        visibility: hidden;
     }
 
     .studies__column--name {
-        max-width: 15em !important;
+        max-width: 15em;
         white-space: normal !important;
     }
 
     .studies__column--location {
-        display: none !important;
-        visibility: hidden !important;
+        display: none;
+        visibility: hidden;
     }
 
     .studies__column--executor {
-        display: none !important;
-        visibility: hidden !important;
+        display: none;
+        visibility: hidden;
     }
 
     .studies__column--mmi{
-        display: none !important;
-        visibility: hidden !important;
+        display: none;
+        visibility: hidden;
     }
 
     .studies__column--amazon {
-        display: none !important;
-        visibility: hidden !important;
+        display: none;
+        visibility: hidden;
     }
 
     .studies__filterInput--name {
-        font-size: 0.7em !important;
+        font-size: 0.7em;
     }
 
     .studies__datePicker {
         background-color: white !important;
         cursor: pointer !important;
-        font-size: 0.7em !important;
+        font-size: 0.7em;
     }
 }

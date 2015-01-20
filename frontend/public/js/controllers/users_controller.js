@@ -83,6 +83,7 @@ StudyManager.UsersController = Ember.Controller.extend({
 
         this.set('usersList', filteredList);
         this.set('isLoading', false);
+        this.set('statusMessage', null);
     },
 
     filterFirstName: function(firstname) {

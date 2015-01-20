@@ -86,9 +86,13 @@
 }
 
 .labels__label--active {
-    background-color: lightsteelblue !important;
+    background-color: lightsteelblue;
     color: #f5f5f5;
     font-weight: bold;
+}
+
+.labels__label--active:hover {
+    background-color: lightsteelblue;
 }
 
 .labels__label__removeIcon__wrapper {
