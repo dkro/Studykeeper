@@ -350,3 +350,10 @@
     float: right;
     margin-bottom: 2em !important;
 }
+
+.tableFilter__emptyRow {
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    color: dimgrey;
+}

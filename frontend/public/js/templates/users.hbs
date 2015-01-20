@@ -37,15 +37,21 @@
             </tr>
         </thead>
         <tbody>
-            {{#each user in usersList}}
-                <tr class="users__row" {{action 'showUserConfig' user}}>
-                    <td>{{user.username}}</td>
-                    <td>{{user.firstname}}</td>
-                    <td>{{user.lastname}}</td>
-                    <td>{{user.mmi}}</td>
-                    <td><span class="glyphicon glyphicon-remove users__deleteIcon" {{action 'deleteUser' user}}></span></td>
+            {{#if usersList}}
+                {{#each user in usersList}}
+                    <tr class="users__row" {{action 'showUserConfig' user}}>
+                        <td>{{user.username}}</td>
+                        <td>{{user.firstname}}</td>
+                        <td>{{user.lastname}}</td>
+                        <td>{{user.mmi}}</td>
+                        <td><span class="glyphicon glyphicon-remove users__deleteIcon" {{action 'deleteUser' user}}></span></td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td class="tableFilter__emptyRow" colspan="5">Keine Ergebnisse</td>
                 </tr>
-            {{/each}}
+            {{/if}}
         </tbody>
     </table>
 </div>

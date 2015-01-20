@@ -1,6 +1,6 @@
 StudyManager.UserCreationController = Ember.Controller.extend({
     needs: 'users',
-    
+
     actions: {
         createUser: function(newData) {
             var newUser = this.store.createRecord('user', {
@@ -22,13 +22,18 @@ StudyManager.UserCreationController = Ember.Controller.extend({
                 newUser.deleteRecord();
                 that.set('statusMessage', { message: 'Nutzer konnte nicht erstellt werden!', isSuccess: false });
             });
-
         },
 
         cancelView: function() {
             this.transitionToRoute('users');
         }
     },
+
+    firstNameInvalid: null,
+
+    lastNameInvalid: null,
+
+    userNameInvalid: null,
 
     statusMessage: null
 });

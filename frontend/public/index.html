@@ -85,22 +85,34 @@
 
         <script type="text/x-handlebars" id="components/user-config">
             <form class="form-horizontal userConfig__form">
-                <div class="form-group">
+                <div {{bind-attr class=":form-group firstNameInvalid:has-error"}}>
                     <label for="firstNameUserConfigInput" class="col-sm-2 control-label">Vorname:</label>
                     <div class="col-sm-10">
-                        {{input type="text" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
+                        {{input type="text" aria-describedby="firstNameHelp" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
+
+                        {{#if firstNameInvalid}}
+                        <span id="firstNameHelp" class="help-block">{{firstNameInvalid}}</span>
+                        {{/if}}
                     </div>
                 </div>
-                <div class="form-group">
+                <div {{bind-attr class=":form-group lastNameInvalid:has-error"}}>
                     <label for="lastNameUserConfigInput" class="col-sm-2 control-label">Nachname:</label>
                     <div class="col-sm-10">
-                        {{input type="text" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
+                        {{input type="text" aria-describedby="lastNameHelp" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
+
+                        {{#if lastNameInvalid}}
+                        <span id="lastNameHelp" class="help-block">{{lastNameInvalid}}</span>
+                        {{/if}}
                     </div>
                 </div>
-                <div class="form-group">
+                <div {{bind-attr class=":form-group userNameInvalid:has-error"}}>
                     <label for="emailUserConfigInput" class="col-sm-2 control-label">Email:</label>
                     <div class="col-sm-10">
-                        {{input type="email" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
+                        {{input type="email" aria-describedby="userNameHelp" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
+
+                        {{#if userNameInvalid}}
+                        <span id="userNameHelp" class="help-block">{{userNameInvalid}}</span>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="form-group">
