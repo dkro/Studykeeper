@@ -10,6 +10,8 @@ StudyManager.Router.map(function() {
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
   this.route('user-creation', { path: '/createUser' });
+  this.resource('news');
+  this.resource('templates');
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -68,7 +70,6 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
 
     return this.store.fetch('user', uId).then(function(user) {
       return Ember.RSVP.hash({
-        searchTags: that.store.find('label'),
         registeredStudies: user.get('registeredFor'),
         createdStudies: user.get('isExecutorFor'),
         mmiPoints: user.get('mmi'),
@@ -78,24 +79,31 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
-    // needed so that the search form component can operate only on string arrays
-    var transformedTags = model.searchTags.map(function (item) {
-      return item.get('title');
-    });
-
     var history = model.registeredStudies.filterBy('closed', true);
     var futureStudies = model.registeredStudies.filterBy('closed', false);
 
-    controller.set('searchTags', transformedTags);
+    controller.set('model', model);
     controller.set('history', history);
     controller.set('futureRegisteredStudies', futureStudies);
-    controller.set('model', model);
   }
 });
 
 StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    return this.store.find('userstudy');
+    return Ember.RSVP.hash({
+      searchTags: this.store.find('label'),
+      studies: this.store.find('userstudy')
+    });
+  },
+
+  setupController: function(controller, model) {
+    // needed so that the search form component can operate only on string arrays
+    var transformedTags = model.searchTags.map(function (item) {
+      return item.get('title');
+    });
+
+    controller.set('model', model);
+    controller.set('searchTags', transformedTags);
   }
 });
 
@@ -139,11 +147,31 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('lastName', model.get('lastname'));
     controller.set('userName', model.get('username'));
     controller.set('mmiPoints', model.get('mmi'));
+    controller.set('isMMIUser', model.get('collectsMMI'));
+    controller.set('selectedRole', model.get('role'));
   }
 });
 
 StudyManager.UserCreationRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller) {
+  }
+});
+
+StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    //return this.store.find('template');
+  },
+
+  setupController: function(controller, model) {
+  }
+});
+
+StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    //return this.store.find('news');
+  },
+
+  setupController: function(controller, model) {
   }
 });
 

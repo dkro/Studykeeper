@@ -11,6 +11,7 @@ StudyManager.Userstudy = DS.Model.extend({
     space: DS.attr('number'),
     news: DS.hasMany('news', { async: true }),
     labels: DS.hasMany('label', { async: true }),
+    //template: DS.belongsTo('template', { async: true }),
     executor: DS.belongsTo('user', { async: true, inverse: 'isExecutorFor' }),
     tutor: DS.belongsTo('user', { async: true, inverse: 'isTutorFor' }),
     registeredUsers: DS.hasMany('user', { async: true, inverse: 'registeredFor' }),

@@ -2,8 +2,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
     needs: ['application', 'userstudies'],
 
     actions: {
-        displayStudies: function(selectedTags) {
-            this.get('controllers.userstudies').set('searchTags', selectedTags);
+        displayStudies: function() {
             this.transitionToRoute('userstudies');
         },
 
@@ -12,9 +11,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
         }
     },
 
-    isTutor: localStorage.isTutor,
-
-    searchTags: []
+    isTutor: localStorage.isTutor
 });
 
 

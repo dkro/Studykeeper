@@ -1,7 +1,7 @@
 StudyManager.ApplicationAdapter = DS.RESTAdapter.extend({
     namespace: 'api',
 
-    host: 'http://localhost:8080',
+    host: 'http://localhost:10001',
 
     ajax: function(url, type, hash) {
         if (Ember.isEmpty(hash)) {

@@ -5,7 +5,7 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         logout: function() {
             var that = this;
 
-            /*Ember.$.post('http://localhost:8080/api/users/logout', { token: localStorage.token }).then(
+            /*Ember.$.post('http://localhost:10001/api/users/logout', { token: localStorage.token }).then(
                 function() {
                     this.resetLocalStorage();
                     this.transitionToRoute('login');
@@ -21,6 +21,20 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         openAccountSettings: function() {
             this.transitionToRoute('acc-config');
         }
+    },
+
+    init: function() {
+        this._super();
+
+        var mmiPoints = [];
+        var val = 0;
+
+        for (var i = 0; i <= 30; i++) {
+            mmiPoints[i] = parseFloat(val);
+            val += 0.5;
+        }
+
+        this.set('mmiValues', mmiPoints);
     },
 
     userRole: localStorage.userRole,
@@ -52,5 +66,9 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         this.controllerFor('login').set('token', null);
 
         window.localStorage.clear();
-    }
+    },
+
+    roles: ['executor', 'participant', 'tutor'],
+
+    mmiValues: null
 });

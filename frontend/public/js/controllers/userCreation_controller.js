@@ -1,5 +1,5 @@
 StudyManager.UserCreationController = Ember.Controller.extend({
-    needs: 'users',
+    needs: ['application', 'users'],
 
     actions: {
         createUser: function(newData) {
@@ -8,7 +8,9 @@ StudyManager.UserCreationController = Ember.Controller.extend({
                 lastname: newData.lastnameNew,
                 username: newData.usernameNew,
                 password: '1234567',
-                mmi: newData.mmiNew
+                mmi: newData.mmiNew,
+                collectsMMI: newData.isMMIUserNew,
+                role: newData.selectedRoleNew
             });
 
             var that = this;
@@ -29,11 +31,21 @@ StudyManager.UserCreationController = Ember.Controller.extend({
         }
     },
 
+    init: function() {
+        this._super();
+        this.set('roles', this.get('controllers.application').get('roles'));
+        this.set('mmiValues', this.get('controllers.application').get('mmiValues'));
+    },
+
     firstNameInvalid: null,
 
     lastNameInvalid: null,
 
     userNameInvalid: null,
 
-    statusMessage: null
+    statusMessage: null,
+
+    mmiValues: null,
+
+    roles: null
 });

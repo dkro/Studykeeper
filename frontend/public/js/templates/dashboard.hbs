@@ -1,24 +1,23 @@
 <div>
-    {{study-searchform allOptions=searchTags classNames='studySearch' action="displayStudies"}}
-    <div class="dashboard_mmiPoints">
-        <span class="dashboard_mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard_mmiPoints__value">{{model.mmiPoints}}</span></span>
+    <button type="button" class="btn btn-primary btn-lg dashboard__studiesButton" {{action 'displayStudies'}}>Studiensuche</button>
+    <div class="dashboard__mmiPoints">
+        <span class="dashboard__mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard__mmiPoints__value">{{model.mmiPoints}}</span></span>
     </div>
 </div>
 
 <div class="dashboardNews panel panel-default">
     <div class="panel-heading">Newsfeed</div>
     <div class="panel-body customizedPanel">
-        <ul class="list-group panelDisplay__list">
+        <div class="list-group panelDisplay__list">
             {{#each n in model.news}}
-                <li class="list-group-item dashboardNews__item">
+                <a target="_blank" {{bind-attr href="n.link"}} class="list-group-item dashboardNews__item">
                     <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.title}} <small>{{n.date}}</small></h3>
                     <div class="list-group-item-text dashboardNews__item__body">
-                        <div>{{n.description}}</div>
-                        <a target="_blank" {{bind-attr href="n.link"}}>Link zur Studie</a>
+                        {{n.description}}
                     </div>
-                </li>
+                </a>
             {{/each}}
-        </ul>
+        </div>
     </div>
 </div>
 

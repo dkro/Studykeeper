@@ -1,16 +1,14 @@
 <h2>Anzeige aller Studien</h2>
 
-{{#if searchTags}}
-    <span>für die Searchtags:
-        {{#each tag in searchTags}}
-            <span class="label label-default">{{tag}}</span>
-        {{/each}}
-                </span>
-{{/if}}
 
-<button type="button" class="btn btn-default btn-sm studies__filterButton" {{action 'enableDisableFilter'}}>
-    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> {{filterButtonText}}
+
+<button type="button" class="btn btn-info studies__filterButton" {{action 'enableDisableFilter'}}>
+    <span class="glyphicon glyphicon-filter studies__filterIcon" aria-hidden="true"></span> {{filterButtonText}}
 </button>
+
+{{#if isFilterVisible}}
+    {{study-searchform allOptions=searchTags classNames="studies__tagFilter"}}
+{{/if}}
 
 <div class="table-responsive studies__tableWrapper">
     <table class="table table-hover">
@@ -55,7 +53,7 @@
             </tr>
         </thead>
         <tbody>
-            {{#each study in model}}
+            {{#each study in model.studies}}
                 <tr {{bind-attr class=":studies__row study.closed:studies__row--expired:studies__row--notExpired"}} {{action 'showStudy' study}}>
                     <td class="studies__column--status">
                         {{#if study.closed}}

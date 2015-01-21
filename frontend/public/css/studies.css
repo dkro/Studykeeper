@@ -32,7 +32,43 @@
 .studies__filterButton {
     display: block;
     margin-top: 3em;
+    margin-bottom: 2em;
+}
+
+.studies__filterIcon {
+    vertical-align: middle;
+}
+
+.studies__tagFilter {
+    width: 100%;
     margin-bottom: 1em;
+}
+
+.studies__tagFiler__select {
+    max-width: 15em;
+    margin-right: 1.5em;
+    display: inline-block;
+}
+
+.studies__tagFilter__tagWrapper {
+    display: inline-block;
+}
+
+.studies__tagFilter__tag {
+    display: inline-block;
+    margin-right: 0.5em;
+    margin-top: 0.7em;
+    border: 0.1em solid lightgray;
+    -webkit-border-radius: 0.6em;
+    -moz-border-radius: 0.6em;
+    border-radius: 0.6em;
+    background-color: lightseagreen;
+    color: white;
+    padding: 0.3em;
+}
+
+.studies__tagFilter__tag__button {
+    margin-left: 0.4em;
 }
 
 

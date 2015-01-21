@@ -11,6 +11,9 @@
         <thead>
             <tr>
                 <th>
+                    {{custom-select values=roles currentSelected=roleFilter}}
+                </th>
+                <th>
                     {{input action="filterUsers" type="text" value=userNameFilter classNames="form-control input-sm" placeholder="Filter User"}}
                 </th>
                 <th>
@@ -29,6 +32,7 @@
                 </th>
             </tr>
             <tr>
+                <th>Rolle</th>
                 <th>User</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
@@ -40,6 +44,7 @@
             {{#if usersList}}
                 {{#each user in usersList}}
                     <tr class="users__row" {{action 'showUserConfig' user}}>
+                        <td>{{user.role}}</td>
                         <td>{{user.username}}</td>
                         <td>{{user.firstname}}</td>
                         <td>{{user.lastname}}</td>
@@ -49,7 +54,7 @@
                 {{/each}}
             {{else}}
                 <tr>
-                    <td class="tableFilter__emptyRow" colspan="5">- Keine Ergebnisse -</td>
+                    <td class="tableFilter__emptyRow" colspan="6">- Keine Ergebnisse -</td>
                 </tr>
             {{/if}}
         </tbody>

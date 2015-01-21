@@ -7,5 +7,5 @@ StudyManager.StudySearchtagComponent = Ember.Component.extend({
         }
     },
 
-    classNames: ['studySearch__tag']
+    classNames: ['studies__tagFilter__tag']
 });

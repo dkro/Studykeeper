@@ -1,5 +1,5 @@
 StudyManager.UserController = Ember.Controller.extend({
-    needs: 'users',
+    needs: ['application', 'users'],
 
     actions: {
         deleteUser: function() {
@@ -28,6 +28,8 @@ StudyManager.UserController = Ember.Controller.extend({
             thisUser.set('firstname', newData.firstnameNew);
             thisUser.set('lastname', newData.lastnameNew);
             thisUser.set('mmi', newData.mmiNew);
+            thisUser.set('collectsMMI', newData.isMMIUserNew);
+            thisUser.set('role', newData.selectedRoleNew);
 
             var that = this;
             var name = thisUser.get('username');
@@ -48,6 +50,12 @@ StudyManager.UserController = Ember.Controller.extend({
         }
     },
 
+    init: function() {
+        this._super();
+        this.set('roles', this.get('controllers.application').get('roles'));
+        this.set('mmiValues', this.get('controllers.application').get('mmiValues'));
+    },
+
     statusMessage: null,
 
     firstName: null,
@@ -56,5 +64,13 @@ StudyManager.UserController = Ember.Controller.extend({
 
     userName: null,
 
-    mmiPoints: null
+    mmiPoints: 0,
+
+    isMMIUser: false,
+
+    selectedRole: null,
+
+    roles: null,
+
+    mmiValues: null
 });

@@ -1,4 +1,6 @@
 StudyManager.UsersController = Ember.Controller.extend({
+    needs: 'application',
+
     actions: {
         showUserConfig: function(user) {
             this.transitionToRoute('user', user);
@@ -31,7 +33,16 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     init: function() {
         this._super();
-        this.initalizeMMIOptions();
+
+        var filterableRoles = [];
+        filterableRoles.pushObject('');
+        filterableRoles.pushObjects(this.get('controllers.application').get('roles'));
+        this.set('roles', filterableRoles);
+
+        var filterMMIOptions = [];
+        filterMMIOptions.pushObject(null);
+        filterMMIOptions.pushObjects(this.get('controllers.application').get('mmiValues'));
+        this.set('mmiFilterOptions', filterMMIOptions);
     },
 
     reset: function() {
@@ -40,14 +51,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         this.set('lastNameFiler', null);
         this.set('userNameFilter', null);
         this.set('mmiFilter', null);
-    },
-
-    initalizeMMIOptions: function() {
-        this.mmiFilterOptions[0] = '';
-
-        for (var i = 1; i <= 20; i++) {
-            this.mmiFilterOptions[i] = '' + i;
-        }
+        this.set('roleFilter', null);
     },
 
     statusMessage: null,
@@ -61,8 +65,16 @@ StudyManager.UsersController = Ember.Controller.extend({
     mmiFilter: null,
 
     mmiFilterChanged: function() {
-        this.filterAll();
+        //this.filterAll();
     }.observes('mmiFilter'),
+
+    roles: null,
+
+    roleFilter: null,
+
+    roleFilterChanged: function() {
+       // this.filterAll();
+    }.observes('roleFilter'),
 
     usersList: [],
 
@@ -78,7 +90,8 @@ StudyManager.UsersController = Ember.Controller.extend({
             return that.filterUserName(user.get('username')) &&
                 that.filterFirstName(user.get('firstname')) &&
                 that.filterLastName(user.get('lastname')) &&
-                that.filterMMI(user.get('mmi'));
+                that.filterMMI(user.get('mmi')) &&
+                that.filterRole(user.get('role'));
         }));
 
         this.set('usersList', filteredList);
@@ -120,7 +133,17 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('mmiFilter')))) {
-            res = mmi === parseInt(this.get('mmiFilter'));
+            res = mmi === parseFloat(this.get('mmiFilter'));
+        }
+
+        return res;
+    },
+
+    filterRole: function(role) {
+        var res = true;
+
+        if (!(Ember.empty(this.get('roleFilter')))) {
+            res = role === this.get('roleFilter');
         }
 
         return res;
@@ -128,5 +151,9 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     firstContainsSecond: function(first, second) {
         return first.indexOf(second) > -1;
+    },
+
+    showMessage: function(statusMessage) {
+        this.set('statusMessage', statusMessage);
     }
 });

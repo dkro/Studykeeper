@@ -9,7 +9,9 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
                 usernameNew: this.get('userName'),
                 firstnameNew: this.get('firstName'),
                 lastnameNew: this.get('lastName'),
-                mmiNew: this.get('selectedMMI')
+                mmiNew: this.get('selectedMMI'),
+                isMMIUserNew: this.get('isMMIUser'),
+                selectedRoleNew: this.get('selectedRole')
             };
 
             this.resetValidation();
@@ -19,22 +21,6 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
             }
         }
     },
-
-    init: function () {
-        this._super();
-        this.reset();
-    },
-
-    reset: function() {
-        var mmiPoints = [];
-
-        for (var i = 0; i <= 20; i++) {
-            mmiPoints[i] = i;
-        }
-
-        this.set('mmiOptions', mmiPoints);
-    },
-
 
     isValid: function(data) {
         var isValid = true;
@@ -68,6 +54,7 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
         this.set('userNameInvalid', null);
     },
 
+
     isUserCreation: false,
 
     firstName: null,
@@ -76,7 +63,15 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
 
     userName: null,
 
-    selectedMMI: null,
+    selectedMMI: 0,
+
+    isMMIUser: false,
+
+    selectedRole: null,
+
+    roles: null,
+
+    mmiOptions: null,
 
     firstNameInvalid: null,
 
