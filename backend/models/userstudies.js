@@ -162,7 +162,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
 module.exports.getUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us ' +
@@ -172,6 +172,25 @@ module.exports.getUserstudyById = function (id, callback) {
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
       'WHERE us.id=? ' +
       'GROUP BY us.id;',
+      id, function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  })
+};
+
+module.exports.getPublicUserstudyById = function (id, callback) {
+  mysql.getConnection(function(connection){
+    connection.query('SELECT us.id, ' +
+      'tutor.username AS tutorEmail, tutor.firstname AS tutorFirstname, tutor.lastname AS tutorLastname, ' +
+      'executor.username AS executorEmail, executor.firstname AS executorFirstname, executor.lastname AS executorLastname, ' +
+      'us.fromDate, us.untilDate, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.mmi, us.compensation, us.location ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN users tutor ON us.tutorId=tutor.id ' +
+      'LEFT JOIN users executor ON us.executorId=executor.id ' +
+      'WHERE us.id=? ',
       id, function(err,result){
         connection.release();
         callback(err,result);

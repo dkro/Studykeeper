@@ -34,6 +34,7 @@ module.exports = function(app) {
   // --------------- Public routes ---------------
   app.post('/api/users/signup', userController.signup);
   app.post('/api/users/retrievePassword', userController.retrievePW);
+  app.get('/api/userstudiesp/:id', userStudyController.getPublicUserstudyById);
 
 
   // --------------- Login routes ---------------

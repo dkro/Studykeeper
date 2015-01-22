@@ -153,6 +153,22 @@ module.exports.getUserstudyById = function(req, res) {
   });
 };
 
+module.exports.getPublicUserstudyById = function(req, res) {
+  UserStudy.getPublicUserstudyById(req.params.id, function(err,result){
+    if (err) {
+      res.json(500, {status: 'failure', errors: err});
+    } else if (result.length === 0 ){
+      res.json({status: 'failure', errors: [{message: 'Userstudy not found'}]});
+    } else {
+
+      var userstudy = result[0];
+
+      userstudy.closed = !!userstudy.closed;
+      res.json({userstudy: userstudy});
+    }
+  });
+};
+
 module.exports.allUserstudies = function(req, res) {
   UserStudy.getAllUserstudies(function(err, list){
     if (err) {
