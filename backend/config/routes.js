@@ -45,7 +45,7 @@ module.exports = function(app) {
   app.get('/api/users', userController.getUsers);
   app.get('/api/users/:id', userController.getUserById);
 
-  app.post('/api/users/create', userController.createUser);
+  app.post('/api/users', userController.createUser);
   app.del('/api/users/:id', userController.deleteUser);
 
   // --------------- Userstudy routes ---------------
@@ -57,12 +57,12 @@ module.exports = function(app) {
   app.post('/api/userstudies',  userStudyController.createUserstudy);
   app.del('/api/userstudies/:id', userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', userStudyController.editUserstudy);
-  app.put('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
-  app.put('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
+  app.post('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
+  app.post('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
 
-  app.put('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
-  app.put('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
-  app.put('/api/userstudies/:id/confirm/:userId',  userStudyController.confirmUserParticipation);
+  app.post('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
+  app.post('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
+  app.post('/api/userstudies/:id/confirm/:userId',  userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------
   app.get('/api/labels', labelController.allLabels);
