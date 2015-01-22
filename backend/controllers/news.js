@@ -43,6 +43,31 @@ module.exports.editNews = function (req, res) {
     });
 };
 
+module.exports.deleteNews = function (req, res) {
+  News.getNewsById(req.params.id, function (err, result) {
+    if (err) {
+      res.json(500, {status: 'failure', errors: err});
+    } else if (result.length === 0) {
+      res.json({status: 'failure', errors: [{message: 'News not found'}]});
+    } else {
+      var news = result[0];
+      if (news.userstudies === null) {
+        News.deleteNewsById(req.params.id, function(err){
+          if (err) {
+            res.json({status: 'failure', errors: err});
+          } else {
+            res.json({status: 'success', message: 'News deleted'});
+          }
+        });
+      } else {
+        news.userstudies = news.userstudies.split(",").map(function(x){return parseInt(x);});
+        res.json({status: 'failure', errors: [{message: 'Unable to delete news. It is mapped to userstudies',
+        userstudies: news.userstudies}]});
+      }
+    }
+  });
+};
+
 
 module.exports.getNewsById = function (req, res) {
   News.getNewsById(req.params.id, function (err, result) {

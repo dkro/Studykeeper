@@ -77,7 +77,7 @@ module.exports = function(app) {
   app.get('/api/news/:id', newsfeedController.getNewsById);
 
   app.post('/api/news', newsfeedController.createNews);
-  //app.del('/api/news', newsfeedController.deleteNews);
+  app.del('/api/news/:id', newsfeedController.deleteNews);
   app.put('/api/news/edit', newsfeedController.editNews);
 
   // --------------- Templates routes ---------------

@@ -61,4 +61,15 @@ module.exports.getNewsById = mysql.query.bind(mysql.query,
   'WHERE n.id=? ' +
   'GROUP BY n.id;');
 
+/**
+ *
+ * Delete row from news table with id
+ *
+ * @params string newsid
+ * @type {function(this:exports.query)}
+ */
+module.exports.deleteNewsById = mysql.query.bind(mysql.query,
+  'DELETE FROM news WHERE id=?');
+
+
 
