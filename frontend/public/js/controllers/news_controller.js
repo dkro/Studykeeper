@@ -7,7 +7,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         },
 
         createNews: function() {
-            //this.transitionToRoute('user-creation');
+            this.transitionToRoute('news-creation');
         },
 
         deleteNews: function(news) {

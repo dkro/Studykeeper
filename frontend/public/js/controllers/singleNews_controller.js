@@ -50,10 +50,6 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
         }
     },
 
-    init: function() {
-        this._super();
-    },
-
     statusMessage: null,
 
     title: null,

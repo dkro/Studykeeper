@@ -12,6 +12,7 @@ StudyManager.Router.map(function() {
   this.route('user-creation', { path: '/createUser' });
   this.resource('news');
   this.resource('single-news', { path: '/news/:news_id' });
+  this.route('news-creation', { path: '/createNews' });
   this.resource('templates');
 });
 
@@ -190,6 +191,11 @@ StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('date', model.get('date'));
     controller.set('description', model.get('description'));
     controller.set('link', model.get('link'));
+  }
+});
+
+StudyManager.NewsCreationRoute = StudyManager.AuthenticationRoute.extend({
+  setupController: function(controller) {
   }
 });
 

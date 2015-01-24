@@ -192,12 +192,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="roleUserConfigSelect" class="col-sm-2 control-label">Rolle:</label>
-                    <div class="col-sm-10">
-                        {{view "select" id="roleUserConfigSelect" content=roles value=selectedRole classNames="form-control component__config__select"}}
-                    </div>
-                </div>
-                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
                         <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
                         {{#if isNewsCreation}}
