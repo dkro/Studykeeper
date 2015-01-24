@@ -168,10 +168,13 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    //return this.store.find('news');
+    return this.store.find('news');
   },
 
   setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('newsList', model);
+    controller.reset();
   }
 });
 

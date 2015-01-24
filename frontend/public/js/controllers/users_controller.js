@@ -65,7 +65,7 @@ StudyManager.UsersController = Ember.Controller.extend({
     mmiFilter: null,
 
     mmiFilterChanged: function() {
-        //this.filterAll();
+        this.filterAll();
     }.observes('mmiFilter'),
 
     roles: null,
@@ -73,7 +73,7 @@ StudyManager.UsersController = Ember.Controller.extend({
     roleFilter: null,
 
     roleFilterChanged: function() {
-       // this.filterAll();
+       this.filterAll();
     }.observes('roleFilter'),
 
     usersList: [],

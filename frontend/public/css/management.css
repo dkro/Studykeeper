@@ -1,57 +1,65 @@
-.users__table {
+.management--all__table {
     margin-top: 1em;
     clear: right;
 }
 
-.users__row {
+.management--all__row {
     cursor: pointer;
 }
 
-.users__statusMessage {
+.management--all__statusMessage {
     float: right;
     width: 100%;
 }
 
-.users__deleteIcon {
+.management--all__deleteIcon {
     color: red;
     cursor: pointer;
 }
 
-.users__deleteIcon:hover {
+.management--all__deleteIcon:hover {
     transform: scale(1.5);
     -moz-transform: scale(1.5);
     -webkit-transform: scale(1.5);
 }
 
-.user__heading {
-    margin-bottom: 0.5em;
+.management--all__emptyFilter {
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    color: dimgrey;
 }
 
-.user__button--delete {
-    margin-bottom: 3em;
+.management--all__datePicker {
+    background-color: white !important;
+    cursor: pointer !important;
 }
 
 @media screen and (min-width: 768px) {
-    .users__heading {
+    .management--all__heading {
+        margin-bottom: 0.5em;
     }
 
-    .users__createButton {
+    .management--all__createButton {
         float: right;
         margin-bottom: 1em;
     }
 }
 
 @media screen and (max-width: 767px) {
-    .users__heading {
+    .management--all__heading {
         margin-bottom: 1em;
     }
 
-    .users__createButton {
+    .management--all__createButton {
         margin-bottom: 0.5em;
     }
 }
 
 
+.user__button--delete {
+    margin-bottom: 3em;
+}
 
 
 
