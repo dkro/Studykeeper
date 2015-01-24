@@ -1,3 +1,5 @@
+/* ALL */
+
 .management--all__table {
     margin-top: 1em;
     clear: right;
@@ -57,7 +59,16 @@
 }
 
 
-.user__button--delete {
+
+
+/* SINGLE */
+
+.management--single__heading {
+
+}
+
+
+.management--single__deleteButton {
     margin-bottom: 3em;
 }
 

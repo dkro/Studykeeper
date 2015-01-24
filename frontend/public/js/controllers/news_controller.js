@@ -3,7 +3,7 @@ StudyManager.NewsController = Ember.Controller.extend({
 
     actions: {
         showNewsConfig: function(news) {
-            //this.transitionToRoute('news', news);
+            this.transitionToRoute('single-news', news);
         },
 
         createNews: function() {

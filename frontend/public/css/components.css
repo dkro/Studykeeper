@@ -1,53 +1,45 @@
-.userConfig__form {
+.component__config__form {
     clear: right;
     max-width: 80%;
 }
 
 @media screen and (min-width: 768px) {
-    .userConfig__select {
+    .component__config__select {
         max-width: 15em;
     }
 
-    .userConfig__button--save {
+    .component__config__saveButton {
         margin-right: 1em;
     }
 
-    .userConfig__button-cancel {
-
-    }
-
-    .userConfig__buttonsWrapper {
+    .component__config__buttonsWrapper {
         padding-top: 2em;
     }
 }
 
 @media screen and (max-width: 767px) {
-    .userConfig__select {
+    .component__config__select {
         max-width: 100%;
     }
 
-    .userConfig__button--cancel {
+    .component__config__cancelButton {
         display: inline-block;
         vertical-align: top;
     }
 
-    .userConfig__button--save {
+    .component__config__saveButton {
         margin-bottom: 2em;
         display: inline-block;
     }
 
-    .userConfig__buttonsWrapper {
+    .component__config__buttonsWrapper {
         padding-top: 2em;
         text-align: center;
     }
 }
 
-.statusMessage__icon {
+.component__statusMessage__icon {
     float: right;
     margin-left: 0.5em;
     margin-bottom: 0.5em;
-}
-
-.statusMessage__message {
-
 }

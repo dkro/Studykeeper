@@ -1,0 +1,10 @@
+<h2 class="management--single__heading">User konfigurieren</h2>
+
+<button class="btn btn-danger management--single__deleteButton" {{action 'deleteNews'}}>News löschen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+
+{{news-config isNewsCreation=false title=title date=date description=description link=link save="updateUser" cancel="cancelView"}}

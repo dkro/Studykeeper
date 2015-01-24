@@ -81,41 +81,41 @@
         </script>
 
         <script type="text/x-handlebars" id="components/user-config">
-            <form class="form-horizontal userConfig__form">
+            <form class="form-horizontal component__config__form">
                 <div {{bind-attr class=":form-group firstNameInvalid:has-error"}}>
                     <label for="firstNameUserConfigInput" class="col-sm-2 control-label">Vorname:</label>
                     <div class="col-sm-10">
-                        {{input type="text" aria-describedby="firstNameHelp" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
+                        {{input type="text" aria-describedby="firstNameUserConfigHelp" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
 
                         {{#if firstNameInvalid}}
-                        <span id="firstNameHelp" class="help-block">{{firstNameInvalid}}</span>
+                            <span id="firstNameUserConfigHelp" class="help-block">{{firstNameInvalid}}</span>
                         {{/if}}
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group lastNameInvalid:has-error"}}>
                     <label for="lastNameUserConfigInput" class="col-sm-2 control-label">Nachname:</label>
                     <div class="col-sm-10">
-                        {{input type="text" aria-describedby="lastNameHelp" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
+                        {{input type="text" aria-describedby="lastNameUserConfigHelp" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
 
                         {{#if lastNameInvalid}}
-                        <span id="lastNameHelp" class="help-block">{{lastNameInvalid}}</span>
+                            <span id="lastNameUserConfigHelp" class="help-block">{{lastNameInvalid}}</span>
                         {{/if}}
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group userNameInvalid:has-error"}}>
                     <label for="emailUserConfigInput" class="col-sm-2 control-label">Email:</label>
                     <div class="col-sm-10">
-                        {{input type="email" aria-describedby="userNameHelp" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
+                        {{input type="email" aria-describedby="userNameUserConfigHelp" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
 
                         {{#if userNameInvalid}}
-                        <span id="userNameHelp" class="help-block">{{userNameInvalid}}</span>
+                            <span id="userNameUserConfigHelp" class="help-block">{{userNameInvalid}}</span>
                         {{/if}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="roleUserConfigSelect" class="col-sm-2 control-label">Rolle:</label>
                     <div class="col-sm-10">
-                        {{view "select" id="roleUserConfigSelect" content=roles value=selectedRole classNames="form-control userConfig__select"}}
+                        {{view "select" id="roleUserConfigSelect" content=roles value=selectedRole classNames="form-control component__config__select"}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -130,20 +130,83 @@
                     <div class="form-group">
                         <label for="mmiUserConfigSelect" class="col-sm-2 control-label">MMI-Punkte:</label>
                         <div class="col-sm-10">
-                            {{view "select" id="mmiUserConfigSelect" content=mmiOptions value=selectedMMI classNames="form-control userConfig__select"}}
+                            {{view "select" id="mmiUserConfigSelect" content=mmiOptions value=selectedMMI classNames="form-control component__config__select"}}
                         </div>
                     </div>
                 {{/if}}
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10 userConfig__buttonsWrapper">
-                        <button type="submit" class="btn btn-primary userConfig__button--save" {{action 'saveClick'}}>
+                    <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
+                        <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
                             {{#if isUserCreation}}
                                 Nutzer erstellen
                             {{else}}
                                 Änderungen speichern
                             {{/if}}
                         </button>
-                        <button class="btn btn-default userConfig__button--cancel" {{action 'cancelClick'}}>Abbrechen</button>
+                        <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>Abbrechen</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+        <script type="text/x-handlebars" id="components/news-config">
+            <form class="form-horizontal component__config__form">
+                <div {{bind-attr class=":form-group titleInvalid:has-error"}}>
+                    <label for="titleNewsConfigInput" class="col-sm-2 control-label">Titel:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="titleNewsConfigHelp" id="titleNewsConfigInput" value=title classNames="form-control" placeholder="Titel"}}
+
+                        {{#if titleInvalid}}
+                            <span id="titleNewsConfigHelp" class="help-block">{{titleInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group dateInvalid:has-error"}}>
+                    <label for="dateNewsConfigInput" class="col-sm-2 control-label">Datum:</label>
+                    <div class="col-sm-10">
+                        {{view "date-picker" aria-describedby="dateNewsConfigHelp" id="dateNewsConfigInput" readonly="readonly" classNames="form-control" value=date placeholder="Datum"}}
+
+                        {{#if dateInvalid}}
+                            <span id="dateNewsConfigHelp" class="help-block">{{dateInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group descriptionInvalid:has-error"}}>
+                    <label for="descriptionNewsConfigInput" class="col-sm-2 control-label">Beschreibung:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="descriptionNewsConfigHelp" id="descriptionNewsConfigInput" value=description classNames="form-control" placeholder="Beschreibung"}}
+
+                        {{#if descriptionInvalid}}
+                            <span id="descriptionNewsConfigHelp" class="help-block">{{descriptionInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group linkInvalid:has-error"}}>
+                    <label for="linkNewsConfigInput" class="col-sm-2 control-label">Link:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="linkNewsConfigHelp" id="linkNewsConfigInput" value=link classNames="form-control" placeholder="Link"}}
+
+                        {{#if linkInvalid}}
+                        <span id="linkNewsConfigHelp" class="help-block">{{linkInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="roleUserConfigSelect" class="col-sm-2 control-label">Rolle:</label>
+                    <div class="col-sm-10">
+                        {{view "select" id="roleUserConfigSelect" content=roles value=selectedRole classNames="form-control component__config__select"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
+                        <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
+                        {{#if isNewsCreation}}
+                            Nutzer erstellen
+                        {{else}}
+                            Änderungen speichern
+                        {{/if}}
+                        </button>
+                        <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>Abbrechen</button>
                     </div>
                 </div>
             </form>

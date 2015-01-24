@@ -1,6 +1,6 @@
-<h2 class="user__heading">User konfigurieren</h2>
+<h2 class="management--single__heading">User konfigurieren</h2>
 
-<button class="btn btn-danger user__button--delete" {{action 'deleteUser'}}>Nutzer löschen</button>
+<button class="btn btn-danger management--single__deleteButton" {{action 'deleteUser'}}>Nutzer löschen</button>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
