@@ -1,7 +1,8 @@
 StudyManager.IsodateTransform = DS.Transform.extend({
     deserialize: function (serialized) {
         if (serialized) {
-            return moment(serialized).toDate();
+            // Use German date representation for displaying on the client
+            return moment(serialized).format('DD.MM.YYYY');
         }
         return serialized;
     },
