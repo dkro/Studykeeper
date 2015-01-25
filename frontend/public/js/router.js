@@ -188,8 +188,6 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.UserCreationRoute = StudyManager.AuthenticationRoute.extend({
-  setupController: function(controller) {
-  }
 });
 
 StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
@@ -228,7 +226,5 @@ StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.NewsCreationRoute = StudyManager.AuthenticationRoute.extend({
-  setupController: function(controller) {
-  }
 });
 

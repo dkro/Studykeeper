@@ -67,9 +67,17 @@
 
 }
 
+.management--single__heading--create {
+    margin-bottom: 1em;
+}
 
 .management--single__deleteButton {
     margin-bottom: 3em;
+}
+
+.management--single__datePicker {
+    background-color: white !important;
+    cursor: pointer !important;
 }
 
 

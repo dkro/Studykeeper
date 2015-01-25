@@ -3,26 +3,23 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
 
     actions: {
         createNews: function(newData) {
-            var newUser = this.store.createRecord('user', {
-                firstname: newData.firstnameNew,
-                lastname: newData.lastnameNew,
-                username: newData.usernameNew,
-                password: '1234567',
-                mmi: newData.mmiNew,
-                collectsMMI: newData.isMMIUserNew,
-                role: newData.selectedRoleNew
+            var newNews = this.store.createRecord('news', {
+                title: newData.titleNew,
+                date: newData.dateNew,
+                description: newData.descriptionNew,
+                link: newData.linkNew
             });
 
             var that = this;
-            var name = newUser.get('username');
+            var name = newNews.get('title');
 
-            newUser.save().then(function(response) {
-                that.transitionToRoute('users').then(function () {
-                    that.get('controllers.users').set('statusMessage', { message: 'Nutzer \"' + name + '\" erstellt!', isSuccess: true });
+            newNews.save().then(function(response) {
+                that.transitionToRoute('news').then(function () {
+                    that.get('controllers.news').set('statusMessage', { message: 'News \"' + name + '\" erstellt!', isSuccess: true });
                 });
             }, function(error) {
-                newUser.deleteRecord();
-                that.set('statusMessage', { message: 'Nutzer konnte nicht erstellt werden!', isSuccess: false });
+                newNews.deleteRecord();
+                that.set('statusMessage', { message: 'News konnte nicht erstellt werden!', isSuccess: false });
             });
         },
 

@@ -27,7 +27,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         },
 
         filterNews: function() {
-            this.filterAll();
+            this.filterAll(true);
         }
     },
 
@@ -43,11 +43,16 @@ StudyManager.NewsController = Ember.Controller.extend({
 
     selectedDateFilter: null,
 
+    selectedDateFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedDateFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedDateFilter'),
+
     newsList: [],
 
     isLoading: false,
 
-    filterAll: function() {
+    filterAll: function(shouldClearStatus) {
         this.set('isLoading', true);
         var that = this;
 
@@ -58,7 +63,10 @@ StudyManager.NewsController = Ember.Controller.extend({
 
         this.set('newsList', filteredList);
         this.set('isLoading', false);
-        this.set('statusMessage', null);
+
+        if (shouldClearStatus) {
+            this.set('statusMessage', null);
+        }
     },
 
     filterTitle: function(title) {
@@ -71,8 +79,12 @@ StudyManager.NewsController = Ember.Controller.extend({
         return res;
     },
 
-    filterDate: function(lastname) {
+    filterDate: function(date) {
         var res = true;
+
+        if (!(Ember.empty(this.get('selectedDateFilter')))) {
+            res = date === this.get('selectedDateFilter');
+        }
 
         return res;
     },

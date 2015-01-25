@@ -1,8 +1,8 @@
-<h2 class="management--single__heading">News erstellen</h2>
+<h2 class="management--single__heading--create">News erstellen</h2>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
 
-{{news-config isNewsCreation=true title="" date="" description="" link="" save="createUser" cancel="cancelView"}}
+{{news-config isNewsCreation=true title="" date="" description="" link="" save="createNews" cancel="cancelView"}}

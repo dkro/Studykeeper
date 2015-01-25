@@ -5,30 +5,45 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
         },
 
         saveClick: function() {
-            /*var params = {
-                usernameNew: this.get('userName'),
-                firstnameNew: this.get('firstName'),
-                lastnameNew: this.get('lastName'),
-                mmiNew: this.get('selectedMMI'),
-                isMMIUserNew: this.get('isMMIUser'),
-                selectedRoleNew: this.get('selectedRole')
+            var params = {
+                titleNew: this.get('title'),
+                dateNew: this.get('date'),
+                descriptionNew: this.get('description'),
+                linkNew: this.get('link')
             };
 
             this.resetValidation();
 
             if (this.isValid(params)) {
                 this.sendAction('save', params);
-            }*/
+            }
         }
     },
 
     isValid: function(data) {
-        return true;
-    },
+        var isValid = true;
 
-    isRegularEmail: function(email) {
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
+        if (Ember.empty(data.titleNew)) {
+            this.set('titleInvalid', 'Der Titel darf nicht leer sein!')
+            isValid = false;
+        }
+
+        if (Ember.empty(data.dateNew)) {
+            this.set('dateInvalid', 'Bitte geben Sie ein Datum an!')
+            isValid = false;
+        }
+
+        if (Ember.empty(data.descriptionNew)) {
+            this.set('descriptionInvalid', 'Bitte geben Sie eine Beschreibung an!')
+            isValid = false;
+        }
+
+        if (Ember.empty(data.linkNew)) {
+            this.set('linkInvalid',  'Bitte geben Sie einen Link an!')
+            isValid = false;
+        }
+
+        return isValid;
     },
 
     resetValidation: function() {
