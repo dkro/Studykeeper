@@ -70,14 +70,10 @@
         </script>
 
         <script type="text/x-handlebars" id="components/labels-item">
-            {{#if isSelected}}
-                <span class="labels__label__name">{{name}}</span>
-                <div class="labels__label__removeIcon__wrapper">
-                    <span class="glyphicon glyphicon-remove labels__label__removeIcon" {{action 'removeLabel'}}></span>
-                </div>
-            {{else}}
-                {{name}}
-            {{/if}}
+            <span class="labels__label__name">{{name}}</span>
+            <div class="labels__label__removeIcon__wrapper">
+                <span class="glyphicon glyphicon-remove labels__label__removeIcon" {{action 'removeLabel'}}></span>
+            </div>
         </script>
 
         <script type="text/x-handlebars" id="components/user-config">
@@ -210,6 +206,24 @@
             <span {{bind-attr class=":glyphicon :statusMessage__icon isSuccess:glyphicon-ok:glyphicon-warning-sign"}}></span>
             <span class="statusMessage__message">{{message}}</span>
         </script>
+
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{yield}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" {{action 'ok'}}>OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <script src="bower_components/jquery/dist/jquery.js"></script>

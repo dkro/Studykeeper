@@ -17,5 +17,15 @@ StudyManager.ApplicationAdapter = DS.RESTAdapter.extend({
         };
 
         return this._super(url, type, hash);
+    },
+
+    ajaxError: function(jqXHR) {
+        var error = this._super(jqXHR);
+        if (jqXHR && jqXHR.status === 422) {
+            var jsonErrors = Ember.$.parseJSON(jqXHR.responseText)["errors"];
+            return new DS.InvalidError(jsonErrors);
+        } else {
+            return error;
+        }
     }
 });

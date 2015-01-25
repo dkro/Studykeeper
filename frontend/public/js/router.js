@@ -2,6 +2,7 @@ StudyManager.Router.map(function() {
   this.route('login', { path: '/' });
   this.route('signup');
   this.route('acc-config');
+  this.route('about');
   this.route('logout');
   this.resource('dashboard');
   this.resource('userstudies');
@@ -14,6 +15,25 @@ StudyManager.Router.map(function() {
   this.resource('single-news', { path: '/news/:news_id' });
   this.route('news-creation', { path: '/createNews' });
   this.resource('templates');
+});
+
+StudyManager.ApplicationRoute = Ember.Route.extend({
+  actions: {
+    showModal: function(name, model) {
+      return this.render(name, {
+        into: 'application',
+        outlet: 'modal',
+        model: model
+      });
+    },
+
+    removeModal: function() {
+      return this.disconnectOutlet({
+        outlet: 'modal',
+        parentView: 'application'
+      });
+    }
+  }
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -44,6 +64,9 @@ StudyManager.LoginRoute = Ember.Route.extend({
   setupController: function(controller) {
     controller.reset();
   }
+});
+
+StudyManager.AboutRoute = Ember.Route.extend({
 });
 
 StudyManager.SignupRoute = Ember.Route.extend({
@@ -121,8 +144,18 @@ StudyManager.LabelsRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
-    controller.set('model', model);
+    var labels = this.store.filter('label', function (label) {
+      return !label.get('isDirty');
+    });
+
+    controller.set('model', labels);
     controller.reset();
+  },
+
+  actions: {
+    refreshLabels: function() {
+      this.refresh();
+    }
   }
 });
 

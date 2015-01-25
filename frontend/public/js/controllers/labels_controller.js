@@ -1,9 +1,5 @@
 StudyManager.LabelsController = Ember.Controller.extend({
     actions: {
-        setCurrentlySelectedId: function(newId) {
-            this.set('currentlySelectedId', newId);
-        },
-
         createLabel: function() {
             var newLabel = this.store.createRecord('label', {
                 title: this.get('newLabelValue')
@@ -12,13 +8,15 @@ StudyManager.LabelsController = Ember.Controller.extend({
             this.set('statusMessage', null);
 
             newLabel.save().then(function(response) {
+                that.send('refreshLabels');
                 that.set('newLabelValue', null);
                 var message = 'Label \"' + newLabel.get('title') + '\" wurde erstellt!';
                 that.set('statusMessage', { message: message, isSuccess: true });
             }, function(error) {
-                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                that.set('statusMessage', { message: error.responseJSON.errors[0].message, isSuccess: false });
                 newLabel.deleteRecord();
                 that.set('newLabelValue', null);
+                that.send('refreshLabels');
             });
         },
 
@@ -30,11 +28,13 @@ StudyManager.LabelsController = Ember.Controller.extend({
                 label.deleteRecord();
                 var name = label.get('title');
                 label.save().then(function(response) {
+                    that.send('refreshLabels');
                     var message = 'Label \"' + name + '\" wurde gelöscht!';
                     that.set('statusMessage', { message: message, isSuccess: true });
                 }, function(error) {
                     label.rollback();
-                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.errors[0].message, isSuccess: false });
+                    that.send('refreshLabels');
                 })
             });
         }
@@ -42,13 +42,10 @@ StudyManager.LabelsController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
-        this.set('currentlySelectedId', null);
         this.set('newLabelValue', null);
     },
 
     statusMessage: null,
-
-    currentlySelectedId: null,
 
     newLabelValue: null,
 

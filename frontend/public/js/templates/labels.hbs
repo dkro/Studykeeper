@@ -2,7 +2,7 @@
 
 
 <div class="input-group labels__creationWrapper">
-    {{input type="text" value=newLabelValue placeholder="Neuer Labelname" classNames="form-control"}}
+    {{input type="text" value=newLabelValue placeholder="Neuer Labelname" action="createLabel" classNames="form-control"}}
     <span class="input-group-btn">
         <button class="btn btn-primary" type="button" {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>Erstellen</button>
     </span>
@@ -14,7 +14,9 @@
 
 <ul class="list-group labels__list">
     {{#each label in model}}
-        {{labels-item name=label.title selfId=label.id currentlySelectedLabelId=currentlySelectedId gotSelected="setCurrentlySelectedId" gotRemoved="deleteLabel"}}
+        {{#if label.id}}
+            {{labels-item name=label.title selfId=label.id gotRemoved="deleteLabel"}}
+        {{/if}}
     {{/each}}
 </ul>
 
