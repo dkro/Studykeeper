@@ -27,7 +27,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         },
 
         filterUsers: function() {
-            this.filterAll();
+            this.filterAll(true);
         }
     },
 
@@ -65,7 +65,8 @@ StudyManager.UsersController = Ember.Controller.extend({
     mmiFilter: null,
 
     mmiFilterChanged: function() {
-        this.filterAll();
+        var shouldClearStatus = !Ember.empty(this.get('mmiFilter'));
+        this.filterAll(shouldClearStatus);
     }.observes('mmiFilter'),
 
     roles: null,
@@ -73,7 +74,8 @@ StudyManager.UsersController = Ember.Controller.extend({
     roleFilter: null,
 
     roleFilterChanged: function() {
-       this.filterAll();
+        var shouldClearStatus = !Ember.empty(this.get('roleFilter'));
+        this.filterAll(shouldClearStatus);
     }.observes('roleFilter'),
 
     usersList: [],
@@ -82,7 +84,7 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     mmiFilterOptions: [],
 
-    filterAll: function() {
+    filterAll: function(shouldClearStatus) {
         this.set('isLoading', true);
         var that = this;
 
@@ -96,7 +98,10 @@ StudyManager.UsersController = Ember.Controller.extend({
 
         this.set('usersList', filteredList);
         this.set('isLoading', false);
-        this.set('statusMessage', null);
+
+        if (shouldClearStatus) {
+            this.set('statusMessage', null);
+        }
     },
 
     filterFirstName: function(firstname) {
