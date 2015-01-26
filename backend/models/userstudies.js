@@ -3,6 +3,7 @@ var mysql      = require('../config/mysql');
 var Promise    = require('es6-promise').Promise;
 
 module.exports.addUserStudy = function (data, callback) {
+  var id;
   var queryData = {
     title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
     description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
@@ -31,6 +32,7 @@ module.exports.addUserStudy = function (data, callback) {
             if (err) {
               reject(err);
             } else {
+              id = result.insertId
               resolve(result.insertId);
             }
           });
@@ -53,7 +55,7 @@ module.exports.addUserStudy = function (data, callback) {
               });
             } else {
               connection.release();
-              callback();
+              callback(err,id);
             }
           });
         })

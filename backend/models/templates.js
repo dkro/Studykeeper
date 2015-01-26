@@ -3,6 +3,7 @@ var mysql      = require('../config/mysql');
 var Promise         = require('es6-promise').Promise;
 
 module.exports.addTemplate = function (template, callback) {
+  var id;
   var queryData = {
     title: template.title,
     fields: template.fields
@@ -36,10 +37,11 @@ module.exports.addTemplate = function (template, callback) {
                 '(SELECT id FROM templates WHERE title=?),' +
                 '?,?)',
                 [queryData.title, queryData.fields[i].title, queryData.fields[i].value],
-                function (err) {
+                function (err,result) {
                   if (err) {
                     reject(err);
                   } else {
+                    id = result.insertId;
                     resolve();
                   }
                 });
@@ -55,7 +57,7 @@ module.exports.addTemplate = function (template, callback) {
                 });
               } else {
                 connection.release();
-                callback();
+                callback(err,id);
               }
             });
           }).catch(function (err) {

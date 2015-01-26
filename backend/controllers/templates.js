@@ -12,11 +12,11 @@ module.exports.createTemplate = function(req, res){
       return TemplatePromise.templateAvailable(template.title);
     })
     .then(function(){
-      Template.addTemplate(template, function(err,result){
+      Template.addTemplate(template, function(err,insertId){
         if (err) {
           throw err;
         } else {
-          template.id = result.insertId;
+          template.id = insertId;
           res.json({status: 'success', message: 'Template created.', template: template});
         }
       });
