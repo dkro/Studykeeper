@@ -15,15 +15,17 @@ StudyManager.UsersController = Ember.Controller.extend({
             var name = user.get('username');
             var that = this;
 
-            user.deleteRecord();
-            user.save().then(function(response) {
-                var successMessage = 'Nutzer \"' + name + '\" wurde erfolgreich gelöscht!';
-                that.set('statusMessage', { message: successMessage, isSuccess: true });
-            }, function(error) {
-                user.rollback();
-                var failMessage = 'Nutzer \"' + name + '\" konnte nicht gelöscht werden!';
-                that.set('statusMessage', { message: failMessage, isSuccess: false });
-            });
+            if (confirm('Wollen Sie den User \"' + name + '\" wirklich löschen?')) {
+                user.deleteRecord();
+                user.save().then(function(response) {
+                    var successMessage = 'Nutzer \"' + name + '\" wurde erfolgreich gelöscht!';
+                    that.set('statusMessage', { message: successMessage, isSuccess: true });
+                }, function(error) {
+                    user.rollback();
+                    var failMessage = 'Nutzer \"' + name + '\" konnte nicht gelöscht werden!';
+                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                });
+            }
         },
 
         filterUsers: function() {

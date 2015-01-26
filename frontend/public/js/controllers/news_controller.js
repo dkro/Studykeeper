@@ -15,15 +15,17 @@ StudyManager.NewsController = Ember.Controller.extend({
             var title = news.get('title');
             var that = this;
 
-            news.deleteRecord();
-            news.save().then(function(response) {
-                var successMessage = 'News \"' + title + '\" wurde erfolgreich gelöscht!';
-                that.set('statusMessage', { message: successMessage, isSuccess: true });
-            }, function(error) {
-                user.rollback();
-                var failMessage = 'News \"' + title + '\" konnte nicht gelöscht werden!';
-                that.set('statusMessage', { message: failMessage, isSuccess: false });
-            });
+            if (confirm('Wollen Sie die News \"' + title + '\" wirklich löschen?')) {
+                news.deleteRecord();
+                news.save().then(function(response) {
+                    var successMessage = 'News \"' + title + '\" wurde erfolgreich gelöscht!';
+                    that.set('statusMessage', { message: successMessage, isSuccess: true });
+                }, function(error) {
+                    user.rollback();
+                    var failMessage = 'News \"' + title + '\" konnte nicht gelöscht werden!';
+                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                });
+            }
         },
 
         filterNews: function() {

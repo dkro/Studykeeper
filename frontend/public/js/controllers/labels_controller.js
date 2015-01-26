@@ -21,22 +21,24 @@ StudyManager.LabelsController = Ember.Controller.extend({
         },
 
         deleteLabel: function(labelId) {
-            var that = this;
-            this.set('statusMessage', null);
+            if (confirm("Wollen Sie das Label wirklich löschen?")) {
+                var that = this;
+                this.set('statusMessage', null);
 
-            this.store.find('label', labelId).then(function (label) {
-                label.deleteRecord();
-                var name = label.get('title');
-                label.save().then(function(response) {
-                    that.send('refreshLabels');
-                    var message = 'Label \"' + name + '\" wurde gelöscht!';
-                    that.set('statusMessage', { message: message, isSuccess: true });
-                }, function(error) {
-                    label.rollback();
-                    that.set('statusMessage', { message: error.responseJSON.errors[0].message, isSuccess: false });
-                    that.send('refreshLabels');
-                })
-            });
+                this.store.find('label', labelId).then(function (label) {
+                    label.deleteRecord();
+                    var name = label.get('title');
+                    label.save().then(function(response) {
+                        that.send('refreshLabels');
+                        var message = 'Label \"' + name + '\" wurde gelöscht!';
+                        that.set('statusMessage', { message: message, isSuccess: true });
+                    }, function(error) {
+                        label.rollback();
+                        that.set('statusMessage', { message: error.responseJSON.errors[0].message, isSuccess: false });
+                        that.send('refreshLabels');
+                    })
+                });
+            }
         }
     },
 

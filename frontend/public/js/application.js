@@ -23,7 +23,7 @@ StudyManager.DatePickerView = Ember.TextField.extend({
     modelChangedValue: function(){
         var picker = this.get('_picker');
         if (picker){
-            picker.setDate(this.get('value'));
+            //picker.setDate(this.get('value'));
         }
     }.observes('value'),
 

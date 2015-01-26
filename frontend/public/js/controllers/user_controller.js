@@ -7,19 +7,20 @@ StudyManager.UserController = Ember.Controller.extend({
             var that = this;
             var name = thisUser.get('username');
 
+            if (confirm('Wollen Sie den User \"' + name + '\" wirklich löschen?')) {
+                thisUser.deleteRecord();
 
-            thisUser.deleteRecord();
-
-            thisUser.save().then(function(response) {
-                that.transitionToRoute('users').then(function () {
-                    var aMessage = 'Nutzer \"' + name + '\" erfolgreich gelöscht!';
-                    that.get('controllers.users').set('statusMessage', { message: aMessage, isSuccess: true });
+                thisUser.save().then(function(response) {
+                    that.transitionToRoute('users').then(function () {
+                        var aMessage = 'Nutzer \"' + name + '\" erfolgreich gelöscht!';
+                        that.get('controllers.users').set('statusMessage', { message: aMessage, isSuccess: true });
+                    });
+                }, function(error) {
+                    thisUser.rollback();
+                    var aMessage = 'Nutzer \"' + name + '\" konnte nicht gelöscht werden!';
+                    that.set('statusMessage', { message: aMessage, isSuccess: false });
                 });
-            }, function(error) {
-                thisUser.rollback();
-                var aMessage = 'Nutzer \"' + name + '\" konnte nicht gelöscht werden!';
-                that.set('statusMessage', { message: aMessage, isSuccess: false });
-            });
+            }
         },
 
         updateUser: function(newData) {
