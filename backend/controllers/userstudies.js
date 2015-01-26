@@ -19,10 +19,11 @@ module.exports.createUserstudy = function(req, res) {
 //    UserPromise.userHasRole(req.body.userstudy.executorname)
 
   Promise.all(promises).then(function(results){
-    UserStudy.addUserStudy(results[0], function (err) {
+    UserStudy.addUserStudy(results[0], function (err,result) {
       if (err) {
         throw err;
       } else {
+        results[0].id = result.insertId;
         res.json({status: 'success', message: 'Userstudy created.', userstudy: results[0]});
       }
     });
