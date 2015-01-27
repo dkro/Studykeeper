@@ -4,11 +4,11 @@ StudyManager.LoginController = Ember.Controller.extend({
     actions: {
         login: function() {
             // DEFAULT
-
+/*
             var userData = this.getProperties('username', 'password');
             var that = this;
 
-            that.set('errorMessage', null);
+            that.set('statusMessage', null);
 
             Ember.$.post('http://localhost:10001/api/users/login', userData).then(function(response) {
                 that.set('token', response.user.token);
@@ -18,12 +18,12 @@ StudyManager.LoginController = Ember.Controller.extend({
 
                 that.transitionToRoute('dashboard');
             }, function(error) {
-                    that.set('errorMessage', 'Login failed!');
+                    that.set('statusMessage', { message: 'Login failed!', isSuccess: false });
             });
-/*
+*/
 
             // MOCK
-            this.set('errorMessage', null);
+            this.set('statusMessage', null);
             var userRole = null;
 
             if (this.get('username') === 'studycreator' &&
@@ -38,7 +38,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             }
 
             if (userRole === null) {
-                this.set('errorMessage', 'Passwort falsch oder User existiert nicht!');
+                this.set('statusMessage', { message: 'Login fehlgeschlagen!', isSuccess: false } );
             } else {
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
@@ -46,22 +46,27 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.set('currentUserId', 1);
 
                 this.transitionToRoute('dashboard');
-            }*/
+            }
         },
 
         toSignUp: function() {
             this.transitionToRoute('signup');
+        },
+
+        toPasswordRecovery: function() {
+            this.transitionToRoute('password-recovery');
         }
     },
 
     reset: function() {
         this.setProperties({
-            errorMessage: '',
+            statusMessage: '',
             username: '',
             password: ''
         });
     },
 
+    statusMessage: null,
 
     token: localStorage.token,
 

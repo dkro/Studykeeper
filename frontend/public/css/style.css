@@ -45,11 +45,23 @@
 }
 
 .login__alert {
-    margin-top: 3em;
+    margin-bottom: 0;
 }
 
 .login__signUpButton {
     margin-top: 3em;
+}
+
+.login__passwordRecovery {
+    font-weight: bold;
+    color: grey;
+    cursor: pointer;
+    margin-top: 2em;
+    text-align: center;
+}
+
+.login__passwordRecovery:hover {
+    text-decoration: underline;
 }
 
 .accountConfig__header {

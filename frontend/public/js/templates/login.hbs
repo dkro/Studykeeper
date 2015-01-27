@@ -9,11 +9,14 @@
             {{input value=password type="password" id="passwordLoginInput" placeholder="Password" classNames="form-control" action="login"}}
         </div>
     </form>
+
     <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
-    {{#if errorMessage}}
-        <p class="alert alert-danger login__alert">
-            {{errorMessage}}
-        </p>
+
+    {{#if statusMessage}}
+        {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="login__alert"}}
     {{/if}}
+
+    <div class="login__passwordRecovery" {{action 'toPasswordRecovery'}}>Passwort vergessen?</div>
 </div>
+
 <button class="btn btn-primary center-block login__signUpButton" {{action 'toSignUp'}}>Account erstellen</button>

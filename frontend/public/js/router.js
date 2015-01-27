@@ -1,6 +1,7 @@
 StudyManager.Router.map(function() {
   this.route('login', { path: '/' });
   this.route('signup');
+  this.route('password-recovery');
   this.route('acc-config');
   this.route('about');
   this.route('logout');
@@ -74,6 +75,9 @@ StudyManager.SignupRoute = Ember.Route.extend({
     // reset properties so that old states are not shown by transitioning to this route
     controller.reset();
   }
+});
+
+StudyManager.PasswordRecoveryRoute = Ember.Route.extend({
 });
 
 StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
