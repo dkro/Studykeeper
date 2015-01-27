@@ -62,8 +62,8 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         this.set('userRole', null);
         this.set('isLoggedIn', false);
         this.set('isTutor', false);
-        this.controllerFor('login').set('currentUserId', null);
-        this.controllerFor('login').set('token', null);
+        this.get('controllers.login').set('currentUserId', null);
+        this.get('controllers.login').set('token', null);
 
         window.localStorage.clear();
     },
