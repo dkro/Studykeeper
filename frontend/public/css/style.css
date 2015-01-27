@@ -56,7 +56,7 @@
     font-weight: bold;
     color: grey;
     cursor: pointer;
-    margin-top: 2em;
+    margin-top: 1em;
     text-align: center;
 }
 
@@ -163,7 +163,50 @@
     font-size: 0.95em;
 }
 
-.dashboard__studiesButton {
+.signUp__statusMessage {
+
+}
+
+.signUp--success__message {
+    margin-top: 4em;
+}
+
+.signUp--success__message--primaryMessage {
+    display: block;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.signUp--success__message--secondaryMessage {
+    display: block;
+}
+
+.passwordRecovery__heading {
+    margin-bottom: 2em;
+}
+
+.passwordRecovery__statusMessage {
+
+}
+
+.passwordRecovery__wrapper {
+    max-width: 40em;
+}
+
+.passwordRecovery--success__message {
+    margin-top: 4em;
+}
+
+.passwordRecovery--success__message--primaryMessage {
+    display: block;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.passwordRecovery--success__message--secondaryMessage {
+    display: block;
 }
 
 
@@ -319,4 +362,3 @@
     float: right;
     margin-bottom: 2em !important;
 }
-

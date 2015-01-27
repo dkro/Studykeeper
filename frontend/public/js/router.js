@@ -1,8 +1,8 @@
 StudyManager.Router.map(function() {
   this.route('login', { path: '/' });
   this.route('signup');
-  this.route('password-recovery');
-  this.route('acc-config');
+  this.route('password-recovery', { path: '/passwordRecovery' });
+  this.route('acc-config', { path: '/account' });
   this.route('about');
   this.route('logout');
   this.resource('dashboard');
@@ -78,6 +78,9 @@ StudyManager.SignupRoute = Ember.Route.extend({
 });
 
 StudyManager.PasswordRecoveryRoute = Ember.Route.extend({
+  setupController: function(controller) {
+    controller.reset();
+  }
 });
 
 StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({

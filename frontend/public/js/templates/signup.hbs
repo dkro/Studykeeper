@@ -1,61 +1,72 @@
-<h2 class="signUp__header">Einen neuen Account anlegen</h2>
-<form role="form" class="signUp__form">
-    <div {{bind-attr class=":form-group firstNameValidationClass"}}>
-        <label class="control-label" for="firstNameSignUpInput">Vorname</label>
-        {{input type="text" id="firstNameSignUpInput" focus-out="validateFirstNameAction" value=firstName classNames="form-control" placeholder="Vorname"}}
-
-        {{#if firstNameHelpText}}
-            <span class="help-block">{{firstNameHelpText}}</span>
-        {{/if}}
+{{#if signUpSuccessful}}
+    <div class="alert alert-success signUp--success__message" role="alert">
+        <span class="signUp--success__message--primaryMessage">Anmeldung erfolgreich für "{{username}}"!</span>
+        <span class="signUp--success__message--secondaryMessage">Bitten überprüfen Sie Ihr Email Postfach und bestätigen Sie Ihren Account.</span>
     </div>
-    <div {{bind-attr class=":form-group lastNameValidationClass"}}>
-        <label class="control-label" for="lastNameSignUpInput">Nachname</label>
-        {{input type="text" id="lastNameSignUpInput" focus-out="validateLastNameAction" value=lastName classNames="form-control" placeholder="Nachname"}}
+{{else}}
+    <h2 class="signUp__header">Einen neuen Account anlegen</h2>
+    <form role="form" class="signUp__form">
+        <div {{bind-attr class=":form-group firstNameValidationClass"}}>
+            <label class="control-label" for="firstNameSignUpInput">Vorname</label>
+            {{input type="text" id="firstNameSignUpInput" focus-out="validateFirstNameAction" value=firstName classNames="form-control" placeholder="Vorname"}}
 
-        {{#if lastNameHelpText}}
-            <span class="help-block">{{lastNameHelpText}}</span>
-        {{/if}}
-    </div>
-    <div {{bind-attr class=":form-group emailValidationClass"}}>
-        <label class="control-label" for="emailSignUpInput">Email</label>
-        {{input type="email" id="emailSignUpInput" focus-out="validateEmailAction" value=username classNames="form-control" placeholder="student@campus.lmu.de"}}
-
-        {{#if emailHelpText}}
-            <span class="help-block">{{emailHelpText}}</span>
-        {{/if}}
-    </div>
-    <div class="form-group ">
-        <label class="control-label" for="mmiCheckbox">Nutzertyp</label>
-        <div id="mmiCheckbox" class="checkbox signUp__field--mmiFlag">
-            <label>
-                <input type="checkbox" value="">
-                Ich möchte <strong class="signUp__field--mmiFlag--highlighting" {{action 'showMMIHelpText'}}>MMI-Punkte <span class="glyphicon glyphicon-question-sign signUp__field--mmiFlag__helpTextIcon"></span></strong> sammeln!
-            </label>
+            {{#if firstNameHelpText}}
+                <span class="help-block">{{firstNameHelpText}}</span>
+            {{/if}}
         </div>
-        {{#if isShowingMMIHelpText}}
-            <span id="helpBlock" class="help-block signUp__field--mmiFlag">
-            <span class="glyphicon glyphicon-info-sign"></span> MMI-Punkte werden für das Modul X im Anwedungsfach Mensch-Maschine-Interaktion für den Studiengang Medieninformatik benötigt.
-        </span>
-        {{/if}}
-    </div>
-    <div {{bind-attr class=":form-group passwordValidationClass"}}>
-        <label class="control-label" for="passwordSignUpInput">Passwort</label>
-        {{input type="password" id="passwordSignUpInput" focus-out="validatePasswordAction" value=password classNames="form-control" placeholder="Passwort"}}
+        <div {{bind-attr class=":form-group lastNameValidationClass"}}>
+            <label class="control-label" for="lastNameSignUpInput">Nachname</label>
+            {{input type="text" id="lastNameSignUpInput" focus-out="validateLastNameAction" value=lastName classNames="form-control" placeholder="Nachname"}}
 
-        {{#if passwordHelpText}}
-            <span class="help-block">{{passwordHelpText}}</span>
-        {{/if}}
-    </div>
-    <div {{bind-attr class=":form-group passwordConfirmValidationClass"}}>
-        <label class="control-label" for="passwordConfirmSignUpInput">Passwort wiederholen</label>
-        {{input type="password" id="passwordConfirmSignUpInput" focus-out="validatePasswordConfirmAction" value=passwordConfirm classNames="form-control" placeholder="Passwort wiederholen"}}
+            {{#if lastNameHelpText}}
+                <span class="help-block">{{lastNameHelpText}}</span>
+            {{/if}}
+        </div>
+        <div {{bind-attr class=":form-group emailValidationClass"}}>
+            <label class="control-label" for="emailSignUpInput">Email</label>
+            {{input type="email" id="emailSignUpInput" focus-out="validateEmailAction" value=username classNames="form-control" placeholder="student@campus.lmu.de"}}
 
-        {{#if passwordConfirmHelpText}}
-            <span class="help-block">{{passwordConfirmHelpText}}</span>
-        {{/if}}
-    </div>
+            {{#if emailHelpText}}
+                <span class="help-block">{{emailHelpText}}</span>
+            {{/if}}
+        </div>
+        <div class="form-group ">
+            <label class="control-label" for="mmiCheckbox">Nutzertyp</label>
+            <div id="mmiCheckbox" class="checkbox signUp__field--mmiFlag">
+                <label>
+                    <input type="checkbox" value="">
+                    Ich möchte <strong class="signUp__field--mmiFlag--highlighting" {{action 'showMMIHelpText'}}>MMI-Punkte <span class="glyphicon glyphicon-question-sign signUp__field--mmiFlag__helpTextIcon"></span></strong> sammeln!
+                </label>
+            </div>
+            {{#if isShowingMMIHelpText}}
+                <span id="helpBlock" class="help-block signUp__field--mmiFlag">
+                <span class="glyphicon glyphicon-info-sign"></span> MMI-Punkte werden für das Modul X im Anwedungsfach Mensch-Maschine-Interaktion für den Studiengang Medieninformatik benötigt.
+            </span>
+            {{/if}}
+        </div>
+        <div {{bind-attr class=":form-group passwordValidationClass"}}>
+            <label class="control-label" for="passwordSignUpInput">Passwort</label>
+            {{input type="password" id="passwordSignUpInput" focus-out="validatePasswordAction" value=password classNames="form-control" placeholder="Passwort"}}
 
-    <button class="btn btn-default signUp__button" {{action 'validateAllAction'}}>
-        Account anlegen
-    </button>
-</form>
+            {{#if passwordHelpText}}
+                <span class="help-block">{{passwordHelpText}}</span>
+            {{/if}}
+        </div>
+        <div {{bind-attr class=":form-group passwordConfirmValidationClass"}}>
+            <label class="control-label" for="passwordConfirmSignUpInput">Passwort wiederholen</label>
+            {{input type="password" id="passwordConfirmSignUpInput" focus-out="validatePasswordConfirmAction" value=passwordConfirm classNames="form-control" placeholder="Passwort wiederholen"}}
+
+            {{#if passwordConfirmHelpText}}
+                <span class="help-block">{{passwordConfirmHelpText}}</span>
+            {{/if}}
+        </div>
+
+        <button class="btn btn-default signUp__button" {{action 'validateAllAction'}}>
+            Account anlegen
+        </button>
+
+        {{#if statusMessage}}
+            {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="signUp__statusMessage"}}
+        {{/if}}
+    </form>
+{{/if}}

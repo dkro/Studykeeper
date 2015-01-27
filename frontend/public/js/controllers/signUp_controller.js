@@ -43,6 +43,8 @@ StudyManager.SignupController = Ember.Controller.extend({
         // Properties are created the first time this method is called (usually from the according route) if they're not
         // already existing! If they're already existing, only their values will be reset.
         this.set('isDataNotValid', false);
+        this.set('signUpSuccessful', false);
+        this.set('statusMessage', null);
 
         this.set('firstName', '');
         this.set('firstNameValidationClass', '');
@@ -69,6 +71,8 @@ StudyManager.SignupController = Ember.Controller.extend({
 
 
     doSignUp: function() {
+        this.set('statusMessage', null);
+
         var userData = {
             "user": {
                 firstname:  this.get('firstName'),
@@ -84,10 +88,9 @@ StudyManager.SignupController = Ember.Controller.extend({
 
         // TODO: Remove hardcoded server stuff!
         Ember.$.post('http://localhost:8080/api/users/signup', userData).then(function(response) {
-            alert('Success!');
+            that.set('signUpSuccessful', true);
         }, function(error) {
-            var a = error.responseJSON.errors.message;
-            var c = error.responseJSON.errors.username;
+            that.set('statusMessage', { message: 'TODO: SignUp Fail!', isSuccess: false })
         });
     },
 
