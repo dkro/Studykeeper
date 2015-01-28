@@ -70,19 +70,19 @@ module.exports = function(app) {
   app.get('/api/labels/:id', labelController.getLabelById);
 
   app.post('/api/labels', labelController.createLabel);
-  app.del('/api/labels/:id', labelController.deleteLabel);
+  app.del('/api/labels/:id', labelController.deleteLabel); // todo make it only possible to delete when its not mapped
 
   // --------------- Newsfeed routes ---------------
   app.get('/api/news', newsfeedController.allNews);
   app.get('/api/news/:id', newsfeedController.getNewsById);
 
   app.post('/api/news', newsfeedController.createNews);
-  app.del('/api/news/:id', newsfeedController.deleteNews);
+  app.del('/api/news/:id', newsfeedController.deleteNews); // todo make it only possible to delete when its not mapped
   app.put('/api/news/edit', newsfeedController.editNews);
 
   // --------------- Templates routes ---------------
-  app.get('/api/templates', templateController.allTemplates); // todo userstudy mapping
-  app.get('/api/templates/:id', templateController.getTemplateById); // todo userstudy mapping
+  app.get('/api/templates', templateController.allTemplates);
+  app.get('/api/templates/:id', templateController.getTemplateById);
 
   app.post('/api/templates', templateController.createTemplate);
   app.del('/api/templates/:id', templateController.deleteTemplate); // todo make it only possible to delete when its not mapped

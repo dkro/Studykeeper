@@ -143,7 +143,7 @@ module.exports.deleteUser = function(userId, callback){
     }
 
     mysql.getConnection(function(connection){
-      connection.query("UPDATE users SET username='deleted', firstname='deleted', lastname='deleted', " +
+      connection.query("UPDATE users SET username='deleted" + userId + "', firstname='deleted', lastname='deleted', " +
         "password='" + hash + "' " +
         "WHERE id=?",
         userId,
