@@ -121,11 +121,23 @@ module.exports.setRole = function(data, callback) {
   });
 };
 
-module.exports.getUserRole = function(username, callback){
+module.exports.getUserRole = function(userId, callback){
   mysql.getConnection(function(connection) {
     connection.query("SELECT name FROM roles WHERE " +
-      "id=(SELECT role FROM users WHERE username=?);",
-      username,
+      "id=(SELECT role FROM users WHERE id=?);",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getRole = function(roleId, callback){
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT * FROM roles WHERE id=?",
+      roleId,
       function(err,result){
         connection.release();
         callback(err,result);
@@ -159,7 +171,7 @@ module.exports.deleteUser = function(userId, callback){
 
 module.exports.getToken = function (token, callback){
   mysql.getConnection(function(connection) {
-    connection.query("SELECT token FROM auth WHERE token=?",
+    connection.query("SELECT * FROM auth WHERE token=?",
       token,
       function(err,result){
         connection.release();
@@ -172,12 +184,14 @@ module.exports.getToken = function (token, callback){
 module.exports.createTokenForUser = function (data,callback) {
   var queryData = {
       username: data.username,
+      role: data.role,
       token: uuid.v1(),
       timestamp: new Date()};
   mysql.getConnection(function(connection) {
-    connection.query( "INSERT INTO auth (userId,token,timestamp) " +
-      "VALUES((SELECT id FROM users WHERE username=?),?,?);",
-      [queryData.username,queryData.token,queryData.timestamp],
+    connection.query( "INSERT INTO auth (userId,roleId,token,timestamp) " +
+      "VALUES((SELECT id FROM users WHERE username=?)," +
+      "(SELECT id FROM roles WHERE name=?),?,?);",
+      [queryData.username,queryData.role,queryData.token,queryData.timestamp],
       function(err,result){
         connection.release();
         callback(err,result);

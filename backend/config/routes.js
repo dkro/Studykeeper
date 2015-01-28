@@ -43,10 +43,11 @@ module.exports = function(app) {
   app.post('/api/users/changePassword', auth.tokenAuthenticate, userController.changePW);
 
   // --------------- User routes ---------------
-  app.get('/api/users', userController.getUsers);
+  app.get('/api/users', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userController.getUsers);
   app.get('/api/users/:id', userController.getUserById);
 
   app.post('/api/users', userController.createUser);
+  app.put('/api/users/:id', userController.editUser);
   app.del('/api/users/:id', userController.deleteUser);
 
   // --------------- Userstudy routes ---------------

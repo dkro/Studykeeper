@@ -254,6 +254,11 @@ module.exports.createUser = function(req, res) {
   });
 };
 
+module.exports.editUser = function(req, res) {
+
+
+}
+
 module.exports.deleteUser = function(req, res) {
   var userId = req.params.id;
   UserPromise.userExistsById(userId)
@@ -272,17 +277,17 @@ module.exports.deleteUser = function(req, res) {
 };
 
 
-module.exports.validateRole = function(role, username, res, callback) {
+module.exports.validateRole = function(roleArray, roleId, callback) {
   var roleValidated = false;
-  User.getUserRole(username, function(err, result){
+  User.getRole(roleId, function(err, result){
     if (err) {
-      res.send(err);
-    } else if (result[0].name === role) {
+      callback(err);
+    } else if (roleArray.indexOf(result[0].name) > -1) {
       roleValidated = true;
-      return callback(roleValidated);
+      callback(err,roleValidated);
     } else {
       roleValidated = false;
-      return callback(roleValidated);
+      callback(err,roleValidated);
   }
   });
 };

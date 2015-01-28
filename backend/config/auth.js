@@ -19,16 +19,13 @@ exports.loginAuthenticate = function(req, res, next) {
 
 exports.tokenAuthenticate = function(req, res, next) {
   passport.authenticate('bearer', {session: false},
-    function(err, user, info) {
+    function(err, token) {
       if (err) {
         res.json(401, {status: "failure", message: err});
-      }
-
-      if (user === false || user.length === 0) {
-        res.json(401, {status: "failure", message: 'Token: User not found'});
+      } else if (token === false || token.length === 0) {
+        res.json(401, {status: "failure", message: 'Token invalid.'});
       } else {
-        req.user = user;
-        req.token = info;
+        req.token = token;
         next();
       }
     }
@@ -37,9 +34,11 @@ exports.tokenAuthenticate = function(req, res, next) {
 
 exports.requiresRole = function(role) {
   return function (req, res, next) {
-    userController.validateRole(role, req.user[0].username, res, function(roleValidated){
-      if(!roleValidated) {
-        res.send(403, {status: 'failure', message: 'Your role is not allowed to this resource.'});
+    userController.validateRole(role, req.token.roleId, function(err,roleValidated){
+      if (err) {
+        res.send(500, {status: 'failure', message: err});
+      } else if(!roleValidated) {
+        res.send(403, {status: 'failure', message: 'Your are not allowed to this resource.'});
       } else {
         next();
       }
