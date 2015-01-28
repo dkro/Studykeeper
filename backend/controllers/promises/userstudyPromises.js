@@ -31,12 +31,6 @@ module.exports.validFullUserstudyReq = function(req){
     if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
       validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.userstudy.title});
     }
-    if (!Validator.isEmail(req.body.userstudy.tutorname)) {
-      validationErrors.push({message: "Tutorname invalid, has be an email: " + req.body.userstudy.tutorname});
-    }
-    if (!Validator.isEmail(req.body.userstudy.executorname)) {
-      validationErrors.push({message: "Executorname invalid, has be an email:: " + req.body.userstudy.executorname});
-    }
     if (!Validator.isNumeric(req.body.userstudy.tutorId)) {
       validationErrors.push({message: "Tutor-ID invalid, has be numeric: " + req.body.userstudy.tutorId});
     }
@@ -52,10 +46,10 @@ module.exports.validFullUserstudyReq = function(req){
     if (!Validator.isLength(req.body.userstudy.description, 3)) {
       validationErrors.push({message: "Description invalid, minimum 3 characters: " + req.body.userstudy.description});
     }
-    if (req.body.userstudy.doodleLink !== undefined && !Validator.isURL(req.body.userstudy.doodleLink)) {
+    if (req.body.userstudy.doodleLink  && !Validator.isURL(req.body.userstudy.doodleLink)) {
       validationErrors.push({message: "DoodleLink invalid, has to be a valid URL: " + req.body.userstudy.doodleLink});
     }
-    if (req.body.userstudy.paper !== undefined && !Validator.isURL(req.body.userstudy.paper)) {
+    if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
       validationErrors.push({message: "Paper invalid, has to be a valid URL: " + req.body.userstudy.paper});
     }
     if (!Validator.isNumeric(req.body.userstudy.mmi)) {
@@ -67,8 +61,11 @@ module.exports.validFullUserstudyReq = function(req){
     if (!Validator.isLength(req.body.userstudy.location, 3)) {
       validationErrors.push({message: "Location invalid, minimum 3 characters: " + req.body.userstudy.location});
     }
-    if (!Validator.isNumeric(req.body.userstudy.space, 3)) {
+    if (!Validator.isNumeric(req.body.userstudy.space)) {
       validationErrors.push({message: "Space invalid, numeric required: " + req.body.userstudy.space});
+    }
+    if (req.body.userstudy.templateId && !Validator.isNumeric(req.body.userstudy.templateId)) {
+      validationErrors.push({message: "TemplateId invalid, numeric required: " + req.body.userstudy.templateId});
     }
     if (Array.isArray(req.body.userstudy.requiredStudies)) {
       for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
@@ -120,7 +117,8 @@ module.exports.validFullUserstudyReq = function(req){
         space: Validator.toString(req.body.userstudy.space),
         requiredStudies: req.body.userstudy.requiredStudies,
         news: req.body.userstudy.news,
-        labels: req.body.userstudy.labels
+        labels: req.body.userstudy.labels,
+        templateId: req.body.userstudy.templateId
       };
       resolve(userStudyData);
     }
@@ -262,4 +260,5 @@ module.exports.userRegisteredStudies = function(user) {
     });
   });
 };
+
 

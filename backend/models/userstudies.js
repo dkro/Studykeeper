@@ -8,7 +8,8 @@ module.exports.addUserStudy = function (data, callback) {
     title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
     description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
     compensation: data.compensation, location: data.location,
-    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels
+    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
+    creatorId: data.creatorId
   };
   mysql.getConnection(function(connection) {
     // Start a Transaction
@@ -18,21 +19,21 @@ module.exports.addUserStudy = function (data, callback) {
         throw err;
       }
       // Create the userstudy in userstudies Table
-      var pr = new Promise(function(resolve,reject){
+      new Promise(function(resolve,reject){
         connection.query('INSERT INTO userstudies ' +
           '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,space,mmi,compensation,' +
-          'location,visible,published,closed,creatorId) ' +
+          'location,visible,published,closed,creatorId,templateId) ' +
           'VALUES ((SELECT id FROM users WHERE id=?),(SELECT id FROM users WHERE id=?),' +
-          '?,?,?,?,?,?,?,?,?,?,1,0,0,1);',
-          // todo creator is hardcoded remove this
+          '?,?,?,?,?,?,?,?,?,?,1,0,0,?,?);',
           [queryData.tutorId,
             queryData.executorId,queryData.from, queryData.until, queryData.title, queryData.description,
-            queryData.link, queryData.paper, queryData.space,queryData.mmi, queryData.compensation, queryData.location],
+            queryData.link, queryData.paper, queryData.space,queryData.mmi, queryData.compensation, queryData.location,
+            queryData.creatorId, queryData.templateId],
           function(err,result){
             if (err) {
               reject(err);
             } else {
-              id = result.insertId
+              id = result.insertId;
               resolve(result.insertId);
             }
           });
@@ -63,8 +64,10 @@ module.exports.addUserStudy = function (data, callback) {
         .catch(function(err){
           connection.rollback(function () {
             connection.release();
+            if(err.code === "ER_DUP_ENTRY") {
+              err = {message: "Userstudy title already taken."};
+            }
             callback(err);
-            throw err;
           });
         });
     });
@@ -73,10 +76,10 @@ module.exports.addUserStudy = function (data, callback) {
 
 module.exports.editUserStudy = function (data, callback) {
   var queryData = {
-    id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
-    description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
-    compensation: data.compensation, location: data.location,
-    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels
+    id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate,
+    until: data.untilDate, description: data.description, link: data.doodleLink, paper: data.paper,
+    space: data.space, mmi: data.mmi, compensation: data.compensation, location: data.location,
+    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId
   };
   mysql.getConnection(function(connection) {
     connection.beginTransaction(function (err) {
@@ -85,15 +88,15 @@ module.exports.editUserStudy = function (data, callback) {
         throw err;
       }
       // Create the userstudy in userstudies Table
-      var pr = new Promise(function(resolve,reject){
+      new Promise(function(resolve,reject){
         connection.query('UPDATE userstudies ' +
-          'SET tutorId=?,executorId=?,fromDate=?,untilDate=?,title=?,description=?,link=?,paper=?,' +
-          'space=?,mmi=?,compensation=?,location=?, creatorId=1 ' +
+          'SET tutorId=?,executorId=?, fromDate=?, untilDate=?, title=?, description=?, link=?, paper=?,' +
+          'space=?, mmi=?, compensation=?,location=?, templateId=? ' +
           'WHERE id=?;',
-          [queryData.tutorId, queryData.executorId, queryData.from,queryData.until, queryData.title,queryData.description,
+          [queryData.tutorId, queryData.executorId, queryData.from, queryData.until, queryData.title,queryData.description,
             queryData.link,queryData.paper, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
-            queryData.id, queryData.title],
-          function(err,result){
+            queryData.templateId, queryData.id],
+          function(err){
             if (err) {
               reject(err);
             } else {
@@ -119,7 +122,7 @@ module.exports.editUserStudy = function (data, callback) {
           return Promise.all(promises);
         })
         // Finally commit
-        .then(function(userstudy){
+        .then(function(){
           connection.commit(function (err) {
             if (err) {
               connection.rollback(function () {
@@ -136,6 +139,9 @@ module.exports.editUserStudy = function (data, callback) {
         .catch(function(err){
           connection.rollback(function () {
             connection.release();
+            if(err.code === "ER_DUP_ENTRY") {
+              err = {message: "Userstudy title already taken."};
+            }
             callback(err);
             throw err;
           });
@@ -167,7 +173,9 @@ module.exports.getUserstudyById = function (id, callback) {
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
-      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId ' +
+      'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
@@ -207,7 +215,8 @@ module.exports.getAllUserstudies = function (callback) {
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
-      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -229,7 +238,8 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, filter, callba
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
-      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us, ' +
+      'us.templateId ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +

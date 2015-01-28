@@ -10,18 +10,16 @@ var Async       = require('async');
 module.exports.createUserstudy = function(req, res) {
 
   // TODO add the creator id to the database
-  // TODO smarter promises... reduce database queries...
-  var promises = [UserstudyPromise.validFullUserstudyReq(req)];
-//,
-//  UserPromise.userExists(req.body.userstudy.tutorname),
-//    UserPromise.userExists(req.body.userstudy.executorname),
-//    UserPromise.userHasRole(req.body.userstudy.tutorname),
-//    UserPromise.userHasRole(req.body.userstudy.executorname)
+  var promises = [UserstudyPromise.validFullUserstudyReq(req),
+    UserPromise.userFromToken(req),
+    UserPromise.userHasRole(req.body.userstudy.tutorId, "tutor"),
+    UserPromise.userHasRole(req.body.userstudy.executorId, "executor")];
 
   Promise.all(promises).then(function(results){
+    results[0].creatorId = results[1].id;
     UserStudy.addUserStudy(results[0], function (err,insertId) {
       if (err) {
-        throw err;
+        res.json(500, {status: 'failure', errors: err});
       } else {
         results[0].id = insertId;
         res.json({status: 'success', message: 'Userstudy created.', userstudy: results[0]});

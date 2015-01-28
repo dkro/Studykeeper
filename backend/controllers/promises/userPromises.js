@@ -202,9 +202,9 @@ module.exports.userFromName = function(user){
   });
 };
 
-module.exports.userHasRole = function(user, role){
+module.exports.userHasRole = function(userId, role){
   return new Promise(function(resolve, reject){
-    User.getUserByName(user.username, function(err, result){
+    User.getUserById(userId, function(err, result){
       if (err) {
         reject(err);
       } else if (result.length > 0) {

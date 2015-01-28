@@ -50,8 +50,8 @@ module.exports = function(app) {
   app.del('/api/users/:id', userController.deleteUser);
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudies', userStudyController.allUserstudies); // todo template mapping
-  app.get('/api/userstudies/:id', userStudyController.getUserstudyById);
+  app.get('/api/userstudies', userStudyController.allUserstudies); //todo filtering on userbase
+  app.get('/api/userstudies/:id', userStudyController.getUserstudyById); //
   app.get('/api/userstudies/all', userStudyController.allUserstudiesFilteredForUser);
   //app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
 
@@ -81,8 +81,8 @@ module.exports = function(app) {
   app.put('/api/news/edit', newsfeedController.editNews);
 
   // --------------- Templates routes ---------------
-  app.get('/api/templates', templateController.allTemplates);
-  app.get('/api/templates/:id', templateController.getTemplateById);
+  app.get('/api/templates', templateController.allTemplates); // todo userstudy mapping
+  app.get('/api/templates/:id', templateController.getTemplateById); // todo userstudy mapping
 
   app.post('/api/templates', templateController.createTemplate);
   app.del('/api/templates/:id', templateController.deleteTemplate); // todo make it only possible to delete when its not mapped

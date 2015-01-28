@@ -1,10 +1,9 @@
 {
   "userstudy": {
-    "title": "userstudy title x",
-    "tutorname": "userx@studykeeper.com",
-    "executorname": "userx@studykeeper.com",
+    "title": "userstudy title xaasd",
     "tutorId": 6,
     "executorId": 7,
+    "templateId": 2,
     "fromDate": "2014-12-12",
     "untilDate": "2014-12-12",
     "description": "userstudy description x",
@@ -12,7 +11,7 @@
     "paper": "http://www.linktopaper.com",
     "mmi": "1",
     "compensation": "22",
-    "location": "location x",
+    "location": "location secret",
     "space": 20,
     "requiredStudies" : [1,6],
     "labels" : [8],
