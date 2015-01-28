@@ -79,7 +79,7 @@ module.exports = function(app) {
 
   app.post('/api/news', auth.tokenAuthenticate, newsfeedController.createNews);
   app.del('/api/news/:id', auth.tokenAuthenticate, newsfeedController.deleteNews); // todo make it only possible to delete when its not mapped
-  app.put('/api/news/edit', auth.tokenAuthenticate, newsfeedController.editNews);
+  app.put('/api/news/:id', auth.tokenAuthenticate, newsfeedController.editNews);
 
   // --------------- Templates routes ---------------
   app.get('/api/templates', auth.tokenAuthenticate, templateController.allTemplates);

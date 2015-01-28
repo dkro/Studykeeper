@@ -25,7 +25,7 @@ module.exports.createNews = function (req, res) {
 
 module.exports.editNews = function (req, res) {
   var news;
-  NewsPromise.validFullNewsReq(req, true)
+  NewsPromise.validFullNewsReq(req)
     .then(function (result) {
       news = result;
       return NewsPromise.newsExists(news);

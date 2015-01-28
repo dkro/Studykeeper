@@ -9,7 +9,7 @@ exports.loginAuthenticate = function(req, res, next) {
         }
 
         if(user.length === 0 || user === false) {
-          res.json(401, {status: "failure", message: 'Login fehlgeschlagen. Der Nutzer wurde nicht gefunden.'});
+          res.json(401, {status: "failure", message: info});
         } else {
           next();
         }

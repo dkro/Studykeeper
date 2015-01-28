@@ -16,7 +16,7 @@ module.exports = function() {
           }
 
           if (user.length < 1) {
-            return done(null, false, { status: 'failure', message: 'Incorrect username.' });
+            return done(null, false, 'Falscher Nutzername.');
           }
 
           crypt.comparePassword(user[0].password, password,
@@ -26,7 +26,7 @@ module.exports = function() {
               }
 
               if (!isPasswordMatch) {
-                return done(null, false, { status:'failure',  message: 'Incorrect password.' });
+                return done(null, false, 'Falsches Passwort.');
               } else {
                 return done(null, user);
               }

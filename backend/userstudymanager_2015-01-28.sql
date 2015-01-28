@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: userstudymanager
-# Generation Time: 2015-01-28 15:51:27 +0000
+# Generation Time: 2015-01-28 19:43:43 +0000
 # ************************************************************
 
 
@@ -44,7 +44,9 @@ LOCK TABLES `auth` WRITE;
 
 INSERT INTO `auth` (`id`, `userId`, `roleId`, `token`, `timestamp`)
 VALUES
-	(26,1,4,'689b0a60-a6ff-11e4-acec-99bec8d0e372','2015-01-28 16:49:08');
+	(34,17,4,'8f7d8c90-a711-11e4-a0fe-1ba90f83a3f8','2015-01-28 18:17:39'),
+	(52,6,2,'4de45840-a720-11e4-98dc-550c10911c51','2015-01-28 20:03:40'),
+	(54,6,2,'5e5382b0-a724-11e4-8efa-f19f733e82ad','2015-01-28 20:40:39');
 
 /*!40000 ALTER TABLE `auth` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -114,8 +116,7 @@ INSERT INTO `news` (`id`, `title`, `date`, `description`, `link`)
 VALUES
 	(2,'News 2','2004-11-20','news description 2','http://www.newslink2.abc'),
 	(3,'News 3','2004-11-20','news description 3','http://www.newslink3.abc'),
-	(6,'News 1','2014-12-12','This news is very interesting. Come on, take a look!','http://www.amazon.com'),
-	(7,'News 1','2014-12-12','This news is very interesting. Come on, take a look!','http://www.amazon.com');
+	(6,'News 1','2014-12-12','This news is very interesting. Come on, take a look!','http://www.amazon.com');
 
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -373,6 +374,7 @@ CREATE TABLE `users` (
   `mmi` tinyint(1) NOT NULL DEFAULT '0',
   `firstname` varchar(11) DEFAULT NULL,
   `lastname` varchar(11) DEFAULT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `role` (`role`),
@@ -382,23 +384,29 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
-INSERT INTO `users` (`id`, `username`, `password`, `role`, `lmuStaff`, `mmi`, `firstname`, `lastname`)
+INSERT INTO `users` (`id`, `username`, `password`, `role`, `lmuStaff`, `mmi`, `firstname`, `lastname`, `visible`)
 VALUES
-	(1,'user1@studykeeper.com','$2a$10$gC/KVfwor5qe/E8K4RrxRuuKrvmcCIDmAgOh9mtzVB6BRg5N5pJNq',4,1,1,'first1','last1'),
-	(2,'user2@studykeeper.com','$2a$10$WW6/10tkOSrgT1RWvWAwReRjX0qs3ze7nNj0fM8OxGUKdixFWD2Sa',4,1,1,'first2','last2'),
-	(3,'user3@studykeeper.com','$2a$10$RLw5xP6MZfE4ljS5kWSDqOf.7jAmjpZyIla/vumfXeNqqsIFhttIy',4,0,0,'first3','last3'),
-	(4,'user4@studykeeper.com','$2a$10$8mynVkH84.j4NBgGjgkBfe7e1bc0j.Uz38/A6NjX4O1v8AlzkqA8G',4,0,0,'first4','last4'),
-	(5,'user5@studykeeper.com','$2a$10$7FbsARL2k37APYCXr63GY./375clb84pJTjtkd2T61CVJM99m0Etu',4,1,0,'first5','last5'),
-	(6,'user6@studykeeper.com','$2a$10$4B36wpor/iI5IosNvwqvQukRbb5Q4eHcji9IllUyWjzz4xMVzygTa',2,1,1,'first6','last6'),
-	(7,'user7@studykeeper.com','$2a$10$DSUB4MkLTaOsdpJOEbDoYerUyCKhykrF6YzYtqfJFKFdhI2nOxCpy',3,1,1,'first7','last7'),
-	(8,'user8@studykeeper.com','$2a$10$9ZM5MKNTUv3wOJ7W248/o.I9YzHAXAcvjR4uCz3ylBy1PPfntoOQC',3,1,1,'first8','last8'),
-	(9,'deleted','$2a$10$1OAhvIxLLpkpZoK2VllsPO7/xFMjVBUlzip4ZJO4WTStmgrfzaQNi',2,0,1,'deleted','deleted'),
-	(11,'username2@studykeeper.com','$2a$10$MK2Gm/jpwHZLmxbDSD7ujOOoRwp9jf2Mt.je9UpWepKvhjnrS6OIW',2,0,1,'firstname','lastname'),
-	(12,'email@email.com','$2a$10$mYEpzjKFYJvj.FZUZe5j2OaukselGY1w1VQ5h3qvewot4G3OEG.3a',4,0,0,'firstname','lastname'),
-	(13,'email2@email.com','$2a$10$kkyVqzQ.X53JbQJdMv78DupnKrMo0k0dVFrUCIgrNyKiltd2z0w1i',4,0,0,'firstname','lastname'),
-	(14,'email3@email.com','$2a$10$dknE8WVyFJhNz9k5b6Mip.EEizqqqGP4RpymjymiX53RWUgbrjcAS',4,0,0,'firstname','lastname'),
-	(15,'email4@email.com','$2a$10$7ujzulF3sOF/EYvz/du7ReZf/l5FBt.46YnC2gPU6LJw9JH2qHNMy',4,0,0,'firstname','lastname'),
-	(16,'deleted16','$2a$10$Gs4x/0xTmYZig/jW2UzHduG/dHnVaG646jDG8r7Q4fh6Dh6JfZVKa',2,0,1,'deleted','deleted');
+	(1,'user1@studykeeper.com','$2a$10$gC/KVfwor5qe/E8K4RrxRuuKrvmcCIDmAgOh9mtzVB6BRg5N5pJNq',4,1,1,'first1','last1',1),
+	(2,'user2@studykeeper.com','$2a$10$WW6/10tkOSrgT1RWvWAwReRjX0qs3ze7nNj0fM8OxGUKdixFWD2Sa',4,1,1,'first2','last2',1),
+	(3,'user3@studykeeper.com','$2a$10$RLw5xP6MZfE4ljS5kWSDqOf.7jAmjpZyIla/vumfXeNqqsIFhttIy',4,0,0,'first3','last3',1),
+	(4,'user4@studykeeper.com','$2a$10$8mynVkH84.j4NBgGjgkBfe7e1bc0j.Uz38/A6NjX4O1v8AlzkqA8G',4,0,0,'first4','last4',1),
+	(5,'user5@studykeeper.com','$2a$10$7FbsARL2k37APYCXr63GY./375clb84pJTjtkd2T61CVJM99m0Etu',4,1,0,'first5','last5',1),
+	(6,'user6@studykeeper.com','$2a$10$4B36wpor/iI5IosNvwqvQukRbb5Q4eHcji9IllUyWjzz4xMVzygTa',2,1,1,'first6','last6',1),
+	(7,'user7@studykeeper.com','$2a$10$DSUB4MkLTaOsdpJOEbDoYerUyCKhykrF6YzYtqfJFKFdhI2nOxCpy',3,1,1,'first7','last7',1),
+	(8,'user8@studykeeper.com','$2a$10$9ZM5MKNTUv3wOJ7W248/o.I9YzHAXAcvjR4uCz3ylBy1PPfntoOQC',3,1,1,'first8','last8',1),
+	(9,'deleted','$2a$10$1OAhvIxLLpkpZoK2VllsPO7/xFMjVBUlzip4ZJO4WTStmgrfzaQNi',2,0,1,'deleted','deleted',0),
+	(11,'username2@studykeeper.com','$2a$10$MK2Gm/jpwHZLmxbDSD7ujOOoRwp9jf2Mt.je9UpWepKvhjnrS6OIW',2,0,1,'firstname','lastname',1),
+	(12,'deleted12','$2a$10$DiSivfOt52S6Ulq.BjBkVuewxZmcpL7PvPrlGfMI1Lt8WT04vJkDO',4,0,0,'deleted','deleted',1),
+	(13,'deleted13','$2a$10$kfNQB3JQXgXsKnLlJHVScuBMUiH3kLwspkiAlQnz1EazZI8Ze69M.',4,0,0,'deleted','deleted',1),
+	(14,'deleted14','$2a$10$HCO1wg9LemXox/DRAiVxneYvZsADXs1mRaTDb0KckU3cnHG.KW3ea',4,0,0,'deleted','deleted',0),
+	(15,'deleted15','$2a$10$bXr.CKrow1ntWvKEHJvK4eslDd7BP6mRf4Ucc6HMeUO7/kYchcgmC',4,0,0,'deleted','deleted',0),
+	(16,'deleted16','$2a$10$Gs4x/0xTmYZig/jW2UzHduG/dHnVaG646jDG8r7Q4fh6Dh6JfZVKa',2,0,1,'deleted','deleted',0),
+	(17,'deleted17','$2a$10$6gbPgizd42PWWvKeSSqYE.VwTACOhzypQEdP2TkPG7XMJ4KQmIwAy',4,0,0,'deleted','deleted',0),
+	(18,'user9@studykeeper.com','$2a$10$VTs5QBG8Thm24GdDFQbkaO8227rqIXlSG7JdxlpAzUGpS8LvC0AdW',2,0,0,'user8@study','user8@study',1),
+	(19,'username2222@studykeeper.com','$2a$10$9.x0aPUSHhR9zd0AH6.PBe/xywrODiPM8ThrueMtvBXOBuTsCpOJa',2,0,1,'firstname','lastname',1),
+	(20,'username2222222@studykeeper.com','$2a$10$qI/SmxbuSkb.KEd23CAsd.AnX3.UNcI02f0g9N9xJofFqPuLzC53a',2,0,1,'firstname','lastname',1),
+	(21,'username22222@studykeeper.com','$2a$10$i87I.9c.zOWIPy3XBzUW5eO2cZ0wEWtnMf3Wz5VafTZTnv3YQeM.O',2,0,1,'firstname','lastname',1),
+	(22,'deleted22','$2a$10$azvnVMnglzn5trt7/0dnSulEuhjVO/rpqYm5tuynKpjjpKzhkPeTe',2,0,1,'deleted','deleted',1);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

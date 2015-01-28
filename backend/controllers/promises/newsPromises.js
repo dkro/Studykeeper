@@ -25,14 +25,9 @@ module.exports.validNewsReq = function(req){
   });
 };
 
-module.exports.validFullNewsReq = function(req,hasId){
+module.exports.validFullNewsReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (hasId){
-      if (!Validator.isNumeric(req.body.news.id)) {
-        validationErrors.push({message: "News Id invalid, numeric required: " + req.body.news.title});
-      }
-    }
     if (!Validator.isLength(req.body.news.title, 3)) {
       validationErrors.push({message: "News Title invalid, minimum 3 characters: " + req.body.news.title});
     }
