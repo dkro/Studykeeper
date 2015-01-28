@@ -47,15 +47,14 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   },
 
   beforeModel: function(transition) {
-    if (!this.controllerFor('login').get('token')) {
+    if (!this.controllerFor('application').get('token')) {
       this.redirectToLogin(transition);
     }
   },
 
   redirectToLogin: function(transition) {
     this.controllerFor('application').resetLocalStorage();
-    this.controllerFor('login').set('errorMessage', 'You must be logged in to view that page.');
-    this.controllerFor('login').set('attemptedTransition', transition);
+    this.controllerFor('login').set('statusMessage', { message: 'Sie müssen eingeloggt sein, um diese Seite sehen zu können!', isSuccess: false });
     this.transitionToRoute('login');
   }
 });
@@ -85,7 +84,8 @@ StudyManager.PasswordRecoveryRoute = Ember.Route.extend({
 
 StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    return this.store.find('user', 1);
+    var uId = this.controllerFor('application').get('currentUserId');
+    return this.store.find('user', uId);
   },
 
   setupController: function(controller, model) {
@@ -97,7 +97,7 @@ StudyManager.AccConfigRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    var uId = this.controllerFor('login').get('currentUserId');
+    var uId = this.controllerFor('application').get('currentUserId');
     var that = this;
 
     return this.store.fetch('user', uId).then(function(user) {

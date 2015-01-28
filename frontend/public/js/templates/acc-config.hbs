@@ -14,12 +14,6 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="accConfigTypeSelect" class="col-sm-2 control-label accountConfig__body__label">Nutzertyp:</label>
-        <div class="col-sm-10">
-            {{view "select" id="accConfigTypeSelect" content=studentTypeOptions selection=selectedStudentType classNames="form-control input-sm accountConfig__body__typeSelect"}}
-        </div>
-    </div>
-    <div class="form-group">
         <label class="col-sm-2 control-label accountConfig__body__label">Passwort</label>
         <div class="col-sm-10">
             {{#if isEditIcon}}
@@ -64,3 +58,7 @@
         </div>
     </div>
 </form>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="accConfig__statusMessage"}}
+{{/if}}

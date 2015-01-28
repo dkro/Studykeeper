@@ -11,8 +11,8 @@ StudyManager.LoginController = Ember.Controller.extend({
             that.set('statusMessage', null);
 
             Ember.$.post('http://localhost:10001/api/users/login', userData).then(function(response) {
-                that.set('token', response.user.token);
-                that.set('currentUserId', response.user.id);
+                that.get('controllers.application').set('token', response.user.token);
+                that.get('controllers.application').set('currentUserId', response.user.id);
                 that.get('controllers.application').set('userRole', response.user.role);
                 that.get('controllers.application').set('isLoggedIn', true);
 
@@ -42,8 +42,8 @@ StudyManager.LoginController = Ember.Controller.extend({
             } else {
                 this.get('controllers.application').set('userRole', userRole);
                 this.get('controllers.application').set('isLoggedIn', true);
-                this.set('token', 'EinToken');
-                this.set('currentUserId', 1);
+                this.get('controllers.application').set('token', 'EinToken');
+                this.get('controllers.application').set('currentUserId', 1);
 
                 this.transitionToRoute('dashboard');
             }
@@ -66,17 +66,5 @@ StudyManager.LoginController = Ember.Controller.extend({
         });
     },
 
-    statusMessage: null,
-
-    token: localStorage.token,
-
-    tokenChanged: function() {
-        localStorage.token = this.get('token');
-    }.observes('token'),
-
-    currentUserId: localStorage.currentUserId,
-
-    currentUserIdChanged: function() {
-        localStorage.currentUserId = this.get('currentUserId');
-    }.observes('currentUserId')
+    statusMessage: null
 });

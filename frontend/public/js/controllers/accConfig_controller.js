@@ -34,7 +34,6 @@ StudyManager.AccConfigController = Ember.Controller.extend({
     reset: function() {
         // Properties are created the first time this method is called (usually from the according route) if they're not
         // already existing! If they're already existing, only their values will be reset.
-        this.set('selectedStudentType', null);
         this.set('isEditIcon', true);
         this.set('oldPassword', null);
         this.set('newPassword', null);
@@ -47,7 +46,5 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         this.set('isNewPasswordValid', true);
         this.set('isNewPasswordConfirmValid', true);
         this.set('passwordValidationMessages', []);
-    },
-
-    studentTypeOptions: ['Default', 'MMI Student']
+    }
 });

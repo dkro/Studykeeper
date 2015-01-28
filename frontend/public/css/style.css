@@ -138,6 +138,10 @@
     margin-top: 1.5em;
 }
 
+.accConfig__statusMessage {
+    margin-top: 2em;
+}
+
 .signUp__header {
     margin-bottom: 1.5em;
 }
