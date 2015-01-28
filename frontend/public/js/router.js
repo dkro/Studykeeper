@@ -64,6 +64,12 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
 
 
 StudyManager.LoginRoute = Ember.Route.extend({
+  beforeModel: function(transition) {
+    if (this.controllerFor('application').get('token')) {
+      this.transitionTo('dashboard');
+    }
+  },
+
   setupController: function(controller) {
     controller.reset();
   }
