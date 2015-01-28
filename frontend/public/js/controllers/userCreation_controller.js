@@ -7,7 +7,6 @@ StudyManager.UserCreationController = Ember.Controller.extend({
                 firstname: newData.firstnameNew,
                 lastname: newData.lastnameNew,
                 username: newData.usernameNew,
-                password: '1234567',
                 mmi: newData.mmiNew,
                 collectsMMI: newData.isMMIUserNew,
                 role: newData.selectedRoleNew
@@ -22,7 +21,7 @@ StudyManager.UserCreationController = Ember.Controller.extend({
                 });
             }, function(error) {
                 newUser.deleteRecord();
-                that.set('statusMessage', { message: 'Nutzer konnte nicht erstellt werden!', isSuccess: false });
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 
