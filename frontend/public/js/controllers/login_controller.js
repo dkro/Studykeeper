@@ -18,7 +18,7 @@ StudyManager.LoginController = Ember.Controller.extend({
 
                 that.transitionToRoute('dashboard');
             }, function(error) {
-                    that.set('statusMessage', { message: 'TODO: Login failed!', isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
 /*
 
