@@ -5,15 +5,22 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         logout: function() {
             var that = this;
 
-            Ember.$.post('http://localhost:10001/api/users/logout', { token: localStorage.token }).then(
-                function() {
-                    this.resetLocalStorage();
-                    this.transitionToRoute('login');
-                },
-                function() {
-                    alert("TODO: Logout failed!");
+            Ember.$.ajax({
+                url: "/api/users/logout",
+                type: "POST",
+                beforeSend: function(request) {
+                    request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)
                 }
-            );/*
+            }).then(
+                function(response) {
+                    that.resetLocalStorage();
+                    that.transitionToRoute('login');
+                },
+                function(error) {
+                    alert("TODO: Logout failed!");
+                });
+
+            /*
             this.resetLocalStorage();
             this.transitionToRoute('login');*/
         },
