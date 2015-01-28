@@ -31,11 +31,11 @@ module.exports.validFullUserstudyReq = function(req){
     if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
       validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.userstudy.title});
     }
-    if (!Validator.isNumeric(req.body.userstudy.tutorId)) {
-      validationErrors.push({message: "Tutor-ID invalid, has be numeric: " + req.body.userstudy.tutorId});
+    if (!Validator.isNumeric(req.body.userstudy.tutor)) {
+      validationErrors.push({message: "Tutor-ID invalid, has be numeric: " + req.body.userstudy.tutor});
     }
-    if (!Validator.isNumeric(req.body.userstudy.executorId)) {
-      validationErrors.push({message: "Executor-ID invalid, has be numeric:: " + req.body.userstudy.executorId});
+    if (!Validator.isNumeric(req.body.userstudy.executor)) {
+      validationErrors.push({message: "Executor-ID invalid, has be numeric:: " + req.body.userstudy.executor});
     }
     if (!Validator.isDate(req.body.userstudy.fromDate)) {
       validationErrors.push({message: "FromDate invalid, has to be of form YYYY-MM-DD: " + req.body.userstudy.fromDate});
@@ -102,10 +102,8 @@ module.exports.validFullUserstudyReq = function(req){
     } else {
       var userStudyData = {
         title: Validator.toString(req.body.userstudy.title),
-        tutorname: Validator.toString(req.body.userstudy.tutorname),
-        executorname: Validator.toString(req.body.userstudy.executorname),
-        tutorId: Validator.toString(req.body.userstudy.tutorId),
-        executorId: Validator.toString(req.body.userstudy.executorId),
+        tutorId: Validator.toString(req.body.userstudy.tutor),
+        executorId: Validator.toString(req.body.userstudy.executor),
         fromDate: Validator.toString(req.body.userstudy.fromDate),
         untilDate: Validator.toString(req.body.userstudy.untilDate),
         description: Validator.toString(req.body.userstudy.description),
@@ -118,7 +116,7 @@ module.exports.validFullUserstudyReq = function(req){
         requiredStudies: req.body.userstudy.requiredStudies,
         news: req.body.userstudy.news,
         labels: req.body.userstudy.labels,
-        templateId: req.body.userstudy.templateId
+        templateId: req.body.userstudy.template
       };
       resolve(userStudyData);
     }

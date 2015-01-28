@@ -174,7 +174,7 @@ module.exports.getUserstudyById = function (id, callback) {
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
-      'us.templateId ' +
+      'us.templateId AS template, us.creatorId AS creator ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -216,7 +216,7 @@ module.exports.getAllUserstudies = function (callback) {
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
-      'us.templateId ' +
+      'us.templateId as template, us.creatorId AS creator '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -239,7 +239,7 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, filter, callba
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us, ' +
-      'us.templateId ' +
+      'us.templateId AS template ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +

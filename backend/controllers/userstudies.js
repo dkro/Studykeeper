@@ -9,11 +9,10 @@ var Async       = require('async');
 
 module.exports.createUserstudy = function(req, res) {
 
-  // TODO add the creator id to the database
   var promises = [UserstudyPromise.validFullUserstudyReq(req),
     UserPromise.userFromToken(req),
-    UserPromise.userHasRole(req.body.userstudy.tutorId, "tutor"),
-    UserPromise.userHasRole(req.body.userstudy.executorId, "executor")];
+    UserPromise.userHasRole(req.body.userstudy.tutor, "tutor"),
+    UserPromise.userHasRole(req.body.userstudy.executor, "executor")];
 
   Promise.all(promises).then(function(results){
     results[0].creatorId = results[1].id;

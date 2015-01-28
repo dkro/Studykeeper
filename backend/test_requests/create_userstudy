@@ -1,9 +1,9 @@
 {
   "userstudy": {
-    "title": "userstudy title xaasd",
-    "tutorId": 6,
-    "executorId": 7,
-    "templateId": 2,
+    "title": "userstudy tita",
+    "tutor": 6,
+    "executor": 7,
+    "template": 2,
     "fromDate": "2014-12-12",
     "untilDate": "2014-12-12",
     "description": "userstudy description x",
