@@ -6,6 +6,7 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
 var Async       = require('async');
+var uuid       = require('node-uuid');
 
 var passwordMinimumLength = 7;
 
@@ -235,6 +236,8 @@ module.exports.createUser = function(req, res) {
     return UserPromise.usernameAvailable(user.username);
   })
   .then(function(result){
+    user.password = uuid.v1();
+
     User.saveUser(user,function(err,result) {
       if (err){
         res.send(err);
@@ -250,7 +253,7 @@ module.exports.createUser = function(req, res) {
     });
   })
   .catch(function(err){
-    res.json({status:'failure', message: 'Server Fehler.', internal: err});
+    res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
   });
 };
 

@@ -15,6 +15,7 @@ module.exports.getUsers = function(callback) {
       "LEFT JOIN studies_users_rel sur ON u.id=sur.userId " +
       "LEFT JOIN userstudies ust ON u.id=ust.tutorId " +
       "LEFT JOIN userstudies usex ON u.id=usex.executorId " +
+      "WHERE u.visible=1 " +
       "GROUP BY u.id;",
       function(err,result){
         connection.release();
@@ -30,7 +31,7 @@ module.exports.getUserById = function(id, callback) {
       "u.firstname,u.lastname " +
       "FROM users u " +
       "LEFT JOIN roles r ON r.id=u.role " +
-      "WHERE u.id=?;",
+      "WHERE u.id=? AND u.visible=1;",
       id,
       function(err,result){
         connection.release();
@@ -46,7 +47,7 @@ module.exports.getUserByName = function(username, callback) {
     connection.query("SELECT u.id, u.username, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname " +
                       "FROM users u " +
                       "LEFT JOIN roles r ON u.role=r.id " +
-                      "WHERE u.username=?;",
+                      "WHERE u.username=? AND u.visible=1;",
                       username,
       function(err,result) {
         if (err) {
@@ -65,7 +66,7 @@ module.exports.getUserByToken = function(token, callback) {
     connection.query( "SELECT u.id, u.username, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname FROM users u " +
                       "INNER JOIN auth a ON u.id=a.userId " +
                       "LEFT JOIN roles r ON u.role=r.id " +
-                      "WHERE token=?;",
+                      "WHERE token=? AND u.visible=1;",
                       token,
       function(err,result){
         connection.release();

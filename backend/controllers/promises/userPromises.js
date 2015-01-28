@@ -80,18 +80,6 @@ module.exports.validCreateUserReq = function(req){
     if (!Validator.isLength(req.body.user.lastname, 3)) {
       validationErrors.push({message: "Lastname invalid, minimum 3 characters: " + req.body.user.lastname});
     }
-    if (!Validator.isLength(req.body.user.password, 7)) {
-      validationErrors.push({message: "Password invalid, minimum 7 characters: " + req.body.user.password});
-    }
-    if (!Validator.isLength(req.body.user.confirmPassword,7)) {
-      validationErrors.push({message: "Confirm Password invalid, minimum 7 chars required."});
-    }
-    if (req.body.user.password !== req.body.user.confirmPassword){
-      validationErrors.push({message: "Passwords dont match"});
-    }
-    if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
-      validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
-    }
     var roleArr = ['participant','executor','tutor'];
     if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
       validationErrors.push({message: "Role invalid, " + roleArr  +" required : " + req.body.user.role});
@@ -106,7 +94,7 @@ module.exports.validCreateUserReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        mmi: Validator.toString(req.body.user.mmi),
+        mmi: req.body.user.mmi ? 1 : 0,
         role    : Validator.toString(req.body.user.role),
         lmuStaff: 0
       };
