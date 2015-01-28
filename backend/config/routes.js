@@ -81,12 +81,12 @@ module.exports = function(app) {
   app.put('/api/news/edit', newsfeedController.editNews);
 
   // --------------- Templates routes ---------------
-  app.get('/api/templates', templateController.allTemplates); //todo smarter query results
+  app.get('/api/templates', templateController.allTemplates);
+  app.get('/api/templates/:id', templateController.getTemplateById);
 
-  app.post('/api/templates/createTemplate', templateController.createTemplate);
-  app.del('/api/templates/deleteTemplate', templateController.deleteTemplate);
-  //app.post('/api/template/edit', templateController.editTemplate);
-  //app.post('/api/userstudy/addTemplate', templateController.addTemplateToUserstudy);
+  app.post('/api/templates', templateController.createTemplate);
+  app.del('/api/templates/:id', templateController.deleteTemplate); // todo make it only possible to delete when its not mapped
+  app.put('/api/templates/:id', templateController.editTemplate);
 
   // Mails
   // tutore sind sueradmins. Mails enden bei loeschen von nutzerstudien

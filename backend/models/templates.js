@@ -3,6 +3,7 @@ var mysql      = require('../config/mysql');
 var Promise         = require('es6-promise').Promise;
 
 module.exports.addTemplate = function (template, callback) {
+  var id;
   var queryData = {
     title: template.title,
     fields: template.fields
@@ -31,16 +32,16 @@ module.exports.addTemplate = function (template, callback) {
             promises.push(new Promise(function (resolve, reject) {
 
               connection.query('INSERT INTO template_fields ' +
-                '(templateId,fieldtypeId,title,description) ' +
+                '(templateId,title,value) ' +
                 'VALUES (' +
                 '(SELECT id FROM templates WHERE title=?),' +
-                '(SELECT id FROM fieldtypes WHERE type=?),' +
                 '?,?)',
-                [queryData.title, queryData.fields[i].fieldtype, queryData.fields[i].title, queryData.fields[i].description],
-                function (err) {
+                [queryData.title, queryData.fields[i].title, queryData.fields[i].value],
+                function (err,result) {
                   if (err) {
                     reject(err);
                   } else {
+                    id = result.insertId;
                     resolve();
                   }
                 });
@@ -56,7 +57,7 @@ module.exports.addTemplate = function (template, callback) {
                 });
               } else {
                 connection.release();
-                callback();
+                callback(err,id);
               }
             });
           }).catch(function (err) {
@@ -71,57 +72,114 @@ module.exports.addTemplate = function (template, callback) {
   }
 };
 
-module.exports.removeTemplate = function (template, callback) {
+module.exports.editTemplate = function (template, callback) {
   var queryData = {
     id: template.id,
     title: template.title,
     fields: template.fields
   };
-  mysql.getConnection(function(connection) {
-    connection.beginTransaction(function (err) {
-      if (err) {
-        throw err;
-      }
-      // Put dummy data into template
-      connection.query('UPDATE templates SET title=\"removed\" WHERE id=?',
-        queryData.id,
-        function (err) {
-          if (err) {
-            connection.rollback(function () {
-              throw err;
-            });
-          }
 
-          // remove all fields connected to template
+  if (queryData.fields.length > 10){
+    throw new Error({message: "Maximum of 10 fields for template allowed"});
+  } else {
+    mysql.getConnection(function(connection) {
+      connection.beginTransaction(function (err) {
+        if (err) {
+          connection.release();
+          throw err;
+        }
+
+        new Promise(function(resolve,reject){
           connection.query('DELETE FROM template_fields WHERE templateId=?',
             queryData.id,
-            function (err) {
+            function(err){
+              if (err) {
+                reject(err);
+              } else {
+                resolve(queryData.id);
+              }
+            });
+          })
+          .then(function(){
+            return new Promise(function(resolve,reject){
+              connection.query('UPDATE templates SET ' +
+                'title=? ' +
+                'WHERE id=?',
+                [queryData.title,queryData.id],
+                function(err){
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(queryData.id);
+                  }
+                });
+            });
+          })
+          .then(function(){
+            var promises = [];
+            for (var i = 0; i < queryData.fields.length; i += 1) {
+              promises.push(new Promise(function (resolve, reject) {
+
+                connection.query('INSERT INTO template_fields ' +
+                  '(templateId,title,value) ' +
+                  'VALUES (' +
+                  '(SELECT id FROM templates WHERE title=?),' +
+                  '?,?)',
+                  [queryData.title, queryData.fields[i].title, queryData.fields[i].value],
+                  function (err) {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve();
+                    }
+                  });
+              }));
+            }
+
+            return Promise.all(promises);
+          })
+          // Finally commit
+          .then(function(){
+            connection.commit(function (err) {
               if (err) {
                 connection.rollback(function () {
                   connection.release();
                   throw err;
                 });
-              }
-              connection.commit(function (err) {
-                if (err) {
-                  connection.rollback(function () {
-                    connection.release();
-                    throw err;
-                  });
-                }
+              } else {
                 connection.release();
                 callback();
-              });
+              }
             });
-        });
+          })
+          .catch(function(err){
+            connection.rollback(function () {
+              connection.release();
+              callback(err);
+              throw err;
+            });
+          });
+      });
     });
+  }
+};
+
+module.exports.removeTemplate = function (templateId, callback) {
+  mysql.getConnection(function(connection) {
+      connection.query('DELETE FROM templates WHERE id=?',
+        templateId,
+        function(err,result){
+          connection.release();
+          callback(err,result);
+        }
+      );
   });
 };
 
 module.exports.getAllTemplates = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM templates t ' +
-      'LEFT JOIN template_fields tf ON t.id=tf.templateId ',
+    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value FROM templates t ' +
+                     'LEFT JOIN template_fields tf ON t.id=tf.templateId ',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -130,10 +188,26 @@ module.exports.getAllTemplates = function (callback) {
   });
 };
 
-module.exports.getTemplate = function (template, callback) {
+module.exports.getTemplateById = function (templateId, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT * FROM templates WHERE title=? AND id=?',
-      [template.title,template.id],
+    connection.query('SELECT  t.id, t.title, tf.title AS fieldTitle, tf.value  FROM templates t ' +
+                     'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
+                     'WHERE t.id=? ',
+      templateId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getTemplateByTitle = function (templateTitle, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value FROM templates t ' +
+      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
+      'WHERE t.title=? ',
+      templateTitle,
       function(err,result){
         connection.release();
         callback(err,result);

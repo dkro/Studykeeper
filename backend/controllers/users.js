@@ -235,13 +235,13 @@ module.exports.createUser = function(req, res) {
     return UserPromise.usernameAvailable(user.username);
   })
   .then(function(result){
-    User.saveUser(user,function(err) {
+    User.saveUser(user,function(err,result) {
       if (err){
         res.send(err);
       } else {
         res.json({message: 'New user has been created successfully',
           user:{
-            id: user.id,
+            id: result.insertId,
             username: user.username,
             role: user.role
           }

@@ -1,7 +1,6 @@
 "use strict";
 var Template         = require('../models/templates');
 var Promise          = require('es6-promise').Promise;
-var UserstudyPromise = require('./promises/userstudyPromises');
 var TemplatePromise  = require('./promises/templatePromises');
 
 
@@ -10,13 +9,14 @@ module.exports.createTemplate = function(req, res){
   TemplatePromise.validFullTemplateReq(req)
     .then(function(result){
       template = result;
-      return TemplatePromise.templateAvailable(template);
+      return TemplatePromise.templateAvailable(template.title);
     })
     .then(function(){
-      Template.addTemplate(template, function(err){
+      Template.addTemplate(template, function(err,insertId){
         if (err) {
           throw err;
         } else {
+          template.id = insertId;
           res.json({status: 'success', message: 'Template created.', template: template});
         }
       });
@@ -26,19 +26,36 @@ module.exports.createTemplate = function(req, res){
     });
 };
 
-module.exports.deleteTemplate = function(req, res){
+module.exports.editTemplate = function (req, res) {
   var template;
-  TemplatePromise.validTemplateReq(req)
-    .then(function(result){
+  TemplatePromise.validFullTemplateReq(req, true)
+    .then(function (result) {
       template = result;
-      return TemplatePromise.templateExists(template);
+      template.id = req.params.id;
+      return TemplatePromise.templateExists(template.id);
     })
-    .then(function(){
-      Template.removeTemplate(template, function(err){
+    .then(function () {
+      Template.editTemplate(template, function (err) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Template removed.', template: template});
+          res.json({status: 'success', message: 'Template edited', template: template});
+        }
+      });
+    })
+    .catch(function (err) {
+      res.json(500, {status: 'failure', errors: err});
+    });
+};
+
+module.exports.deleteTemplate = function(req, res){
+    TemplatePromise.templateExists(req.params.id)
+    .then(function(){
+      Template.removeTemplate(req.params.id, function(err){
+        if (err) {
+          throw err;
+        } else {
+          res.json({status: 'success', message: 'Template removed.'});
         }
       });
     })
@@ -50,9 +67,47 @@ module.exports.deleteTemplate = function(req, res){
 module.exports.allTemplates = function (req, res){
   Template.getAllTemplates(function(err,result){
     if (err) {
-      res.json(err);
+      res.json(500, {status: 'failure', message: err});
     } else {
-      res.json(result);
+      res.json({templates: parseTemplateSQL(result)});
     }
-  })
+  });
+};
+
+module.exports.getTemplateById = function (req, res){
+  Template.getTemplateById(req.params.id, function(err,result){
+    if (err) {
+      res.json(500, {status: 'failure', message: err});
+    } else {
+      res.json({template: parseTemplateSQL(result)[0]});
+    }
+  });
+};
+
+var parseTemplateSQL = function(templateArray){
+  var ids = [];
+  var templates = [];
+  var iteratorTemplate = -1;
+  for (var i = 0; i < templateArray.length; i += 1) {
+    var template = {};
+    if (ids.indexOf(templateArray[i].id) < 0){
+      ids.push(templateArray[i].id);
+      template.id = templateArray[i].id;
+      template.title = templateArray[i].title;
+      template.fields = [];
+      template.fields.push({
+        title : templateArray[i].fieldTitle,
+        value : templateArray[i].value
+      });
+      templates.push(template);
+      iteratorTemplate = iteratorTemplate += 1;
+    } else {
+      templates[iteratorTemplate].fields.push({
+        title : templateArray[i].fieldTitle,
+        value : templateArray[i].value
+      });
+    }
+  }
+
+  return templates;
 };

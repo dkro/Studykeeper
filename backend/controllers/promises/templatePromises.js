@@ -19,17 +19,13 @@ module.exports.validFullTemplateReq = function(req){
           if (!Validator.isLength(req.body.template.fields[i].title, 3)) {
             validationErrors.push({message: "Template Field Title required. Minimum 3 characters: " + req.body.template.fields[i].title});
           }
-          if (req.body.template.fields[i].description && !Validator.isLength(req.body.template.fields[i].description, 3)) {
-            validationErrors.push({message: "Template Field Title invalid, minimum 3 characters: " + req.body.template.fields[i].description});
+          if (req.body.template.fields[i].value && !Validator.isLength(req.body.template.fields[i].value, 3)) {
+            validationErrors.push({message: "Template Field Title invalid, minimum 3 characters: " + req.body.template.fields[i].value});
           }
 
-          if (!Validator.isLength(req.body.template.fields[i].fieldtype, 1)) {
-            validationErrors.push({message: "Template Field Fieldtype required."});
-          }
           fields.push({
             title: Validator.toString(req.body.template.fields[i].title),
-            fieldtype: Validator.toString(req.body.template.fields[i].fieldtype),
-            description: Validator.toString(req.body.template.fields[i].description)
+            value: Validator.toString(req.body.template.fields[i].value)
           });
         }
     }
@@ -69,9 +65,9 @@ module.exports.validTemplateReq = function(req){
   });
 };
 
-module.exports.templateExists = function(template){
+module.exports.templateExists = function(templateId){
   return new Promise(function(resolve, reject){
-    Template.getTemplate(template, function(err, result){
+    Template.getTemplateById(templateId, function(err, result){
       if (err) {
         reject({message: 'Internal error, please try again.'});
       }
@@ -85,15 +81,15 @@ module.exports.templateExists = function(template){
   });
 };
 
-module.exports.templateAvailable = function(template) {
+module.exports.templateAvailable = function(templateName) {
   return new Promise(function(resolve, reject){
-    Template.getTemplate(template,function(err, result){
+    Template.getTemplateByTitle(templateName, function(err, result){
       if (err){
         reject({message: 'Internal error, please try again.'});
       }
 
       if (result.length > 0) {
-        reject({message: 'Template already exists.'});
+        reject({message: 'Template with this Title already exists.'});
       } else {
         resolve(result[0]);
       }

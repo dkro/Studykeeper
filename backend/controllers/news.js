@@ -9,10 +9,11 @@ module.exports.createNews = function (req, res) {
 
   NewsPromise.validFullNewsReq(req, false)
     .then(function (news) {
-      News.addNews(news, function (err) {
+      News.addNews(news, function (err, result) {
         if (err) {
           throw err;
         } else {
+          news.id = result.insertId;
           res.json({status: 'success', message: 'News created', news: news});
         }
       });

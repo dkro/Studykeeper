@@ -3,6 +3,7 @@ var mysql      = require('../config/mysql');
 var Promise    = require('es6-promise').Promise;
 
 module.exports.addUserStudy = function (data, callback) {
+  var id;
   var queryData = {
     title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
     description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
@@ -29,19 +30,20 @@ module.exports.addUserStudy = function (data, callback) {
             queryData.link, queryData.paper, queryData.space,queryData.mmi, queryData.compensation, queryData.location],
           function(err,result){
             if (err) {
-              reject(err)
+              reject(err);
             } else {
-              resolve(result.insertId)
+              id = result.insertId
+              resolve(result.insertId);
             }
-          })
+          });
       })
         .then(function(userstudyId){
           var promises = [
             addUserstudyRelations(connection, userstudyId, 'news', queryData.news),
             addUserstudyRelations(connection, userstudyId, 'labels', queryData.labels),
             addUserstudyRelations(connection, userstudyId, 'requires', queryData.requiredStudies)
-          ]
-          return Promise.all(promises)
+          ];
+          return Promise.all(promises);
         })
         // Finally commit
         .then(function(userstudy){
@@ -53,7 +55,7 @@ module.exports.addUserStudy = function (data, callback) {
               });
             } else {
               connection.release();
-              callback();
+              callback(err,id);
             }
           });
         })
@@ -61,10 +63,10 @@ module.exports.addUserStudy = function (data, callback) {
         .catch(function(err){
           connection.rollback(function () {
             connection.release();
-            throw err;
             callback(err);
+            throw err;
           });
-        })
+        });
     });
   });
 };
@@ -93,9 +95,9 @@ module.exports.editUserStudy = function (data, callback) {
             queryData.id, queryData.title],
           function(err,result){
             if (err) {
-              reject(err)
+              reject(err);
             } else {
-              resolve(queryData.id)
+              resolve(queryData.id);
             }
           }
         );
@@ -105,16 +107,16 @@ module.exports.editUserStudy = function (data, callback) {
             delUserstudyRelations(connection, userstudyId, 'news'),
             delUserstudyRelations(connection, userstudyId, 'labels'),
             delUserstudyRelations(connection, userstudyId, 'requires')
-          ]
-          return Promise.all(promises)
+          ];
+          return Promise.all(promises);
         })
         .then(function(results){
           var promises = [
             addUserstudyRelations(connection, results[0], 'news', queryData.news),
             addUserstudyRelations(connection, results[1], 'labels', queryData.labels),
             addUserstudyRelations(connection, results[2], 'requires', queryData.requiredStudies)
-          ]
-          return Promise.all(promises)
+          ];
+          return Promise.all(promises);
         })
         // Finally commit
         .then(function(userstudy){
@@ -134,10 +136,10 @@ module.exports.editUserStudy = function (data, callback) {
         .catch(function(err){
           connection.rollback(function () {
             connection.release();
-            throw err;
             callback(err);
+            throw err;
           });
-        })
+        });
     });
   });
 };
@@ -177,7 +179,7 @@ module.exports.getUserstudyById = function (id, callback) {
         callback(err,result);
       }
     );
-  })
+  });
 };
 
 module.exports.getPublicUserstudyById = function (id, callback) {
@@ -196,7 +198,7 @@ module.exports.getPublicUserstudyById = function (id, callback) {
         callback(err,result);
       }
     );
-  })
+  });
 };
 
 module.exports.getAllUserstudies = function (callback) {
@@ -468,25 +470,25 @@ var addUserstudyRelations = function(connection, userstudyId, type, relationIds)
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation... recieved: " + + " expected: [news/labels,requires]"})
+      reject({message: "wrong type for userstudy relation... recieved: " + type + " expected: [news/labels,requires]"});
     } else if (relationIds.length === 0){
-      resolve(userstudyId)
+      resolve(userstudyId);
     } else {
       var queryString = 'INSERT INTO ' + tableName + ' (studyId, ' + columnName + ') ' +
-        'VALUES (' + userstudyId + ',' + relationIds[0] + ')'
+        'VALUES (' + userstudyId + ',' + relationIds[0] + ')';
       for (var i = 1; i < relationIds.length; i += 1) {
-        queryString = queryString.concat(',(' + userstudyId + ',' + relationIds[i] + ')')
+        queryString = queryString.concat(',(' + userstudyId + ',' + relationIds[i] + ')');
       }
       connection.query(queryString, function (err, result) {
         if (err) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(userstudyId)
+          resolve(userstudyId);
         }
-      })
+      });
     }
   });
-}
+};
 
 
 var delUserstudyRelations = function(connection, userstudyId, type) {
@@ -507,20 +509,20 @@ var delUserstudyRelations = function(connection, userstudyId, type) {
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation deletion... recieved: " + + " expected: [news/labels,requires]"})
+      reject({message: "wrong type for userstudy relation deletion... recieved: " + type + " expected: [news/labels,requires]"});
     } else {
       connection.query('DELETE FROM ' + tableName + ' WHERE studyId=?',
         userstudyId,
         function (err, result) {
           if (err) {
-            reject(err)
+            reject(err);
           } else {
-            resolve(userstudyId)
+            resolve(userstudyId);
           }
         });
     }
   });
-}
+};
 
 module.exports.getStudiesRelationFor = function(userstudyId, type){
   return new Promise(function(resolve,reject) {
@@ -544,7 +546,7 @@ module.exports.getStudiesRelationFor = function(userstudyId, type){
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation getter... recieved: " + + " expected: [news/labels,requires]"})
+      reject({message: "wrong type for userstudy relation getter... recieved: " + type + " expected: [news/labels,requires]"});
     } else {
       mysql.getConnection(function(connection) {
         connection.query('SELECT ' + columnName + ' AS id FROM ' + tableName + ' WHERE studyId=?',
@@ -552,10 +554,10 @@ module.exports.getStudiesRelationFor = function(userstudyId, type){
           function (err, result) {
             if (err) {
               connection.release();
-              reject(err)
+              reject(err);
             } else {
               connection.release();
-              resolve(result)
+              resolve(result);
             }
           });
       });
