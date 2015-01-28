@@ -19,7 +19,7 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
                 });
             }, function(error) {
                 newNews.deleteRecord();
-                that.set('statusMessage', { message: 'News konnte nicht erstellt werden!', isSuccess: false });
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 

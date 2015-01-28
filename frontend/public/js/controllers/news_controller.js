@@ -22,8 +22,7 @@ StudyManager.NewsController = Ember.Controller.extend({
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     user.rollback();
-                    var failMessage = 'News \"' + title + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
