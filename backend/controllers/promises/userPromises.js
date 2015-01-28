@@ -72,25 +72,13 @@ module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
     if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Username invalid, email required: " + req.body.user.username});
+      validationErrors.push({message: "Email ungültig: " + req.body.user.username});
     }
     if (!Validator.isLength(req.body.user.firstname, 3)) {
-      validationErrors.push({message: "Firstname invalid, minimum 3 characters: " + req.body.user.firstname});
+      validationErrors.push({message: "Vorname invalid, Minimum : " + req.body.user.firstname});
     }
     if (!Validator.isLength(req.body.user.lastname, 3)) {
       validationErrors.push({message: "Lastname invalid, minimum 3 characters: " + req.body.user.lastname});
-    }
-    if (!Validator.isLength(req.body.user.password, 7)) {
-      validationErrors.push({message: "Password invalid, minimum 7 characters: " + req.body.user.password});
-    }
-    if (!Validator.isLength(req.body.user.confirmPassword,7)) {
-      validationErrors.push({message: "Confirm Password invalid, minimum 7 chars required."});
-    }
-    if (req.body.user.password !== req.body.user.confirmPassword){
-      validationErrors.push({message: "Passwords dont match"});
-    }
-    if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
-      validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
     }
     var roleArr = ['participant','executor','tutor'];
     if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
@@ -106,7 +94,7 @@ module.exports.validCreateUserReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        mmi: Validator.toString(req.body.user.mmi),
+        mmi: req.body.user.mmi ? 1 : 0,
         role    : Validator.toString(req.body.user.role),
         lmuStaff: 0
       };
@@ -126,7 +114,7 @@ module.exports.userExists = function(username){
       if (err) {
         reject(err);
       } else if (result.length === 0) {
-        reject({message: 'User not found', user: username});
+        reject('Der Nutzer wurde nicht gefunden.');
       } else {
         resolve(result[0]);
       }
@@ -140,7 +128,7 @@ module.exports.userExistsById = function(userId){
       if (err) {
         reject(err);
       } else if (result.length === 0){
-        reject({message: 'User not found', user: userId});
+        reject('Der Nutzer wurde nicht gefunden.');
       } else {
         resolve(result[0]);
       }
@@ -156,7 +144,7 @@ module.exports.usernameAvailable = function(username){
       } else if (result.length === 0) {
         resolve();
       } else {
-        reject({message: 'Email already in use.', username: username});
+        reject('Email-adresse wird schon benutzt.');
       }
     });
   });

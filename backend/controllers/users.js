@@ -6,13 +6,14 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 var crypt      = require('../utilities/encryption');
 var validator  = require('validator');
 var Async       = require('async');
+var uuid       = require('node-uuid');
 
 var passwordMinimumLength = 7;
 
 module.exports.getUser = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else {
       res.json({user: result});
     }
@@ -22,9 +23,9 @@ module.exports.getUser = function(req, res) {
 module.exports.getUserById = function(req, res) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', errors: [{message: 'User not found'}]});
+      res.json(500, {status: 'failure', message: 'Der Nutzer wurde nicht gefunden.'});
     } else {
 
       var user = result[0];
@@ -54,7 +55,7 @@ module.exports.getUserById = function(req, res) {
         res.json({user: user});
       })
         .catch(function(err){
-          res.json(500, {status: 'failure', errors: err});
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         });
 
     }
@@ -64,7 +65,7 @@ module.exports.getUserById = function(req, res) {
 module.exports.getUsers = function(req, res) {
   User.getUsers(function(err,list){
       if (err) {
-        res.json(500, {status: 'failure', errors: err});
+        res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       } else {
         Async.eachSeries(list, function(item, callback){
           if (item.isExecutorFor === null) {
@@ -86,7 +87,7 @@ module.exports.getUsers = function(req, res) {
           callback();
         }, function(err){
           if(err){
-            res.json({status:'failure',message: err});
+            res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
           } else {
             res.json({users:list});
           }
@@ -121,11 +122,11 @@ module.exports.signup = function(req, res) {
         } else {
           User.createTokenForUser(user, function (err) {
             if (err) {
-              res.send(500, err);
+              res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
             } else {
               User.getTokensForUser(user, function (err, result) {
                 if (err) {
-                  res.send(err);
+                  res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
                 } else {
                   // Sort token result so that newest token is the first in array
                   result.sort(function (a, b) {
@@ -136,7 +137,7 @@ module.exports.signup = function(req, res) {
 
                   res.json({
                     status: 'success',
-                    message: 'New user has been created successfully',
+                    message: 'Ein neuer Nutzer wurde erfolgreich erstellt.',
                     user: {
                       id: user.id,
                       username: user.username,
@@ -152,7 +153,7 @@ module.exports.signup = function(req, res) {
       });
     })
    .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 
 };
@@ -175,7 +176,7 @@ module.exports.login = function(req, res) {
         .then(function(tokens){
             res.json({
               status: 'success',
-              message: 'Login successful',
+              message: 'Login erfolgreich.',
               user: {
               id: user.id,
               username: user.username,
@@ -185,12 +186,12 @@ module.exports.login = function(req, res) {
             });
         })
         .catch(function(err){
-          res.json(500, {status: 'failure', errors: err});
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         });
 
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     });
 };
 
@@ -199,7 +200,7 @@ module.exports.logout = function(req, res) {
     .then(function(user){
       User.deleteToken(user.token, function(err){
         if (err) {
-          res.send(err);
+          res.send(500, {status: 'failure', message: 'Server Fehler. Bitte loggen Sie sich erneut ein.', internal: err});
         } else {
 
           var now = new Date();
@@ -207,11 +208,11 @@ module.exports.logout = function(req, res) {
 
           User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow, function(err){
             if (err) {
-              res.send(err);
+              res.send(500, {status: 'failure', message: 'Server Fehler. Bitte loggen Sie sich erneut ein.', internal: err});
             } else {
               res.json({
                 status: 'success',
-                message: 'Logged out.',
+                message: 'Ausgeloggt.',
                 user: {
                   username: user.username
                 }
@@ -221,7 +222,7 @@ module.exports.logout = function(req, res) {
         }
       })
     .catch(function(err){
-          res.json({status: 'failure', errors: err});
+          res.json({status: 'failure', message: 'Server Fehler.', internal: err});
     });
   });
 };
@@ -235,11 +236,13 @@ module.exports.createUser = function(req, res) {
     return UserPromise.usernameAvailable(user.username);
   })
   .then(function(result){
+    user.password = uuid.v1();
+
     User.saveUser(user,function(err,result) {
       if (err){
         res.send(err);
       } else {
-        res.json({message: 'New user has been created successfully',
+        res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt.',
           user:{
             id: result.insertId,
             username: user.username,
@@ -250,7 +253,7 @@ module.exports.createUser = function(req, res) {
     });
   })
   .catch(function(err){
-    res.json({status:'failure',message: err});
+    res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
   });
 };
 
@@ -267,12 +270,12 @@ module.exports.deleteUser = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'user deleted', user: userId});
+          res.json({status: 'success', message: 'Nutzer wurde erfolgreich gelöscht.'});
         }
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     });
 };
 
@@ -306,14 +309,14 @@ module.exports.changePW = function(req, res) {
   };
 
   if (user.newPassword !== user.newPasswordConfirmation) {
-    res.json({
+    res.json(500,{
       status: "failure",
-      message: "New passwords don't match."
+      message: "Die Passwörter stimmen nicht überein."
     });
   } else if (user.newPassword.length < passwordMinimumLength) {
-    res.json({
+    res.json(500,{
       status: "failure",
-      message: "New password is too short. Minimum of 7 chars."
+      message: "Das Passwort ist zu kurz. Es muss mindestens 7 Charakter haben."
     });
   } else {
       User.getUserByName(user.username, function(err, userResult) {
@@ -321,7 +324,7 @@ module.exports.changePW = function(req, res) {
           res.send(err);
         } else {
           if (userResult.length < 1) {
-            res.send({status: 'failure', message: 'Incorrect username.'});
+            res.send(500,{status: 'failure', message: 'Email schon vergeben.'});
           } else {
             crypt.comparePassword(userResult[0].password, user.oldPassword,
               function (err, isPasswordMatch) {
@@ -330,9 +333,9 @@ module.exports.changePW = function(req, res) {
                 }
 
                 if (!isPasswordMatch) {
-                  res.send({
+                  res.send(500,{
                     status: 'failure',
-                    message: 'Incorrect password.'
+                    message: 'Falsches Password.'
                   });
                 } else {
                   User.setPassword(user.newPassword, user.username, function (err) {
@@ -341,7 +344,7 @@ module.exports.changePW = function(req, res) {
                     } else {
                       res.json({
                         status: "success",
-                        message: "Password successfully changed."
+                        message: "Password wurde erfolgreich geändert."
                       });
                     }
                   });

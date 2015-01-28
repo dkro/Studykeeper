@@ -5,11 +5,11 @@ exports.loginAuthenticate = function(req, res, next) {
   passport.authenticate('local', {session: false},
       function(err, user, info){
         if(err) {
-          res.json(401, {status: "failure", message: err});
+          res.json(500, {status: "failure", message: 'Server Error', internal: err});
         }
 
         if(user.length === 0 || user === false) {
-          res.json(401, {status: "failure", message: 'Login: User not found.'});
+          res.json(401, {status: "failure", message: 'Login fehlgeschlagen. Der Nutzer wurde nicht gefunden.'});
         } else {
           next();
         }
@@ -21,9 +21,9 @@ exports.tokenAuthenticate = function(req, res, next) {
   passport.authenticate('bearer', {session: false},
     function(err, token) {
       if (err) {
-        res.json(401, {status: "failure", message: err});
+        res.json(500, {status: "failure", message: 'Server Error', internal: err});
       } else if (token === false || token.length === 0) {
-        res.json(401, {status: "failure", message: 'Token invalid.'});
+        res.json(401, {status: "failure", message: 'Token ungültig.'});
       } else {
         req.token = token;
         next();
@@ -34,11 +34,12 @@ exports.tokenAuthenticate = function(req, res, next) {
 
 exports.requiresRole = function(role) {
   return function (req, res, next) {
+    // token auth strategy puts the token into req.token
     userController.validateRole(role, req.token.roleId, function(err,roleValidated){
       if (err) {
-        res.send(500, {status: 'failure', message: err});
+        res.send(500, {status: 'failure', message: 'Server Error', internal: err});
       } else if(!roleValidated) {
-        res.send(403, {status: 'failure', message: 'Your are not allowed to this resource.'});
+        res.send(403, {status: 'failure', message: 'Keine Rechte.'});
       } else {
         next();
       }

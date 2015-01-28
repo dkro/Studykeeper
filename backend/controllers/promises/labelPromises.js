@@ -3,20 +3,18 @@ var Label         = require('../../models/labels');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
-module.exports.validLabelReq = function(req,hasId){
+module.exports.validLabelReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-
-    if (hasId){
-      if (!Validator.isNumeric(req.body.label.id)) {
-        validationErrors.push({message: "Label Id invalid, numeric required: " + req.body.label.title});
+    if (!req.body.label) {
+      validationErrors.push("Label request hat ein falsches Format.");
+    } else {
+      if (!Validator.isLength(req.body.label.title, 3)) {
+        validationErrors.push("Label Title invalid, minimum 3 characters: " + req.body.label.title);
       }
     }
-    if (!Validator.isLength(req.body.label.title, 3)) {
-      validationErrors.push({message: "Label Title invalid, minimum 3 characters: " + req.body.label.title});
-    }
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var labelData = {
         title: Validator.toString(req.body.label.title)
@@ -33,11 +31,11 @@ module.exports.labelExists = function(label){
   return new Promise(function(resolve, reject){
     Label.getLabelById(label.id, function(err, result){
       if (err) {
-        reject({message: 'Internal error, please try again.'});
+        reject(err);
       } else if (result.length > 0){
         resolve(result[0]);
       } else {
-        reject({message: 'Label not found.'});
+        reject('Label wurde nicht gefunden.');
       }
     });
   });
@@ -47,11 +45,11 @@ module.exports.labelAvailable = function(label) {
   return new Promise(function(resolve, reject){
     Label.getLabelByName(label.title,function(err, result){
       if (err){
-       reject({message: 'Internal error, please try again.'});
+       reject(err);
       }
 
       if (result.length > 0) {
-        reject({message: 'Label already exists.'});
+        reject('Label existiert schon.');
       } else {
         resolve(result[0]);
       }

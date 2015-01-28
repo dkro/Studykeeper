@@ -61,7 +61,7 @@ module.exports.deleteUserstudy = function(req, res) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Userstudy deleted.', userstudy: userstudyId});
+          res.json({status: 'success', message: 'Userstudy deleted.'});
         }
       });
     })

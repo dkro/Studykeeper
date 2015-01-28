@@ -20,12 +20,12 @@ module.exports.createLabel = function(req, res){
         throw err;
       } else {
         label.id = result.insertId;
-        res.json({status: 'success', message: 'label created', label: label});
+        res.json({status: 'success', message: 'Label erstellt.', label: label});
       }
     });
   })
   .catch(function(err){
-    res.json(500, {status: 'failure', errors: err});
+    res.json(500, {status: 'failure', message: err});
   });
 };
 
@@ -37,19 +37,19 @@ module.exports.deleteLabel = function(req, res){
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'label deleted', label: label});
+          res.json({status: 'success', message: 'Label gelöscht.'});
         }
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
 module.exports.allLabels = function(req, res){
   Label.getAllLabels(function(err, list){
     if (err){
-      res.json(500,{status: 'failure', errors: {message: 'Internal error, please try again.'}});
+      res.json(500,{status: 'failure', message: 'Server Fehler.', internal: err});
     } else {
       Async.eachSeries(list, function(item, callback){
         if (item.userstudies === null) {
@@ -61,7 +61,7 @@ module.exports.allLabels = function(req, res){
         callback();
       }, function(err){
         if(err){
-          res.json({status:'failure',message: err});
+          res.json(500, {status:'failure', message: err});
         } else {
           res.json({labels: list});
         }
@@ -75,7 +75,7 @@ module.exports.getLabelById = function(req, res){
     if (err) {
       res.json(500, {status: 'failure', errors: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', errors: [{message: 'Label not found'}]});
+      res.json({status: 'failure', message: 'Label wurde nicht gefunden'});
     } else {
       var label = result[0];
       if (label.userstudies === null) {
