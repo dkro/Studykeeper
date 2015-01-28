@@ -178,8 +178,12 @@ module.exports.removeTemplate = function (templateId, callback) {
 
 module.exports.getAllTemplates = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value FROM templates t ' +
-                     'LEFT JOIN template_fields tf ON t.id=tf.templateId ',
+    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value, ' +
+                     'GROUP_CONCAT(DISTINCT us.id) AS userstudies ' +
+                     'FROM templates t ' +
+                     'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
+                     'LEFT JOIN userstudies us ON us.templateId=t.id ' +
+                     'GROUP BY t.id;',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -190,9 +194,13 @@ module.exports.getAllTemplates = function (callback) {
 
 module.exports.getTemplateById = function (templateId, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT  t.id, t.title, tf.title AS fieldTitle, tf.value  FROM templates t ' +
+    connection.query('SELECT  t.id, t.title, tf.title AS fieldTitle, tf.value, ' +
+                     'GROUP_CONCAT(DISTINCT us.id) AS userstudies ' +
+                     'FROM templates t ' +
                      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
-                     'WHERE t.id=? ',
+                     'LEFT JOIN userstudies us ON us.templateId=t.id ' +
+                     'WHERE t.id=? ' +
+                     'GROUP BY t.id;',
       templateId,
       function(err,result){
         connection.release();

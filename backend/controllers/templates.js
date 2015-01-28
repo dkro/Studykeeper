@@ -2,6 +2,7 @@
 var Template         = require('../models/templates');
 var Promise          = require('es6-promise').Promise;
 var TemplatePromise  = require('./promises/templatePromises');
+var Async       = require('async');
 
 
 module.exports.createTemplate = function(req, res){
@@ -69,7 +70,20 @@ module.exports.allTemplates = function (req, res){
     if (err) {
       res.json(500, {status: 'failure', message: err});
     } else {
-      res.json({templates: parseTemplateSQL(result)});
+      Async.eachSeries(result, function(item, callback){
+        if (item.userstudies === null) {
+          item.userstudies = [];
+        } else {
+          item.userstudies = item.userstudies.split(",").map(function(x){return parseInt(x);});
+        }
+        callback();
+      }, function(err){
+        if(err){
+          res.json({status:'failure',message: err});
+        } else {
+          res.json({templates: parseTemplateSQL(result)});
+        }
+      });
     }
   });
 };
@@ -79,7 +93,13 @@ module.exports.getTemplateById = function (req, res){
     if (err) {
       res.json(500, {status: 'failure', message: err});
     } else {
-      res.json({template: parseTemplateSQL(result)[0]});
+      if (result[0].userstudies === null) {
+        result[0].userstudies = [];
+      } else {
+        result[0].userstudies = result[0].userstudies.split(",").map(function(x){return parseInt(x);});
+      }
+
+      res.json({template: parseTemplateSQL(result)});
     }
   });
 };
@@ -94,6 +114,7 @@ var parseTemplateSQL = function(templateArray){
       ids.push(templateArray[i].id);
       template.id = templateArray[i].id;
       template.title = templateArray[i].title;
+      template.userstudies = templateArray[i].userstudies;
       template.fields = [];
       template.fields.push({
         title : templateArray[i].fieldTitle,
