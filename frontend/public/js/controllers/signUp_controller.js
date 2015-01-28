@@ -87,10 +87,10 @@ StudyManager.SignupController = Ember.Controller.extend({
         var that = this;
 
         // TODO: Remove hardcoded server stuff!
-        Ember.$.post('http://localhost:10001/api/users/signup', userData).then(function(response) {
+        Ember.$.post('/api/users/signup', userData).then(function(response) {
             that.set('signUpSuccessful', true);
         }, function(error) {
-            that.set('statusMessage', { message: 'TODO: SignUp Fail!', isSuccess: false })
+            that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false })
         });
     },
 
