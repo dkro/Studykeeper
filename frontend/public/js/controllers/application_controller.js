@@ -17,6 +17,8 @@ StudyManager.ApplicationController = Ember.Controller.extend({
                     that.transitionToRoute('login');
                 },
                 function(error) {
+                    that.resetLocalStorage();
+                    that.transitionToRoute('login');
                     alert('Logout fehlgeschlagen!' + error.responseJSON.message);
                 });
 
