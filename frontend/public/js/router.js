@@ -53,9 +53,12 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   },
 
   redirectToLogin: function(transition) {
+    var that = this;
+
     this.controllerFor('application').resetLocalStorage();
-    this.controllerFor('login').set('statusMessage', { message: 'Sie müssen eingeloggt sein, um diese Seite sehen zu können!', isSuccess: false });
-    this.transitionToRoute('login');
+    this.transitionTo('login').then(function () {
+      that.controllerFor('login').set('statusMessage', { message: 'Sie müssen eingeloggt sein, um diese Seite sehen zu können!', isSuccess: false });
+    });
   }
 });
 
@@ -199,10 +202,13 @@ StudyManager.UserCreationRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
-    //return this.store.find('template');
+    return this.store.find('template');
   },
 
   setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('templatesList', model);
+    controller.reset();
   }
 });
 
