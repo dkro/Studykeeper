@@ -17,7 +17,7 @@ StudyManager.ApplicationController = Ember.Controller.extend({
                     that.transitionToRoute('login');
                 },
                 function(error) {
-                    alert("TODO: Logout failed!");
+                    alert('Logout fehlgeschlagen!' + error.responseJSON.message);
                 });
 
             /*
