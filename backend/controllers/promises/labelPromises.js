@@ -33,11 +33,11 @@ module.exports.labelExists = function(label){
   return new Promise(function(resolve, reject){
     Label.getLabelById(label.id, function(err, result){
       if (err) {
-        reject({message: 'Internal error, please try again.'});
+        reject(err);
       } else if (result.length > 0){
         resolve(result[0]);
       } else {
-        reject({message: 'Label not found.'});
+        reject('Label wurde nicht gefunden.');
       }
     });
   });
@@ -47,11 +47,11 @@ module.exports.labelAvailable = function(label) {
   return new Promise(function(resolve, reject){
     Label.getLabelByName(label.title,function(err, result){
       if (err){
-       reject({message: 'Internal error, please try again.'});
+       reject(err);
       }
 
       if (result.length > 0) {
-        reject({message: 'Label already exists.'});
+        reject('Label existiert schon.');
       } else {
         resolve(result[0]);
       }

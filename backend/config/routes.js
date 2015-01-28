@@ -44,50 +44,50 @@ module.exports = function(app) {
 
   // --------------- User routes ---------------
   app.get('/api/users', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userController.getUsers);
-  app.get('/api/users/:id', userController.getUserById);
+  app.get('/api/users/:id', auth.tokenAuthenticate, userController.getUserById);
 
-  app.post('/api/users', userController.createUser);
-  app.put('/api/users/:id', userController.editUser);
-  app.del('/api/users/:id', userController.deleteUser);
+  app.post('/api/users', auth.tokenAuthenticate, userController.createUser);
+  app.put('/api/users/:id', auth.tokenAuthenticate, userController.editUser);
+  app.del('/api/users/:id', auth.tokenAuthenticate, userController.deleteUser);
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudies', userStudyController.allUserstudies); //todo filtering on userbase
-  app.get('/api/userstudies/:id', userStudyController.getUserstudyById); //
-  app.get('/api/userstudies/all', userStudyController.allUserstudiesFilteredForUser);
+  app.get('/api/userstudies', auth.tokenAuthenticate, userStudyController.allUserstudies); //todo filtering on userbase
+  app.get('/api/userstudies/:id', auth.tokenAuthenticate, userStudyController.getUserstudyById); //
+  app.get('/api/userstudies/all', auth.tokenAuthenticate, userStudyController.allUserstudiesFilteredForUser);
   //app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
 
-  app.post('/api/userstudies',  userStudyController.createUserstudy);
-  app.del('/api/userstudies/:id', userStudyController.deleteUserstudy);
-  app.put('/api/userstudies/:id', userStudyController.editUserstudy);
-  app.post('/api/userstudies/:id/publish',  userStudyController.publishUserstudy);
-  app.post('/api/userstudies/:id/close',  userStudyController.closeUserstudy);
+  app.post('/api/userstudies',  auth.tokenAuthenticate, userStudyController.createUserstudy);
+  app.del('/api/userstudies/:id', auth.tokenAuthenticate, userStudyController.deleteUserstudy);
+  app.put('/api/userstudies/:id', auth.tokenAuthenticate, userStudyController.editUserstudy);
+  app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, userStudyController.publishUserstudy);
+  app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, userStudyController.closeUserstudy);
 
-  app.post('/api/userstudies/:id/register',  userStudyController.registerUserToStudy);
-  app.post('/api/userstudies/:id/signoff',  userStudyController.removeUserFromStudy);
-  app.post('/api/userstudies/:id/confirm/:userId',  userStudyController.confirmUserParticipation);
+  app.post('/api/userstudies/:id/register',  auth.tokenAuthenticate, userStudyController.registerUserToStudy);
+  app.post('/api/userstudies/:id/signoff',  auth.tokenAuthenticate, userStudyController.removeUserFromStudy);
+  app.post('/api/userstudies/:id/confirm/:userId',  auth.tokenAuthenticate, userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------
-  app.get('/api/labels', labelController.allLabels);
-  app.get('/api/labels/:id', labelController.getLabelById);
+  app.get('/api/labels', auth.tokenAuthenticate, labelController.allLabels);
+  app.get('/api/labels/:id', auth.tokenAuthenticate, labelController.getLabelById);
 
-  app.post('/api/labels', labelController.createLabel);
-  app.del('/api/labels/:id', labelController.deleteLabel); // todo make it only possible to delete when its not mapped
+  app.post('/api/labels', auth.tokenAuthenticate, labelController.createLabel);
+  app.del('/api/labels/:id', auth.tokenAuthenticate, labelController.deleteLabel); // todo make it only possible to delete when its not mapped
 
   // --------------- Newsfeed routes ---------------
-  app.get('/api/news', newsfeedController.allNews);
-  app.get('/api/news/:id', newsfeedController.getNewsById);
+  app.get('/api/news', auth.tokenAuthenticate, newsfeedController.allNews);
+  app.get('/api/news/:id', auth.tokenAuthenticate, newsfeedController.getNewsById);
 
-  app.post('/api/news', newsfeedController.createNews);
-  app.del('/api/news/:id', newsfeedController.deleteNews); // todo make it only possible to delete when its not mapped
-  app.put('/api/news/edit', newsfeedController.editNews);
+  app.post('/api/news', auth.tokenAuthenticate, newsfeedController.createNews);
+  app.del('/api/news/:id', auth.tokenAuthenticate, newsfeedController.deleteNews); // todo make it only possible to delete when its not mapped
+  app.put('/api/news/edit', auth.tokenAuthenticate, newsfeedController.editNews);
 
   // --------------- Templates routes ---------------
-  app.get('/api/templates', templateController.allTemplates);
-  app.get('/api/templates/:id', templateController.getTemplateById);
+  app.get('/api/templates', auth.tokenAuthenticate, templateController.allTemplates);
+  app.get('/api/templates/:id', auth.tokenAuthenticate, templateController.getTemplateById);
 
-  app.post('/api/templates', templateController.createTemplate);
-  app.del('/api/templates/:id', templateController.deleteTemplate); // todo make it only possible to delete when its not mapped
-  app.put('/api/templates/:id', templateController.editTemplate);
+  app.post('/api/templates', auth.tokenAuthenticate, templateController.createTemplate);
+  app.del('/api/templates/:id', auth.tokenAuthenticate, templateController.deleteTemplate); // todo make it only possible to delete when its not mapped
+  app.put('/api/templates/:id', auth.tokenAuthenticate, templateController.editTemplate);
 
   // Mails
   // tutore sind sueradmins. Mails enden bei loeschen von nutzerstudien
