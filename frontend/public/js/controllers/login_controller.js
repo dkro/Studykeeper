@@ -4,7 +4,7 @@ StudyManager.LoginController = Ember.Controller.extend({
     actions: {
         login: function() {
             // DEFAULT
-/*
+
             var userData = this.getProperties('username', 'password');
             var that = this;
 
@@ -18,9 +18,9 @@ StudyManager.LoginController = Ember.Controller.extend({
 
                 that.transitionToRoute('dashboard');
             }, function(error) {
-                    that.set('statusMessage', { message: 'Login failed!', isSuccess: false });
+                    that.set('statusMessage', { message: 'TODO: Login failed!', isSuccess: false });
             });
-*/
+/*
 
             // MOCK
             this.set('statusMessage', null);
@@ -46,7 +46,7 @@ StudyManager.LoginController = Ember.Controller.extend({
                 this.get('controllers.application').set('currentUserId', 1);
 
                 this.transitionToRoute('dashboard');
-            }
+            }*/
         },
 
         toSignUp: function() {

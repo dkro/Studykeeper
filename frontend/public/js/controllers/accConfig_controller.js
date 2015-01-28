@@ -28,7 +28,25 @@ StudyManager.AccConfigController = Ember.Controller.extend({
             }
 
             this.set('passwordValidationMessages', errorTexts);
+
+            if (Ember.empty(this.get('passwordValidationMessages'))) {
+                this.doPasswordChange();
+            }
         }
+    },
+
+    doPasswordChange: function () {
+        var thisUser = this.get('model');
+        thisUser.set('password', this.get('newPassword'));
+
+        var that = this;
+        thisUser.save().then(function(response) {
+            that.set('isEditIcon', true);
+            that.set('statusMessage', { message: 'Passwort erfolgreich geändert!', isSuccess: true });
+        }, function(error) {
+            thisUser.rollback();
+            that.set('statusMessage', { message: 'TODO: Password Change failed!', isSuccess: false });
+        });
     },
 
     reset: function() {
@@ -38,6 +56,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         this.set('oldPassword', null);
         this.set('newPassword', null);
         this.set('newPasswordConfirm', null);
+        this.set('statusMessage', null);
         this.resetValidation();
     },
 
