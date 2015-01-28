@@ -39,8 +39,7 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
                 });
             }, function(error) {
                 thisNews.rollback();
-                var aMessage = 'News \"' + name + '\" konnte nicht geändert werden!';
-                that.set('statusMessage', { message: aMessage, isSuccess: false });
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 
