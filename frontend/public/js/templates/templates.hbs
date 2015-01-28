@@ -1,0 +1,47 @@
+<h2 class="management--all__heading">Alle Templates</h2>
+
+<button class="btn btn-primary management--all__createButton" {{action 'createTemplate'}}>Template erstellen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="management--all__statusMessage"}}
+{{/if}}
+
+<div class="table-responsive management--all__table">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>
+                {{input action="filterTemplates" type="text" value=titleFilter classNames="form-control input-sm" placeholder="Filter Titel"}}
+            </th>
+            <th>
+                {{input action="filterTemplates" type="number" name="quantity" min="0" max="30" value=fieldCountFilter classNames="form-control input-sm" placeholder="Filter Felder"}}
+            </th>
+            <th>
+                {{#if isLoading}}
+                    <span class="glyphicon glyphicon-refresh"></span>
+                {{/if}}
+            </th>
+        </tr>
+        <tr>
+            <th>Titel</th>
+            <th>Anzahl Felder</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#if templatesList}}
+            {{#each template in templatesList}}
+                <tr class="management--all__row" {{action 'showTemplateConfig' news}}>
+                    <td>{{template.title}}</td>
+                    <td>{{template.fields.length}}</td>
+                    <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteTemplate' template}}></span></td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td class="management--all__emptyFilter" colspan="3">- Keine Ergebnisse -</td>
+            </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>
