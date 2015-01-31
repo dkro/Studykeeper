@@ -50,7 +50,7 @@ StudyManager.UsersController = Ember.Controller.extend({
     reset: function() {
         this.set('statusMessage', null);
         this.set('firstNameFilter', null);
-        this.set('lastNameFiler', null);
+        this.set('lastNameFilter', null);
         this.set('userNameFilter', null);
         this.set('mmiFilter', null);
         this.set('roleFilter', null);
@@ -60,7 +60,7 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     firstNameFilter: null,
 
-    lastNameFiler: null,
+    lastNameFilter: null,
 
     userNameFilter: null,
 
@@ -119,7 +119,7 @@ StudyManager.UsersController = Ember.Controller.extend({
     filterLastName: function(lastname) {
         var res = true;
 
-        if (!(Ember.empty(this.get('lastNameFiler')))) {
+        if (!(Ember.empty(this.get('lastNameFilter')))) {
             res = this.firstContainsSecond(lastname, this.get('lastNameFilter'));
         }
 
