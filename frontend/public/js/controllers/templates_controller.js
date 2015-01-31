@@ -37,6 +37,15 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         this.set('statusMessage', null);
         this.set('titleFilter', null);
         this.set('fieldCountFilter', null);
+
+        var counts = [];
+        counts.pushObject(null);
+
+        for (var i = 0; i <= 30; i++) {
+            counts.pushObject(i);
+        }
+
+        this.set('totalFieldsCount', counts);
     },
 
     statusMessage: null,
@@ -44,6 +53,13 @@ StudyManager.TemplatesController = Ember.Controller.extend({
     titleFilter: null,
 
     fieldCountFilter: null,
+
+    fieldCountFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('mmiFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('fieldCountFilter'),
+
+    totalFieldsCount: null,
 
     templatesList: [],
 
@@ -80,7 +96,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('fieldCountFilter')))) {
-            res = this.firstContainsSecond(parseInt(count), this.get('fieldCountFilter'));
+            res = count === parseFloat(this.get('fieldCountFilter'));
         }
 
         return res;
