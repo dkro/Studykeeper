@@ -15,15 +15,15 @@ module.exports.createTemplate = function(req, res){
     .then(function(){
       Template.addTemplate(template, function(err,insertId){
         if (err) {
-          throw err;
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         } else {
           template.id = insertId;
-          res.json({status: 'success', message: 'Template created.', template: template});
+          res.json({status: 'success', message: 'Template erstellt.', template: template});
         }
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -38,14 +38,14 @@ module.exports.editTemplate = function (req, res) {
     .then(function () {
       Template.editTemplate(template, function (err) {
         if (err) {
-          throw err;
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Template edited', template: template});
+          res.json({status: 'success', message: 'Template geändert', template: template});
         }
       });
     })
     .catch(function (err) {
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -54,21 +54,21 @@ module.exports.deleteTemplate = function(req, res){
     .then(function(){
       Template.removeTemplate(req.params.id, function(err){
         if (err) {
-          throw err;
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Template removed.'});
+          res.json({status: 'success', message: 'Template gelöscht.'});
         }
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
 module.exports.allTemplates = function (req, res){
   Template.getAllTemplates(function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', message: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else {
       Async.eachSeries(result, function(item, callback){
         if (item.userstudies === null) {
@@ -79,7 +79,7 @@ module.exports.allTemplates = function (req, res){
         callback();
       }, function(err){
         if(err){
-          res.json({status:'failure',message: err});
+          res.json(500, {status:'failure', message: err});
         } else {
           res.json({templates: parseTemplateSQL(result)});
         }
@@ -91,7 +91,7 @@ module.exports.allTemplates = function (req, res){
 module.exports.getTemplateById = function (req, res){
   Template.getTemplateById(req.params.id, function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', message: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else {
       if (result[0].userstudies === null) {
         result[0].userstudies = [];
