@@ -179,11 +179,41 @@ module.exports.deleteUser = function(userId, callback){
         "password='" + hash + "' " +
         "WHERE id=?",
         userId,
-        callback);
+        function(err,result){
+          connection.release();
+          callback(err,result);
+        }
+      );
     });
   });
+};
 
+module.exports.getOpenStudieIdsForExecutor = function(userId, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT us.id FROM userstudies us " +
+      "LEFT JOIN users u ON u.id=us.executorId " +
+      "WHERE u.id=? AND us.closed=0 AND us.visible=1",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
 
+module.exports.getOpenStudieIdsForTutor = function(userId, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT us.id FROM userstudies us " +
+      "LEFT JOIN users u ON u.id=us.tutorId " +
+      "WHERE u.id=? AND us.closed=0 AND us.visible=1",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
 };
 
 

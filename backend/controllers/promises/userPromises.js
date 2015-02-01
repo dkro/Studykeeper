@@ -263,6 +263,44 @@ module.exports.userHasRole = function(userId, role){
   });
 };
 
+module.exports.executorHasNoOpenStudies = function(userId) {
+  return new Promise(function(resolve,reject){
+    User.getOpenStudieIdsForExecutor(userId, function(err,result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {
+        var str = "";
+        for (var i = 0; i<result.length; i+=1){
+          str = str + " " + result[i].id;
+        }
+        reject("Der Nutzer (Rolle Ausführer) hat noch offene Nutzerstudien. Seine Rolle " +
+        "kann nur zum 'participant' gändert werden wenn diese geschlossen worden sind: " + str);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+module.exports.tutorHasNoOpenStudies = function(userId ){
+  return new Promise(function(resolve,reject){
+    User.getOpenStudieIdsForTutor(userId, function(err,result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {
+        var str = "";
+        for (var i = 0; i<result.length; i+=1){
+          str = str + " " + result[i].id;
+        }
+        reject("Der Nutzer (Rolle Tutor) hat noch offene Nutzerstudien. Seine Rolle " +
+        "kann nur zum 'participant/executor' gändert werden wenn diese geschlossen worden sind: " + str);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
 module.exports.createTokensForUser = function(user){
   return new Promise(function(resolve, reject){
     User.createTokenForUser(user, function(err, result){

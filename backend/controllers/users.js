@@ -261,6 +261,17 @@ module.exports.editUser = function(req, res) {
 
       return UserPromise.userExistsById(req.params.id);
     })
+    .then(function(result){
+      // Executors can not be participants if they have an open study
+      if (user.role === "participant" && result.role === "executor") {
+        return UserPromise.executorHasNoOpenStudies(result.id);
+      // Tutors can not be participants/executors if they have an open study
+      } else if (user.role === "participant" || user.role === "executor"  && result.role === "tutor") {
+        return UserPromise.tutorHasNoOpenStudies(result.id);
+      } else {
+        return result;
+      }
+    })
     .then(function(){
       User.editUser(user,function(err) {
         if (err){
@@ -275,7 +286,7 @@ module.exports.editUser = function(req, res) {
       });
     })
     .catch(function(err){
-      res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+      res.json(500, {status:'failure', message: err});
     });
 };
 
