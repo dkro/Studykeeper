@@ -153,7 +153,7 @@ module.exports.signup = function(req, res) {
       });
     })
    .catch(function(err){
-      res.json(500, {status: 'failure', message: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     });
 
 };

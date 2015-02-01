@@ -6,43 +6,26 @@ var Validator    = require('validator');
 module.exports.validNewsReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (!Validator.isNumeric(req.body.news.id)) {
-      validationErrors.push({message: "News Id invalid, numeric required: " + req.body.news.id});
-    }
-    if (!Validator.isLength(req.body.news.title, 3)) {
-      validationErrors.push({message: "News Title invalid, minimum 3 characters: " + req.body.news.title});
-    }
 
-    if (validationErrors.length > 0) {
-      reject(validationErrors);
+    if (!req.body.news){
+      validationErrors.push("News request hat ein falsches Format.");
     } else {
-      var newsData = {
-        id: Validator.toString(req.body.news.id),
-        title: Validator.toString(req.body.news.title)
-      };
-      resolve(newsData);
-    }
-  });
-};
-
-module.exports.validFullNewsReq = function(req){
-  return new Promise(function(resolve,reject) {
-    var validationErrors = [];
-    if (!Validator.isLength(req.body.news.title, 3)) {
-      validationErrors.push({message: "News Title invalid, minimum 3 characters: " + req.body.news.title});
-    }
-    if (!Validator.isDate(req.body.news.date)) {
-      validationErrors.push({message: "News Date invalid, date required: " + req.body.news.date});
-    }
-    if (!Validator.isLength(req.body.news.description, 3)) {
-      validationErrors.push({message: "News Description invalid, minimum 3 characters: " + req.body.news.description});
-    }
-    if (!Validator.isURL(req.body.news.link)) {
-      validationErrors.push({message: "News link invalid, valid URL required: " + req.body.news.link});
+      if (!Validator.isLength(req.body.news.title, 3)) {
+        validationErrors.push("News Title ungültig. Minimum 3 Charakter: " + req.body.news.title);
+      }
+      if (!Validator.isDate(req.body.news.date)) {
+        validationErrors.push("News Datum ungültig. Datum Format erwartet: " + req.body.news.date);
+      }
+      if (!Validator.isLength(req.body.news.description, 3)) {
+        validationErrors.push("News Beschreibung ungültig, Minimum 3 Charakter: " + req.body.news.description);
+      }
+      if (!Validator.isURL(req.body.news.link)) {
+        validationErrors.push("News link ungültig. URL Format erwartet: " + req.body.news.link);
+      }
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var newsData = {
         title: Validator.toString(req.body.news.title),
@@ -62,13 +45,13 @@ module.exports.newsExists = function(news){
   return new Promise(function(resolve, reject){
     News.getNewsById(news.id, function(err, result){
       if (err) {
-        reject({message: 'Internal error, please try again.'});
+        reject(err);
       }
 
       if (result.length > 0){
         resolve(result[0]);
       } else {
-        reject({message: 'News not found.'});
+        reject('News wurde nicht gefunden.');
       }
     });
   });

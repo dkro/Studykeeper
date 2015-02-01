@@ -32,6 +32,7 @@ module.exports.createLabel = function(req, res){
 module.exports.deleteLabel = function(req, res){
     var label = {id:req.params.id};
     LabelPromise.labelExists(label)
+      // todo dont delete label when its used in a userstudy
     .then(function(){
       Label.deleteLabel(label, function(err){
         if (err) {

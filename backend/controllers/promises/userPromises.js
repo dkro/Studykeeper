@@ -71,22 +71,26 @@ module.exports.validLoginReq = function(req){
 module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Email ungültig: " + req.body.user.username});
-    }
-    if (!Validator.isLength(req.body.user.firstname, 3)) {
-      validationErrors.push({message: "Vorname invalid, Minimum : " + req.body.user.firstname});
-    }
-    if (!Validator.isLength(req.body.user.lastname, 3)) {
-      validationErrors.push({message: "Lastname invalid, minimum 3 characters: " + req.body.user.lastname});
-    }
-    var roleArr = ['participant','executor','tutor'];
-    if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
-      validationErrors.push({message: "Role invalid, " + roleArr  +" required : " + req.body.user.role});
+    if (!req.body.user) {
+      validationErrors.push("User request hat ein falsches Format");
+    } else {
+      if (!Validator.isEmail(req.body.user.username)) {
+        validationErrors.push("Email ungültig: " + req.body.user.username);
+      }
+      if (!Validator.isLength(req.body.user.firstname, 3)) {
+        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      }
+      if (!Validator.isLength(req.body.user.lastname, 3)) {
+        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      }
+      var roleArr = ['participant','executor','tutor'];
+      if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
+        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+      }
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -166,12 +170,12 @@ module.exports.userFromToken = function(req){
               result[0].token = token;
               resolve(result[0]);
             } else {
-              reject({message: 'User not found'});
+              reject("Der Nutzer wurde nicht gefunden");
             }
           });
         }
       } else {
-        reject({message: 'Authorization header is invalid'});
+        reject("Der Authorization header ist ungültig");
       }
     }
   });
@@ -184,7 +188,7 @@ module.exports.userFromName = function(user){
         reject(err);
       } else if (result.length > 0) {resolve(result[0]);
       } else {
-        reject({message: 'User not found'});
+        reject("Der Nutzer wurde nicht gefunden");
       }
     });
   });
@@ -199,10 +203,10 @@ module.exports.userHasRole = function(userId, role){
         if (result[0].role===role) {
           resolve(result[0]);
         } else {
-          reject({message: 'Userrole does not match. Expected: ' + role + " Recieved: " + result[0].role});
+          reject("Die Nutzerrolle stimmt nicht überein. Erwartet: " + role + " Erhalten: " + result[0].role);
         }
       } else {
-        reject({message: 'User not found'});
+        reject("Der Nutzer wurde nicht gefunden");
       }
     });
   });

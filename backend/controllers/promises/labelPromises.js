@@ -10,7 +10,7 @@ module.exports.validLabelReq = function(req){
       validationErrors.push("Label request hat ein falsches Format.");
     } else {
       if (!Validator.isLength(req.body.label.title, 3)) {
-        validationErrors.push("Label Title invalid, minimum 3 characters: " + req.body.label.title);
+        validationErrors.push("Label Titel invalid, minimum 3 characters: " + req.body.label.title);
       }
     }
     if (validationErrors.length > 0) {
