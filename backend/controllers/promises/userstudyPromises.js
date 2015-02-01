@@ -3,100 +3,83 @@ var Userstudy    = require('../../models/userstudies');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
-
-module.exports.validUserstudyReq = function(req){
-  return new Promise(function(resolve,reject) {
-    var validationErrors = [];
-    if (!Validator.isNumeric(req.body.userstudy.id)) {
-      validationErrors.push({message: "Id invalid, has to be numeric: " + req.body.userstudy.id});
-    }
-    if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
-      validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.userstudy.title});
-    }
-    if (validationErrors.length > 0) {
-      reject(validationErrors);
-    } else {
-      var userStudyData = {
-        id: Validator.toString(req.body.userstudy.id),
-        title: Validator.toString(req.body.userstudy.title)
-      };
-      resolve(userStudyData);
-    }
-  });
-};
-
 module.exports.validFullUserstudyReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
-      validationErrors.push({message: "Title invalid, minimum 3 characters: " + req.body.userstudy.title});
-    }
-    if (!Validator.isNumeric(req.body.userstudy.tutor)) {
-      validationErrors.push({message: "Tutor-ID invalid, has be numeric: " + req.body.userstudy.tutor});
-    }
-    if (!Validator.isNumeric(req.body.userstudy.executor)) {
-      validationErrors.push({message: "Executor-ID invalid, has be numeric:: " + req.body.userstudy.executor});
-    }
-    if (!Validator.isDate(req.body.userstudy.fromDate)) {
-      validationErrors.push({message: "FromDate invalid, has to be of form YYYY-MM-DD: " + req.body.userstudy.fromDate});
-    }
-    if (!Validator.isDate(req.body.userstudy.untilDate)) {
-      validationErrors.push({message: "UntilDate invalid, has to be of form YYYY-MM-DD: " + req.body.userstudy.untilDate});
-    }
-    if (!Validator.isLength(req.body.userstudy.description, 3)) {
-      validationErrors.push({message: "Description invalid, minimum 3 characters: " + req.body.userstudy.description});
-    }
-    if (req.body.userstudy.doodleLink  && !Validator.isURL(req.body.userstudy.doodleLink)) {
-      validationErrors.push({message: "DoodleLink invalid, has to be a valid URL: " + req.body.userstudy.doodleLink});
-    }
-    if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
-      validationErrors.push({message: "Paper invalid, has to be a valid URL: " + req.body.userstudy.paper});
-    }
-    if (!Validator.isNumeric(req.body.userstudy.mmi)) {
-      validationErrors.push({message: "MMI Points invalid, numeric required: " + req.body.userstudy.mmi});
-    }
-    if (!Validator.isNumeric(req.body.userstudy.compensation)) {
-      validationErrors.push({message: "Compensation invalid, numeric required: " + req.body.userstudy.compensation});
-    }
-    if (!Validator.isLength(req.body.userstudy.location, 3)) {
-      validationErrors.push({message: "Location invalid, minimum 3 characters: " + req.body.userstudy.location});
-    }
-    if (!Validator.isNumeric(req.body.userstudy.space)) {
-      validationErrors.push({message: "Space invalid, numeric required: " + req.body.userstudy.space});
-    }
-    if (req.body.userstudy.templateId && !Validator.isNumeric(req.body.userstudy.templateId)) {
-      validationErrors.push({message: "TemplateId invalid, numeric required: " + req.body.userstudy.templateId});
-    }
-    if (Array.isArray(req.body.userstudy.requiredStudies)) {
-      for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
-        if (!Validator.isNumeric(req.body.userstudy.requiredStudies)) {
-          validationErrors.push({message: "requiredStudies invalid, numeric required: " + req.body.userstudy.requiredStudies});
-        }
-      }
+    if (!req.body.userstudy) {
+      validationErrors.push("Nutzerstudien request hat ein falsches Format.");
     } else {
-      validationErrors.push({message: "requiredStudies invalid, Array of Ids required: " + req.body.userstudy.isFutureStudyFor});
-    }
-    if (Array.isArray(req.body.userstudy.news)) {
-      for (var j=0; j<req.body.userstudy.news; j+=1){
-        if (!Validator.isNumeric(req.body.userstudy.news)) {
-          validationErrors.push({message: "news invalid, numeric required: " + req.body.userstudy.news});
-        }
+      if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
+        validationErrors.push("Title ungültig. Minimum 3 Charakter: " + req.body.userstudy.title);
       }
-    } else {
-      validationErrors.push({message: "news invalid, Array of Ids required: " + req.body.userstudy.news});
-    }
-    if (Array.isArray(req.body.userstudy.labels)) {
-      for (var k=0; k<req.body.userstudy.labels; k+=1){
-        if (!Validator.isNumeric(req.body.userstudy.labels)) {
-          validationErrors.push({message: "labels invalid, numeric required: " + req.body.userstudy.labels});
-        }
+      if (!Validator.isNumeric(req.body.userstudy.tutor)) {
+        validationErrors.push("Tutor-ID ungültig. Zahl erwartet: " + req.body.userstudy.tutor);
       }
-    } else {
-      validationErrors.push({message: "labels invalid, Array of Ids required: " + req.body.userstudy.labels});
+      if (!Validator.isNumeric(req.body.userstudy.executor)) {
+        validationErrors.push("Executor-ID ungültig. Zahl erwartet:: " + req.body.userstudy.executor);
+      }
+      if (!Validator.isDate(req.body.userstudy.fromDate)) {
+        validationErrors.push("FromDate ungültig. Datum Fromat erwartet YYYY-MM-DD: " + req.body.userstudy.fromDate);
+      }
+      if (!Validator.isDate(req.body.userstudy.untilDate)) {
+        validationErrors.push("UntilDate ungültig. Datum Fromat erwartet  YYYY-MM-DD: " + req.body.userstudy.untilDate);
+      }
+      if (!Validator.isLength(req.body.userstudy.description, 3)) {
+        validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
+      }
+      if (req.body.userstudy.doodleLink  && !Validator.isURL(req.body.userstudy.doodleLink)) {
+        validationErrors.push("DoodleLink ungültig. URL Format erwartet: " + req.body.userstudy.doodleLink);
+      }
+      if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
+        validationErrors.push("Paper ungültig. URL Format erwartet: " + req.body.userstudy.paper);
+      }
+      if (!Validator.isNumeric(req.body.userstudy.mmi)) {
+        validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
+      }
+      if (!Validator.isNumeric(req.body.userstudy.compensation)) {
+        validationErrors.push("Compensation ungültig, numeric required: " + req.body.userstudy.compensation);
+      }
+      if (!Validator.isLength(req.body.userstudy.location, 3)) {
+        validationErrors.push("Location ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
+      }
+      if (!Validator.isNumeric(req.body.userstudy.space)) {
+        validationErrors.push("Space ungültig. Zahl erwartet: " + req.body.userstudy.space);
+      }
+      if (req.body.userstudy.templateId && !Validator.isNumeric(req.body.userstudy.templateId)) {
+        validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.templateId);
+      }
+      if (Array.isArray(req.body.userstudy.requiredStudies)) {
+        for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
+          if (!Validator.isNumeric(req.body.userstudy.requiredStudies)) {
+            validationErrors.push("requiredStudies ungültig. Zahl erwartet: " + req.body.userstudy.requiredStudies);
+          }
+        }
+      } else {
+        validationErrors.push("requiredStudies ungültig, Array von Zahlen erwartet: " + req.body.userstudy.isFutureStudyFor);
+      }
+      if (Array.isArray(req.body.userstudy.news)) {
+        for (var j=0; j<req.body.userstudy.news; j+=1){
+          if (!Validator.isNumeric(req.body.userstudy.news)) {
+            validationErrors.push("News ungültig. Zahl erwartet: " + req.body.userstudy.news);
+          }
+        }
+      } else {
+        validationErrors.push("News ungültig. Array von Zahlen erwartet: " + req.body.userstudy.news);
+      }
+      if (Array.isArray(req.body.userstudy.labels)) {
+        for (var k=0; k<req.body.userstudy.labels; k+=1){
+          if (!Validator.isNumeric(req.body.userstudy.labels)) {
+            validationErrors.push("labels ungültig. Zahl erwartet: " + req.body.userstudy.labels);
+          }
+        }
+      } else {
+        validationErrors.push("labels ungültig. Array von Zahlen erwartet: " + req.body.userstudy.labels);
+      }
+      if (req.body.userstudy.fromDate > req.body.userstudy.untilDate) {
+        validationErrors.push("Das from-Datum muss vor dem until-Datum liegen.");
+      }
     }
-    if (req.body.userstudy.fromDate > req.body.userstudy.untilDate) {
-      validationErrors.push({message: 'The from-date needs to be before the until-date.'});
-    }
+
     if (validationErrors.length > 0) {
       reject(validationErrors);
     } else {
@@ -130,10 +113,7 @@ module.exports.userstudyExists = function(userstudy) {
       if (err) {
         reject(err);
       } else if (result.length === 0) {
-        reject({message: 'userstudy not found', userstudy: {
-          id: userstudy.id,
-          title: userstudy.title
-        }});
+        reject("Der Nutzerstudie wurde nicht gefunden");
       } else {
         resolve(result[0]);
       }
@@ -142,23 +122,24 @@ module.exports.userstudyExists = function(userstudy) {
   });
 };
 
-module.exports.userstudyHasSpace = function(userstudy) {
+module.exports.userstudyHasSpace = function(userstudyId) {
   return new Promise(function(resolve, reject){
-    Userstudy.getUserstudy(userstudy,function(err,result){
+    Userstudy.getUserstudyById(userstudyId,function(err,result){
       if (err) {reject(err);}
-      var space = result[0].space;
-      if (result.length === 0) {reject({message: 'userstudy not found', userstudy: userstudy});}
-
-      Userstudy.getUsersRegisteredToStudy(userstudy, function(err,result){
-        if (err) {reject(err);}
-
-        if (result.length < space) {
-          resolve(result[0]);
-        } else {
-          reject({message: 'userstudy: ' + userstudy.title + ' has not open slots'});
-        }
-      });
-
+      var userstudy = result[0];
+      if (result.length === 0) {
+        reject("Nutzerstudie wurde nicht gefunden.");
+      } else {
+        Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
+          if (err) {
+            reject(err);
+          } else if (result.length < userstudy.space) {
+            resolve(result[0]);
+          } else {
+            reject("Die Nutzerstudie " + userstudy.title + " hat keine offenen Plätze.");
+          }
+        });
+      }
     });
   });
 };
@@ -180,7 +161,7 @@ module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
         if (registered) {
           resolve(userId);
         } else {
-          reject({message: 'user: ' + userId + ' is not registered to userstudy: ' + userstudyId});
+          reject("Der Nutzer " + userId + " ist nicht zur Nutzerstudie " + userstudyId + " registriert");
         }
       }
     });
@@ -202,7 +183,7 @@ module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
         }
 
         if (registered) {
-          reject({message: 'user: ' + userId + ' is registered already to userstudy: ' + userstudyId});
+          reject("Der Nutzer " + userId + " ist schon zur Nutzerstudie " + userstudyId + "registriert");
         } else {
           resolve(userId);
         }
