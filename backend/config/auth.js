@@ -1,5 +1,5 @@
 var passport  = require('passport');
-var userController = require('../controllers/users');
+var UserController = require('../controllers/users');
 
 exports.loginAuthenticate = function(req, res, next) {
   passport.authenticate('local', {session: false},
@@ -35,14 +35,22 @@ exports.tokenAuthenticate = function(req, res, next) {
 exports.requiresRole = function(role) {
   return function (req, res, next) {
     // token auth strategy puts the token into req.token
-    userController.validateRole(role, req.token.roleId, function(err,roleValidated){
-      if (err) {
-        res.send(500, {status: 'failure', message: 'Server Error', internal: err});
-      } else if(!roleValidated) {
-        res.send(403, {status: 'failure', message: 'Keine Rechte.'});
-      } else {
+    if (role[0] === "self"){
+      if (req.token.userId.toString() === req.params.id){
         next();
+      } else {
+        res.send(403, {status: 'failure', message: 'Keine Rechte.'});
       }
-    });
+    } else {
+      UserController.validateRole(role, req.token.roleId, function(err,roleValidated){
+        if (err) {
+          res.send(500, {status: 'failure', message: 'Server Error', internal: err});
+        } else if(!roleValidated) {
+          res.send(403, {status: 'failure', message: 'Keine Rechte.'});
+        } else {
+          next();
+        }
+      });
+    }
   };
 };

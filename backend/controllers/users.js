@@ -330,7 +330,6 @@ module.exports.retrievePW = function(){
 
 module.exports.changePW = function(req, res) {
   var user = {
-    username: req.body.username,
     oldPassword: req.body.oldPassword,
     newPassword: req.body.newPassword,
     newPasswordConfirmation: req.body.newPasswordConfirmation
@@ -347,26 +346,24 @@ module.exports.changePW = function(req, res) {
       message: "Das Passwort ist zu kurz. Es muss mindestens 7 Charakter haben."
     });
   } else {
-      User.getUserByName(user.username, function(err, userResult) {
+      User.getPasswordById(req.params.id, function(err, userResult) {
         if (err) {
           res.send(err);
         } else {
           if (userResult.length < 1) {
-            res.send(500,{status: 'failure', message: 'Email schon vergeben.'});
+            res.send(500,{status: 'failure', message: 'Nutzer wurde nicht gefunden.'});
           } else {
-            crypt.comparePassword(userResult[0].password, user.oldPassword,
+            crypt.comparePassword(userResult[0].password,user.oldPassword,
               function (err, isPasswordMatch) {
                 if (err) {
-                  return res(err);
-                }
-
-                if (!isPasswordMatch) {
+                  return res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+                } else if (!isPasswordMatch) {
                   res.send(500,{
                     status: 'failure',
                     message: 'Falsches Password.'
                   });
                 } else {
-                  User.setPassword(user.newPassword, user.username, function (err) {
+                  User.setPassword(user.newPassword, userResult[0].id, function (err) {
                     if (err) {
                       res.send(err);
                     } else {

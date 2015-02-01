@@ -41,6 +41,20 @@ module.exports.getUserById = function(id, callback) {
   });
 };
 
+module.exports.getPasswordById = function(id, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT u.id, u.username, u.password " +
+      "FROM users u " +
+      "WHERE u.id=? AND u.visible=1;",
+      id,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
 // used by passport. password has to be included
 module.exports.getUserByName = function(username, callback) {
   mysql.getConnection(function(connection) {
@@ -89,25 +103,26 @@ module.exports.saveUser = function(data, callback) {
   crypt.cryptPassword(queryData.password, function(err,hash){
     if (err) {
       callback(err);
+    } else {
+      mysql.getConnection(function(connection) {
+        connection.query( "INSERT INTO users " +
+          "(username,password,role,firstname,lastname,lmuStaff,mmi,collectsMMI) " +
+          "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?,?);",
+          [queryData.username,
+            hash,
+            queryData.role,
+            queryData.firstname,
+            queryData.lastname,
+            queryData.lmuStaff,
+            queryData.mmi,
+            queryData.collectsMMI],
+          function(err,result){
+            connection.release();
+            callback(err,result);
+          }
+        );
+      });
     }
-    mysql.getConnection(function(connection) {
-      connection.query( "INSERT INTO users " +
-        "(username,password,role,firstname,lastname,lmuStaff,mmi,collectsMMI) " +
-        "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?,?);",
-        [queryData.username,
-          hash,
-          queryData.role,
-          queryData.firstname,
-          queryData.lastname,
-          queryData.lmuStaff,
-          queryData.mmi,
-          queryData.collectsMMI],
-        function(err,result){
-          connection.release();
-          callback(err,result);
-        }
-      );
-    });
   });
 };
 
@@ -340,24 +355,24 @@ module.exports.setLMUStaff = function(username, isLMUstaff, callback) {
   });
 };
 
-module.exports.setPassword = function(password, username, callback) {
+module.exports.setPassword = function(password, userId, callback) {
   crypt.cryptPassword(password, function(err,hash){
     if (err) {
       callback(err);
+    } else {
+      password = hash;
+      mysql.getConnection(function(connection) {
+        connection.query( "UPDATE users " +
+          "SET password=? " +
+          "WHERE id=?;",
+          [password,userId],
+          function(err,result){
+            connection.release();
+            callback(err,result);
+          }
+        );
+      });
     }
-
-    password = hash;
-    mysql.getConnection(function(connection) {
-      connection.query( "UPDATE users " +
-        "SET password=? " +
-        "WHERE username=?;",
-        [password,username],
-        function(err,result){
-          connection.release();
-          callback(err,result);
-        }
-      );
-    });
   });
 };
 
