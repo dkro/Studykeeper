@@ -29,6 +29,10 @@ StudyManager.NewsController = Ember.Controller.extend({
 
         filterNews: function() {
             this.filterAll(true);
+        },
+
+        clearDatePicker: function() {
+            this.set('selectedDateFilter', null);
         }
     },
 
