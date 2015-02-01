@@ -147,6 +147,8 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 
     controller.set('model', model);
     controller.set('searchTags', transformedTags);
+    controller.set('studiesList', model);
+    controller.reset();
   }
 });
 

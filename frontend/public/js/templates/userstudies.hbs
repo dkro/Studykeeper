@@ -1,19 +1,18 @@
-<h2>Anzeige aller Studien</h2>
+<h2 class="management--all__heading">Anzeige aller Studien</h2>
 
 
+<button class="btn btn-primary management--all__createButton" {{action 'createStudy'}}>Studie erstellen</button>
 
-<button type="button" class="btn btn-info studies__filterButton" {{action 'enableDisableFilter'}}>
-    <span class="glyphicon glyphicon-filter studies__filterIcon" aria-hidden="true"></span> {{filterButtonText}}
-</button>
-
-{{#if isFilterVisible}}
-    {{study-searchform allOptions=searchTags classNames="studies__tagFilter"}}
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="management--all__statusMessage"}}
 {{/if}}
+
+
+{{study-searchform allOptions=searchTags classNames="studies__tagFilter"}}
 
 <div class="table-responsive studies__tableWrapper">
     <table class="table table-hover">
         <thead>
-        {{#if isFilterVisible}}
             <tr>
                 <th class="studies__column--status studies__filter--state">
                     {{custom-select values=stateFilterOptions currentSelected=selectedStateFilter}}
@@ -39,8 +38,9 @@
                 <th class="studies__filter--amazon studies__column--amazon">
                     {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
                 </th>
+                <th>
+                </th>
             </tr>
-        {{/if}}
             <tr>
                 <th class="studies__column--status">Status</th>
                 <th>Von</th>
@@ -50,6 +50,7 @@
                 <th class="studies__column--executor">Durchführung</th>
                 <th class="studies__column--mmi">MMI</th>
                 <th class="studies__column--amazon">Amazon</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -67,6 +68,7 @@
                     <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
                     <td class="studies__column--mmi">{{study.mmi}}</td>
                     <td class="studies__column--amazon">{{study.compensation}}€</td>
+                    <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
                 </tr>
             {{/each}}
         </tbody>

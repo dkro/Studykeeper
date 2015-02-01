@@ -1,14 +1,41 @@
 StudyManager.UserstudiesController = Ember.Controller.extend({
     actions: {
-        enableDisableFilter: function() {
-            var enabled = this.get('isFilterVisible');
-            this.set('isFilterVisible', !enabled);
-        },
-
         showStudy: function(study) {
             this.transitionToRoute('userstudy', study);
+        },
+
+        deleteStudy: function(study) {
+            this.set('statusMessage', null);
+            var name = study.get('title');
+            var that = this;
+
+            if (confirm('Wollen Sie die Studie \"' + name + '\" wirklich löschen?')) {
+                study.deleteRecord();
+                study.save().then(function(response) {
+                    var successMessage = 'Studie \"' + name + '\" wurde erfolgreich gelöscht!';
+                    that.set('statusMessage', { message: successMessage, isSuccess: true });
+                }, function(error) {
+                    study.rollback();
+                    var failMessage = 'Studie \"' + name + '\" konnte nicht gelöscht werden!';
+                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                });
+            }
         }
     },
+
+    reset: function() {
+        this.set('statusMessage', null);
+        this.set('selectedStateFilter', null);
+        this.set('selectedFromFilter', null);
+        this.set('selectedToFiler', null);
+        this.set('selectedNameFilter', null);
+        this.set('selectedLocationFilter', null);
+        this.set('selectedPersonFilter', null);
+        this.set('selectedMMIFilter', null);
+        this.set('selectedAmazonFilter', null);
+    },
+
+    statusMessage: null,
 
     searchTags: null,
 
@@ -18,7 +45,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     amazonFilterOptions: ['', '5€', '10€', '15€', '20€', '25€'],
 
-    selectedStateFilter: '',
+    selectedStateFilter: null,
 
     selectedFromFilter: null,
 
@@ -32,17 +59,5 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     selectedMMIFilter: '',
 
-    selectedAmazonFilter: '',
-
-    isFilterVisible: false,
-
-    filterButtonText: 'Filter einblenden',
-
-    adaptFilterButtonText: function() {
-        if (this.get('isFilterVisible')) {
-            this.set('filterButtonText', 'Filter ausblenden');
-        } else {
-            this.set('filterButtonText', 'Filter einblenden');
-        }
-    }.observes('isFilterVisible')
+    selectedAmazonFilter: ''
 });
