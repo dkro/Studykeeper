@@ -43,3 +43,21 @@
     margin-left: 0.5em;
     margin-bottom: 0.5em;
 }
+
+.component__config--template__field__value {
+    display: inline-block;
+    width: 90%;
+}
+
+.component__config--template__field__deleteButton {
+    display: inline-block;
+    vertical-align: top;
+    color: red;
+    cursor: pointer;
+}
+
+.component__config--template__field__deleteButton:hover {
+    transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+}

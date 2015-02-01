@@ -31,7 +31,7 @@
         <tbody>
         {{#if templatesList}}
             {{#each template in templatesList}}
-                <tr class="management--all__row" {{action 'showTemplateConfig' news}}>
+                <tr class="management--all__row" {{action 'showTemplateConfig' template}}>
                     <td>{{template.title}}</td>
                     <td>{{template.fields.length}}</td>
                     <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteTemplate' template}}></span></td>

@@ -1,0 +1,9 @@
+<h2 class="management--single__heading">Template bearbeiten</h2>
+
+<button class="btn btn-danger management--single__deleteButton" {{action 'deleteTemplate'}}>Template löschen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+{{template-config isTemplateCreation=false title=title fields=fields save="updateTemplate" cancel="cancelView"}}

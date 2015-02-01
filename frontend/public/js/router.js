@@ -16,6 +16,8 @@ StudyManager.Router.map(function() {
   this.resource('single-news', { path: '/news/:news_id' });
   this.route('news-creation', { path: '/createNews' });
   this.resource('templates');
+  this.resource('template', { path: '/templates/:template_id' });
+  this.route('template-creation', { path: '/createTemplate' });
 });
 
 StudyManager.ApplicationRoute = Ember.Route.extend({
@@ -216,6 +218,21 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('templatesList', model);
     controller.reset();
   }
+});
+
+StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
+  model: function(params) {
+    return this.store.fetch('news', params.template_id);
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.set('title', model.get('title'));
+    controller.set('fields', model.get('fields'));
+  }
+});
+
+StudyManager.TemplateCreationRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({

@@ -1,0 +1,7 @@
+<h2 class="management--single__heading--create">Template erstellen</h2>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+{{template-config isTemplateCreation=true title="" fields=[] save="createTemplate" cancel="cancelView"}}
