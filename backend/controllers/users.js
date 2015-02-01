@@ -153,7 +153,7 @@ module.exports.signup = function(req, res) {
       });
     })
    .catch(function(err){
-      res.json(500, {status: 'failure', message: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     });
 
 };
@@ -222,7 +222,7 @@ module.exports.logout = function(req, res) {
         }
       })
     .catch(function(err){
-          res.json({status: 'failure', message: 'Server Fehler.', internal: err});
+      res.json({status: 'failure', message: err});
     });
   });
 };
@@ -230,37 +230,65 @@ module.exports.logout = function(req, res) {
 module.exports.createUser = function(req, res) {
   var user;
 
-  UserPromise.validCreateUserReq(req).then(function(result){
+  UserPromise.validCreateUserReq(req)
+  .then(function(result){
     user = result;
 
     return UserPromise.usernameAvailable(user.username);
   })
-  .then(function(result){
+  .then(function(){
     user.password = uuid.v1();
 
-    User.saveUser(user,function(err,result) {
+    User.saveUser(user,function(err) {
       if (err){
-        res.send(err);
+        res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
       } else {
-        res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt.',
-          user:{
-            id: result.insertId,
-            username: user.username,
-            role: user.role
-          }
-        });
+        res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt.'});
       }
     });
   })
   .catch(function(err){
-    res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+    res.json(500, {status:'failure', message: err});
   });
 };
 
 module.exports.editUser = function(req, res) {
+  var user;
 
+  UserPromise.validEditUserReq(req)
+    .then(function(result){
+      user = result;
 
-}
+      return UserPromise.userExistsById(req.params.id);
+    })
+    .then(function(result){
+      // Executors can not be participants if they have an open study
+      if (user.role === "participant" && result.role === "executor") {
+        return UserPromise.executorHasNoOpenStudies(result.id);
+      // Tutors can not be participants/executors if they have an open study
+      } else if (user.role === "participant" || user.role === "executor"  && result.role === "tutor") {
+        return UserPromise.tutorHasNoOpenStudies(result.id);
+      } else {
+        return result;
+      }
+    })
+    .then(function(){
+      User.editUser(user,function(err) {
+        if (err){
+          if (err.code === "ER_DUP_ENTRY"){
+            res.send(500, {status:'failure', message: 'Email-adresse schon vergeben.'});
+          } else {
+            res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
+          }
+        } else {
+          res.json({message: 'Der Nutzer wurde erfolgreich editiert.'});
+        }
+      });
+    })
+    .catch(function(err){
+      res.json(500, {status:'failure', message: err});
+    });
+};
 
 module.exports.deleteUser = function(req, res) {
   var userId = req.params.id;

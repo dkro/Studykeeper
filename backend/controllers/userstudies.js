@@ -18,14 +18,14 @@ module.exports.createUserstudy = function(req, res) {
     results[0].creatorId = results[1].id;
     UserStudy.addUserStudy(results[0], function (err,insertId) {
       if (err) {
-        res.json(500, {status: 'failure', errors: err});
+        res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       } else {
         results[0].id = insertId;
         res.json({status: 'success', message: 'Userstudy created.', userstudy: results[0]});
       }
     });
   }).catch(function(err){
-    res.json(500, {status: 'failure', errors: err});
+    res.json(500, {status: 'failure', message: err});
   });
 };
 
@@ -48,7 +48,7 @@ module.exports.editUserstudy = function(req, res) {
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -66,7 +66,7 @@ module.exports.deleteUserstudy = function(req, res) {
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -83,44 +83,17 @@ module.exports.publishUserstudy = function(req, res) {
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 
-};
-
-module.exports.getUserstudy = function(req, res) {
-  var userstudy;
-
-  UserstudyPromise.validUserstudyReq(req)
-    .then(function(result){
-      userstudy = result;
-      return UserstudyPromise.userstudyExists(userstudy);
-    })
-    .then(function(){
-      return UserstudyPromise.labelsForUserstudy(userstudy);
-    })
-    .then(function(labels){
-      UserStudy.getUserstudy(userstudy, function(err, result){
-        if (err) {
-          throw err;
-        } else {
-          var study = result[0];
-          study.labels = labels;
-          res.json({userstudy: study});
-        }
-      });
-    })
-    .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
-    });
 };
 
 module.exports.getUserstudyById = function(req, res) {
   UserStudy.getUserstudyById(req.params.id, function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', errors: [{message: 'Userstudy not found'}]});
+      res.json({status: 'failure', message: 'Userstudy not found'});
     } else {
 
       var userstudy = result[0];
@@ -154,9 +127,9 @@ module.exports.getUserstudyById = function(req, res) {
 module.exports.getPublicUserstudyById = function(req, res) {
   UserStudy.getPublicUserstudyById(req.params.id, function(err,result){
     if (err) {
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', errors: [{message: 'Userstudy not found'}]});
+      res.json({status: 'failure', message: 'Userstudy not found'});
     } else {
 
       var userstudy = result[0];
@@ -170,7 +143,7 @@ module.exports.getPublicUserstudyById = function(req, res) {
 module.exports.allUserstudies = function(req, res) {
   UserStudy.getAllUserstudies(function(err, list){
     if (err) {
-      res.json(err);
+      res.json({status:'failure', message: 'Server Fehler.', internal: err});
       } else {
           Async.eachSeries(list, function(item, callback){
             if (item.requiredStudies === null) {
@@ -198,7 +171,7 @@ module.exports.allUserstudies = function(req, res) {
             callback();
           }, function(err){
             if(err){
-              res.json({status:'failure',message: err});
+              res.json({status:'failure', message: 'Server Fehler.', internal: err});
             } else {
               res.json({userstudies:list});
             }
@@ -241,7 +214,7 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
             callback();
           }, function(err){
             if(err){
-              res.json({status:'failure',message: err});
+              res.json({status:'failure', message: 'Server Fehler.', internal: err});
             } else {
               res.json({userstudies:list});
             }
@@ -250,7 +223,7 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
       });
     })
     .catch(function (err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -268,7 +241,7 @@ module.exports.allUserstudiesCreatedByUser = function(req, res) {
       });
     })
     .catch(function (err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -294,7 +267,7 @@ module.exports.registerUserToStudy = function(req, res){
     });
   })
   .catch(function (err){
-    res.json(500, {status: 'failure', errors: err});
+    res.json(500, {status: 'failure', message: err});
   });
 };
 
@@ -319,7 +292,7 @@ module.exports.removeUserFromStudy = function(req, res){
     });
   })
   .catch(function (err){
-    res.json(500, {status: 'failure', errors: err});
+    res.json(500, {status: 'failure', message: err});
   });
 };
 
@@ -350,7 +323,7 @@ module.exports.confirmUserParticipation = function(req, res){
       });
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', errors: err});
+      res.json(500, {status: 'failure', message: err});
     });
 };
 
@@ -366,7 +339,7 @@ module.exports.closeUserstudy = function(req, res){
           res.json({status: 'success', message: 'Userstudy closed.', userstudy: req.params.id});
         }
       }).catch(function(err){
-        res.json(500, {status: 'failure', errors: err});
+        res.json(500, {status: 'failure', message: err});
       });
     });
 };

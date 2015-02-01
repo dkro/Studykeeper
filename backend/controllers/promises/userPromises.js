@@ -71,22 +71,29 @@ module.exports.validLoginReq = function(req){
 module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
-    if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Email ungültig: " + req.body.user.username});
-    }
-    if (!Validator.isLength(req.body.user.firstname, 3)) {
-      validationErrors.push({message: "Vorname invalid, Minimum : " + req.body.user.firstname});
-    }
-    if (!Validator.isLength(req.body.user.lastname, 3)) {
-      validationErrors.push({message: "Lastname invalid, minimum 3 characters: " + req.body.user.lastname});
-    }
-    var roleArr = ['participant','executor','tutor'];
-    if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
-      validationErrors.push({message: "Role invalid, " + roleArr  +" required : " + req.body.user.role});
+    if (!req.body.user) {
+      validationErrors.push("User request hat ein falsches Format");
+    } else {
+      if (!Validator.isEmail(req.body.user.username)) {
+        validationErrors.push("Email ungültig: " + req.body.user.username);
+      }
+      if (!Validator.isLength(req.body.user.firstname, 3)) {
+        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      }
+      if (!Validator.isLength(req.body.user.lastname, 3)) {
+        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      }
+      if (!Validator.isNumeric(req.body.user.mmi)) {
+        validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
+      }
+      var roleArr = ['participant','executor','tutor'];
+      if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
+        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+      }
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -94,9 +101,57 @@ module.exports.validCreateUserReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        mmi: req.body.user.mmi ? 1 : 0,
+        mmi: Validator.toString(req.body.user.mmi),
+        collectsMMI: req.body.user.collectsMMI ? 1 : 0,
         role    : Validator.toString(req.body.user.role),
         lmuStaff: 0
+      };
+      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+        userData.lmuStaff = 1;
+      } else {
+        userData.lmuStaff = 0;
+      }
+      resolve(userData);
+    }
+  });
+};
+
+module.exports.validEditUserReq = function(req){
+  return new Promise(function(resolve,reject) {
+    var validationErrors = [];
+    if (!req.body.user) {
+      validationErrors.push("User request hat ein falsches Format");
+    } else {
+      if (!Validator.isEmail(req.body.user.username)) {
+        validationErrors.push("Email ungültig: " + req.body.user.username);
+      }
+      if (!Validator.isLength(req.body.user.firstname, 3)) {
+        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      }
+      if (!Validator.isLength(req.body.user.lastname, 3)) {
+        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      }
+      if (!Validator.isNumeric(req.body.user.mmi)) {
+        validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
+      }
+      var roleArr = ['participant','executor','tutor'];
+      if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
+        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      reject(validationErrors.join());
+    } else {
+      var userData = {
+        username: Validator.toString(req.body.user.username),
+        firstname: Validator.toString(req.body.user.firstname),
+        lastname: Validator.toString(req.body.user.lastname),
+        mmi: Validator.toString(req.body.user.mmi),
+        collectsMMI: req.body.user.collectsMMI ? 1 : 0,
+        role    : Validator.toString(req.body.user.role),
+        lmuStaff: 0,
+        id: req.params.id
       };
       if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
         userData.lmuStaff = 1;
@@ -166,12 +221,12 @@ module.exports.userFromToken = function(req){
               result[0].token = token;
               resolve(result[0]);
             } else {
-              reject({message: 'User not found'});
+              reject("Der Nutzer wurde nicht gefunden");
             }
           });
         }
       } else {
-        reject({message: 'Authorization header is invalid'});
+        reject("Der Authorization header ist ungültig");
       }
     }
   });
@@ -184,7 +239,7 @@ module.exports.userFromName = function(user){
         reject(err);
       } else if (result.length > 0) {resolve(result[0]);
       } else {
-        reject({message: 'User not found'});
+        reject("Der Nutzer wurde nicht gefunden");
       }
     });
   });
@@ -199,10 +254,48 @@ module.exports.userHasRole = function(userId, role){
         if (result[0].role===role) {
           resolve(result[0]);
         } else {
-          reject({message: 'Userrole does not match. Expected: ' + role + " Recieved: " + result[0].role});
+          reject("Die Nutzerrolle stimmt nicht überein. Erwartet: " + role + " Erhalten: " + result[0].role);
         }
       } else {
-        reject({message: 'User not found'});
+        reject("Der Nutzer wurde nicht gefunden");
+      }
+    });
+  });
+};
+
+module.exports.executorHasNoOpenStudies = function(userId) {
+  return new Promise(function(resolve,reject){
+    User.getOpenStudieIdsForExecutor(userId, function(err,result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {
+        var str = "";
+        for (var i = 0; i<result.length; i+=1){
+          str = str + " " + result[i].id;
+        }
+        reject("Der Nutzer (Rolle Ausführer) hat noch offene Nutzerstudien. Seine Rolle " +
+        "kann nur zum 'participant' gändert werden wenn diese geschlossen worden sind: " + str);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+module.exports.tutorHasNoOpenStudies = function(userId ){
+  return new Promise(function(resolve,reject){
+    User.getOpenStudieIdsForTutor(userId, function(err,result){
+      if (err) {
+        reject(err);
+      } else if (result.length > 0) {
+        var str = "";
+        for (var i = 0; i<result.length; i+=1){
+          str = str + " " + result[i].id;
+        }
+        reject("Der Nutzer (Rolle Tutor) hat noch offene Nutzerstudien. Seine Rolle " +
+        "kann nur zum 'participant/executor' gändert werden wenn diese geschlossen worden sind: " + str);
+      } else {
+        resolve();
       }
     });
   });

@@ -1,9 +1,10 @@
 {
   "user": {
-    "username": "username222@studykeeper.com",
-    "firstname": "firstname",
-    "lastname": "lastname",
-    "mmi": true,
-    "role": "tutor"
+    "username": "user1@studykeeper.com",
+    "firstname": "firstnamea",
+    "lastname": "lastnameb",
+    "mmi": 10,
+    "role": "participant",
+    "collectsMMI": false
   }
 }
