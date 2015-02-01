@@ -44,20 +44,47 @@
     margin-bottom: 0.5em;
 }
 
-.component__config--template__field__value {
-    display: inline-block;
-    width: 90%;
+.component__config--template__title__wrapper {
+    margin-bottom: 3em;
 }
 
-.component__config--template__field__deleteButton {
-    display: inline-block;
-    vertical-align: top;
-    color: red;
+.component__config--template__field__nameWrapper {
+    margin-bottom: 0.1em;
+}
+
+.component__config--template__field__valueWrapper {
+    margin-bottom: 2em;
+}
+
+.component__config--template__field__nameInputGroup{
+    margin-left: 2em;
+    max-width: 95%;
+    display: inline-table;
+}
+
+.component__config--template__field__valueInputGroup {
+    margin-left: 2em;
+    max-width: 95%;
+}
+
+.component__config--template__field__remove {
     cursor: pointer;
+    font-weight: bold;
+    color: red;
+    float: right;
+    font-size: 1.3em;
 }
 
-.component__config--template__field__deleteButton:hover {
+.component__config--template__field__remove:hover {
     transform: scale(1.5);
     -moz-transform: scale(1.5);
     -webkit-transform: scale(1.5);
+}
+
+.component__config--template__addField__wrapper {
+    margin-top: 3em;
+}
+
+.component__config--template__addField__button {
+    float: right;
 }

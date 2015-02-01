@@ -18,9 +18,7 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         addField: function() {
-            var field = StudyManager.Field.create({
-                name: 'FeldNeu'
-            });
+            var field = StudyManager.Field.create();
 
             this.get('fields').pushObject(field);
         },
@@ -50,5 +48,11 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
 
     title: null,
 
-    fields: null
+    fields: [],
+
+    fieldsChanged: function() {
+        this.set('hasFields', !Ember.empty(this.get('fields')));
+    }.observes('fields'),
+
+    hasFields: false
 });
