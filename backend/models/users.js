@@ -83,22 +83,25 @@ module.exports.saveUser = function(data, callback) {
                    password: data.password,
                    role: data.role,
                    lmuStaff: data.lmuStaff,
-                   mmi: data.mmi};
+                   mmi: data.mmi,
+                   collectsMMI: data.collectsMMI};
 
   crypt.cryptPassword(queryData.password, function(err,hash){
     if (err) {
       callback(err);
     }
     mysql.getConnection(function(connection) {
-      connection.query( "INSERT INTO users (username,password,role,firstname,lastname,lmuStaff,mmi) " +
-        "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?);",
+      connection.query( "INSERT INTO users " +
+        "(username,password,role,firstname,lastname,lmuStaff,mmi,collectsMMI) " +
+        "VALUES (?,?,(SELECT id FROM roles WHERE name=?),?,?,?,?,?);",
         [queryData.username,
           hash,
           queryData.role,
           queryData.firstname,
           queryData.lastname,
           queryData.lmuStaff,
-          queryData.mmi],
+          queryData.mmi,
+          queryData.collectsMMI],
         function(err,result){
           connection.release();
           callback(err,result);
@@ -108,16 +111,32 @@ module.exports.saveUser = function(data, callback) {
   });
 };
 
-module.exports.setRole = function(data, callback) {
-  mysql.getConnection(function(connection) {
-    connection.query("UPDATE users " +
-      "SET role=(SELECT name FROM roles WHERE name=?) " +
-      "WHERE username=?;",
-      [data.role, data.username],
-      function(err,result){
-        connection.release();
-        callback(err,result);
-      }
+module.exports.editUser = function(data,callback){
+  var queryData = {username: data.username, firstname: data.firstname, lastname: data.lastname,
+    role: data.role, lmuStaff: data.lmuStaff, mmi: data.mmi, collectsMMI:data.collectsMMI, id:data.id};
+
+    mysql.getConnection(function(connection) {
+      connection.query( "UPDATE users SET " +
+        "username=?, " +
+        "role=(SELECT id FROM roles WHERE name=?), " +
+        "firstname=?, " +
+        "lastname=?, " +
+        "lmuStaff=?, " +
+        "mmi=?, " +
+        "collectsMMI=? " +
+        "WHERE id=?",
+        [queryData.username,
+          queryData.role,
+          queryData.firstname,
+          queryData.lastname,
+          queryData.lmuStaff,
+          queryData.mmi,
+          queryData.collectsMMI,
+          queryData.id],
+        function(err,result){
+          connection.release();
+          callback(err,result);
+        }
     );
   });
 };

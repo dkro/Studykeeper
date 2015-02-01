@@ -83,6 +83,9 @@ module.exports.validCreateUserReq = function(req){
       if (!Validator.isLength(req.body.user.lastname, 3)) {
         validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
       }
+      if (!Validator.isNumeric(req.body.user.mmi)) {
+        validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
+      }
       var roleArr = ['participant','executor','tutor'];
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
         validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
@@ -98,9 +101,57 @@ module.exports.validCreateUserReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        mmi: req.body.user.mmi ? 1 : 0,
+        mmi: Validator.toString(req.body.user.mmi),
+        collectsMMI: req.body.user.collectsMMI ? 1 : 0,
         role    : Validator.toString(req.body.user.role),
         lmuStaff: 0
+      };
+      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+        userData.lmuStaff = 1;
+      } else {
+        userData.lmuStaff = 0;
+      }
+      resolve(userData);
+    }
+  });
+};
+
+module.exports.validEditUserReq = function(req){
+  return new Promise(function(resolve,reject) {
+    var validationErrors = [];
+    if (!req.body.user) {
+      validationErrors.push("User request hat ein falsches Format");
+    } else {
+      if (!Validator.isEmail(req.body.user.username)) {
+        validationErrors.push("Email ungültig: " + req.body.user.username);
+      }
+      if (!Validator.isLength(req.body.user.firstname, 3)) {
+        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      }
+      if (!Validator.isLength(req.body.user.lastname, 3)) {
+        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      }
+      if (!Validator.isNumeric(req.body.user.mmi)) {
+        validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
+      }
+      var roleArr = ['participant','executor','tutor'];
+      if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
+        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      reject(validationErrors.join());
+    } else {
+      var userData = {
+        username: Validator.toString(req.body.user.username),
+        firstname: Validator.toString(req.body.user.firstname),
+        lastname: Validator.toString(req.body.user.lastname),
+        mmi: Validator.toString(req.body.user.mmi),
+        collectsMMI: req.body.user.collectsMMI ? 1 : 0,
+        role    : Validator.toString(req.body.user.role),
+        lmuStaff: 0,
+        id: req.params.id
       };
       if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
         userData.lmuStaff = 1;
