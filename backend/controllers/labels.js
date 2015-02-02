@@ -32,15 +32,21 @@ module.exports.createLabel = function(req, res){
 module.exports.deleteLabel = function(req, res){
     var label = {id:req.params.id};
     LabelPromise.labelExists(label)
-      // todo dont delete label when its used in a userstudy
-    .then(function(){
-      Label.deleteLabel(label, function(err){
-        if (err) {
-          throw err;
-        } else {
-          res.json({status: 'success', message: 'Label gelöscht.'});
-        }
-      });
+    .then(function(label){
+          if (label.userstudies === null) {
+            Label.deleteLabel(label.id, function(err){
+              if (err) {
+                throw err;
+              } else {
+                res.json({status: 'success', message: 'Label gelöscht.'});
+              }
+            });
+          } else {
+            label.userstudies = label.userstudies.split(",").map(function(x){return parseInt(x);});
+            res.json(500, {status: 'failure',
+              message: 'Das Label konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Label hat.',
+              userstudies: label.userstudies});
+          }
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});

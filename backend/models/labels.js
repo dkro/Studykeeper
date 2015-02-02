@@ -13,11 +13,11 @@ module.exports.addLabel = function (label, callback) {
   });
 };
 
-module.exports.deleteLabel = function (label, callback) {
+module.exports.deleteLabel = function (labelId, callback) {
   mysql.getConnection(function(connection) {
     connection.query('DELETE FROM labels ' +
                       'WHERE id=?',
-      [label.id,label.title],
+      labelId,
       function(err,result){
         connection.release();
         callback(err,result);
