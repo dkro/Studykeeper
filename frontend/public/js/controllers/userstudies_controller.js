@@ -1,7 +1,11 @@
 StudyManager.UserstudiesController = Ember.Controller.extend({
     actions: {
-        showStudy: function(study) {
+        showStudyConfig: function(study) {
             this.transitionToRoute('userstudy', study);
+        },
+
+        createStudy: function() {
+            this.transitionToRoute('study-creation');
         },
 
         deleteStudy: function(study) {
@@ -20,44 +24,124 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
                     that.set('statusMessage', { message: failMessage, isSuccess: false });
                 });
             }
+        },
+
+        filterStudies: function() {
+            this.filterAll(true);
         }
     },
 
     reset: function() {
         this.set('statusMessage', null);
-        this.set('selectedStateFilter', null);
         this.set('selectedFromFilter', null);
         this.set('selectedToFiler', null);
-        this.set('selectedNameFilter', null);
+        this.set('selectedTitleFilter', null);
         this.set('selectedLocationFilter', null);
-        this.set('selectedPersonFilter', null);
+        this.set('selectedExecutorFilter', null);
         this.set('selectedMMIFilter', null);
         this.set('selectedAmazonFilter', null);
+    },
+
+    filterAll: function(shouldClearStatus) {
+        var that = this;
+
+        var filteredList = this.store.filter('userstudy', (function(study){
+            return that.filterStudyTitle(study.get('title')) &&
+                that.filterExecutor(study.get('executor')) &&
+                that.filterAmazon(study.get('compensation')) &&
+                that.filterMMI(study.get('mmi')) &&
+                that.filterLocation(study.get('location'));
+        }));
+
+        this.set('studiesList', filteredList);
+
+        if (shouldClearStatus) {
+            this.set('statusMessage', null);
+        }
+    },
+
+    filterStudyTitle: function(title) {
+        var res = true;
+
+        if (!(Ember.empty(this.get('selectedTitleFilter')))) {
+            res = this.firstContainsSecond(title, this.get('selectedTitleFilter'));
+        }
+
+        return res;
+    },
+
+    filterLocation: function(location) {
+        var res = true;
+
+        if (!(Ember.empty(this.get('selectedLocationFilter')))) {
+            res = this.firstContainsSecond(location, this.get('selectedLocationFilter'));
+        }
+
+        return res;
+    },
+
+    filterExecutor: function(executor) {
+        var res = true;
+        var firstName = executor.get('firstname');
+        var lastName = executor.get('lastname');
+
+        if (!(Ember.empty(this.get('selectedExecutorFilter')))) {
+            res = this.firstContainsSecond(firstName, this.get('selectedExecutorFilter')) ||
+                    this.firstContainsSecond(lastName, this.get('selectedExecutorFilter')) ;
+        }
+
+        return res;
+    },
+
+    filterAmazon: function(points) {
+        var res = true;
+
+        if (!(Ember.empty(this.get('selectedAmazonFilter')))) {
+            res = this.firstContainsSecond(parseInt(points), this.get('selectedAmazonFilter'));
+        }
+
+        return res;
+    },
+
+    firstContainsSecond: function(first, second) {
+        return first.indexOf(second) > -1;
+    },
+
+    showMessage: function(statusMessage) {
+        this.set('statusMessage', statusMessage);
     },
 
     statusMessage: null,
 
     searchTags: null,
 
-    stateFilterOptions: ['', 'Zukünftig', 'Abgelaufen'],
+    studiesList: [],
 
     mmiFilterOptions: ['', '1', '2', '3', '4', '5'],
 
-    amazonFilterOptions: ['', '5€', '10€', '15€', '20€', '25€'],
-
-    selectedStateFilter: null,
+    amazonFilterOptions: ['', '5', '10', '15', '20', '25'],
 
     selectedFromFilter: null,
 
     selectedToFiler: null,
 
-    selectedNameFilter: null,
+    selectedTitleFilter: null,
 
     selectedLocationFilter: null,
 
-    selectedPersonFilter: null,
+    selectedExecutorFilter: null,
 
-    selectedMMIFilter: '',
+    selectedMMIFilter: null,
 
-    selectedAmazonFilter: ''
+    selectedMMIFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedMMIFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedMMIFilter'),
+
+    selectedAmazonFilter: null,
+
+    selectedAmazonFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedAmazonFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedAmazonFilter')
 });
