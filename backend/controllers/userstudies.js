@@ -21,7 +21,7 @@ module.exports.createUserstudy = function(req, res) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       } else {
         results[0].id = insertId;
-        res.json({status: 'success', message: 'Userstudy created.', userstudy: results[0]});
+        res.json({status: 'success', message: 'Die Nutzerstudie wurde erstellt.', userstudy: results[0]});
       }
     });
   }).catch(function(err){
@@ -41,9 +41,9 @@ module.exports.editUserstudy = function(req, res) {
     .then(function() {
       UserStudy.editUserStudy(userstudy, function (err) {
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Userstudy edited.', userstudy: userstudy});
+          res.json({status: 'success', message: 'Die Nutzerstudie wurde geändert.', userstudy: userstudy});
         }
       });
     })
@@ -59,9 +59,9 @@ module.exports.deleteUserstudy = function(req, res) {
     .then(function(){
       UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Userstudy deleted.'});
+          res.json({status: 'success', message: 'Die Nutzerstudie wurde gelöscht.'});
         }
       });
     })
@@ -76,9 +76,9 @@ module.exports.publishUserstudy = function(req, res) {
     .then(function(userstudy){
       UserStudy.publishUserstudy(userstudy, function(err) {
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Userstudy published.', userstudy: req.params.id});
+          res.json({status: 'success', message: 'Die Nutzerstudie wurde veröffentlicht.', userstudy: req.params.id});
         }
       });
     })
@@ -93,7 +93,7 @@ module.exports.getUserstudyById = function(req, res) {
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', message: 'Userstudy not found'});
+      res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
     } else {
 
       var userstudy = result[0];
@@ -129,7 +129,7 @@ module.exports.getPublicUserstudyById = function(req, res) {
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
     } else if (result.length === 0 ){
-      res.json({status: 'failure', message: 'Userstudy not found'});
+      res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
     } else {
 
       var userstudy = result[0];
@@ -234,7 +234,7 @@ module.exports.allUserstudiesCreatedByUser = function(req, res) {
     .then(function(user){
       UserStudy.getStudiesCreatedByUser(user, function(err, list){
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
           res.json({userstudies: list});
         }
@@ -259,9 +259,37 @@ module.exports.registerUserToStudy = function(req, res){
     .then(function(){
       UserStudy.mapUserToStudy(userId, userstudyId, function(err){
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'User registered to userstudy.',
+          res.json({status: 'success', message: 'Der Nutzer wurde zur Nutzerstudie angemeldet.',
+                    user: userId, userstudy: userstudyId});
+        }
+    });
+  })
+  .catch(function (err){
+    res.json(500, {status: 'failure', message: err});
+  });
+};
+
+module.exports.signoff = function(req, res){
+  var userstudyId = req.params.studyId;
+  var userId;
+
+  UserPromise.userFromToken(req)
+    .then(function(result){
+      userId = result.id;
+
+      return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
+     })
+    .then(function(){
+      return UserstudyPromise.userIsNotConfirmed(userId,userstudyId);
+    })
+    .then(function(){
+      UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
+        if (err) {
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
+        } else {
+          res.json({status: 'success', message: 'Der Nutzer wurde von der Nutzerstudie entfernt.',
                     user: userId, userstudy: userstudyId});
         }
     });
@@ -273,27 +301,50 @@ module.exports.registerUserToStudy = function(req, res){
 
 module.exports.removeUserFromStudy = function(req, res){
   var userstudyId = req.params.id;
-  var userId;
+  var userId = req.params.userId;
 
   UserPromise.userFromToken(req)
-    .then(function(result){
-      userId = result.id;
+    .then(function(user){
+      if (user.role === "executor") {
+        UserStudy.getStudiesUserIsExecutor({id:userId},function(err,result){
+          if (err) {
+            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          } else {
+            var allowed = false;
+            for (var i = 0; i < result.length; i+=1) {
+              if (result[i].id === parseInt(userstudyId)) {
+                allowed = true;
+                break;
+              }
+            }
 
-      return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
-     })
+            if (allowed){
+              return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
+            } else {
+              res.json({status:'failure', message: 'Der Executor hat keine Rechte an dieser Nutzerstudie Nutzer zu entfernen.'});
+            }
+          }
+        });
+      } else {
+        return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
+      }
+    })
+    .then(function(){
+      return UserstudyPromise.userIsNotConfirmed(userId,userstudyId);
+    })
     .then(function(){
       UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'User removed from userstudy.',
-                    user: userId, userstudy: userstudyId});
+          res.json({status: 'success', message: 'Der Nutzer wurde von der Nutzerstudie entfernt.',
+            user: userId, userstudy: userstudyId});
         }
+      });
+    })
+    .catch(function (err){
+      res.json(500, {status: 'failure', message: err});
     });
-  })
-  .catch(function (err){
-    res.json(500, {status: 'failure', message: err});
-  });
 };
 
 module.exports.confirmUserParticipation = function(req, res){
@@ -310,13 +361,16 @@ module.exports.confirmUserParticipation = function(req, res){
 
       return UserstudyPromise.userIsRegisteredToStudy(user.id,userstudy.id);
     })
+    .then(function(){
+      return UserstudyPromise.userIsNotConfirmed(user.id,userstudy.id);
+    })
     .then(function() {
       UserStudy.confirmUser(user, userstudy, function (err) {
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
           res.json({
-            status: 'success', message: 'Confirmed user participation of userstudy',
+            status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt.',
             user: user, userstudy: userstudy
           });
         }
@@ -334,9 +388,9 @@ module.exports.closeUserstudy = function(req, res){
 
       UserStudy.closeUserstudy(userstudy, function(err, list){
         if (err) {
-          throw err;
+          res.json({status:'failure', message: 'Server Fehler.', internal: err});
         } else {
-          res.json({status: 'success', message: 'Userstudy closed.', userstudy: req.params.id});
+          res.json({status: 'success', message: 'Nutzerstudie geschlossen.', userstudy: req.params.id});
         }
       }).catch(function(err){
         res.json(500, {status: 'failure', message: err});

@@ -152,7 +152,7 @@ module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
       } else {
         var registered = false;
         for (var i= 0; i<result.length; i+=1) {
-          if (result[i].id === userId) {
+          if (result[i].id === parseInt(userId)) {
             registered = true;
             break;
           }
@@ -167,6 +167,31 @@ module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
     });
   });
 };
+
+module.exports.userIsNotConfirmed = function(userId,studyId){
+  return new Promise(function(resolve, reject){
+    Userstudy.getStudiesRelationFor(studyId, "users", function(err,result){
+      if (err) {
+        reject(err);
+      } else {
+        var confirmed = false;
+        for (var i= 0; i<result.length; i+=1) {
+          if (result[i].userId === parseInt(userId) && result[i].confirmed === 1 && result[i].studyId === parseInt(studyId)) {
+            confirmed = true;
+            break;
+          }
+        }
+
+        if (!confirmed) {
+          resolve();
+        } else {
+          reject("Die Telnahme des Nutzers " + userId + " an der Nutzerstudie " + studyId + " ist schon bestätigt");
+        }
+      }
+    });
+  });
+};
+
 
 module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
   return new Promise(function(resolve, reject){

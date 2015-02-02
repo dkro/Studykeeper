@@ -417,7 +417,6 @@ module.exports.unmapUserFromStudy = function(userId, userstudyId, callback){
       'WHERE userId=? ' +
       'AND studyId=?',
       [userId, userstudyId],
-      // todo what happens if the user is confirmed. Unmap or not?
       function(err,result){
         connection.release();
         callback(err,result);
@@ -534,45 +533,43 @@ var delUserstudyRelations = function(connection, userstudyId, type) {
   });
 };
 
-module.exports.getStudiesRelationFor = function(userstudyId, type){
-  return new Promise(function(resolve,reject) {
+module.exports.getStudiesRelationFor = function(userstudyId, type, callback){
     var tableName;
-    var columnName;
 
     switch(type){
       case 'news':
         tableName = "studies_news_rel";
-        columnName = "newsId";
         break;
       case 'labels':
         tableName = "studies_labels_rel";
-        columnName = "labelId";
         break;
       case 'requires':
         tableName = "studies_requires_rel";
-        columnName = "requiresId";
+        break;
+      case 'users':
+        tableName = "studies_users_rel";
         break;
       default:
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation getter... recieved: " + type + " expected: [news/labels,requires]"});
+      callback("wrong type for userstudy relation getter... recieved: " + type + " " +
+      "expected: news || labels || requires || users]");
     } else {
       mysql.getConnection(function(connection) {
-        connection.query('SELECT ' + columnName + ' AS id FROM ' + tableName + ' WHERE studyId=?',
+        connection.query('SELECT * FROM ' + tableName + ' WHERE studyId=?',
           userstudyId,
           function (err, result) {
             if (err) {
               connection.release();
-              reject(err);
+              callback(err);
             } else {
               connection.release();
-              resolve(result);
+              callback(err,result);
             }
           });
       });
     }
-  });
 };
 
 

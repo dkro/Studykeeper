@@ -61,8 +61,9 @@ module.exports = function(app) {
   app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor']), userStudyController.publishUserstudy);
   app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.closeUserstudy);
 
-  app.post('/api/userstudies/:id/register',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.registerUserToStudy);
-  app.post('/api/userstudies/:id/signoff',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.removeUserFromStudy);
+  app.post('/api/userstudies/:studyId/register/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.registerUserToStudy);
+  app.post('/api/userstudies/:studyId/signoff/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.signoff);
+  app.post('/api/userstudies/:id/remove/:userId',  auth.tokenAuthenticate, auth.requiresRole(['tutor','executor']), userStudyController.removeUserFromStudy);
   app.post('/api/userstudies/:id/confirm/:userId',  auth.tokenAuthenticate, auth.requiresRole(['executor']), userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------

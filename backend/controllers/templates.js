@@ -99,6 +99,8 @@ module.exports.getTemplateById = function (req, res){
   Template.getTemplateById(req.params.id, function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+    } else if (result.length === 0){
+      res.json({status: 'failure', message: 'Template wurde nicht gefunden'});
     } else {
       if (result[0].userstudies === null) {
         result[0].userstudies = [];
