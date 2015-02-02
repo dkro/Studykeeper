@@ -51,14 +51,21 @@ module.exports.editTemplate = function (req, res) {
 
 module.exports.deleteTemplate = function(req, res){
     TemplatePromise.templateExists(req.params.id)
-    .then(function(){
-      Template.removeTemplate(req.params.id, function(err){
-        if (err) {
-          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+    .then(function(template){
+        if (template.userstudies === null) {
+          Template.removeTemplate(req.params.id, function(err){
+            if (err) {
+              res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+            } else {
+              res.json({status: 'success', message: 'Template gelöscht.'});
+            }
+          });
         } else {
-          res.json({status: 'success', message: 'Template gelöscht.'});
+          template.userstudies = template.userstudies.split(",").map(function(x){return parseInt(x);});
+          res.json(500, {status: 'failure',
+            message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template hat.',
+            userstudies: template.userstudies});
         }
-      });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});

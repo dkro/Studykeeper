@@ -70,7 +70,7 @@ module.exports = function(app) {
   app.get('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), labelController.getLabelById);
 
   app.post('/api/labels', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.createLabel);
-  app.del('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.deleteLabel); // todo make it only possible to delete when its not mapped
+  app.del('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.deleteLabel);
 
   // --------------- Newsfeed routes ---------------
   app.get('/api/news', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), newsfeedController.allNews);
@@ -85,7 +85,7 @@ module.exports = function(app) {
   app.get('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), templateController.getTemplateById);
 
   app.post('/api/templates', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.createTemplate);
-  app.del('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.deleteTemplate); // todo make it only possible to delete when its not mapped
+  app.del('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.deleteTemplate);
   app.put('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.editTemplate);
 
   // Mails
