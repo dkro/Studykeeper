@@ -1,6 +1,7 @@
 StudyManager.Template = DS.Model.extend({
     title: DS.attr('string'),
-    fields: DS.attr('array')
+    fields: DS.attr('array'),
+    userstudies: DS.hasMany('userstudy', { async: true })
 });
 
 StudyManager.Template.FIXTURES = [
@@ -16,7 +17,8 @@ StudyManager.Template.FIXTURES = [
                 name: 'Two',
                 value: '2'
             }
-        ]
+        ],
+        userstudies: [1, 2, 3]
     },
     {
         id: 2,
@@ -34,6 +36,7 @@ StudyManager.Template.FIXTURES = [
                 name: 'Five',
                 value: '5'
             }
-        ]
+        ],
+        userstudies: [4, 5]
     }
 ];
