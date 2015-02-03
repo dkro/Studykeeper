@@ -43,4 +43,10 @@
     </div>
 </div>
 
-<button class="btn btn-primary study__button">Zu dieser Studie anmelden</button>
+<button class="btn btn-primary study__button">
+    {{#if canEdit}}
+        Bearbeiten
+    {{else}}
+        Zu dieser Studie anmelden
+    {{/if}}
+</button>

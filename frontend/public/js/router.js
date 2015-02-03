@@ -155,6 +155,11 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
     return this.store.fetch('userstudy', params.userstudy_id);
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.determineCanEdit();
   }
 });
 
