@@ -7,6 +7,8 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
             if (this.selectedValues.length === 0) {
                 this.set('hasTagsSelected', false);
             }
+
+            this.sendAction('action', this.get('selectedValues'));
         }
     },
 
@@ -62,6 +64,8 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
             if (!this.hasTagsSelected) {
                 this.set('hasTagsSelected', true);
             }
+
+            this.sendAction('action', this.get('selectedValues'));
         }
     }.observes('currentSelected')
 });

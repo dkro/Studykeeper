@@ -26,6 +26,11 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
             }
         },
 
+        labelsChanged: function(labelVals) {
+            this.set('selectedLabelsFilter', labelVals);
+            this.filterAll(true);
+        },
+
         filterStudies: function() {
             this.filterAll(true);
         },
@@ -59,7 +64,8 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
                 that.filterAmazon(study.get('compensation')) &&
                 that.filterMMI(study.get('mmi')) &&
                 that.filterLocation(study.get('location')) &&
-                that.filterDateRange(study.get('fromDate'), study.get('untilDate'));
+                that.filterDateRange(study.get('fromDate'), study.get('untilDate')) &&
+                that.filterLabels(study.get('labels'));
         }));
 
         this.set('studiesList', filteredList);
@@ -117,6 +123,38 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
         if (!(Ember.empty(this.get('selectedMMIFilter')))) {
             res = points === this.get('selectedMMIFilter');
+        }
+
+        return res;
+    },
+
+    filterLabels: function(labels) {
+        var res = false;
+
+        // If there are labels currently selected
+        if (!(Ember.empty(this.get('selectedLabelsFilter')))) {
+            // Iterate over all selected filter labels
+            this.get('selectedLabelsFilter').some(function(filterLabel) {
+                var hasLabel = false;
+
+                labels.some(function(studyLabel) {
+                    // If study has the filter label assigned
+                    if (filterLabel === studyLabel.get('title')) {
+                        // Equivalent to break (See documentation for "some")
+                        return hasLabel = true;
+                    }
+                });
+
+                res = hasLabel;
+
+                // If already a non-match
+                if (!hasLabel) {
+                    // equivalent to break (See documentation for "some"
+                    return true;
+                }
+            });
+        } else {
+            res = true;
         }
 
         return res;
@@ -219,5 +257,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     selectedAmazonFilterChanged: function() {
         var shouldClearStatus = !Ember.empty(this.get('selectedAmazonFilter'));
         this.filterAll(shouldClearStatus);
-    }.observes('selectedAmazonFilter')
+    }.observes('selectedAmazonFilter'),
+
+    selectedLabelsFilter: []
 });
