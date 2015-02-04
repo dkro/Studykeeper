@@ -1,7 +1,6 @@
 "use strict";
 var Label        = require('../models/labels');
 var Promise      = require('es6-promise').Promise;
-var UserstudyPromise = require('./promises/userstudyPromises');
 var LabelPromise = require('./promises/labelPromises');
 var Async       = require('async');
 
@@ -9,7 +8,7 @@ var Async       = require('async');
 module.exports.createLabel = function(req, res, next){
   var label;
 
-  LabelPromise.validLabelReq(req,false)
+  LabelPromise.validLabelReq(req)
   .then(function(result){
     label = result;
     return LabelPromise.labelAvailable(label);

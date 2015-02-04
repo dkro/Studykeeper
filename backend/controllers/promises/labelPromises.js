@@ -19,9 +19,6 @@ module.exports.validLabelReq = function(req){
       var labelData = {
         title: Validator.toString(req.body.label.title)
       };
-      if (hasId) {
-        labelData.id = req.body.label.id;
-      }
       resolve(labelData);
     }
   });
