@@ -113,6 +113,8 @@ module.exports.signup = function(req, res, next) {
   Promise.all(promises)
     .then(function(results) {
       user = results[0];
+      user.collectsMMI = user.mmi;
+      user.mmi = 0;
       return new Promise(function (resolve, reject) {
         if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
           user.lmuStaff = 1;
