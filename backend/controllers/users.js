@@ -4,9 +4,9 @@ var Promise      = require('es6-promise').Promise;
 var UserPromise = require('./promises/userPromises');
 var UserstudyPromise = require('./promises/userstudyPromises');
 var crypt      = require('../utilities/encryption');
-var validator  = require('validator');
 var Async       = require('async');
 var uuid       = require('node-uuid');
+var Mail      = require('../utilities/mail');
 
 var passwordMinimumLength = 7;
 
@@ -169,6 +169,36 @@ module.exports.signup = function(req, res, next) {
       return next();
     });
 
+};
+
+module.exports.sendSignUpMail = function(req, res, next){
+  var user;
+  var promises = [UserPromise.validSignupReq(req), UserPromise.usernameAvailable(req.body.user.username)];
+
+  Promise.all(promises)
+    .then(function(results) {
+      user = results[0];
+      var mail = {
+          from: 'StudyKeeper <no-reply@studykeeper.com>',
+          to: user.username,
+          subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
+          html: '<a>http://studykeeper.medien.ifi.lmu.de:10001/</a>'};
+      Mail.sendMail(mail,function(err,result){
+        if (err) {
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          next();
+        } else {
+          res.json({status: 'success',
+            message: 'Es wurde eine E-Mail an '+ user.username +' versandt.',
+            internal: result});
+          }
+          next();
+        });
+      })
+    .catch(function(err){
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
+    });
 };
 
 module.exports.login = function(req, res, next) {
