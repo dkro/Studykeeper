@@ -22,7 +22,6 @@ module.exports = function(app) {
   app.use(restify.fullResponse());
   restify.CORS.ALLOW_HEADERS.push('authorization');
 
-  var directory = path.resolve('../frontend/public/');
   // All routes are mapped to frontend/public except for /api/* routes
   // This supplies the static content of the frontend.
   // This also means all new routes need to be added with a /api/* prefix!!!
@@ -50,10 +49,8 @@ module.exports = function(app) {
   app.del('/api/users/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userController.deleteUser);
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudies', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.allUserstudies); //todo filtering on userbase
-  app.get('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.getUserstudyById); //
-  app.get('/api/userstudies/all', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.allUserstudiesFilteredForUser);
-  //app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
+  app.get('/api/userstudies', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.allUserstudies);
+  app.get('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.getUserstudyById);
 
   app.post('/api/userstudies',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.createUserstudy);
   app.del('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.deleteUserstudy);

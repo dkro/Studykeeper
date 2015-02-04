@@ -159,98 +159,96 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
 };
 
 module.exports.allUserstudies = function(req, res, next) {
-  UserStudy.getAllUserstudies(function(err, list){
-    if (err) {
-      res.json({status:'failure', message: 'Server Fehler.', internal: err});
-      return next();
-      } else {
-          Async.eachSeries(list, function(item, callback){
-            if (item.requiredStudies === null) {
-              item.requiredStudies = [];
-            } else {
-              item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.news === null) {
-              item.news = [];
-            } else {
-              item.news = item.news.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.labels === null) {
-              item.labels = [];
-            } else {
-              item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.registeredUsers === null) {
-              item.registeredUsers = [];
-            } else {
-              item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
-            }
-
-            item.closed = !!item.closed;
-            callback();
-          }, function(err){
-            if(err){
-              res.json({status:'failure', message: 'Server Fehler.', internal: err});
-              return next();
-            } else {
-              res.json({userstudies:list});
-              return next();
-            }
-          });
-      }
-  });
-};
-
-module.exports.allUserstudiesFilteredForUser = function(req, res, next) {
-
   UserPromise.userFromToken(req)
     .then(function(user){
-      UserStudy.getAllUserstudiesFilteredForUser(user, function(err, list){
-        if (err) {
-          throw err;
-        } else {
-          Async.eachSeries(list, function(item, callback){
-            if (item.requiredStudies === null) {
-              item.requiredStudies = [];
-            } else {
-              item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.news === null) {
-              item.news = [];
-            } else {
-              item.news = item.news.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.labels === null) {
-              item.labels = [];
-            } else {
-              item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
-            }
-            if (item.registeredUsers === null) {
-              item.registeredUsers = [];
-            } else {
-              item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
-            }
+      if (user.role === 'tutor'){
+        UserStudy.getAllUserstudies(function(err, list){
+          if (err) {
+            res.json({status:'failure', message: 'Server Fehler.', internal: err});
+            return next();
+          } else {
+            Async.eachSeries(list, function(item, callback){
+              if (item.requiredStudies === null) {
+                item.requiredStudies = [];
+              } else {
+                item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.news === null) {
+                item.news = [];
+              } else {
+                item.news = item.news.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.labels === null) {
+                item.labels = [];
+              } else {
+                item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.registeredUsers === null) {
+                item.registeredUsers = [];
+              } else {
+                item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
+              }
 
-            item.closed = !!item.closed;
-            callback();
-          }, function(err){
-            if(err){
-              res.json({status:'failure', message: 'Server Fehler.', internal: err});
-              return next();
-            } else {
-              res.json({userstudies:list});
-              return next();
-            }
-          });
-        }
-      });
+              item.closed = !!item.closed;
+              callback();
+            }, function(err){
+              if(err){
+                res.json({status:'failure', message: 'Server Fehler.', internal: err});
+                return next();
+              } else {
+                res.json({userstudies:list});
+                return next();
+              }
+            });
+          }
+        });
+      } else {
+        UserStudy.getAllUserstudiesFilteredForUser(user, function(err, list){
+          if (err) {
+            throw err;
+          } else {
+            Async.eachSeries(list, function(item, callback){
+              if (item.requiredStudies === null) {
+                item.requiredStudies = [];
+              } else {
+                item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.news === null) {
+                item.news = [];
+              } else {
+                item.news = item.news.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.labels === null) {
+                item.labels = [];
+              } else {
+                item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
+              }
+              if (item.registeredUsers === null) {
+                item.registeredUsers = [];
+              } else {
+                item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
+              }
+
+              item.closed = !!item.closed;
+              callback();
+            }, function(err){
+              if(err){
+                res.json({status:'failure', message: 'Server Fehler.', internal: err});
+                return next();
+              } else {
+                res.json({userstudies:list});
+                return next();
+              }
+            });
+          }
+        });
+      }
     })
-    .catch(function (err){
-      res.json(500, {status: 'failure', message: err});
-      return next();
-    });
+  .catch(function (err){
+    res.json(500, {status: 'failure', message: err});
+    return next();
+  });
 };
-
 
 module.exports.allUserstudiesCreatedByUser = function(req, res, next) {
 

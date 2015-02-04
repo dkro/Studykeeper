@@ -125,10 +125,10 @@ module.exports.signup = function(req, res, next) {
     .then(function(){
 
       User.saveUser(user, function (err,result) {
-        user.id = result.insertId;
         if (err) {
           throw err;
         } else {
+          user.id = result.insertId;
           User.createTokenForUser(user, function (err) {
             if (err) {
               res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
