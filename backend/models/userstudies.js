@@ -347,6 +347,18 @@ module.exports.getStudiesCreatedByUser = function(user, callback){
   });
 };
 
+module.exports.getStudiesFinishedByUser = function(userId, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT studyId FROM studies_users_rel " +
+      "WHERE userId=? AND confirmed=1 AND registered=1",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+}
+
 
 module.exports.getLabelsForStudy = function(userstudy, callback){
   mysql.getConnection(function(connection) {

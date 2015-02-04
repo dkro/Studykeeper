@@ -272,14 +272,19 @@ module.exports.allUserstudiesCreatedByUser = function(req, res, next) {
 
 
 module.exports.registerUserToStudy = function(req, res, next){
-  var userstudyId = req.params.id;
+  var userstudyId = req.params.studyId;
   var userId;
 
   UserPromise.userFromToken(req)
     .then(function(result){
       userId = result.id;
 
-      return UserstudyPromise.userIsNOTRegisteredToStudy(userId,userstudyId);
+      var promises =
+        [UserstudyPromise.userstudyExists({id:userstudyId}),
+        UserstudyPromise.userIsNOTRegisteredToStudy(userId,userstudyId),
+        UserstudyPromise.userstudyHasSpace(userstudyId),
+        UserstudyPromise.userCompletedAllRequiredStudies(userId,userstudyId)];
+      return Promise.all(promises);
     })
     .then(function(){
       UserStudy.mapUserToStudy(userId, userstudyId, function(err){

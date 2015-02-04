@@ -144,6 +144,42 @@ module.exports.userstudyHasSpace = function(userstudyId) {
   });
 };
 
+module.exports.userCompletedAllRequiredStudies = function(userid,userstudyId) {
+  return new Promise(function(resolve, reject){
+    var userstudy;
+    Userstudy.getUserstudyById(userstudyId, function(err, result){
+      if (err) {
+        reject(err);
+      } else {
+        userstudy = result[0];
+        if (userstudy.requiredStudies===null){
+          resolve();
+        } else {
+          userstudy.requiredStudies = userstudy.requiredStudies.split(",").map(function(x){return parseInt(x);});
+          Userstudy.getStudiesFinishedByUser(userid, function(err,studies){
+            if (err) {
+              reject(err);
+            } else {
+              var ids = studies.map(function(value){
+                return value.studyId;
+              });
+              var allowed = userstudy.requiredStudies.every(function(element){
+                return (ids.indexOf(element) > -1);
+              });
+
+              if (allowed){
+                resolve();
+              } else {
+                reject("Der Nutzer hat nicht alle benötigten Nutzerstudien beendet.");
+              }
+            }
+          });
+        }
+      }
+    });
+  });
+};
+
 module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
   return new Promise(function(resolve, reject){
     Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
@@ -208,7 +244,7 @@ module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
         }
 
         if (registered) {
-          reject("Der Nutzer " + userId + " ist schon zur Nutzerstudie " + userstudyId + "registriert");
+          reject("Der Nutzer " + userId + " ist schon zur Nutzerstudie " + userstudyId + " registriert");
         } else {
           resolve(userId);
         }
