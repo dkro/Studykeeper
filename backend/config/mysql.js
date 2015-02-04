@@ -16,7 +16,6 @@ function getConnection(callback) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
     } else {
-      console.log('Mysql: Using connection ' + connection.threadId + ' from pool');
       callback(connection);
     }
   });

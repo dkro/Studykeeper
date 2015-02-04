@@ -5,7 +5,7 @@ var TemplatePromise  = require('./promises/templatePromises');
 var Async       = require('async');
 
 
-module.exports.createTemplate = function(req, res){
+module.exports.createTemplate = function(req, res, next){
   var template;
   TemplatePromise.validFullTemplateReq(req)
     .then(function(result){
@@ -16,18 +16,21 @@ module.exports.createTemplate = function(req, res){
       Template.addTemplate(template, function(err,insertId){
         if (err) {
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           template.id = insertId;
           res.json({status: 'success', message: 'Template erstellt.', template: template});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.editTemplate = function (req, res) {
+module.exports.editTemplate = function (req, res, next) {
   var template;
   TemplatePromise.validFullTemplateReq(req, true)
     .then(function (result) {
@@ -39,25 +42,30 @@ module.exports.editTemplate = function (req, res) {
       Template.editTemplate(template, function (err) {
         if (err) {
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Template geändert', template: template});
+          return next();
         }
       });
     })
     .catch(function (err) {
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.deleteTemplate = function(req, res){
+module.exports.deleteTemplate = function(req, res, next){
     TemplatePromise.templateExists(req.params.id)
     .then(function(template){
         if (template.userstudies === null) {
           Template.removeTemplate(req.params.id, function(err){
             if (err) {
               res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+              return next();
             } else {
               res.json({status: 'success', message: 'Template gelöscht.'});
+              return next();
             }
           });
         } else {
@@ -65,17 +73,20 @@ module.exports.deleteTemplate = function(req, res){
           res.json(500, {status: 'failure',
             message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template hat.',
             userstudies: template.userstudies});
+          return next();
         }
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.allTemplates = function (req, res){
+module.exports.allTemplates = function (req, res, next){
   Template.getAllTemplates(function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else {
       Async.eachSeries(result, function(item, callback){
         if (item.userstudies === null) {
@@ -87,20 +98,24 @@ module.exports.allTemplates = function (req, res){
       }, function(err){
         if(err){
           res.json(500, {status:'failure', message: err});
+          return next();
         } else {
           res.json({templates: parseTemplateSQL(result)});
+          return next();
         }
       });
     }
   });
 };
 
-module.exports.getTemplateById = function (req, res){
+module.exports.getTemplateById = function (req, res, next){
   Template.getTemplateById(req.params.id, function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0){
       res.json({status: 'failure', message: 'Template wurde nicht gefunden'});
+      return next();
     } else {
       if (result[0].userstudies === null) {
         result[0].userstudies = [];
@@ -109,6 +124,7 @@ module.exports.getTemplateById = function (req, res){
       }
 
       res.json({template: parseTemplateSQL(result)});
+      return next();
     }
   });
 };

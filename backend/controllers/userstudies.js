@@ -7,7 +7,7 @@ var UserstudyPromise = require('./promises/userstudyPromises');
 var Async       = require('async');
 
 
-module.exports.createUserstudy = function(req, res) {
+module.exports.createUserstudy = function(req, res, next) {
 
   var promises = [UserstudyPromise.validFullUserstudyReq(req),
     UserPromise.userFromToken(req),
@@ -19,17 +19,20 @@ module.exports.createUserstudy = function(req, res) {
     UserStudy.addUserStudy(results[0], function (err,insertId) {
       if (err) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        return next();
       } else {
         results[0].id = insertId;
         res.json({status: 'success', message: 'Die Nutzerstudie wurde erstellt.', userstudy: results[0]});
+        return next();
       }
     });
   }).catch(function(err){
     res.json(500, {status: 'failure', message: err});
+    return next();
   });
 };
 
-module.exports.editUserstudy = function(req, res) {
+module.exports.editUserstudy = function(req, res, next) {
   var userstudy;
   UserstudyPromise.validFullUserstudyReq(req)
     .then(function(result){
@@ -42,17 +45,20 @@ module.exports.editUserstudy = function(req, res) {
       UserStudy.editUserStudy(userstudy, function (err) {
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde geändert.', userstudy: userstudy});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.deleteUserstudy = function(req, res) {
+module.exports.deleteUserstudy = function(req, res, next) {
   var userstudyId = req.params.id;
 
   UserstudyPromise.userstudyExists({id: userstudyId})
@@ -60,40 +66,48 @@ module.exports.deleteUserstudy = function(req, res) {
       UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde gelöscht.'});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.publishUserstudy = function(req, res) {
+module.exports.publishUserstudy = function(req, res, next) {
 
     UserstudyPromise.userstudyExists({id:req.params.id})
     .then(function(userstudy){
       UserStudy.publishUserstudy(userstudy, function(err) {
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde veröffentlicht.', userstudy: req.params.id});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 
 };
 
-module.exports.getUserstudyById = function(req, res) {
+module.exports.getUserstudyById = function(req, res, next) {
   UserStudy.getUserstudyById(req.params.id, function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0 ){
       res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+      return next();
     } else {
 
       var userstudy = result[0];
@@ -120,30 +134,35 @@ module.exports.getUserstudyById = function(req, res) {
 
       userstudy.closed = !!userstudy.closed;
       res.json({userstudy: userstudy});
+      return next();
     }
   });
 };
 
-module.exports.getPublicUserstudyById = function(req, res) {
+module.exports.getPublicUserstudyById = function(req, res, next) {
   UserStudy.getPublicUserstudyById(req.params.id, function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0 ){
       res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+      return next();
     } else {
 
       var userstudy = result[0];
 
       userstudy.closed = !!userstudy.closed;
       res.json({userstudy: userstudy});
+      return next();
     }
   });
 };
 
-module.exports.allUserstudies = function(req, res) {
+module.exports.allUserstudies = function(req, res, next) {
   UserStudy.getAllUserstudies(function(err, list){
     if (err) {
       res.json({status:'failure', message: 'Server Fehler.', internal: err});
+      return next();
       } else {
           Async.eachSeries(list, function(item, callback){
             if (item.requiredStudies === null) {
@@ -172,15 +191,17 @@ module.exports.allUserstudies = function(req, res) {
           }, function(err){
             if(err){
               res.json({status:'failure', message: 'Server Fehler.', internal: err});
+              return next();
             } else {
               res.json({userstudies:list});
+              return next();
             }
           });
       }
   });
 };
 
-module.exports.allUserstudiesFilteredForUser = function(req, res) {
+module.exports.allUserstudiesFilteredForUser = function(req, res, next) {
 
   UserPromise.userFromToken(req)
     .then(function(user){
@@ -215,8 +236,10 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
           }, function(err){
             if(err){
               res.json({status:'failure', message: 'Server Fehler.', internal: err});
+              return next();
             } else {
               res.json({userstudies:list});
+              return next();
             }
           });
         }
@@ -224,29 +247,33 @@ module.exports.allUserstudiesFilteredForUser = function(req, res) {
     })
     .catch(function (err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
 
-module.exports.allUserstudiesCreatedByUser = function(req, res) {
+module.exports.allUserstudiesCreatedByUser = function(req, res, next) {
 
   UserPromise.userFromToken(req)
     .then(function(user){
       UserStudy.getStudiesCreatedByUser(user, function(err, list){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({userstudies: list});
+          return next();
         }
       });
     })
     .catch(function (err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
 
-module.exports.registerUserToStudy = function(req, res){
+module.exports.registerUserToStudy = function(req, res, next){
   var userstudyId = req.params.id;
   var userId;
 
@@ -260,18 +287,21 @@ module.exports.registerUserToStudy = function(req, res){
       UserStudy.mapUserToStudy(userId, userstudyId, function(err){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Der Nutzer wurde zur Nutzerstudie angemeldet.',
                     user: userId, userstudy: userstudyId});
+          return next();
         }
     });
   })
   .catch(function (err){
     res.json(500, {status: 'failure', message: err});
+      return next();
   });
 };
 
-module.exports.signoff = function(req, res){
+module.exports.signoff = function(req, res, next){
   var userstudyId = req.params.studyId;
   var userId;
 
@@ -288,18 +318,21 @@ module.exports.signoff = function(req, res){
       UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Der Nutzer wurde von der Nutzerstudie entfernt.',
                     user: userId, userstudy: userstudyId});
+          return next();
         }
     });
   })
   .catch(function (err){
     res.json(500, {status: 'failure', message: err});
+    return next();
   });
 };
 
-module.exports.removeUserFromStudy = function(req, res){
+module.exports.removeUserFromStudy = function(req, res, next){
   var userstudyId = req.params.id;
   var userId = req.params.userId;
 
@@ -309,6 +342,7 @@ module.exports.removeUserFromStudy = function(req, res){
         UserStudy.getStudiesUserIsExecutor({id:userId},function(err,result){
           if (err) {
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+            return next();
           } else {
             var allowed = false;
             for (var i = 0; i < result.length; i+=1) {
@@ -322,6 +356,7 @@ module.exports.removeUserFromStudy = function(req, res){
               return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
             } else {
               res.json({status:'failure', message: 'Der Executor hat keine Rechte an dieser Nutzerstudie Nutzer zu entfernen.'});
+              return next();
             }
           }
         });
@@ -336,18 +371,21 @@ module.exports.removeUserFromStudy = function(req, res){
       UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Der Nutzer wurde von der Nutzerstudie entfernt.',
             user: userId, userstudy: userstudyId});
+          return next();
         }
       });
     })
     .catch(function (err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.confirmUserParticipation = function(req, res){
+module.exports.confirmUserParticipation = function(req, res, next){
   var promises = [UserPromise.userExistsById(req.params.userId),
   UserstudyPromise.userstudyExists({id:req.params.id})];
 
@@ -368,20 +406,23 @@ module.exports.confirmUserParticipation = function(req, res){
       UserStudy.confirmUser(user, userstudy, function (err) {
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({
             status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt.',
             user: user, userstudy: userstudy
           });
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.closeUserstudy = function(req, res){
+module.exports.closeUserstudy = function(req, res, next){
 
    UserstudyPromise.userstudyExists({id:req.params.id})
     .then(function(userstudy){
@@ -389,11 +430,14 @@ module.exports.closeUserstudy = function(req, res){
       UserStudy.closeUserstudy(userstudy, function(err, list){
         if (err) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({status: 'success', message: 'Nutzerstudie geschlossen.', userstudy: req.params.id});
+          return next();
         }
       }).catch(function(err){
         res.json(500, {status: 'failure', message: err});
+        return next();
       });
     });
 };

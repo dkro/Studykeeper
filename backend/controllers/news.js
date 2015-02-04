@@ -5,7 +5,7 @@ var NewsPromise = require('./promises/newsPromises');
 var Async       = require('async');
 
 
-module.exports.createNews = function (req, res) {
+module.exports.createNews = function (req, res, next) {
 
   NewsPromise.validNewsReq(req)
     .then(function (news) {
@@ -15,15 +15,17 @@ module.exports.createNews = function (req, res) {
         } else {
           news.id = result.insertId;
           res.json({status: 'success', message: 'News erstellt', news: news});
+          return next();
         }
       });
     })
     .catch(function (err) {
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.editNews = function (req, res) {
+module.exports.editNews = function (req, res, next) {
   var news;
   NewsPromise.validNewsReq(req)
     .then(function (result) {
@@ -36,28 +38,34 @@ module.exports.editNews = function (req, res) {
           throw err;
         } else {
           res.json({status: 'success', message: 'News geändert.', news: news});
+          return next();
         }
       });
     })
     .catch(function (err) {
       res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 
-module.exports.deleteNews = function (req, res) {
+module.exports.deleteNews = function (req, res, next) {
   News.getNewsById(req.params.id, function (err, result) {
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0) {
       res.json(500, {status: 'failure', message: 'News wurde nicht gefunden'});
+      return next();
     } else {
       var news = result[0];
       if (news.userstudies === null) {
         News.deleteNewsById(req.params.id, function(err){
           if (err) {
             res.json({status: 'failure', message: 'Server Fehler.', internal: err});
+            return next();
           } else {
             res.json({status: 'success', message: 'News wurde gelöscht.'});
+            return next();
           }
         });
       } else {
@@ -65,18 +73,21 @@ module.exports.deleteNews = function (req, res) {
         res.json(500, {status: 'failure',
           message: 'Die News konnte nicht gelöscht werden, da mindestens eine Nutzerstudie diese News anzeigt.',
           userstudies: news.userstudies});
+        return next();
       }
     }
   });
 };
 
 
-module.exports.getNewsById = function (req, res) {
+module.exports.getNewsById = function (req, res, next) {
   News.getNewsById(req.params.id, function (err, result) {
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0) {
       res.json({status: 'failure', message: 'News wurde nicht gefunden'});
+      return next();
     } else {
       var news = result[0];
       if (news.userstudies === null) {
@@ -86,14 +97,16 @@ module.exports.getNewsById = function (req, res) {
       }
 
       res.json({news: news});
+      return next();
     }
   });
 };
 
-module.exports.allNews = function (req, res) {
+module.exports.allNews = function (req, res, next) {
   News.getAllNews(function (err, list) {
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else {
       Async.eachSeries(list, function(item, callback){
         if (item.userstudies === null) {
@@ -106,8 +119,10 @@ module.exports.allNews = function (req, res) {
       }, function(err){
         if(err){
           res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+          return next();
         } else {
           res.json({news: list});
+          return next();
         }
       });
     }

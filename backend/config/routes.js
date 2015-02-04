@@ -27,7 +27,7 @@ module.exports = function(app) {
   // This supplies the static content of the frontend.
   // This also means all new routes need to be added with a /api/* prefix!!!
   app.get(/^\/(?!api).*/, restify.serveStatic({
-    'directory': directory,
+    'directory': '../frontend/public/',
     'default' : 'index.html'
   }));
 

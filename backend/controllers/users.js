@@ -10,22 +10,26 @@ var uuid       = require('node-uuid');
 
 var passwordMinimumLength = 7;
 
-module.exports.getUser = function(req, res) {
+module.exports.getUser = function(req, res, next) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else {
       res.json({user: result});
+      return next();
     }
   });
 };
 
-module.exports.getUserById = function(req, res) {
+module.exports.getUserById = function(req, res, next) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     } else if (result.length === 0 ){
       res.json(500, {status: 'failure', message: 'Der Nutzer wurde nicht gefunden.'});
+      return next();
     } else {
 
       var user = result[0];
@@ -53,19 +57,22 @@ module.exports.getUserById = function(req, res) {
         user.isTutorFor = tutorIds;
         user.registeredStudies = registeredStudies;
         res.json({user: user});
+        return next();
       })
         .catch(function(err){
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          return next();
         });
 
     }
   });
 };
 
-module.exports.getUsers = function(req, res) {
+module.exports.getUsers = function(req, res, next) {
   User.getUsers(function(err,list){
       if (err) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        return next();
       } else {
         Async.eachSeries(list, function(item, callback){
           if (item.isExecutorFor === null) {
@@ -88,15 +95,17 @@ module.exports.getUsers = function(req, res) {
         }, function(err){
           if(err){
             res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+            return next();
           } else {
             res.json({users:list});
+            return next();
           }
         });
     }
   });
 };
 
-module.exports.signup = function(req, res) {
+module.exports.signup = function(req, res, next) {
 
   var user;
   var promises = [UserPromise.validSignupReq(req), UserPromise.usernameAvailable(req.body.user.username)];
@@ -123,10 +132,12 @@ module.exports.signup = function(req, res) {
           User.createTokenForUser(user, function (err) {
             if (err) {
               res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
+              return next();
             } else {
               User.getTokensForUser(user, function (err, result) {
                 if (err) {
                   res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
+                  return next();
                 } else {
                   // Sort token result so that newest token is the first in array
                   result.sort(function (a, b) {
@@ -145,6 +156,7 @@ module.exports.signup = function(req, res) {
                       token: result[0].token
                     }
                   });
+                  return next();
                 }
               });
             }
@@ -154,11 +166,12 @@ module.exports.signup = function(req, res) {
     })
    .catch(function(err){
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     });
 
 };
 
-module.exports.login = function(req, res) {
+module.exports.login = function(req, res, next) {
   var user;
 
   UserPromise.validLoginReq(req)
@@ -184,23 +197,27 @@ module.exports.login = function(req, res) {
               token: tokens[0].token
               }
             });
+            return next();
         })
         .catch(function(err){
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          return next();
         });
 
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     });
 };
 
-module.exports.logout = function(req, res) {
+module.exports.logout = function(req, res, next) {
   UserPromise.userFromToken(req)
     .then(function(user){
       User.deleteToken(user.token, function(err){
         if (err) {
           res.send(500, {status: 'failure', message: 'Server Fehler. Bitte loggen Sie sich erneut ein.', internal: err});
+          return next();
         } else {
 
           var now = new Date();
@@ -209,6 +226,7 @@ module.exports.logout = function(req, res) {
           User.deleteTokensForUserBeforeTimestamp(user.username, ThirtyMinutesFromNow, function(err){
             if (err) {
               res.send(500, {status: 'failure', message: 'Server Fehler. Bitte loggen Sie sich erneut ein.', internal: err});
+              return next();
             } else {
               res.json({
                 status: 'success',
@@ -217,17 +235,19 @@ module.exports.logout = function(req, res) {
                   username: user.username
                 }
               });
+              return next();
             }
           });
         }
       })
     .catch(function(err){
       res.json({status: 'failure', message: err});
+      return next();
     });
   });
 };
 
-module.exports.createUser = function(req, res) {
+module.exports.createUser = function(req, res, next) {
   var user;
 
   UserPromise.validCreateUserReq(req)
@@ -242,17 +262,20 @@ module.exports.createUser = function(req, res) {
     User.saveUser(user,function(err) {
       if (err){
         res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
+        return next();
       } else {
         res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt.'});
+        return next();
       }
     });
   })
   .catch(function(err){
     res.json(500, {status:'failure', message: err});
+    return next();
   });
 };
 
-module.exports.editUser = function(req, res) {
+module.exports.editUser = function(req, res, next) {
   var user;
 
   UserPromise.validEditUserReq(req)
@@ -277,20 +300,24 @@ module.exports.editUser = function(req, res) {
         if (err){
           if (err.code === "ER_DUP_ENTRY"){
             res.send(500, {status:'failure', message: 'Email-adresse schon vergeben.'});
+            return next();
           } else {
             res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
+            return next();
           }
         } else {
           res.json({message: 'Der Nutzer wurde erfolgreich editiert.'});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status:'failure', message: err});
+      return next();
     });
 };
 
-module.exports.deleteUser = function(req, res) {
+module.exports.deleteUser = function(req, res, next) {
   var userId = req.params.id;
   UserPromise.userExistsById(userId)
     .then(function(){
@@ -299,11 +326,13 @@ module.exports.deleteUser = function(req, res) {
           throw err;
         } else {
           res.json({status: 'success', message: 'Nutzer wurde erfolgreich gelöscht.'});
+          return next();
         }
       });
     })
     .catch(function(err){
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      return next();
     });
 };
 
@@ -328,7 +357,7 @@ module.exports.retrievePW = function(){
 
 };
 
-module.exports.changePW = function(req, res) {
+module.exports.changePW = function(req, res, next) {
   var user = {
     oldPassword: req.body.oldPassword,
     newPassword: req.body.newPassword,
@@ -340,11 +369,13 @@ module.exports.changePW = function(req, res) {
       status: "failure",
       message: "Die Passwörter stimmen nicht überein."
     });
+    return next();
   } else if (user.newPassword.length < passwordMinimumLength) {
     res.json(500,{
       status: "failure",
       message: "Das Passwort ist zu kurz. Es muss mindestens 7 Charakter haben."
     });
+    return next();
   } else {
       User.getPasswordById(req.params.id, function(err, userResult) {
         if (err) {
@@ -352,16 +383,19 @@ module.exports.changePW = function(req, res) {
         } else {
           if (userResult.length < 1) {
             res.send(500,{status: 'failure', message: 'Nutzer wurde nicht gefunden.'});
+            return next();
           } else {
             crypt.comparePassword(userResult[0].password,user.oldPassword,
               function (err, isPasswordMatch) {
                 if (err) {
                   return res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+                  return next();
                 } else if (!isPasswordMatch) {
                   res.send(500,{
                     status: 'failure',
                     message: 'Falsches Password.'
                   });
+                  return next();
                 } else {
                   User.setPassword(user.newPassword, userResult[0].id, function (err) {
                     if (err) {
@@ -371,6 +405,7 @@ module.exports.changePW = function(req, res) {
                         status: "success",
                         message: "Password wurde erfolgreich geändert."
                       });
+                      return next();
                     }
                   });
                 }
