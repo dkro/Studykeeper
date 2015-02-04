@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: userstudymanager
-# Generation Time: 2015-01-06 21:43:53 +0000
+# Generation Time: 2015-02-04 12:03:19 +0000
 # ************************************************************
 
 
@@ -28,37 +28,17 @@ DROP TABLE IF EXISTS `auth`;
 CREATE TABLE `auth` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(11) unsigned NOT NULL,
+  `roleId` int(11) unsigned NOT NULL,
   `token` char(36) NOT NULL DEFAULT '',
   `timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `token` (`token`),
   KEY `user` (`userId`),
+  KEY `role_auth_rel` (`roleId`),
+  CONSTRAINT `role_auth_rel` FOREIGN KEY (`roleId`) REFERENCES `users` (`role`) ON UPDATE CASCADE,
   CONSTRAINT `user` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table fieldtypes
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `fieldtypes`;
-
-CREATE TABLE `fieldtypes` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(32) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `fieldtypes` WRITE;
-/*!40000 ALTER TABLE `fieldtypes` DISABLE KEYS */;
-
-INSERT INTO `fieldtypes` (`id`, `type`)
-VALUES
-	(1,'text'),
-	(2,'options');
-
-/*!40000 ALTER TABLE `fieldtypes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table labels
@@ -75,22 +55,6 @@ CREATE TABLE `labels` (
 
 
 
-# Dump of table mmi
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `mmi`;
-
-CREATE TABLE `mmi` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `userId` int(11) unsigned NOT NULL,
-  `points` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `userId` (`userId`),
-  CONSTRAINT `mmi_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
 # Dump of table news
 # ------------------------------------------------------------
 
@@ -98,6 +62,10 @@ DROP TABLE IF EXISTS `news`;
 
 CREATE TABLE `news` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL DEFAULT '',
+  `date` date NOT NULL,
+  `description` varchar(1000) NOT NULL DEFAULT '',
+  `link` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -135,13 +103,64 @@ DROP TABLE IF EXISTS `studies_labels_rel`;
 
 CREATE TABLE `studies_labels_rel` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `labelId` int(11) unsigned NOT NULL,
   `studyId` int(11) unsigned NOT NULL,
+  `labelId` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label_rel` (`labelId`),
   KEY `study_rel` (`studyId`),
-  CONSTRAINT `label_rel` FOREIGN KEY (`labelId`) REFERENCES `labels` (`id`),
-  CONSTRAINT `study_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`)
+  CONSTRAINT `label_rel` FOREIGN KEY (`labelId`) REFERENCES `labels` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `study_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table studies_news_rel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `studies_news_rel`;
+
+CREATE TABLE `studies_news_rel` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `studyId` int(11) unsigned NOT NULL,
+  `newsId` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table studies_requires_rel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `studies_requires_rel`;
+
+CREATE TABLE `studies_requires_rel` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `studyId` int(10) unsigned NOT NULL,
+  `requiresId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `study_main1_rel` (`studyId`),
+  KEY `study_required_rel` (`requiresId`),
+  CONSTRAINT `study_required_rel` FOREIGN KEY (`requiresId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table studies_users_rel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `studies_users_rel`;
+
+CREATE TABLE `studies_users_rel` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `studyId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `registered` tinyint(1) NOT NULL DEFAULT '0',
+  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `study_user_rel` (`studyId`),
+  KEY `user_study_rel` (`userId`),
+  CONSTRAINT `user_usterstudy_rel` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),
+  CONSTRAINT `userstudy_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -154,14 +173,11 @@ DROP TABLE IF EXISTS `template_fields`;
 CREATE TABLE `template_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `templateId` int(11) unsigned NOT NULL,
-  `fieldtypeId` int(11) unsigned NOT NULL,
-  `title` varchar(11) NOT NULL DEFAULT '',
-  `description` varchar(64) DEFAULT NULL,
+  `title` varchar(64) NOT NULL DEFAULT '',
+  `value` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fieldtype_rel` (`fieldtypeId`),
-  KEY `template_rel` (`templateId`),
-  CONSTRAINT `fieldtype_rel` FOREIGN KEY (`fieldtypeId`) REFERENCES `fieldtypes` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `template_rel` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`) ON UPDATE CASCADE
+  KEY `template_fields_rel` (`templateId`),
+  CONSTRAINT `template_fields_rel` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -174,7 +190,8 @@ DROP TABLE IF EXISTS `templates`;
 CREATE TABLE `templates` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(32) NOT NULL DEFAULT 'Title',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -190,32 +207,15 @@ CREATE TABLE `users` (
   `password` char(60) NOT NULL DEFAULT '',
   `role` int(11) unsigned NOT NULL,
   `lmuStaff` tinyint(1) NOT NULL DEFAULT '0',
-  `surname` varchar(11) DEFAULT NULL,
+  `mmi` int(11) NOT NULL DEFAULT '0',
+  `firstname` varchar(11) DEFAULT NULL,
   `lastname` varchar(11) DEFAULT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '1',
+  `collectsMMI` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `role` (`role`),
   CONSTRAINT `role` FOREIGN KEY (`role`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table users_studies_rel
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users_studies_rel`;
-
-CREATE TABLE `users_studies_rel` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `studyId` int(11) unsigned NOT NULL,
-  `userId` int(11) unsigned NOT NULL,
-  `registered` tinyint(1) NOT NULL DEFAULT '0',
-  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `study_user_rel` (`studyId`),
-  KEY `user_study_rel` (`userId`),
-  CONSTRAINT `study_user_rel` FOREIGN KEY (`studyId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_study_rel` FOREIGN KEY (`userId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -229,6 +229,8 @@ CREATE TABLE `userstudies` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tutorId` int(11) unsigned NOT NULL,
   `executorId` int(11) unsigned NOT NULL,
+  `creatorId` int(11) unsigned NOT NULL,
+  `templateId` int(11) unsigned DEFAULT NULL,
   `fromDate` date NOT NULL,
   `untilDate` date NOT NULL,
   `title` varchar(32) NOT NULL DEFAULT '',
@@ -246,7 +248,11 @@ CREATE TABLE `userstudies` (
   UNIQUE KEY `title` (`title`),
   KEY `tutor_userstudy_rel` (`tutorId`),
   KEY `executor_userstudy_rel` (`executorId`),
+  KEY `creator_user_rel` (`creatorId`),
+  KEY `template_userstudy_rel` (`templateId`),
+  CONSTRAINT `creator_user_rel` FOREIGN KEY (`creatorId`) REFERENCES `users` (`id`),
   CONSTRAINT `executer_userstudy_rel` FOREIGN KEY (`executorId`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `template_userstudy_rel` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`),
   CONSTRAINT `tutor_userstudy_rel` FOREIGN KEY (`tutorId`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
