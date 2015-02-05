@@ -180,7 +180,7 @@ module.exports.getUserstudyById = function (id, callback) {
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
-      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? ' +
       'GROUP BY us.id;',
       id, function(err,result){

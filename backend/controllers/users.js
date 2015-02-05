@@ -39,7 +39,7 @@ module.exports.getUserById = function(req, res, next) {
         UserstudyPromise.userRegisteredStudies(user)];
 
       Promise.all(promises).then(function(results){
-        var executorIds = [];q
+        var executorIds = [];
         for (var i = 0; i < results[0].length; i += 1) {
           executorIds.push(results[0][i].id);
         }
