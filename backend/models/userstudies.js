@@ -319,8 +319,7 @@ module.exports.getStudiesUserIsRegistered = function(user, callback){
                       'WHERE usrel.userId=? ' +
                       'AND usrel.registered=1 ' +
                       'AND us.visible=1 ' +
-                      'AND us.published=1 ' +
-                      'AND us.closed=0' ,
+                      'AND us.published=1 ',
       user.id,
       function(err,result){
         connection.release();
