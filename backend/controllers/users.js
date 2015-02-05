@@ -47,15 +47,15 @@ module.exports.getUserById = function(req, res, next) {
         for (var j = 0; j < results[1].length; j += 1) {
           tutorIds.push(results[1][j].id);
         }
-        var registeredStudies = [];
+        var registeredFor = [];
         for (var l = 0; l < results[2].length; l += 1) {
-          registeredStudies.push(results[2][l].id);
+          registeredFor.push(results[2][l].id);
         }
 
 
         user.isExecutorFor = executorIds;
         user.isTutorFor = tutorIds;
-        user.registeredStudies = registeredStudies;
+        user.registeredFor = registeredFor;
         res.json({user: user});
         return next();
       })
