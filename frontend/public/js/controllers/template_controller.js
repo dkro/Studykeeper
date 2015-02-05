@@ -43,6 +43,15 @@ StudyManager.TemplateController = Ember.Controller.extend({
 
         cancelView: function() {
             this.transitionToRoute('templates');
+        },
+
+        addField: function() {
+            var field = {
+                title: 'Feld' + this.get('notPersistedFields').length,
+                value: 'Wert' + this.get('notPersistedFields').length
+            };
+
+            this.get('notPersistedFields').pushObject(field);
         }
     },
 
@@ -50,5 +59,7 @@ StudyManager.TemplateController = Ember.Controller.extend({
 
     title: null,
 
-    fields: []
+    persistedFields: [],
+
+    notPersistedFields: []
 });

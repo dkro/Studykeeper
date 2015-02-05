@@ -6,4 +6,5 @@
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
-{{template-config isTemplateCreation=false title=title fields=fields save="updateTemplate" cancel="cancelView"}}
+{{template-config isTemplateCreation=false title=title persistedFields=persistedFields notPersistedFields=notPersistedFields
+        save="updateTemplate" cancel="cancelView" add="addField"}}

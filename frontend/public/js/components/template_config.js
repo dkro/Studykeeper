@@ -18,13 +18,15 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         addField: function() {
-            var field = StudyManager.Field.create();
-
-            this.get('fields').pushObject(field);
+            this.sendAction('add');
         },
 
         removeField: function(field) {
-            this.get('fields').removeObject(field);
+            this.sendAction('remove', field);
+        },
+
+        removePersistedField: function(field) {
+            this.get('persistedFields').removeObject(field);
         }
     },
 
@@ -48,11 +50,13 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
 
     title: null,
 
-    fields: [],
+    persistedFields: [],
+
+    notPersistedFields: [],
 
     fieldsChanged: function() {
-        this.set('hasFields', !Ember.empty(this.get('fields')));
-    }.observes('fields'),
+        this.set('hasFields', !Ember.empty(this.get('persistedFields')) && !Ember.empty(this.get('notPersistedFields')));
+    }.observes('persistedFields', 'notPersistedFields'),
 
     hasFields: false
 });

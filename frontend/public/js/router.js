@@ -250,7 +250,7 @@ StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.set('title', model.get('title'));
-    controller.set('fields', model.get('fields'));
+    controller.set('persistedFields', model.get('fields'));
   }
 });
 

@@ -289,6 +289,7 @@
                     </div>
                 </div>
             </form>
+            {{selection-list}}
         </script>
 
         <script type="text/x-handlebars" id="components/template-config">
@@ -308,15 +309,34 @@
                         <label class="col-sm-2 control-label">Felder:</label>
                     </div>
                 {{/if}}
-                {{#each field in fields}}
+                {{#each field in persistedFields}}
                     <div class="form-group component__config--template__field__nameWrapper">
                         <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="input-group component__config--template__field__nameInputGroup">
                                 <span class="input-group-addon">Name</span>
-                                {{input type="text" value=field.name placeholder="Feldname" action="addField" classNames="form-control"}}
+                                {{input type="text" value=field.title placeholder="Feldname" action="addField" classNames="form-control"}}
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group component__config--template__field__valueWrapper">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="input-group component__config--template__field__valueInputGroup">
+                                <span class="input-group-addon">Text</span>
+                                {{textarea rows="2" value=field.value classNames="form-control component__config--template__field__value" placeholder="Feldinhalt"}}
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+                {{#each field in notPersistedFields}}
+                    <div class="form-group component__config--template__field__nameWrapper">
+                        <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="input-group component__config--template__field__nameInputGroup">
+                            <span class="input-group-addon">Name</span>
+                            {{input type="text" value=field.title placeholder="Feldname" action="addField" classNames="form-control"}}
+                        </div>
+                    </div>
                     </div>
                     <div class="form-group component__config--template__field__valueWrapper">
                         <div class="col-sm-offset-2 col-sm-10">
@@ -347,6 +367,22 @@
                     </div>
                 </div>
             </form>
+        </script>
+
+        <script type="text/x-handlebars" id="components/selection-list">
+            <div class="panel panel-primary">
+                <div class="panel-heading">{{title}}</div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {{#each item in itemList}}
+                            <li class="list-group-item">
+                                {{item}}
+                                {{input type="checkbox"}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
         </script>
 
         <script type="text/x-handlebars" id="components/status-message">

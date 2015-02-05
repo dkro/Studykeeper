@@ -11,6 +11,13 @@
     .navBar__nav--account {
         padding-bottom: 9px !important;
     }
+
+    .navBar__nav__createStudy {
+        float: right;
+        background-color: cornflowerblue;
+        color: white;
+        border: 2px solid black;
+    }
 }
 
 /* mobile navbar */
@@ -22,7 +29,14 @@
     .accountDefault {
         display: block;
     }
+
+    .navBar__nav__createStudy {
+        background-color: cornflowerblue;
+        color: white;
+        border: 2px solid black;
+    }
 }
+
 
 .accountIcon {
     font-size: 1.5em;
