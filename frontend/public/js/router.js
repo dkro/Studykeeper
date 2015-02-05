@@ -8,6 +8,7 @@ StudyManager.Router.map(function() {
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
+  this.resource('userstudy-edit', { path: '/userstudies/:userstudy_id/studyEdit' });
   this.resource('labels');
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
@@ -160,6 +161,20 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.determineCanEdit();
+  }
+});
+
+StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
+  model: function(params) {
+    var that = this;
+
+    return Ember.RSVP.hash({
+      study: that.store.find('userstudy', params.userstudy_id),
+      allNews: that.store.find('news'),
+      allLabels: that.store.find('label'),
+      allUsers: that.store.find('user'),
+      allTemplates: that.store.find('template')
+    });
   }
 });
 

@@ -202,6 +202,95 @@
             </form>
         </script>
 
+        <script type="text/x-handlebars" id="components/study-config">
+            <form class="form-horizontal component__config__form">
+                <div {{bind-attr class=":form-group titleInvalid:has-error"}}>
+                    <label for="titleStudyConfigInput" class="col-sm-2 control-label">Titel:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="titleStudyConfigHelp" id="titleStudyConfigInput" value=title classNames="form-control" placeholder="Titel"}}
+
+                        {{#if titleInvalid}}
+                            <span id="titleStudyConfigHelp" class="help-block">{{titleInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group fromDateInvalid:has-error"}}>
+                    <label for="fromStudyConfigInput" class="col-sm-2 control-label">Von:</label>
+                    <div class="col-sm-10">
+                        {{view "date-picker" aria-describedby="fromStudyConfigHelp" id="fromStudyConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=fromDate placeholder="Zeitraum von"}}
+
+                        {{#if fromDateInvalid}}
+                            <span id="fromStudyConfigHelp" class="help-block">{{fromDateInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group toDateInvalid:has-error"}}>
+                    <label for="toStudyConfigInput" class="col-sm-2 control-label">Bis:</label>
+                    <div class="col-sm-10">
+                        {{view "date-picker" aria-describedby="toStudyConfigHelp" id="toStudyConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=toDate placeholder="Zeitraum bis"}}
+
+                        {{#if toDateInvalid}}
+                            <span id="toStudyConfigHelp" class="help-block">{{toDateInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group locationInvalid:has-error"}}>
+                    <label for="locationStudyConfigInput" class="col-sm-2 control-label">Ort:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="locationStudyConfigHelp" id="locationStudyConfigInput" value=location classNames="form-control" placeholder="Ort"}}
+
+                        {{#if locationInvalid}}
+                            <span id="locationStudyConfigHelp" class="help-block">{{locationInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group descriptionInvalid:has-error"}}>
+                    <label for="descriptionStudyConfigTextArea" class="col-sm-2 control-label">Beschreibung:</label>
+                    <div class="col-sm-10">
+                        {{textarea rows="3" aria-describedby="descriptionStudyConfigInputHelp" id="descriptionStudyConfigTextArea" value=description classNames="form-control" placeholder="Beschreibung"}}
+
+                        {{#if descriptionInvalid}}
+                            <span id="descriptionStudyConfigInputHelp" class="help-block">{{descriptionInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div {{bind-attr class=":form-group linkInvalid:has-error"}}>
+                    <label for="linkStudyConfigInput" class="col-sm-2 control-label">Link:</label>
+                    <div class="col-sm-10">
+                        {{input type="text" aria-describedby="linkStudyConfigInputHelp" id="linkStudyConfigInput" value=link classNames="form-control" placeholder="Link"}}
+
+                        {{#if linkInvalid}}
+                            <span id="linkStudyConfigInputHelp" class="help-block">{{linkInvalid}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mmiStudyConfigSelect" class="col-sm-2 control-label">MMI-Punkte:</label>
+                    <div class="col-sm-10">
+                        {{view "select" id="mmiStudyConfigSelect" content=mmiPoints value=mmi classNames="form-control component__config__select"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="amazonStudyConfigSelect" class="col-sm-2 control-label">Amazon:</label>
+                    <div class="col-sm-10">
+                        {{view "select" id="amazonStudyConfigSelect" content=amazonValues value=amazon classNames="form-control component__config__select"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
+                        <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
+                        {{#if isStudyCreation}}
+                            Nutzer erstellen
+                        {{else}}
+                            Änderungen speichern
+                        {{/if}}
+                        </button>
+                        <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>Abbrechen</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
         <script type="text/x-handlebars" id="components/template-config">
             <form class="form-horizontal component__config__form">
                 <div {{bind-attr class=":form-group :component__config--template__title__wrapper titleInvalid:has-error"}}>

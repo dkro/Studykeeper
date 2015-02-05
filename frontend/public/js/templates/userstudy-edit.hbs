@@ -1,0 +1,11 @@
+<h2 class="management--single__heading">Studie konfigurieren</h2>
+
+<button class="btn btn-danger management--single__deleteButton" {{action 'deleteStudy'}}>Studie löschen</button>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+{{study-config isStudyCreation=false save="updateStudy" cancel="cancelView" title=model.study.title fromDate=model.study.fromDate
+        toDate=model.study.untilDate mmi=model.study.mmi amazon=model.study.compensation mmiPoints=mmiPoints amazonValues=amazonValues
+        location=model.study.location description=model.study.description link=model.study.link}}

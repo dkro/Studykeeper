@@ -2,6 +2,13 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     needs: ['userstudies', 'application'],
 
     actions: {
+        primaryButtonClick: function() {
+            if (this.get('canEdit')) {
+                this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
+            } else {
+                alert('TODO: Anmelden zur Studie');
+            }
+        }
     },
 
     canEdit: false,
