@@ -30,7 +30,8 @@ module.exports.editNews = function (req, res, next) {
   NewsPromise.validNewsReq(req)
     .then(function (result) {
       news = result;
-      return NewsPromise.newsExists(news);
+      news.id = req.params.id;
+      return NewsPromise.newsExists(req.params.id);
     })
     .then(function () {
       News.editNews(news, function (err) {

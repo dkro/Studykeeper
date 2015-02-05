@@ -33,17 +33,14 @@ module.exports.validNewsReq = function(req){
         description: Validator.toString(req.body.news.description),
         link: Validator.toString(req.body.news.link)
       };
-      if (hasId) {
-        newsData.id = req.body.news.id;
-      }
       resolve(newsData);
     }
   });
 };
 
-module.exports.newsExists = function(news){
+module.exports.newsExists = function(newsId){
   return new Promise(function(resolve, reject){
-    News.getNewsById(news.id, function(err, result){
+    News.getNewsById(newsId, function(err, result){
       if (err) {
         reject(err);
       }
