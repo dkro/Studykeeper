@@ -222,7 +222,7 @@ module.exports.getAllUserstudies = function (callback) {
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
-      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'GROUP BY us.id;',
       function(err,result){
         connection.release();
@@ -247,7 +247,7 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
-      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE us.visible=1 AND us.published=1 ' +
       'AND (srr.studyId IS NULL OR (surful.userId=? AND surful.confirmed=1 AND surful.id IS NOT NULL))  ' +
