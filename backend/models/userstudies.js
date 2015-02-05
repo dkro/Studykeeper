@@ -168,6 +168,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
 };
 
 module.exports.getUserstudyById = function (id, callback) {
+  // todo visible for all?
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
@@ -200,7 +201,7 @@ module.exports.getPublicUserstudyById = function (id, callback) {
       'FROM userstudies us ' +
       'LEFT JOIN users tutor ON us.tutorId=tutor.id ' +
       'LEFT JOIN users executor ON us.executorId=executor.id ' +
-      'WHERE us.id=? ',
+      'WHERE us.id=? AND us.visible=1 AND us.published=1',
       id, function(err,result){
         connection.release();
         callback(err,result);
@@ -231,21 +232,27 @@ module.exports.getAllUserstudies = function (callback) {
   });
 };
 
-
-module.exports.getAllUserstudiesFilteredForUser = function (user, filter, callback) {
+// Returns all userstudies which either have no required studies or the user has
+// completed and confirmed all required studies
+// TODO if a study has multiple required studies and the user has completed only one it is still shown...
+module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
-      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers FROM userstudies us, ' +
-      'us.templateId AS template ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId AS template, us.creatorId AS creator '+
+      'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.confirmed=1) ' +
-      'WHERE us.visible=1, us.published=1 ' +
+      'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
+      'WHERE us.visible=1 AND us.published=1 ' +
+      'AND (srr.studyId IS NULL OR (surful.userId=? AND surful.confirmed=1 AND surful.id IS NOT NULL))  ' +
       'GROUP BY us.id;',
+      [user.id,user.id],
       function(err,result){
         connection.release();
         callback(err,result);
@@ -340,6 +347,18 @@ module.exports.getStudiesCreatedByUser = function(user, callback){
   });
 };
 
+module.exports.getStudiesFinishedByUser = function(userId, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT studyId FROM studies_users_rel " +
+      "WHERE userId=? AND confirmed=1 AND registered=1",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+}
+
 
 module.exports.getLabelsForStudy = function(userstudy, callback){
   mysql.getConnection(function(connection) {
@@ -417,7 +436,6 @@ module.exports.unmapUserFromStudy = function(userId, userstudyId, callback){
       'WHERE userId=? ' +
       'AND studyId=?',
       [userId, userstudyId],
-      // todo what happens if the user is confirmed. Unmap or not?
       function(err,result){
         connection.release();
         callback(err,result);
@@ -534,45 +552,43 @@ var delUserstudyRelations = function(connection, userstudyId, type) {
   });
 };
 
-module.exports.getStudiesRelationFor = function(userstudyId, type){
-  return new Promise(function(resolve,reject) {
+module.exports.getStudiesRelationFor = function(userstudyId, type, callback){
     var tableName;
-    var columnName;
 
     switch(type){
       case 'news':
         tableName = "studies_news_rel";
-        columnName = "newsId";
         break;
       case 'labels':
         tableName = "studies_labels_rel";
-        columnName = "labelId";
         break;
       case 'requires':
         tableName = "studies_requires_rel";
-        columnName = "requiresId";
+        break;
+      case 'users':
+        tableName = "studies_users_rel";
         break;
       default:
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation getter... recieved: " + type + " expected: [news/labels,requires]"});
+      callback("wrong type for userstudy relation getter... recieved: " + type + " " +
+      "expected: news || labels || requires || users]");
     } else {
       mysql.getConnection(function(connection) {
-        connection.query('SELECT ' + columnName + ' AS id FROM ' + tableName + ' WHERE studyId=?',
+        connection.query('SELECT * FROM ' + tableName + ' WHERE studyId=?',
           userstudyId,
           function (err, result) {
             if (err) {
               connection.release();
-              reject(err);
+              callback(err);
             } else {
               connection.release();
-              resolve(result);
+              callback(err,result);
             }
           });
       });
     }
-  });
 };
 
 

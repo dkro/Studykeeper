@@ -22,17 +22,17 @@ module.exports = function(app) {
   app.use(restify.fullResponse());
   restify.CORS.ALLOW_HEADERS.push('authorization');
 
-  var directory = path.resolve('../frontend/public/');
   // All routes are mapped to frontend/public except for /api/* routes
   // This supplies the static content of the frontend.
   // This also means all new routes need to be added with a /api/* prefix!!!
   app.get(/^\/(?!api).*/, restify.serveStatic({
-    'directory': directory,
+    'directory': '../frontend/public/',
     'default' : 'index.html'
   }));
 
   // --------------- Public routes ---------------
   app.post('/api/users/signup', userController.signup);
+  app.post('/api/users/mail', userController.sendSignUpMail);
   app.post('/api/users/retrievePassword', userController.retrievePW);
   app.get('/api/userstudiesp/:id', userStudyController.getPublicUserstudyById);
 
@@ -50,10 +50,8 @@ module.exports = function(app) {
   app.del('/api/users/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userController.deleteUser);
 
   // --------------- Userstudy routes ---------------
-  app.get('/api/userstudies', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.allUserstudies); //todo filtering on userbase
-  app.get('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.getUserstudyById); //
-  app.get('/api/userstudies/all', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.allUserstudiesFilteredForUser);
-  //app.get('/api/userstudies/created', userStudyController.allUserstudiesCreatedByUser);
+  app.get('/api/userstudies', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.allUserstudies);
+  app.get('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.getUserstudyById);
 
   app.post('/api/userstudies',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.createUserstudy);
   app.del('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.deleteUserstudy);
@@ -61,8 +59,9 @@ module.exports = function(app) {
   app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor']), userStudyController.publishUserstudy);
   app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.closeUserstudy);
 
-  app.post('/api/userstudies/:id/register',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.registerUserToStudy);
-  app.post('/api/userstudies/:id/signoff',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), userStudyController.removeUserFromStudy);
+  app.post('/api/userstudies/:studyId/register/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.registerUserToStudy);
+  app.post('/api/userstudies/:studyId/signoff/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.signoff);
+  app.post('/api/userstudies/:id/remove/:userId',  auth.tokenAuthenticate, auth.requiresRole(['tutor','executor']), userStudyController.removeUserFromStudy);
   app.post('/api/userstudies/:id/confirm/:userId',  auth.tokenAuthenticate, auth.requiresRole(['executor']), userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------
@@ -70,7 +69,7 @@ module.exports = function(app) {
   app.get('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), labelController.getLabelById);
 
   app.post('/api/labels', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.createLabel);
-  app.del('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.deleteLabel); // todo make it only possible to delete when its not mapped
+  app.del('/api/labels/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), labelController.deleteLabel);
 
   // --------------- Newsfeed routes ---------------
   app.get('/api/news', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), newsfeedController.allNews);
@@ -85,7 +84,7 @@ module.exports = function(app) {
   app.get('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), templateController.getTemplateById);
 
   app.post('/api/templates', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.createTemplate);
-  app.del('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.deleteTemplate); // todo make it only possible to delete when its not mapped
+  app.del('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.deleteTemplate);
   app.put('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.editTemplate);
 
   // Mails
