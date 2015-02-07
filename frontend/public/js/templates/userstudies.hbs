@@ -15,11 +15,11 @@
         <thead>
             <tr>
                 <th>
-                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Von" value=selectedFromFilter}}
+                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Von" date=selectedFromFilter}}
                     <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearFromFilter'}}></span>
                 </th>
                 <th>
-                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Bis" value=selectedToFilter}}
+                    {{view "date-picker" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Bis" date=selectedToFilter}}
                     <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearToFilter'}}></span>
                 </th>
                 <th class="studies__column--name">
@@ -55,8 +55,8 @@
             {{#if studiesList}}
                 {{#each study in studiesList}}
                     <tr {{bind-attr class=":studies__row study.closed:studies__row--expired:studies__row--notExpired"}} {{action 'showStudyConfig' study}}>
-                        <td>{{study.fromDate}}</td>
-                        <td>{{study.untilDate}}</td>
+                        <td>{{germanDate study.fromDate}}</td>
+                        <td>{{germanDate study.untilDate}}</td>
                         <td class="studies__column--name">{{study.title}}</td>
                         <td class="studies__column--location">{{study.location}}</td>
                         <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>

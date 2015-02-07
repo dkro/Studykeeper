@@ -244,13 +244,14 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetch('news', params.template_id);
+    return this.store.fetch('template', params.template_id);
   },
 
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.set('title', model.get('title'));
-    controller.set('persistedFields', model.get('fields'));
+    controller.set('fields', model.get('fields'));
+    controller.reset();
   }
 });
 

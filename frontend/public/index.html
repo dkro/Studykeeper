@@ -51,11 +51,11 @@
                             <div class="list-group-item-text studyDisplay__study__body">
                                 <span class="studyDisplay__study__body__row">
                                     <div class="studyDisplay__study__body__cell--description">Von: </div>
-                                    <div class="studyDisplay__study__body__cell--value">{{study.fromDate}}</div>
+                                    <div class="studyDisplay__study__body__cell--value">{{germanDate study.fromDate}}</div>
                                 </span>
                                 <span class="studyDisplay__study__body__row">
                                     <div class="studyDisplay__study__body__cell--description">Bis: </div>
-                                    <div class="studyDisplay__study__body__cell--value">{{study.untilDate}}</div>
+                                    <div class="studyDisplay__study__body__cell--value">{{germanDate study.untilDate}}</div>
                                 </span>
                                 <span class="studyDisplay__study__body__row">
                                     <div class="studyDisplay__study__body__cell--description">Ort: </div>
@@ -160,7 +160,7 @@
                 <div {{bind-attr class=":form-group dateInvalid:has-error"}}>
                     <label for="dateNewsConfigInput" class="col-sm-2 control-label">Datum:</label>
                     <div class="col-sm-10">
-                        {{view "date-picker" aria-describedby="dateNewsConfigHelp" id="dateNewsConfigInput" readonly="readonly" classNames="form-control control management--single__datePicker" value=date placeholder="Datum"}}
+                        {{view "date-field" aria-describedby="dateNewsConfigHelp" id="dateNewsConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=externalDate placeholder="Datum"}}
 
                         {{#if dateInvalid}}
                             <span id="dateNewsConfigHelp" class="help-block">{{dateInvalid}}</span>
@@ -309,34 +309,15 @@
                         <label class="col-sm-2 control-label">Felder:</label>
                     </div>
                 {{/if}}
-                {{#each field in persistedFields}}
+                {{#each field in fields}}
                     <div class="form-group component__config--template__field__nameWrapper">
                         <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="input-group component__config--template__field__nameInputGroup">
                                 <span class="input-group-addon">Name</span>
-                                {{input type="text" value=field.title placeholder="Feldname" action="addField" classNames="form-control"}}
+                                {{input type="text" value=field.title placeholder="Feldname" classNames="form-control"}}
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group component__config--template__field__valueWrapper">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="input-group component__config--template__field__valueInputGroup">
-                                <span class="input-group-addon">Text</span>
-                                {{textarea rows="2" value=field.value classNames="form-control component__config--template__field__value" placeholder="Feldinhalt"}}
-                            </div>
-                        </div>
-                    </div>
-                {{/each}}
-                {{#each field in notPersistedFields}}
-                    <div class="form-group component__config--template__field__nameWrapper">
-                        <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="input-group component__config--template__field__nameInputGroup">
-                            <span class="input-group-addon">Name</span>
-                            {{input type="text" value=field.title placeholder="Feldname" action="addField" classNames="form-control"}}
-                        </div>
-                    </div>
                     </div>
                     <div class="form-group component__config--template__field__valueWrapper">
                         <div class="col-sm-offset-2 col-sm-10">
@@ -349,8 +330,8 @@
                 {{/each}}
                 <div class="form-group component__config--template__addField__wrapper">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-default component__config--template__addField__button">
-                            <span class="glyphicon glyphicon-plus" {{action 'addField'}}></span>
+                        <button class="btn btn-default component__config--template__addField__button" {{action 'addField'}}>
+                            <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </div>
                 </div>
@@ -396,8 +377,8 @@
         <script src="bower_components/ember/ember.js"></script>
         <script src="bower_components/ember-data/ember-data.js"></script>
         <script src="bower_components/moment/moment.js"></script>
-        <script src="bower_components/ember-pikaday/build/lib.js"></script>
         <script src="bower_components/pikaday/pikaday.js"></script>
+        <script src="bower_components/ember-pikaday/build/lib.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="userstudy-manager-ember.js"></script>
         <script src="js/templates.js"></script>

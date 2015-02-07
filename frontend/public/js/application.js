@@ -1,6 +1,6 @@
 window.StudyManager = Ember.Application.create();
 
-StudyManager.ApplicationAdapter = DS.FixtureAdapter;
+//StudyManager.ApplicationAdapter = DS.FixtureAdapter;
 
 
 StudyManager.ApplicationStore = DS.Store.extend({
@@ -14,6 +14,10 @@ var validationInput = Ember.TextField.extend({
 
 Ember.Handlebars.helper('validation-input', validationInput);
 
+Ember.Handlebars.helper('germanDate', function(date, options) {
+    return moment(date).format('DD.MM.YYYY');
+});
+
 // Important: Ember.js has new deprecations added for "global lookup of views" in version 1.8.
 // That means: Views for example have to be named : "TestView" or "SuperTestView"
 // and are used in the HTML file by using "{{view "test"}}" or {{view "super-test"}}
@@ -23,7 +27,7 @@ StudyManager.DatePickerView = Ember.TextField.extend({
     modelChangedValue: function(){
         var picker = this.get('_picker');
         if (picker){
-            //picker.setDate(this.get('value'));
+            picker.setDate(this.get('value'));
         }
     }.observes('value'),
 
@@ -45,5 +49,29 @@ StudyManager.DatePickerView = Ember.TextField.extend({
             picker.destroy();
         }
         this.set('_picker', null);
+    }
+});
+
+StudyManager.DateFieldView = Ember.TextField.extend({
+    classNames: ['form-control'],
+    picker: null,
+
+    updateValues: (function() {
+        var date;
+        date = moment(this.get('value'), 'DD.MM.YYYY');
+        if (date.isValid()) {
+            this.set("date", date.toDate());
+        } else {
+            this.set("date", null);
+        }
+    }).observes("value"),
+
+    didInsertElement: function() {
+        var picker;
+        picker = new Pikaday({
+            field: this.$()[0],
+            format: "DD.MM.YYYY"
+        });
+        return this.set("picker", picker);
     }
 });

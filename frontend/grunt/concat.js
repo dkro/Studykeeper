@@ -13,7 +13,8 @@ module.exports = {
         'public/js/controllers/**/*.js',
         'public/js/models/**/*.js',
         'public/js/components/**/*.js',
-        'public/js/transforms/**/*.js'
+        'public/js/transforms/**/*.js',
+        'public/js/objects/**/*.js'
       ]
     }
   }
