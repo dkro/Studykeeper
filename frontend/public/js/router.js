@@ -281,6 +281,7 @@ StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('date', model.get('date'));
     controller.set('description', model.get('description'));
     controller.set('link', model.get('link'));
+    controller.reset();
   }
 });
 

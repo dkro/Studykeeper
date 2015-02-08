@@ -1,6 +1,6 @@
 StudyManager.News = DS.Model.extend({
     title: DS.attr('string'),
-    date: DS.attr('date'),
+    date: DS.attr('isodate'),
     description: DS.attr('string'),
     link: DS.attr('string'),
     userstudies: DS.hasMany('userstudy', { async: true })

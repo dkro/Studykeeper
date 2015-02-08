@@ -53,16 +53,23 @@ StudyManager.DatePickerView = Ember.TextField.extend({
 });
 
 StudyManager.DateFieldView = Ember.TextField.extend({
-    classNames: ['form-control'],
     picker: null,
 
     updateValues: (function() {
         var date;
-        date = moment(this.get('value'), 'DD.MM.YYYY');
-        if (date.isValid()) {
-            this.set("date", date.toDate());
-        } else {
+
+        var val = this.get("value");
+
+        if (Ember.empty(val)) {
             this.set("date", null);
+        } else {
+            var parts = val.match(/(\d+)/g);
+            date = moment(new Date(parts[2], parts[1]-1, parts[0]));
+            if (date.isValid()) {
+                this.set("date", date);
+            } else {
+                this.set("date", null);
+            }
         }
     }).observes("value"),
 

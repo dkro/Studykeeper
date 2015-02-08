@@ -21,7 +21,7 @@
     "bootstrap": "~3.3.1",
     "ember": "~1.8.1",
     "ember-data": "~1.0.0-beta.12",
-    "ember-pikaday": "~0.1.7"
+    "ember-pikaday": "~0.1.8"
   },
   "resolutions": {
     "ember": "~1.8.1"

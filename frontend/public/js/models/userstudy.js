@@ -1,8 +1,8 @@
 StudyManager.Userstudy = DS.Model.extend({
     title: DS.attr('string'),
     description: DS.attr('string'),
-    fromDate: DS.attr('date'),
-    untilDate: DS.attr('date'),
+    fromDate: DS.attr('isodate'),
+    untilDate: DS.attr('isodate'),
     location: DS.attr('string'),
     link: DS.attr('string'),
     compensation: DS.attr('number'),
