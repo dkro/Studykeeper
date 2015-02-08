@@ -166,7 +166,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var toFilter = this.get('selectedToFilter');
 
         if (!Ember.empty(fromFilter) && !Ember.empty(toFilter)) {
-            this.inRange(from, fromFilter, toFilter) && this.inRange(to, fromFilter, toFilter);
+            res = this.inRange(from, fromFilter, toFilter) && this.inRange(to, fromFilter, toFilter);
         } else if (!Ember.empty(fromFilter) && Ember.empty(toFilter)) {
             res = (this.compare(from, fromFilter) >= 0) && (this.compare(to, fromFilter) >= 0);
         } else if (Ember.empty(fromFilter) && !Ember.empty(toFilter)) {
@@ -182,13 +182,9 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     },
 
     compare: function(date1, date2) {
-        // Compare two dates (could be of any type supported by the convert
-        // function above) and returns:
         //  -1 : if a < b
         //   0 : if a = b
         //   1 : if a > b
-        // NaN : if a or b is an illegal date
-        // NOTE: The code inside isFinite does an assignment (=).
         return (
             isFinite(date1=this.parseDate(date1).valueOf()) &&
             isFinite(date2=this.parseDate(date2).valueOf()) ?
