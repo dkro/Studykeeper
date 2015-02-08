@@ -14,11 +14,11 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>
+                <th class="studies__filter--fromDate">
                     {{view "date-field" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Von" value=selectedFromFilter}}
                     <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearFromFilter'}}></span>
                 </th>
-                <th>
+                <th class="studies__filter--toDate">
                     {{view "date-field" readonly="readonly" classNames="form-control input-sm management--all__datePicker" placeholder="Filter Bis" value=selectedToFilter}}
                     <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearToFilter'}}></span>
                 </th>

@@ -19,6 +19,14 @@
     min-width: 5em;
 }
 
+.studies__filter--fromDate {
+    white-space: nowrap;
+}
+
+.studies__filter--toDate {
+    white-space: nowrap;
+}
+
 .studies__filter--amazon {
     min-width: 6em;
 }
