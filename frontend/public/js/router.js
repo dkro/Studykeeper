@@ -160,7 +160,7 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.determineCanEdit();
+    controller.determineNeededProperties();
   }
 });
 

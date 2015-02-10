@@ -15,6 +15,10 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         }
     },
 
+    determineNeededProperties: function() {
+        this.determineCanEdit();
+    },
+
     canEdit: false,
 
     determineCanEdit: function() {
