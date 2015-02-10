@@ -97,5 +97,21 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
 
     descriptionInvalid: null,
 
-    linkInvalid: null
+    linkInvalid: null,
+
+    labels: [],
+
+    news: [],
+
+    users: [],
+
+    templates: [],
+
+    executor: null,
+
+    tutor: null,
+
+    template: null,
+
+    allRequiredStudies: []
 });

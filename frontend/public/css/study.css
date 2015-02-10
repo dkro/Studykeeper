@@ -109,7 +109,16 @@
     color: midnightblue;
 }
 
-.study__button {
+.study__editRegisterButton {
+    margin-right: 1em;
+    display: inline-block;
+}
+
+.study__cancelButton {
+    display: inline-block;
+}
+
+.study__button__wrapper {
     margin-top: 2em;
     margin-bottom: 2em;
 }

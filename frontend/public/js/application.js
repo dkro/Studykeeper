@@ -18,6 +18,24 @@ Ember.Handlebars.helper('germanDate', function(date, options) {
     return moment(date).format('DD.MM.YYYY');
 });
 
+Ember.Handlebars.helper('typeOutput', function(item, type, options) {
+    var res = '';
+
+    if (type === 'NEWS_TYPE') {
+        res = item.get('title') + ' (' + item.get('date') + ')';
+    } else if (type === 'LABELS_TYPE') {
+        res = item.get('title');
+    } else if (type === 'STUDY_TYPE') {
+        res = item.get('title');
+    } else if (type === 'TEMPLATE_TYPE') {
+        res = item.get('title');
+    } else if (type === 'USER_TYPE') {
+        res = item.get('username') + ' (' + item.get('firstname') + ' ' + item.get('lastname') + ')';
+    }
+
+    return res;
+});
+
 // Important: Ember.js has new deprecations added for "global lookup of views" in version 1.8.
 // That means: Views for example have to be named : "TestView" or "SuperTestView"
 // and are used in the HTML file by using "{{view "test"}}" or {{view "super-test"}}

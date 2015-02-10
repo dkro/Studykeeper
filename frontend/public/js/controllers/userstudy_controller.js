@@ -8,6 +8,10 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             } else {
                 alert('TODO: Anmelden zur Studie');
             }
+        },
+
+        cancelButtonClick: function() {
+            this.transitionToRoute('userstudies');
         }
     },
 

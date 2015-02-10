@@ -59,6 +59,42 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         this.set('amazonValues', this.get('controllers.application').get('amazonValues'));
     },
 
+    determineAsyncProperties: function() {
+        this.determineExecutor();
+        this.determineTutor();
+        this.determineTemplate();
+    },
+
+    /**
+     * This fix is necessary so that the initial value is set correctly.
+     */
+    determineExecutor: function() {
+        var that = this;
+        var theExecutor = this.get('model').study.get('executor').then(function(anExecutor){
+            that.set('executor', anExecutor);
+        });
+    },
+
+    /**
+     * This fix is necessary so that the initial value is set correctly.
+     */
+    determineTutor: function() {
+        var that = this;
+        var theTutor = this.get('model').study.get('tutor').then(function(anTutor){
+            that.set('tutor', anTutor);
+        });
+    },
+
+    /**
+     * This fix is necessary so that the initial value is set correctly.
+     */
+    determineTemplate: function() {
+        var that = this;
+        var theTemplate = this.get('model').study.get('template').then(function(aTemplate){
+            that.set('template', aTemplate);
+        });
+    },
+
     statusMessage: null,
 
     title: null,
@@ -79,5 +115,15 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     amazon: null,
 
-    amazonValues: []
+    amazonValues: [],
+
+    executor: null,
+
+    tutor: null,
+
+    template: null,
+
+    allRequiredStudies: [],
+
+    selectedRequiredStudies: []
 });

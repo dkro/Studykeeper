@@ -1,9 +1,10 @@
 StudyManager.SelectionListComponent = Ember.Component.extend({
+    classNames: ['component__selectionList'],
+
     actions: {
     },
 
-    itemList: ['ABC', 'DEF'],
+    itemList: [],
 
-    title: "Titel"
-
+    itemType: null
 });

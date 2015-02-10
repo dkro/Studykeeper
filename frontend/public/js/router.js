@@ -169,12 +169,22 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
     var that = this;
 
     return Ember.RSVP.hash({
-      study: that.store.find('userstudy', params.userstudy_id),
       allNews: that.store.find('news'),
       allLabels: that.store.find('label'),
       allUsers: that.store.find('user'),
-      allTemplates: that.store.find('template')
+      allTemplates: that.store.find('template'),
+      allStudies: that.store.find('userstudy'),
+      study: that.store.find('userstudy', params.userstudy_id)
     });
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    var possibleRequiredStudies = this.store.filter('userstudy', function (study) {
+      return study.get('id') !== model.study.get('id');
+    });
+    controller.set('allRequiredStudies', possibleRequiredStudies);
+    controller.determineAsyncProperties();
   }
 });
 
