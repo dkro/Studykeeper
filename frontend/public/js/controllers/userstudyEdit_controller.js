@@ -121,9 +121,15 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     tutor: null,
 
+    selectedLabels: [],
+
+    selectedNews: [],
+
+    registeredUsers: [],
+
     template: null,
 
     allRequiredStudies: [],
 
-    selectedRequiredStudies: []
+    requiredStudies: []
 });

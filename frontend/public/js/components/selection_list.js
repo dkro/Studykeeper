@@ -6,5 +6,7 @@ StudyManager.SelectionListComponent = Ember.Component.extend({
 
     itemList: [],
 
-    itemType: null
+    itemType: null,
+
+    selections: []
 });

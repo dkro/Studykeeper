@@ -1,18 +1,28 @@
 StudyManager.SelectionItemComponent = Ember.Component.extend({
     tagName: 'li',
 
-    classNameBindings: [':list-group-item', ':component__selectionItem','isClicked:list-group-item-info'],
+    classNameBindings: [':list-group-item', ':component__selectionItem','isSelected:list-group-item-info'],
 
-    isClicked: false,
+    isSelected: function() {
+        return this.get('selections').contains(this.get('item'));
+    }.property('selections.@each'),
 
     actions: {
     },
 
     click: function() {
-        this.set('isClicked', !this.get('isClicked'));
+        var newState = !this.get('isSelected');
+
+        if (newState) {
+            this.get('selections').pushObject(this.get('item'));
+        } else {
+            this.get('selections').removeObject(this.get('item'));
+        }
     },
 
     itemType: null,
 
-    item: null
+    item: null,
+
+    selections: []
 });
