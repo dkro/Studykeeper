@@ -183,7 +183,7 @@ module.exports.getAllTemplates = function (callback) {
                      'FROM templates t ' +
                      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
                      'LEFT JOIN userstudies us ON us.templateId=t.id ' +
-                     'GROUP BY t.id;',
+                     'GROUP BY tf.id;',
       function(err,result){
         connection.release();
         callback(err,result);
@@ -200,7 +200,7 @@ module.exports.getTemplateById = function (templateId, callback) {
                      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
                      'LEFT JOIN userstudies us ON us.templateId=t.id ' +
                      'WHERE t.id=? ' +
-                     'GROUP BY t.id;',
+                     'GROUP BY tf.id;',
       templateId,
       function(err,result){
         connection.release();
