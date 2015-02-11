@@ -5,7 +5,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         },
 
         createStudy: function() {
-            this.transitionToRoute('study-creation');
+            this.transitionToRoute('userstudy-creation');
         },
 
         deleteStudy: function(study) {

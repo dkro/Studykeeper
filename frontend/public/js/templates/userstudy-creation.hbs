@@ -1,0 +1,12 @@
+<h2 class="management--single__heading">Studie erstellen</h2>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+{{study-config isStudyCreation=true save="createStudy" cancel="cancelView" title="" fromDate=fromDate
+    toDate=toDate mmi=mmi amazon=amazon mmiPoints=mmiPoints amazonValues=amazonValues
+    location=location description=description link=link labels=model.allLabels
+    users=model.allUsers allRequiredStudies=model.allStudies templates=model.allTemplates
+    selectedLabels=selectedLabels news=model.allNews selectedNews=selectedNews registeredUsers=registeredUsers
+    requiredStudies=requiredStudies template=template executor=executor tutor=tutor}}

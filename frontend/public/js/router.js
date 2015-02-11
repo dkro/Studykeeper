@@ -9,6 +9,7 @@ StudyManager.Router.map(function() {
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
   this.resource('userstudy-edit', { path: '/userstudies/:userstudy_id/studyEdit' });
+  this.resource('userstudy-creation', { path: '/createStudy' });
   this.resource('labels');
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
@@ -189,6 +190,20 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('registeredUsers', model.study.get('registeredUsers'));
     controller.set('requiredStudies', model.study.get('requiredStudies'));
     controller.determineAsyncProperties();
+  }
+});
+
+StudyManager.UserstudyCreationRoute = StudyManager.AuthenticationRoute.extend({
+  model: function() {
+    var that = this;
+
+    return Ember.RSVP.hash({
+      allNews: that.store.find('news'),
+      allLabels: that.store.find('label'),
+      allUsers: that.store.find('user'),
+      allTemplates: that.store.find('template'),
+      allStudies: that.store.find('userstudy')
+    });
   }
 });
 

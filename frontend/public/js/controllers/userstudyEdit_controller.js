@@ -25,6 +25,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
         updateStudy: function(newData) {
             var thisStudy = this.get('model').study;
+            var id = thisStudy.get('id');
             thisStudy.set('title', newData.titleNew);
             thisStudy.set('fromDate', newData.fromNew);
             thisStudy.set('untilDate', newData.toNew);
@@ -32,12 +33,24 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             thisStudy.set('description', newData.descriptionNew);
             thisStudy.set('link', newData.linkNew);
             thisStudy.set('mmi', newData.mmiNew);
-            thisStudy.set('amazon', newData.amazonNew);
+            thisStudy.set('compensation', newData.amazonNew);
+            // TODO: space!
+            thisStudy.get('labels').clear();
+            thisStudy.get('labels').pushObjects(this.get('selectedLabels'));
+            thisStudy.get('news').clear();
+            thisStudy.get('news').pushObjects(this.get('selectedNews'));
+            thisStudy.set('template', this.get('template'));
+            thisStudy.set('executor', this.get('executor'));
+            thisStudy.set('tutor', this.get('tutor'));
+            thisStudy.get('registeredUsers').clear();
+            thisStudy.get('registeredUsers').pushObjects(this.get('registeredUsers'));
+            thisStudy.get('requiredStudies').clear();
+            thisStudy.get('requiredStudies').pushObjects(this.get('requiredStudies'));
 
             var that = this;
             var name = thisStudy.get('title');
             thisStudy.save().then(function(response) {
-                that.transitionToRoute('userstudy').then(function () {
+                that.transitionToRoute('userstudy', id).then(function () {
                     var aMessage = 'Studie \"' + name + '\" erfolgreich geändert!';
                     that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: true });
                 });
