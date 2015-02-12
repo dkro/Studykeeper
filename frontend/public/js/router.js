@@ -52,7 +52,7 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   },
 
   beforeModel: function(transition) {
-    if (!this.controllerFor('application').get('token')) {
+    if (Ember.empty(this.controllerFor('application').get('token'))) {
       this.redirectToLogin(transition);
     }
   },
@@ -114,7 +114,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     var uId = this.controllerFor('application').get('currentUserId');
     var that = this;
 
-    return this.store.fetch('user', uId).then(function(user) {
+    return this.store.find('user', uId).then(function(user) {
       return Ember.RSVP.hash({
         registeredStudies: user.get('registeredFor'),
         createdStudies: user.get('isExecutorFor'),
