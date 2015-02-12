@@ -29,5 +29,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var isExecutor = userRole === 'tutor' && this.get('model').get('executor').get('id') === currentUserId;
 
         this.set('canEdit', isTutor || isExecutor);
-    }
+    },
+
+    statusMessage: null
 });

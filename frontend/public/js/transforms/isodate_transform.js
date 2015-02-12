@@ -10,7 +10,7 @@ StudyManager.IsodateTransform = DS.Transform.extend({
     serialize: function (deserialized) {
         if (deserialized) {
             var parts = deserialized.match(/(\d+)/g);
-            return new Date(parts[2], parts[1]-1, parts[0]);
+            return new Date(parts[2], parts[1]-1, parts[0], 12, 0, 0, 0);
         }
 
         return deserialized;

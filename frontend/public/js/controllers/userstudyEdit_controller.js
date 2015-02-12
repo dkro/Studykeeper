@@ -56,8 +56,10 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
                 });
             }, function(error) {
                 thisStudy.rollback();
-                var aMessage = 'Studie \"' + name + '\" konnte nicht geändert werden!';
-                that.set('statusMessage', { message: aMessage, isSuccess: false });
+                that.transitionToRoute('userstudy', id).then(function () {
+                    var aMessage = error.responseJSON.message;
+                    that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: true });
+                });
             });
         },
 

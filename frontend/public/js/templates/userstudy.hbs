@@ -4,6 +4,10 @@
     <span class="glyphicon glyphicon-calendar study__dateRange--delimiter"></span> {{model.fromDate}} - {{model.untilDate}}
 </div>
 
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
 <div class="data__wrapper">
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>

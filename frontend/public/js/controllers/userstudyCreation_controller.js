@@ -32,7 +32,9 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
                 });
             }, function(error) {
                 newStudy.deleteRecord();
-                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                that.transitionToRoute('userstudies').then(function () {
+                    that.get('controllers.userstudies').set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                });
             });
         },
 
