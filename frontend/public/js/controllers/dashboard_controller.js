@@ -11,7 +11,9 @@ StudyManager.DashboardController = Ember.Controller.extend({
         }
     },
 
-    isTutor: localStorage.isTutor
+    isTutor: localStorage.isTutor,
+
+    isLMUStaff: localStorage.isLMUStaff
 });
 
 

@@ -6,6 +6,7 @@ StudyManager.User = DS.Model.extend({
     collectsMMI: DS.attr('boolean'),
     role: DS.attr('string'),
     mmi: DS.attr('number'),
+    lmuStaff: DS.attr('boolean'),
     isExecutorFor: DS.hasMany('userstudy', { async: true }),
     isTutorFor: DS.hasMany('userstudy', { async: true }),
     registeredFor: DS.hasMany('userstudy', { async: true })
@@ -21,6 +22,7 @@ StudyManager.User.FIXTURES = [
         collectsMMI: true,
         role: 'tutor',
         mmi: 2,
+        lmuStaff: true,
         isExecutorFor: [1, 2],
         isTutorFor: [1, 2],
         registeredFor: [1, 2, 3]
@@ -34,6 +36,7 @@ StudyManager.User.FIXTURES = [
         collectsMMI: false,
         role: 'participant',
         mmi: 0,
+        lmuStaff: true,
         isExecutorFor: [3, 4, 5],
         isTutorFor: [3, 4, 5],
         registeredFor: [1, 2, 4]
