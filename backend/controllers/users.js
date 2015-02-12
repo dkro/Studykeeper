@@ -293,14 +293,37 @@ module.exports.createUser = function(req, res, next) {
     return UserPromise.usernameAvailable(user.username);
   })
   .then(function(){
-    user.password = uuid.v1();
+    user.password = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    User.saveUser(user,function(err) {
+    for( var i=0; i < 10; i+= 1 ) {
+      user.password += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    User.saveUser(user,function(err,result) {
       if (err){
         res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
         return next();
       } else {
-        res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt.'});
+        user.id = result.insertId;
+        sendUserWelcomeMail(user.username,user.password, function(err){
+          if (err) {
+            res.send(500, {status:'failure', message: 'Der Nutzer wurde erstellt, jedoch kam es zu einem Fehler ' +
+            'beim Senden der Willkommens-Mail mit dem Passwort.', internal: err});
+            next();
+          } else {
+            sendSignUpMail(user, function(err){
+              if (err) {
+                res.send(500, {status:'failure', message: 'Der Nutzer wurde erstellt, jedoch kam es zu einem Fehler ' +
+                'beim senden der ConfirmationMail.', internal: err});
+                next();
+              } else {
+                res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt und eine Email mit seinem Password versandt.'});
+                next();
+              }
+            });
+          }
+        });
         return next();
       }
     });
@@ -351,6 +374,25 @@ module.exports.editUser = function(req, res, next) {
       res.json(500, {status:'failure', message: err});
       return next();
     });
+};
+
+var sendUserWelcomeMail = function(email,password,callback) {
+  var mail = {
+    from: 'StudyKeeper <no-reply@studykeeper.com>',
+    to: email,
+    subject: 'Es wurde ein Account für Sie erstellt.',
+    html: 'Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen' +
+    ' Ihrer Email Adresse bekommen. Nachdem Sie Ihr Email Adresse bestätigt haben können Sie sich mit Ihrer Email-Adresse' +
+    'und diesem Passwort: ' + password + ' bei der folgenden URL einloggen ' +
+    '<a>http://studykeeper.medien.ifi.lmu.de:10001/</a> ' +
+    'Das Passwort können Sie jederzeit unter der Account Konfiguration ändern.'};
+  Mail.sendMail(mail,function(err,result){
+    if (err) {
+      callback(err);
+    } else {
+      callback(err,result);
+    }
+  });
 };
 
 module.exports.deleteUser = function(req, res, next) {

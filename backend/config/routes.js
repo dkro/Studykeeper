@@ -88,7 +88,4 @@ module.exports = function(app) {
   app.del('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.deleteTemplate);
   app.put('/api/templates/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), templateController.editTemplate);
 
-  // Mails
-  // tutore sind sueradmins. Mails enden bei loeschen von nutzerstudien
-
 };
