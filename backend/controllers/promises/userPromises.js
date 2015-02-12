@@ -238,12 +238,18 @@ module.exports.userFromToken = function(req){
   });
 };
 
-module.exports.userFromName = function(user){
+module.exports.userFromNameWithConfirmationData = function(user){
   return new Promise(function(resolve, reject){
-    User.getUserByName(user.username, function(err, result){
+    User.getUserByNameWithConfirmationData(user.username, function(err, result){
       if (err) {
         reject(err);
-      } else if (result.length > 0) {resolve(result[0]);
+      } else if (result.length > 0) {
+        if (result[0].confirmed === 1){
+          resolve(result[0]);
+        } else {
+          reject("Die Email-Adresse wurde nicht bestätigt. Bitte Bestätigen Sie Ihre Email-Adresse, bevor Sie sich " +
+          "einloggen können");
+        }
       } else {
         reject("Der Nutzer wurde nicht gefunden");
       }

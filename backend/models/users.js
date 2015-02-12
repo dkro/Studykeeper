@@ -2,6 +2,7 @@
 var mysql      = require('../config/mysql');
 var crypt      = require('../utilities/encryption');
 var uuid       = require('node-uuid');
+var Promise    = require('es6-promise').Promise;
 
 module.exports.getUsers = function(callback) {
   mysql.getConnection(function(connection) {
@@ -63,6 +64,27 @@ module.exports.getUserByName = function(username, callback) {
                       "LEFT JOIN roles r ON u.role=r.id " +
                       "WHERE u.username=? AND u.visible=1;",
                       username,
+      function(err,result) {
+        if (err) {
+          callback(err)
+        } else {
+          connection.release();
+          callback(err,result);
+        }
+      }
+    );
+  });
+};
+
+module.exports.getUserByNameWithConfirmationData = function(username, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query("SELECT u.id, u.username, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname, " +
+      "uc.confirmed " +
+      "FROM users u " +
+      "LEFT JOIN roles r ON u.role=r.id " +
+      "LEFT JOIN users_confirm uc ON u.id=uc.userId " +
+      "WHERE u.username=? AND u.visible=1;",
+      username,
       function(err,result) {
         if (err) {
           callback(err)
@@ -142,8 +164,7 @@ module.exports.createConfirmationLink = function(userId,hash,callback){
 module.exports.getUserForHash = function(hash, callback){
   mysql.getConnection(function(connection){
     connection.query("SELECT * FROM users_confirm " +
-      "WHERE hash=?" +
-      hash,
+      "WHERE hash=" + connection.escape(hash),
       function(err,result){
         connection.release();
         callback(err,result);
@@ -151,7 +172,7 @@ module.exports.getUserForHash = function(hash, callback){
   });
 };
 
-module.exports.deleteUnconfirmedUsers = function(date, callback) {
+module.exports.deleteUnconfirmedUser = function(userId, callback) {
   mysql.getConnection(function (connection) {
     // Start a Transaction
     connection.beginTransaction(function (err) {
@@ -161,8 +182,8 @@ module.exports.deleteUnconfirmedUsers = function(date, callback) {
       }
       // Delete Relation
       new Promise(function (resolve, reject) {
-        connection.query("DELETE FROM users_confirm WHERE token=?",
-          date,
+        connection.query("DELETE FROM users_confirm WHERE userId=?",
+          userId,
           function (err) {
             if (err) {
               reject(err);
@@ -172,16 +193,18 @@ module.exports.deleteUnconfirmedUsers = function(date, callback) {
           });
       })
         // Delete user
-        .then(function (resolve, reject) {
-          connection.query("DELETE FROM users_confirm WHERE token=?",
-            date,
-            function (err) {
-              if (err) {
-                reject(err);
-              } else {
-                resolve();
-              }
-            });
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            connection.query("DELETE FROM users WHERE id=?",
+              userId,
+              function (err) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+          });
         })
         // Finally commit
         .then(function () {

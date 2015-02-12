@@ -32,7 +32,7 @@ module.exports = function(app) {
 
   // --------------- Public routes ---------------
   app.post('/api/users/signup', userController.signup);
-  app.post('/api/users/confirm/:hash', userController.confirmUser);
+  app.get('/api/users/confirm/:hash', userController.confirmUser);
   app.post('/api/users/recovery', userController.retrievePW);
   app.get('/api/userstudiesp/:id', userStudyController.getPublicUserstudyById);
 

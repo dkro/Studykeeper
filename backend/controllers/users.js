@@ -159,7 +159,9 @@ var sendSignUpMail = function(user, callback){
         from: 'StudyKeeper <no-reply@studykeeper.com>',
         to: user.username,
         subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
-        html: '<a>http://studykeeper.medien.ifi.lmu.de:10001/users/confirm/' + hash + '</a>'};
+        html: 'Bitte clicken Sie auf folgenden Link um Ihre Email-Adresse zu bestätigten und melden sich dann ' +
+        'mit Ihren Nutzerdaten an. ' +
+        '<a>http://studykeeper.medien.ifi.lmu.de:10001/api/users/confirm/' + hash + '</a>'};
       Mail.sendMail(mail,function(err,result){
         if (err) {
           callback(err);
@@ -174,27 +176,33 @@ var sendSignUpMail = function(user, callback){
 module.exports.confirmUser = function(req, res, next){
  var hash = req.params.hash;
   User.getUserForHash(hash,function(err,result){
-    var now = new Date();
-    var ThreeDaysFromNow = new Date(now - 1000*60*30);
-
-    if (result[0].timestamp < ThreeDaysFromNow) {
-      User.deleteUnconfirmedUsers(function(err){
-        if (err){
-          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-        } else {
-          res.json(500, {status: 'failure', message: 'Der Token ist nicht mehr gültig. Bitte melden Sie sich erneut an'});
-        }
-      });
-      next();
+    if (!result || result.length === 0){
+      res.json(500, {status: 'failure', message: 'Die Hash wurde nicht gefunden. Bitte melden Sie sich erneut an.'});
     } else {
-      User.confirmUser(hash, function(err, result){
-        if (err){
-          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-        } else {
-          // todo redirect homepage
-          res.json({status: 'failure', message: 'Der Nutzer wurde erfolgreich bestätigt.'});
-        }
-      });
+      var hashentry = result[0];
+      var now = new Date();
+      var ThreeDaysFromNow = new Date(now - 1000*60*60*24*3);
+
+
+      if (result[0].timestamp < ThreeDaysFromNow) {
+        User.deleteUnconfirmedUser(hashentry.userId,function(err){
+          if (err){
+            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          } else {
+            res.json(500, {status: 'failure', message: 'Der Token ist nicht mehr gültig. Bitte melden Sie sich erneut an'});
+          }
+        });
+        next();
+      } else {
+        User.confirmUser(hash, function(err, result){
+          if (err){
+            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          } else {
+            res.header('Location', '/');
+            res.send(302);
+          }
+        });
+      }
     }
   });
 };
@@ -204,7 +212,7 @@ module.exports.login = function(req, res, next) {
 
   UserPromise.validLoginReq(req)
     .then(function (user){
-      return UserPromise.userFromName(user);
+      return UserPromise.userFromNameWithConfirmationData(user);
     })
     .then(function (result){
         user = result;
