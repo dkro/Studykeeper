@@ -389,8 +389,136 @@ module.exports.validateRole = function(roleArray, roleId, callback) {
 };
 
 
-module.exports.retrievePW = function(){
+module.exports.recoverPasswordRequest = function(req, res, next){
+  var email = req.body.userEmail;
 
+  UserPromise.userExists(email)
+    .then(function(){
+      sendPasswordRetrievalRequest(email,function(err){
+        if(err){
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          next();
+        } else {
+          res.json({status: 'success', message: 'Email wurde versandt.'});
+          next();
+        }
+      });
+    })
+    .catch(function(err){
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      next();
+    });
+};
+
+module.exports.recoverPasswordAction = function(req, res, next){
+  var now = new Date();
+  var ThreeDaysFromNow = new Date(now - 1000*60*60*24*3);
+  var hash = req.params.hash;
+
+  User.getPasswordRetrievalData(hash, function(err, result){
+    if (err) {
+      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      next();
+    } else if (!result || result.length === 0) {
+      res.json(500, {status: 'failure', message: 'Keine Anfrage zur Password-Wiederherstullung gefunden. ' +
+      'Eventuell ist Sie abgelaufen und wurde entfernt.'});
+      next();
+    } else if (result[0].timestamp < ThreeDaysFromNow) {
+      User.deleteOldPasswortRetrievalData(ThreeDaysFromNow,function(err){
+        if (err) {
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        } else {
+          res.json(500, {status: 'failure', message: 'Die Anfrage ist älter als drei Tage. Bitte führen Sie ' +
+          'erneut eine Anfrage zur Password Wiederherstellung aus.'});
+        }
+      });
+    } else {
+      var pwData = result[0];
+      var newpw = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for( var i=0; i < 10; i+= 1 ) {
+        newpw += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+
+      new Promise(function(resolve, reject){
+        User.setPassword(newpw, pwData.userId, function(err){
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      })
+      .then(function(){
+        return new Promise(function(resolve,reject){
+          User.deletePasswortRetrievalData(pwData.userId, function(err){
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      })
+      .then(function(){
+        sendPasswordRetrievalAction(pwData.username,newpw,function(err){
+          if (err) {
+            res.json(500, {status: 'failure', message: 'Server Fehler beim senden der Email. ' +
+            'Bitte Kontaktieren Sie uns persönlich um Ihr Passwort ' +
+            'widerherzustellen.', internal: err});
+          } else {
+            res.json({status: 'success', message: 'Email wurde versandt.'});
+            next();
+          }
+        });
+      })
+      .catch(function(err){
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+          next();
+      });
+    }
+  });
+};
+
+var sendPasswordRetrievalRequest = function(email, callback){
+  var hash = uuid.v1();
+  User.createPasswordRetrievalData(email,hash,function(err){
+    if (err){
+      callback(err);
+    } else {
+      var mail = {
+        from: 'StudyKeeper <no-reply@studykeeper.com>',
+        to: email,
+        subject: 'Password vergessen?',
+        html: 'Bitte clicken Sie auf folgenden Link um Ihr Passwort zurück zu setzen. Falls Sie diese Mail nicht  ' +
+        'angefordert haben bitte ignorieren Sie diese Mail. ' +
+        '<a>http://studykeeper.medien.ifi.lmu.de:10001/api/users/recover/' + hash + '</a>'};
+      Mail.sendMail(mail,function(err,result){
+        if (err) {
+          callback(err);
+        } else {
+          callback(err,result);
+        }
+      });
+    }
+  });
+};
+
+var sendPasswordRetrievalAction = function(email, newpw, callback){
+  var mail = {
+    from: 'StudyKeeper <no-reply@studykeeper.com>',
+    to: email,
+    subject: 'Ihr Passwort wurde zurückgesetzt',
+    html: 'Ihr Passwort wurde zurückgesetzt. Ihr neues Passwort lautet: ' + newpw + '. Bitte loggen Sie sich ' +
+    'damit ein und ändern Ihr Passwort in den Account Konfigurationen.'};
+  Mail.sendMail(mail,function(err,result){
+    if (err) {
+      callback(err);
+    } else {
+      callback(err,result);
+    }
+  });
 };
 
 module.exports.changePW = function(req, res, next) {

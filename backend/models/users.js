@@ -229,7 +229,7 @@ module.exports.deleteUnconfirmedUser = function(userId, callback) {
         });
     });
   });
-}
+};
 
 
 module.exports.confirmUser = function(hash,callback){
@@ -239,6 +239,56 @@ module.exports.confirmUser = function(hash,callback){
       "timestamp=? " +
       "WHERE hash=?",
       [new Date(),hash],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+module.exports.getPasswordRetrievalData = function(hash, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT upr.*, u.username FROM users_pw_recovery upr " +
+      "LEFT JOIN users u ON upr.userId=u.id " +
+      "WHERE hash=" + connection.escape(hash),
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+
+module.exports.createPasswordRetrievalData = function(email, hash, callback){
+  mysql.getConnection(function(connection){
+    connection.query("INSERT INTO users_pw_recovery  " +
+      "(userId,hash,timestamp) " +
+      "VALUES ((SELECT id FROM users WHERE username=?),?,?)",
+      [email,hash,new Date()],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+module.exports.deletePasswortRetrievalData = function(userId, callback){
+  mysql.getConnection(function(connection){
+    connection.query("DELETE FROM users_pw_recovery " +
+      "WHERE userId=?",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+module.exports.deleteOldPasswortRetrievalData = function(date, callback){
+  mysql.getConnection(function(connection){
+    connection.query("DELETE FROM users_pw_recovery " +
+      "WHERE timestamp < ?",
+      date,
       function(err,result){
         connection.release();
         callback(err,result);
