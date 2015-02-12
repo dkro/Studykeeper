@@ -126,6 +126,49 @@ module.exports.saveUser = function(data, callback) {
   });
 };
 
+module.exports.createConfirmationLink = function(userId,hash,callback){
+  mysql.getConnection(function(connection){
+    connection.query("INSERT INTO users_confirm " +
+      "(userId,confirmed,timestamp,hash) " +
+      "VALUES (?,0,?,?)",
+    [userId,new Date(),hash],
+    function(err,result){
+      connection.release();
+      callback(err,result);
+    });
+  });
+};
+
+module.exports.getUserForHash = function(hash, callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT * FROM users_confirm " +
+      "WHERE hash=?" +
+      hash,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+module.exports.deleteUnconfirmedUsers = function(){
+
+};
+
+module.exports.confirmUser = function(hash,callback){
+  mysql.getConnection(function(connection){
+    connection.query("UPDATE users_confirm SET " +
+      "confirmed=1, " +
+      "timestamp=? " +
+      "WHERE hash=?",
+      [new Date(),hash],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
 module.exports.editUser = function(data,callback){
   var queryData = {username: data.username, firstname: data.firstname, lastname: data.lastname,
     role: data.role, lmuStaff: data.lmuStaff, mmi: data.mmi, collectsMMI:data.collectsMMI, id:data.id};

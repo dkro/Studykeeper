@@ -11,14 +11,14 @@ var nodemailer = require('nodemailer');
 
 // create reusable transporter object using SMTP transport
 var transporter = nodemailer.createTransport(
-  // If you want to use an smpt provider please uncomment those lines
-  //{
-  //service: 'Gmail',
-  //auth: {
-  //  user: 'gmail.user@gmail.com',
-  //  pass: 'userpass'
-  //}
-  //}
+  {
+    host: 'smtp.ifi.lmu.de',
+    port: 25,
+    auth: {
+      user: '',
+      pass: ''
+    }
+  }
 );
 
 // send mail with defined transport object
