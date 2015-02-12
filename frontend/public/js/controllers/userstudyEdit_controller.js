@@ -58,7 +58,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
                 thisStudy.rollback();
                 that.transitionToRoute('userstudy', id).then(function () {
                     var aMessage = error.responseJSON.message;
-                    that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: true });
+                    that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: false });
                 });
             });
         },
