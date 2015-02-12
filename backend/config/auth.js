@@ -6,10 +6,8 @@ exports.loginAuthenticate = function(req, res, next) {
       function(err, user, info){
         if(err) {
           res.json(500, {status: "failure", message: 'Server Error', internal: err});
-        }
-
-        if(user.length === 0 || user === false) {
-          res.json(401, {status: "failure", message: info});
+        } else if(user.length === 0 || user === false) {
+          res.json(401, {status: "failure", message: "Ungültige Anmeldaten.", internal: info});
         } else {
           next();
         }

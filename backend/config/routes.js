@@ -33,7 +33,7 @@ module.exports = function(app) {
   // --------------- Public routes ---------------
   app.post('/api/users/signup', userController.signup);
   app.post('/api/users/confirm/:hash', userController.confirmUser);
-  app.post('/api/users/retrievePassword', userController.retrievePW);
+  app.post('/api/users/recovery', userController.retrievePW);
   app.get('/api/userstudiesp/:id', userStudyController.getPublicUserstudyById);
 
   // --------------- Login routes ---------------
@@ -56,7 +56,7 @@ module.exports = function(app) {
   app.post('/api/userstudies',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.createUserstudy);
   app.del('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor']), userStudyController.editUserstudy);
-  app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor']), userStudyController.publishUserstudy);
+  app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.publishUserstudy);
   app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.closeUserstudy);
 
   app.post('/api/userstudies/:studyId/register/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.registerUserToStudy);

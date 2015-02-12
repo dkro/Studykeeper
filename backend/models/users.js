@@ -151,9 +151,63 @@ module.exports.getUserForHash = function(hash, callback){
   });
 };
 
-module.exports.deleteUnconfirmedUsers = function(){
+module.exports.deleteUnconfirmedUsers = function(date, callback) {
+  mysql.getConnection(function (connection) {
+    // Start a Transaction
+    connection.beginTransaction(function (err) {
+      if (err) {
+        connection.release();
+        throw err;
+      }
+      // Delete Relation
+      new Promise(function (resolve, reject) {
+        connection.query("DELETE FROM users_confirm WHERE token=?",
+          date,
+          function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+      })
+        // Delete user
+        .then(function (resolve, reject) {
+          connection.query("DELETE FROM users_confirm WHERE token=?",
+            date,
+            function (err) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+        })
+        // Finally commit
+        .then(function () {
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                connection.release();
+                throw err;
+              });
+            } else {
+              connection.release();
+              callback(err);
+            }
+          });
+        })
+        // Catch all erors
+        .catch(function (err) {
+          connection.rollback(function () {
+            connection.release();
+            callback(err);
+          });
+        });
+    });
+  });
+}
 
-};
 
 module.exports.confirmUser = function(hash,callback){
   mysql.getConnection(function(connection){

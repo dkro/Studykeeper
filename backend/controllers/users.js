@@ -16,6 +16,7 @@ module.exports.getUser = function(req, res, next) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       return next();
     } else {
+      result.lmuStaff = !!result.lmuStaff;
       res.json({user: result});
       return next();
     }
@@ -56,6 +57,7 @@ module.exports.getUserById = function(req, res, next) {
         user.isExecutorFor = executorIds;
         user.isTutorFor = tutorIds;
         user.registeredFor = registeredFor;
+        user.lmuStaff = !!user.lmuStaff;
         res.json({user: user});
         return next();
       })
@@ -91,6 +93,7 @@ module.exports.getUsers = function(req, res, next) {
             item.registeredFor = item.registeredFor.split(",").map(function(x){return parseInt(x);});
           }
 
+          item.lmuStaff = !!item.lmuStaff;
           callback();
         }, function(err){
           if(err){

@@ -33,17 +33,17 @@ module.exports.validFullUserstudyReq = function(req){
       if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
         validationErrors.push("Paper ungültig. URL Format erwartet: " + req.body.userstudy.paper);
       }
-      if (!Validator.isNumeric(req.body.userstudy.mmi)) {
+      if (!Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
       }
       if (!Validator.isNumeric(req.body.userstudy.compensation)) {
-        validationErrors.push("Compensation ungültig, numeric required: " + req.body.userstudy.compensation);
+        validationErrors.push("Amazon Punkte ungültig. Zahl erwartet: " + req.body.userstudy.compensation);
       }
       if (!Validator.isLength(req.body.userstudy.location, 3)) {
-        validationErrors.push("Location ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
+        validationErrors.push("Ort ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
       }
       if (!Validator.isNumeric(req.body.userstudy.space)) {
-        validationErrors.push("Space ungültig. Zahl erwartet: " + req.body.userstudy.space);
+        validationErrors.push("Teilnehmeranzahl ungültig. Zahl erwartet: " + req.body.userstudy.space);
       }
       if (req.body.userstudy.templateId && !Validator.isNumeric(req.body.userstudy.templateId)) {
         validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.templateId);
