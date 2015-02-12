@@ -2,10 +2,14 @@ StudyManager.PasswordRecoveryController = Ember.Controller.extend({
     actions: {
         recoverPassword: function() {
             this.set('statusMessage', null);
+            var that = this;
 
             if (this.emailIsValid()) {
-                this.set('passwordRecoverySuccessful', true);
-                alert('TODO!');
+                Ember.$.post('/api/users/recovery', this.get('userEmail')).then(function(response) {
+                    that.set('passwordRecoverySuccessful', true);
+                }, function(error) {
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false })
+                });
             } else {
                 this.set('statusMessage', { message: 'Geben Sie bitte eine valide Email-Adresse an!', isSuccess: false });
             }
