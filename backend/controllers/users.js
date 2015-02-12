@@ -113,94 +113,87 @@ module.exports.signup = function(req, res, next) {
   Promise.all(promises)
     .then(function(results) {
       user = results[0];
-      user.collectsMMI = user.mmi;
-      user.mmi = 0;
-      return new Promise(function (resolve, reject) {
-        if (user.username.indexOf("@cip.ifi.lmu.de") >= 0 || user.username.indexOf("@campus.lmu.de") >= 0) {
-          user.lmuStaff = 1;
-        }
-
-        resolve();
-      });
-
     })
     .then(function(){
-
-      User.saveUser(user, function (err,result) {
+      User.saveUser(user, function (err, result) {
         if (err) {
           throw err;
         } else {
           user.id = result.insertId;
-          User.createTokenForUser(user, function (err) {
+          sendSignUpMail(user, function (err, result){
             if (err) {
-              res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
-              return next();
+              res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
             } else {
-              User.getTokensForUser(user, function (err, result) {
-                if (err) {
-                  res.send(500, {status:'failure', message: 'Server Fehler.', internal: err});
-                  return next();
-                } else {
-                  // Sort token result so that newest token is the first in array
-                  result.sort(function (a, b) {
-                    a = new Date(a.timestamp);
-                    b = new Date(b.timestamp);
-                    return a > b ? -1 : a < b ? 1 : 0;
-                  });
-
-                  res.json({
-                    status: 'success',
-                    message: 'Ein neuer Nutzer wurde erfolgreich erstellt.',
-                    user: {
-                      id: user.id,
-                      username: user.username,
-                      role: user.role,
-                      token: result[0].token
-                    }
-                  });
-                  return next();
+              res.json({
+                status: 'success',
+                message: 'Ein neuer Nutzer wurde erfolgreich erstellt und eine Mail versandt.',
+                user: {
+                  id: user.id,
+                  username: user.username,
+                  role: user.role
                 }
               });
             }
-          });
-        }
-      });
+              return next();
+            });
+          }
+        });
     })
    .catch(function(err){
-      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      res.json(500, {status: 'failure', message: err});
       return next();
     });
 
 };
 
-module.exports.sendSignUpMail = function(req, res, next){
-  var user;
-  var promises = [UserPromise.validSignupReq(req), UserPromise.usernameAvailable(req.body.user.username)];
-
-  Promise.all(promises)
-    .then(function(results) {
-      user = results[0];
+var sendSignUpMail = function(user, callback){
+  var hash = uuid.v1();
+  User.createConfirmationLink(user.id,hash,function(err){
+    if (err){
+      callback(err);
+    } else {
       var mail = {
-          from: 'StudyKeeper <no-reply@studykeeper.com>',
-          to: user.username,
-          subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
-          html: '<a>http://studykeeper.medien.ifi.lmu.de:10001/</a>'};
+        from: 'StudyKeeper <no-reply@studykeeper.com>',
+        to: user.username,
+        subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
+        html: '<a>http://studykeeper.medien.ifi.lmu.de:10001/users/confirm/' + hash + '</a>'};
       Mail.sendMail(mail,function(err,result){
         if (err) {
-          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-          next();
+          callback(err);
         } else {
-          res.json({status: 'success',
-            message: 'Es wurde eine E-Mail an '+ user.username +' versandt.',
-            internal: result});
-          }
-          next();
-        });
-      })
-    .catch(function(err){
-      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-      return next();
-    });
+          callback(err,result);
+        }
+      });
+    }
+  });
+};
+
+module.exports.confirmUser = function(req, res, next){
+ var hash = req.params.hash;
+  User.getUserForHash(hash,function(err,result){
+    var now = new Date();
+    var ThreeDaysFromNow = new Date(now - 1000*60*30);
+
+    if (result[0].timestamp < ThreeDaysFromNow) {
+      User.deleteUnconfirmedUsers(function(err){
+        if (err){
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        } else {
+          res.json(500, {status: 'failure', message: 'Der Token ist nicht mehr gültig. Bitte melden Sie sich erneut an'});
+        }
+      });
+      next();
+    } else {
+      User.confirmUser(hash, function(err, result){
+        if (err){
+          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        } else {
+          // todo redirect homepage
+          res.json({status: 'failure', message: 'Der Nutzer wurde erfolgreich bestätigt.'});
+        }
+      });
+    }
+  });
 };
 
 module.exports.login = function(req, res, next) {
@@ -238,7 +231,7 @@ module.exports.login = function(req, res, next) {
 
     })
     .catch(function(err){
-      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+      res.json(500, {status: 'failure', message: err});
       return next();
     });
 };
@@ -420,7 +413,7 @@ module.exports.changePW = function(req, res, next) {
             crypt.comparePassword(userResult[0].password,user.oldPassword,
               function (err, isPasswordMatch) {
                 if (err) {
-                  return res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+                  res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
                   return next();
                 } else if (!isPasswordMatch) {
                   res.send(500,{

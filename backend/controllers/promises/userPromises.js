@@ -8,28 +8,28 @@ module.exports.validSignupReq = function(req){
     var validationErrors = [];
 
     if (!Validator.isEmail(req.body.user.username)) {
-      validationErrors.push({message: "Username invalid, email format required: " + req.body.user.username});
+      validationErrors.push("Email ungültig.");
     }
     if (!Validator.isLength(req.body.user.firstname,1)) {
-      validationErrors.push({message: "Firstname invalid, minimum 1 chars required."});
+      validationErrors.push("Vorname ungültig.");
     }
     if (!Validator.isLength(req.body.user.lastname,1)) {
-      validationErrors.push({message: "Lastname invalid, minimum 1 chars required."});
+      validationErrors.push("Nachname ungültig.");
     }
     if (!Validator.isLength(req.body.user.password,7)) {
-      validationErrors.push({message: "Password invalid, minimum 7 chars required."});
+      validationErrors.push("Passwort ungültig. Minimum 7 Charakter.");
     }
     if (!Validator.isLength(req.body.user.confirmPassword,7)) {
-      validationErrors.push({message: "Confirm Password invalid, minimum 7 chars required."});
+      validationErrors.push("Passwort bestätigung ungültig, Minimum 7 Charakter.");
     }
     if (req.body.user.password !== req.body.user.confirmPassword){
-      validationErrors.push({message: "Passwords dont match"});
+      validationErrors.push("Passwörter stimmen nicht überein.");
     }
     if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
-      validationErrors.push({message: "MMI Flag invalid, 0 or 1 required: " + req.body.user.mmi});
+      validationErrors.push({message: "MMI ungültig. 0 oder 1 erwartet."});
     }
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -37,10 +37,16 @@ module.exports.validSignupReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        mmi: Validator.toString(req.body.user.mmi),
-        role    : 'participant',
+        collectsMMI: Validator.toString(req.body.user.mmi),
+        mmi: 0,
+        role:'participant',
         lmuStaff: 0
       };
+      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+        userData.lmuStaff = 1;
+      } else {
+        userData.lmuStaff = 0;
+      }
       resolve(userData);
     }
   });
@@ -51,14 +57,14 @@ module.exports.validLoginReq = function(req){
     var validationErrors = [];
 
     if (!Validator.isLength(req.body.username,1)) {
-      validationErrors.push({message: "Username required."});
+      validationErrors.push("Email erwartet.");
     }
     if (!Validator.isLength(req.body.password,1)) {
-      validationErrors.push({message: "Password required."});
+      validationErrors.push("Passwort erwartet.");
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join());
     } else {
       var userData = {
         username: Validator.toString(req.body.username)
@@ -75,16 +81,16 @@ module.exports.validCreateUserReq = function(req){
       validationErrors.push("User request hat ein falsches Format");
     } else {
       if (!Validator.isEmail(req.body.user.username)) {
-        validationErrors.push("Email ungültig: " + req.body.user.username);
+        validationErrors.push("Email ungültig.");
       }
-      if (!Validator.isLength(req.body.user.firstname, 3)) {
-        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      if (!Validator.isLength(req.body.user.firstname, 1)) {
+        validationErrors.push("Vorname ungültig.");
       }
-      if (!Validator.isLength(req.body.user.lastname, 3)) {
-        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      if (!Validator.isLength(req.body.user.lastname, 1)) {
+        validationErrors.push("Nachname ungültig.");
       }
       if (!Validator.isNumeric(req.body.user.mmi)) {
-        validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
+        validationErrors.push("MMI Punkte ungültig. Zahl erwartet.");
       }
       var roleArr = ['participant','executor','tutor'];
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
