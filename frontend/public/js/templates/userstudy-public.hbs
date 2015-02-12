@@ -4,10 +4,6 @@
     <span class="glyphicon glyphicon-calendar study__dateRange--delimiter"></span> {{model.fromDate}} - {{model.untilDate}}
 </div>
 
-{{#if statusMessage}}
-    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
-{{/if}}
-
 <div class="data__wrapper">
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
@@ -47,17 +43,6 @@
     </div>
 </div>
 
-<div class="study__button__wrapper">
-    <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>
-        {{#if canEdit}}
-            Bearbeiten
-        {{else}}
-            {{#if isRegistered}}
-                Von dieser Studie abmelden
-            {{else}}
-                Zu dieser Studie anmelden
-            {{/if}}
-        {{/if}}
-    </button>
-    <button class="btn btn-default study__cancelButton" {{action 'cancelButtonClick'}}>Alle Studien</button>
-</div>
+<button class="btn btn-primary study__registerButton--public" {{action 'register'}}>
+    Zu dieser Studie anmelden
+</button>

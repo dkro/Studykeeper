@@ -8,6 +8,7 @@ StudyManager.Router.map(function() {
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
+  this.resource('userstudy-public', { path: '/userstudies/public/:userstudy_id' });
   this.resource('userstudy-edit', { path: '/userstudies/:userstudy_id/studyEdit' });
   this.resource('userstudy-creation', { path: '/createStudy' });
   this.resource('labels');
@@ -155,6 +156,17 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
+  model: function(params) {
+    return this.store.fetch('userstudy', params.userstudy_id);
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    controller.determineNeededProperties();
+  }
+});
+
+StudyManager.UserstudyPublicRoute = Ember.Route.extend({
   model: function(params) {
     return this.store.fetch('userstudy', params.userstudy_id);
   },

@@ -6,7 +6,36 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             if (this.get('canEdit')) {
                 this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
             } else {
-                alert('TODO: Anmelden zur Studie');
+                var studyId = this.get('model').get('id');
+                var currentUserId = this.get('controllers.application').get('currentUserId');
+                var that = this;
+                var successMessage;
+                var usedUrl;
+
+                if (this.get('isRegistered')) {
+                    successMessage = 'Abmeldung erfolgreich';
+                    usedUrl = '/api/userstudies/' + studyId + '/signoff/' + currentUserId;
+                } else {
+                    successMessage = 'Anmeldung erfolgreich';
+                    usedUrl = '/api/userstudies/' + studyId + '/register/' + currentUserId;
+                }
+
+                Ember.$.ajax({
+                        url: usedUrl,
+                        type: "POST",
+                        beforeSend: function(request) {
+                            request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)
+                        }
+                    }).then(
+                        function(response) {
+                            that.store.fetch('userstudy', studyId).then(function(study) {
+                                that.set('model', study);
+                                that.set('statusMessage', { message: successMessage, isSuccess: true });
+                            });
+                        },
+                        function(error) {
+                            that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                        });
             }
         },
 
@@ -17,6 +46,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
 
     determineNeededProperties: function() {
         this.determineCanEdit();
+        this.determineIsRegistered();
     },
 
     canEdit: false,
@@ -29,6 +59,18 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var isExecutor = userRole === 'tutor' && this.get('model').get('executor').get('id') === currentUserId;
 
         this.set('canEdit', isTutor || isExecutor);
+    },
+
+    isRegistered: false,
+
+    determineIsRegistered: function() {
+        var currentUserId = this.get('controllers.application').get('currentUserId');
+        var that = this;
+
+        this.store.find('user', currentUserId).then(function(user) {
+            var isRegistered = that.get('model').get('registeredUsers').contains(user);
+            that.set('isRegistered', isRegistered);
+        });
     },
 
     statusMessage: null

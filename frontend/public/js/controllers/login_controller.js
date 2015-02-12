@@ -25,26 +25,23 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             // MOCK
             this.set('statusMessage', null);
-            var userRole = null;
+            var canLogin = null;
 
-            if (this.get('username') === 'studycreator' &&
-                this.get('password') === 'creator') {
-                userRole = 'executor';
-            } else if (this.get('username') === 'student' &&
+            if (this.get('username') === 'student' &&
                 this.get('password') === '123') {
-                userRole = 'tutor';
-            } else if (this.get('username') === 'student' &&
-                this.get('password') === 'abc') {
-                userRole = 'default';
+                canLogin = true;
             }
 
-            if (userRole === null) {
+            if (!canLogin) {
                 this.set('statusMessage', { message: 'Login fehlgeschlagen!', isSuccess: false } );
             } else {
-                this.get('controllers.application').set('userRole', userRole);
+                var userId = 2;
+                var currentUser = this.store.find('user', userId);
+                this.get('controllers.application').set('userRole', currentUser.get('role'));
                 this.get('controllers.application').set('isLoggedIn', true);
                 this.get('controllers.application').set('token', 'EinToken');
-                this.get('controllers.application').set('currentUserId', 1);
+                this.get('controllers.application').set('currentUserId', userId);
+                this.get('controllers.application').set('isLMUStaff', currentUser.get('lmuStaff'));
 
                 this.transitionToRoute('dashboard');
             }*/
