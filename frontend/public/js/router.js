@@ -131,6 +131,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('model', model);
     controller.set('history', history);
     controller.set('futureRegisteredStudies', futureStudies);
+    controller.determineInitialProperties();
   }
 });
 
@@ -173,7 +174,7 @@ StudyManager.UserstudyPublicRoute = Ember.Route.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.determineNeededProperties();
+    controller.determineLoggedIn();
   }
 });
 

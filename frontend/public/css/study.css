@@ -110,11 +110,16 @@
 }
 
 .study__editRegisterButton {
-    margin-right: 1em;
+    margin-right: 2em;
     display: inline-block;
 }
 
 .study__cancelButton {
+    display: inline-block;
+}
+
+.study__publicButton {
+    margin-right: 1em;
     display: inline-block;
 }
 

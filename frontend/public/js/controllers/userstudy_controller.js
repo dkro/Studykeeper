@@ -41,6 +41,10 @@ StudyManager.UserstudyController = Ember.Controller.extend({
 
         cancelButtonClick: function() {
             this.transitionToRoute('userstudies');
+        },
+
+        publicButtonClick: function() {
+            this.transitionToRoute('userstudy-public', this.get('model').get('id'));
         }
     },
 

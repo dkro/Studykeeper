@@ -40,5 +40,19 @@ StudyManager.User.FIXTURES = [
         isExecutorFor: [3, 4, 5],
         isTutorFor: [3, 4, 5],
         registeredFor: [1, 2, 4]
+    },
+    {
+        id: 3,
+        firstname: 'Max3',
+        lastname: 'Mustermann3',
+        username: 'mustermann3@test.de',
+        password: '1234567',
+        collectsMMI: false,
+        role: 'participant',
+        mmi: 0,
+        lmuStaff: false,
+        isExecutorFor: [],
+        isTutorFor: [],
+        registeredFor: []
     }
 ];

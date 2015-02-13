@@ -25,25 +25,32 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             // MOCK
             this.set('statusMessage', null);
-            var canLogin = null;
+            var userId = null;
 
             if (this.get('username') === 'student' &&
                 this.get('password') === '123') {
-                canLogin = true;
+                userId = 1;
+            } else if (this.get('username') === 'student' &&
+                this.get('password') === 'abc') {
+                userId = 2;
+            } else if (this.get('username') === 'student' &&
+                this.get('password') === 'xyz') {
+                userId = 3;
             }
 
-            if (!canLogin) {
+            if (Ember.empty(userId)) {
                 this.set('statusMessage', { message: 'Login fehlgeschlagen!', isSuccess: false } );
             } else {
-                var userId = 2;
-                var currentUser = this.store.find('user', userId);
-                this.get('controllers.application').set('userRole', currentUser.get('role'));
-                this.get('controllers.application').set('isLoggedIn', true);
-                this.get('controllers.application').set('token', 'EinToken');
-                this.get('controllers.application').set('currentUserId', userId);
-                this.get('controllers.application').set('isLMUStaff', currentUser.get('lmuStaff'));
+                var that = this;
+                this.store.find('user', userId).then(function(user) {
+                    that.get('controllers.application').set('userRole', user.get('role'));
+                    that.get('controllers.application').set('isLoggedIn', true);
+                    that.get('controllers.application').set('token', 'EinToken');
+                    that.get('controllers.application').set('currentUserId', userId);
+                    that.get('controllers.application').set('isLMUStaff', user.get('lmuStaff'));
 
-                this.transitionToRoute('dashboard');
+                    that.transitionToRoute('dashboard');
+                });
             }*/
         },
 

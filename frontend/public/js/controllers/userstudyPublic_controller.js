@@ -3,13 +3,18 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
 
     actions: {
         register: function() {
-            if (this.get('isLoggedIn')) {
-                alert('TODO: Anmelden zur Studie');
-            } else {
-                this.transitionToRoute('login');
-            }
+            this.transitionToRoute('login');
+        },
+
+        cancelButtonClick: function() {
+            this.transitionToRoute('userstudies');
         }
     },
 
-    isLoggedIn: localStorage.isLoggedIn
+    determineLoggedIn: function() {
+        var isLoggedIn = this.get('controllers.application').get('isLoggedIn');
+        this.set('isLoggedIn', isLoggedIn);
+    },
+
+    isLoggedIn: false
 });

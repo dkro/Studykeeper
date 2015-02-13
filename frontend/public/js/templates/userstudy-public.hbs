@@ -43,6 +43,12 @@
     </div>
 </div>
 
-<button class="btn btn-primary study__registerButton--public" {{action 'register'}}>
-    Zu dieser Studie anmelden
-</button>
+<div class="study__button__wrapper">
+    {{#if isLoggedIn}}
+        <button class="btn btn-default study__cancelButton" {{action 'cancelButtonClick'}}>Zurück</button>
+    {{else}}
+        <button class="btn btn-primary study__editRegisterButton" {{action 'register'}}>
+            Zu dieser Studie anmelden
+        </button>
+    {{/if}}
+</div>
