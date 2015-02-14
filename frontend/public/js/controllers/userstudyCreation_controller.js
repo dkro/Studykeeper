@@ -47,9 +47,12 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
         this._super();
         this.set('mmiPoints', this.get('controllers.application').get('mmiValues'));
         this.set('amazonValues', this.get('controllers.application').get('amazonValues'));
+        this.set('isTutorUser', this.get('controllers.application').get('isTutor'));
     },
 
     statusMessage: null,
+
+    isTutorUser: false,
 
     title: null,
 
@@ -82,6 +85,10 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
     selectedNews: [],
 
     registeredUsers: [],
+
+    possibleTutors: [],
+
+    possibleExecutors: [],
 
     template: null,
 

@@ -72,6 +72,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         this._super();
         this.set('mmiPoints', this.get('controllers.application').get('mmiValues'));
         this.set('amazonValues', this.get('controllers.application').get('amazonValues'));
+        this.set('isTutorUser', this.get('controllers.application').get('isTutor'));
     },
 
     determineAsyncProperties: function() {
@@ -112,6 +113,8 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     statusMessage: null,
 
+    isTutorUser: false,
+
     title: null,
 
     fromDate: null,
@@ -141,6 +144,10 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
     selectedNews: [],
 
     registeredUsers: [],
+
+    possibleTutors: [],
+
+    possibleExecutors: [],
 
     template: null,
 

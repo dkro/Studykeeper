@@ -68,6 +68,8 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
 
     isStudyCreation: false,
 
+    isTutorUser: false,
+
     title: null,
 
     fromDate: null,
@@ -111,6 +113,23 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
     selectedNews: [],
 
     users: [],
+
+    possibleTutors: [],
+
+    possibleExecutors: [],
+
+    usersChanged: function() {
+        var allTutors = this.get('users').filter(function(user) {
+            return user.get('role') === 'tutor';
+        });
+
+        var allExecutors = this.get('users').filter(function(user) {
+            return user.get('role') === 'executor';
+        });
+
+        this.set('possibleTutors', allTutors);
+        this.set('possibleExecutors', allExecutors);
+    },
 
     registeredUsers: [],
 

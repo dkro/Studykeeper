@@ -202,6 +202,14 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('selectedNews', model.study.get('news'));
     controller.set('registeredUsers', model.study.get('registeredUsers'));
     controller.set('requiredStudies', model.study.get('requiredStudies'));
+    var allTutors = model.allUsers.filter(function(user) {
+      return user.get('role') === 'tutor';
+    });
+    var allExecutors = model.allUsers.filter(function(user) {
+      return user.get('role') === 'executor' || user.get('role') === 'tutor';
+    });
+    controller.set('possibleTutors', allTutors);
+    controller.set('possibleExecutors', allExecutors);
     controller.determineAsyncProperties();
   }
 });
@@ -217,6 +225,19 @@ StudyManager.UserstudyCreationRoute = StudyManager.AuthenticationRoute.extend({
       allTemplates: that.store.find('template'),
       allStudies: that.store.find('userstudy')
     });
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+
+    var allTutors = model.allUsers.filter(function(user) {
+      return user.get('role') === 'tutor';
+    });
+    var allExecutors = model.allUsers.filter(function(user) {
+      return user.get('role') === 'executor' || user.get('role') === 'tutor';
+    });
+    controller.set('possibleTutors', allTutors);
+    controller.set('possibleExecutors', allExecutors);
   }
 });
 

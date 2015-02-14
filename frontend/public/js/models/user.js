@@ -34,7 +34,7 @@ StudyManager.User.FIXTURES = [
         username: 'mustermann2@campus.lmu.de',
         password: '1234567',
         collectsMMI: false,
-        role: 'participant',
+        role: 'executor',
         mmi: 0,
         lmuStaff: true,
         isExecutorFor: [3, 4, 5],
