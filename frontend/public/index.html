@@ -289,6 +289,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="spaceStudyConfigSelect" class="col-sm-2 control-label">Kapazität:</label>
+                    <div class="col-sm-10">
+                        {{input id="spaceStudyConfigSelect" value=capacity classNames="form-control" type="number" min="0" step="1"}}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="registeredUsersStudyConfigList" class="col-sm-2 control-label">Angemeldet:</label>
                     <div class="col-sm-10">
                         {{selection-list id="registeredUsersStudyConfigList" selections=registeredUsers itemList=users itemType="USER_TYPE"}}

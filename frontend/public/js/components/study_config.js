@@ -13,7 +13,8 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
                 descriptionNew: this.get('description'),
                 linkNew: this.get('link'),
                 amazonNew: this.get('amazon'),
-                mmiNew: this.get('mmi')
+                mmiNew: this.get('mmi'),
+                capacityNew: this.get('capacity')
             };
 
             this.resetValidation();
@@ -98,6 +99,8 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
     descriptionInvalid: null,
 
     linkInvalid: null,
+
+    capacity: 0,
 
     labels: [],
 

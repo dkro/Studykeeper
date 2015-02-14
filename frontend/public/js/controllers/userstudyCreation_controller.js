@@ -9,12 +9,12 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
                 untilDate: newData.toNew,
                 location: newData.locationNew,
                 description: newData.descriptionNew,
+                space: newData.capacityNew,
                 link: newData.linkNew,
                 mmi: newData.mmiNew,
                 compensation: newData.amazonNew
             });
 
-            // TODO: space!
             newStudy.get('labels').pushObjects(this.get('selectedLabels'));
             newStudy.get('news').pushObjects(this.get('selectedNews'));
             newStudy.set('template', this.get('template'));
@@ -62,6 +62,8 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
     description: null,
 
     link: null,
+
+    capacity: 0,
 
     mmi: null,
 
