@@ -6,12 +6,20 @@
 
 <div class="data__wrapper">
     <div class="data__row">
+        <div class="data__cell--description">Studientyp: </div>
+        <div class="data__cell--value">
+            {{#each label in model.labels}}
+                <span class="study__label">{{label.title}}</span>
+            {{/each}}
+        </div>
+    </div>
+    <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
-        <div class="data__cell--value data--person">{{model.executor.firstname}}&nbsp;{{model.executor.lastname}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
+        <div class="data__cell--value data--person">{{model.executor}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Betreuer: </div>
-        <div class="data__cell--value data--person">{{model.tutor.firstname}}&nbsp;{{model.tutor.lastname}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
+        <div class="data__cell--value data--person">{{model.tutor}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Ort: </div>
@@ -31,6 +39,12 @@
             </div>
         </div>
     </div>
+    {{#each field in model.template.fields}}
+        <div class="data__row">
+            <div class="data__cell--description">{{field.title}}: </div>
+            <div class="data__cell--value">{{field.value}}</div>
+        </div>
+    {{/each}}
     <div class="data__row">
         <div class="data__cell--description">Doodle: </div>
         <div class="data__cell--value">
@@ -38,8 +52,8 @@
         </div>
     </div>
     <div class="data__row">
-        <div class="data__cell--description">Kapazität: </div>
-        <div class="data__cell--value">{{model.space}}</div>
+        <div class="data__cell--description">Freie Plätze: </div>
+        <div class="data__cell--value">{{model.freeSpace}} von {{model.capacity}}</div>
     </div>
 </div>
 

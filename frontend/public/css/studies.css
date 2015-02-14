@@ -68,9 +68,9 @@
     -webkit-border-radius: 0.6em;
     -moz-border-radius: 0.6em;
     border-radius: 0.6em;
-    background-color: lightseagreen;
+    background-color: darkgrey;
     color: white;
-    padding: 0.3em;
+    padding: 0.25em 0.4em;
 }
 
 .studies__tagFilter__tag__button {

@@ -51,6 +51,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     determineNeededProperties: function() {
         this.determineCanEdit();
         this.determineIsRegistered();
+        this.determineFreeSpace();
     },
 
     canEdit: false,
@@ -75,6 +76,15 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             var isRegistered = that.get('model').get('registeredUsers').contains(user);
             that.set('isRegistered', isRegistered);
         });
+    },
+
+    freeSpace: 0,
+
+    determineFreeSpace: function() {
+        var registeredUsersCount = this.get('model').get('registeredUsers.length');
+        var freeSpace = this.get('model').get('space') - registeredUsersCount;
+
+        this.set('freeSpace', freeSpace);
     },
 
     statusMessage: null
