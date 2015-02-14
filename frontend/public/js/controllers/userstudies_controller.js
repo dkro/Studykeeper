@@ -178,7 +178,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     parseDate: function(input) {
         var parts = input.match(/(\d+)/g);
-        return new Date(parts[2], parts[1]-1, parts[0]);
+        return new Date(parts[2], parts[1]-1, parts[0], 12, 0, 0, 0);
     },
 
     compare: function(date1, date2) {

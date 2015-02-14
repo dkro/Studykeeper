@@ -290,10 +290,14 @@
                         {{view "select" id="amazonStudyConfigSelect" content=amazonValues value=amazon classNames="form-control component__config__select"}}
                     </div>
                 </div>
-                <div class="form-group">
+                <div {{bind-attr class=":form-group spaceInvalid:has-error"}}>
                     <label for="spaceStudyConfigSelect" class="col-sm-2 control-label">Kapazität:</label>
                     <div class="col-sm-10">
-                        {{input id="spaceStudyConfigSelect" value=capacity classNames="form-control" type="number" min="0" step="1"}}
+                        {{input id="spaceStudyConfigSelect" aria-describedby="spaceStudyConfigInputHelp" value=capacity classNames="form-control" type="text" placeholder="Studienkapazität"}}
+
+                        {{#if spaceInvalid}}
+                            <span id="spaceStudyConfigInputHelp" class="help-block">{{spaceInvalid}}</span>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -338,7 +342,7 @@
                 {{/if}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn isValidState:btn-primary:btn-danger :component__config__saveButton"}} {{action 'saveClick'}}>
                         {{#if isStudyCreation}}
                             Studie erstellen
                         {{else}}
