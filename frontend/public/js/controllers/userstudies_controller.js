@@ -1,4 +1,6 @@
 StudyManager.UserstudiesController = Ember.Controller.extend({
+    needs: ['application'],
+
     actions: {
         showStudyConfig: function(study) {
             this.transitionToRoute('userstudy', study);
@@ -53,6 +55,9 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         this.set('selectedExecutorFilter', null);
         this.set('selectedMMIFilter', null);
         this.set('selectedAmazonFilter', null);
+
+        var isTutor = this.get('controllers.application').get('isTutor');
+        this.set('isTutor', isTutor);
     },
 
     filterAll: function(shouldClearStatus) {
@@ -212,6 +217,8 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     },
 
     statusMessage: null,
+
+    isTutor: false,
 
     searchTags: null,
 

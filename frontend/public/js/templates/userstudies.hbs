@@ -1,7 +1,8 @@
 <h2 class="management--all__heading">Anzeige aller Studien</h2>
 
-
-<button class="btn btn-primary management--all__createButton" {{action 'createStudy'}}>Studie erstellen</button>
+{{#if isTutor}}
+    <button class="btn btn-primary management--all__createButton" {{action 'createStudy'}}>Studie erstellen</button>
+{{/if}}
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="management--all__statusMessage"}}
