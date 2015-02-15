@@ -9,7 +9,7 @@ module.exports.addUserStudy = function (data, callback) {
     description: data.description, link: data.link, paper: data.paper, space: data.space, mmi: data.mmi,
     compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
-    creatorId: data.creatorId, templateValues: data.templateValues
+    creatorId: data.creatorId, templateValues: data.templateValues, registeredUsers: data.registeredUsers
   };
   mysql.getConnection(function(connection) {
     // Start a Transaction
@@ -43,7 +43,8 @@ module.exports.addUserStudy = function (data, callback) {
             addUserstudyRelations(connection, userstudyId, 'news', queryData.news),
             addUserstudyRelations(connection, userstudyId, 'labels', queryData.labels),
             addUserstudyRelations(connection, userstudyId, 'requires', queryData.requiredStudies),
-            addTemplateValues(connection,userstudyId,queryData.templateId,queryData.templateValues)
+            addTemplateValues(connection,userstudyId,queryData.templateId,queryData.templateValues),
+            addRegisteredUsers(connection,userstudyId,queryData.registeredUsers)
           ];
           return Promise.all(promises);
         })
@@ -81,7 +82,7 @@ module.exports.editUserStudy = function (data, callback) {
     until: data.untilDate, description: data.description, link: data.link, paper: data.paper,
     space: data.space, mmi: data.mmi, compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
-    templateValues: data.templateValues
+    templateValues: data.templateValues, registeredUsers: data.registeredUsers
   };
   mysql.getConnection(function(connection) {
     connection.beginTransaction(function (err) {
@@ -112,7 +113,8 @@ module.exports.editUserStudy = function (data, callback) {
             delUserstudyRelations(connection, userstudyId, 'news'),
             delUserstudyRelations(connection, userstudyId, 'labels'),
             delUserstudyRelations(connection, userstudyId, 'requires'),
-            delTemplateValues(connection,userstudyId,queryData.templateId)
+            delTemplateValues(connection,userstudyId,queryData.templateId),
+            delRegisteredUsers(connection,userstudyId)
           ];
           return Promise.all(promises);
         })
@@ -121,7 +123,8 @@ module.exports.editUserStudy = function (data, callback) {
             addUserstudyRelations(connection, results[0], 'news', queryData.news),
             addUserstudyRelations(connection, results[1], 'labels', queryData.labels),
             addUserstudyRelations(connection, results[2], 'requires', queryData.requiredStudies),
-            addTemplateValues(connection,results[3],queryData.templateId,queryData.templateValues)
+            addTemplateValues(connection,results[3],queryData.templateId,queryData.templateValues),
+            addRegisteredUsers(connection,results[4],queryData.registeredUsers)
           ];
           return Promise.all(promises);
         })
@@ -489,17 +492,91 @@ module.exports.deleteUserstudy = function (userstudyId, callback) {
   });
 };
 
-module.exports.closeUserstudy = function(userstudy, callback){
-  mysql.getConnection(function(connection) {
-    connection.query('UPDATE userstudies ' +
-      'SET closed=1 ' +
-      'WHERE id=? AND title=?',
-      [userstudy.id,userstudy.title],
-      function(err,result){
+module.exports.closeUserstudy = function(userstudyId, closeArr, callback){
+
+  mysql.getConnection(function (connection) {
+    // Start a Transaction
+    connection.beginTransaction(function (err) {
+      if (err) {
         connection.release();
-        callback(err,result);
+        throw err;
       }
-    );
+
+      var userIdArr = closeArr.map(function(x){return x.userId});
+      // Update users
+      new Promise(function (resolve, reject) {
+        connection.query("UPDATE studies_users_rel " +
+          "SET confirmed=1 " +
+          "WHERE userId IN (?) AND studyId=?",
+          [userIdArr,userstudyId],
+          function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+      })
+        // Update userstudy
+        .then(function () {
+          var promises = [];
+          for (var i = 0; i < closeArr.length; i+=1){
+            if (closeArr[i].getsMMI) {
+              promises.push(new Promise(function (resolve, reject) {
+                connection.query("UPDATE users SET " +
+                  "mmi=mmi+(SELECT mmi FROM userstudies WHERE id=?) " +
+                  "WHERE id=?",
+                  [userstudyId,closeArr[i].userId],
+                  function (err) {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve();
+                    }
+                  });
+              }));
+            }
+          }
+          return Promise.all(promises);
+        })
+        // Update userstudy
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            connection.query("UPDATE userstudies " +
+            "SET closed=1 " +
+            "WHERE id=?",
+              userstudyId,
+              function (err) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+          });
+        })
+        // Finally commit
+        .then(function () {
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                connection.release();
+                throw err;
+              });
+            } else {
+              connection.release();
+              callback(err);
+            }
+          });
+        })
+        // Catch all erors
+        .catch(function (err) {
+          connection.rollback(function () {
+            connection.release();
+            callback(err);
+          });
+        });
+    });
   });
 };
 
@@ -585,7 +662,7 @@ var addUserstudyRelations = function(connection, userstudyId, type, relationIds)
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation... recieved: " + type + " expected: [news/labels/requires]"});
+      reject("Interner Fehler: Falscher typ angegeben: " + type + " Erwartet: [news/labels/requires]");
     } else if (relationIds.length === 0){
       resolve(userstudyId);
     } else {
@@ -624,7 +701,7 @@ var delUserstudyRelations = function(connection, userstudyId, type) {
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation deletion... recieved: " + type + " expected: [news/labels,requires]"});
+      reject("Interner Fehler: Falscher typ angegeben: " + type + " Erwartet: [news/labels,requires]");
     } else {
       connection.query('DELETE FROM ' + tableName + ' WHERE studyId=?',
         userstudyId,
@@ -659,8 +736,8 @@ module.exports.getStudiesRelationFor = function(userstudyId, type, callback){
     }
 
     if (!tableName) {
-      callback("wrong type for userstudy relation getter... recieved: " + type + " " +
-      "expected: news || labels || requires || users]");
+      callback("Interner Fehler: Falscher typ angegeben: " + type + " " +
+      "Erwartet: news || labels || requires || users]");
     } else {
       mysql.getConnection(function(connection) {
         connection.query('SELECT * FROM ' + tableName + ' WHERE studyId=?',
@@ -706,6 +783,44 @@ var delTemplateValues = function (connection, userstudyId, templateId) {
   return new Promise(function(resolve,reject) {
     connection.query('DELETE FROM studies_template_values WHERE studyId=? AND templateId=?',
       [userstudyId,templateId],
+      function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(userstudyId);
+        }
+      });
+  });
+};
+
+var addRegisteredUsers = function (connection, userstudyId, userArr) {
+  userArr = userArr || [];
+
+  return new Promise(function(resolve,reject) {
+    if (userArr.length === 0) {
+      resolve(userstudyId);
+    } else {
+      var queryString = 'INSERT INTO studies_users_rel (studyId, userId, registered, confirmed) ' +
+        'VALUES (' + connection.escape(userstudyId) + ',' + connection.escape(userArr[0]) + ',1,0)';
+      for (var i = 1; i < userArr.length; i += 1) {
+        queryString = queryString.concat(',(' + connection.escape(userstudyId) + ',' + connection.escape(userArr[i]) + ',1,0)');
+      }
+      connection.query(queryString,
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(userstudyId);
+        }
+      });
+    }
+  });
+};
+
+var delRegisteredUsers = function (connection, userstudyId) {
+  return new Promise(function(resolve,reject) {
+    connection.query('DELETE FROM studies_users_rel WHERE studyId=?',
+      userstudyId,
       function (err) {
         if (err) {
           reject(err);

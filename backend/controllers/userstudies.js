@@ -44,8 +44,38 @@ module.exports.editUserstudy = function(req, res, next) {
     .then(function(result){
       userstudy = result;
       userstudy.id = req.params.id;
+      return UserPromise.userFromToken(req);
+    })
+    .then(function(user){
+      if (user.role === "executor") {
+        UserStudy.getStudiesUserIsExecutor({id:user.id},function(err,result){
+          if (err) {
+            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+            return next();
+          } else {
+            var allowed = false;
+            for (var i = 0; i < result.length; i+=1) {
+              if (result[i].id === parseInt(userstudy.id)) {
+                allowed = true;
+                break;
+              }
+            }
 
+            if (allowed){
+              return user;
+            } else {
+              res.json({status:'failure', message: 'Der Nutzer hat keine Rechte an diese Nutzerstudie zu editieren.'});
+              return next();
+            }
+          }
+        });
+      } else {
+        return user;
+      }
+    })
+    .then(function(){
       var promises = [UserstudyPromise.userstudyExists(userstudy),
+        UserstudyPromise.userstudyIsOpen(userstudy),
         UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
         UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
         UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
@@ -73,6 +103,9 @@ module.exports.deleteUserstudy = function(req, res, next) {
   var userstudyId = req.params.id;
 
   UserstudyPromise.userstudyExists({id: userstudyId})
+    .then(function(result){
+      return UserstudyPromise.userstudyIsOpen(result);
+    })
     .then(function(){
       UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
@@ -472,21 +505,46 @@ module.exports.confirmUserParticipation = function(req, res, next){
 
 module.exports.closeUserstudy = function(req, res, next){
 
-   UserstudyPromise.userstudyExists({id:req.params.id})
-    .then(function(userstudy){
+  var userstudy = {};
+  var closeReq = {};
+  var promises = [UserstudyPromise.userstudyExists({id:req.params.id}),
+    UserstudyPromise.validCloseRequest(req)];
 
-      UserStudy.closeUserstudy(userstudy, function(err, list){
+  Promise.all(promises)
+    .then(function(results){
+      userstudy = results[0];
+      closeReq = results[1];
+      promises = [];
+      for (var i = 0; i < results.length; i += 1) {
+        promises.push(UserPromise.userExistsById(results[1][i].userId));
+      }
+
+      return Promise.all(promises);
+    })
+    .then(function(users) {
+      promises = [];
+      for (var i = 0; i < users.length; i += 1) {
+        promises.push(UserstudyPromise.userIsRegisteredToStudy(users[i].id,userstudy.id));
+        promises.push(UserstudyPromise.userIsNotConfirmed(users[i].id,userstudy.id));
+        promises.push(UserPromise.userIsLMU(users[i]));
+      }
+
+      promises.push(UserstudyPromise.userstudyIsOpen(userstudy));
+      return Promise.all(promises);
+    })
+    .then(function() {
+      UserStudy.closeUserstudy(userstudy.id, closeReq, function (err) {
         if (err) {
-          res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          res.json({status: 'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
-          res.json({status: 'success', message: 'Nutzerstudie geschlossen.', userstudy: req.params.id});
+          res.json({status: 'success', message: 'Nutzerstudie geschlossen. Alle Teilnehmer wurden bestätigt.', userstudy: req.params.id});
           return next();
         }
-      }).catch(function(err){
-        res.json(500, {status: 'failure', message: err});
-        return next();
       });
+    }).catch(function (err) {
+      res.json(500, {status: 'failure', message: err});
+      return next();
     });
 };
 

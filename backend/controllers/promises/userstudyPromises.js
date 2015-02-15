@@ -70,6 +70,15 @@ module.exports.validFullUserstudyReq = function(req){
       } else {
         validationErrors.push("News ungültig. Array von Zahlen erwartet: " + req.body.userstudy.news);
       }
+      if (!req.body.userstudy.registeredUsers || Array.isArray(req.body.userstudy.registeredUsers)) {
+        for (var m=0; j<req.body.userstudy.registeredUsers; m+=1){
+          if (!Validator.isNumeric(req.body.userstudy.registeredUsers)) {
+            validationErrors.push("registeredUsers ungültig. Zahl erwartet: " + req.body.userstudy.registeredUsers);
+          }
+        }
+      } else {
+        validationErrors.push("registeredUsers ungültig. Array von Zahlen erwartet: " + req.body.userstudy.registeredUsers);
+      }
       if (!req.body.userstudy.labels || Array.isArray(req.body.userstudy.labels)) {
         for (var k=0; k<req.body.userstudy.labels; k+=1){
           if (!Validator.isNumeric(req.body.userstudy.labels)) {
@@ -100,6 +109,7 @@ module.exports.validFullUserstudyReq = function(req){
         compensation: Validator.toString(req.body.userstudy.compensation),
         location: Validator.toString(req.body.userstudy.location),
         space: Validator.toString(req.body.userstudy.space),
+        registeredUsers: req.body.userstudy.registeredUsers,
         requiredStudies: req.body.userstudy.requiredStudies,
         news: req.body.userstudy.news,
         labels: req.body.userstudy.labels,
@@ -107,6 +117,33 @@ module.exports.validFullUserstudyReq = function(req){
         templateValues: req.body.userstudy.templateValues
       };
       resolve(userStudyData);
+    }
+  });
+};
+
+module.exports.validCloseRequest = function(req){
+  return new Promise(function(resolve,reject) {
+
+    var validationErrors = [];
+
+    if (!req.body.users || Array.isArray(req.body.users)) {
+      for (var i=0; i<req.body.users; i+=1){
+        if (!Validator.isNumeric(req.body.users[i].userId)) {
+          validationErrors.push("UserId ungültig. Zahl erwartet: " + req.body.users.userId);
+        }
+        if (req.body.users[i].getsMMI !== true || req.body.users[i].getsMMI !== false ) {
+          validationErrors.push("getsMMI ungültig. Boolean erwartet: " + req.body.users.getsMMI);
+        }
+      }
+    } else {
+      validationErrors.push("Close Request ungültig, Array von {userId:1,getsMMI:false} Objekten erwartet: " + req.body.users);
+    }
+
+    if (validationErrors.length > 0) {
+      reject(validationErrors.join(' '));
+    } else {
+      var closeData = req.body.users;
+      resolve(closeData);
     }
   });
 };
@@ -124,6 +161,17 @@ module.exports.userstudyExists = function(userstudy) {
     });
   });
 };
+
+module.exports.userstudyIsOpen = function(userstudy) {
+  return new Promise(function(resolve, reject){
+    if (userstudy.closed === 1) {
+      reject("Der Nutzerstudie wurde ist schon geschlossen. Editieren/Löschen verboten");
+    } else {
+      resolve(userstudy);
+    }
+  });
+};
+
 
 module.exports.userstudyHasSpace = function(userstudyId) {
   return new Promise(function(resolve, reject){
