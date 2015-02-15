@@ -4,7 +4,11 @@ StudyManager.SelectionItemComponent = Ember.Component.extend({
     classNameBindings: [':list-group-item', ':component__selectionItem','isSelected:list-group-item-info'],
 
     isSelected: function() {
-        return this.get('selections').contains(this.get('item'));
+        if (this.get('selections') === undefined) {
+            return false;
+        } else {
+            return this.get('selections').contains(this.get('item'));
+        }
     }.property('selections.@each'),
 
     actions: {

@@ -195,7 +195,7 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    var possibleRequiredStudies = this.store.filter('userstudy', function (study) {
+    var possibleRequiredStudies = model.allStudies.filter(function (study) {
       return study.get('id') !== model.study.get('id');
     });
     controller.set('allRequiredStudies', possibleRequiredStudies);
