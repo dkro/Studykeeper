@@ -9,8 +9,6 @@ var app       = restify.createServer({
 app.use(restify.bodyParser({ mapParams: false}));
 
 // Bootstrap Application
-var config = require('./config/config.js');
-
 var mysql  = require('./config/mysql.js');
 
 require('./config/passport.js')();

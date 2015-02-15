@@ -1,7 +1,6 @@
 "use strict";
 // Server libraries
 var restify             = require('restify');
-var path                = require('path');
 
 // Authentication libraries
 var passport            = require('passport');
