@@ -14,6 +14,10 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
             var name = newNews.get('title');
 
             newNews.save().then(function(response) {
+                that.store.find('news').filterBy('id', null).forEach(function(item) {
+                    item.deleteRecord();
+                });
+
                 that.transitionToRoute('news').then(function () {
                     that.get('controllers.news').set('statusMessage', { message: 'News \"' + name + '\" erstellt!', isSuccess: true });
                 });
