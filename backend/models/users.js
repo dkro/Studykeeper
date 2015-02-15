@@ -365,16 +365,21 @@ module.exports.getRole = function(roleId, callback){
 };
 
 module.exports.deleteUser = function(userId, callback){
-  var secret = uuid.v1();
+  var newpw = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  crypt.cryptPassword(secret, function(err,hash){
+  for( var i=0; i < 10; i+= 1 ) {
+    newpw += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  crypt.cryptPassword(newpw, function(err,hash){
     if (err) {
       callback(err);
     }
 
     mysql.getConnection(function(connection){
       connection.query("UPDATE users SET username='deleted" + userId + "', firstname='deleted', lastname='deleted', " +
-        "password='" + hash + "' " +
+        "password='" + hash + "', visible=0 " +
         "WHERE id=?",
         userId,
         function(err,result){
