@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: studykeeper
-# Generation Time: 2015-02-15 18:37:13 +0000
+# Generation Time: 2015-02-15 21:35:59 +0000
 # ************************************************************
 
 
@@ -44,10 +44,9 @@ LOCK TABLES `auth` WRITE;
 
 INSERT INTO `auth` (`id`, `userId`, `roleId`, `token`, `timestamp`)
 VALUES
-	(15,4,2,'71211e80-b529-11e4-be6c-5d3b38b74993','2015-02-15 16:48:00'),
-	(16,4,2,'12d377a0-b52a-11e4-be6c-5d3b38b74993','2015-02-15 16:48:26'),
-	(17,4,2,'36761640-b52a-11e4-be6c-5d3b38b74993','2015-02-15 16:50:39'),
-	(19,1,1,'044ed9f0-b538-11e4-86f0-75c23b632ba4','2015-02-15 19:21:50');
+	(23,1,1,'0ffb4d60-b556-11e4-a949-dd6c779df345','2015-02-15 22:04:42'),
+	(25,1,1,'0d313b70-b557-11e4-ae07-dfd90d3677b6','2015-02-15 22:27:21'),
+	(26,1,1,'af4b6c30-b559-11e4-8335-efa9b31e8b9d','2015-02-15 22:35:12');
 
 /*!40000 ALTER TABLE `auth` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -144,15 +143,6 @@ CREATE TABLE `studies_labels_rel` (
   CONSTRAINT `study_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `studies_labels_rel` WRITE;
-/*!40000 ALTER TABLE `studies_labels_rel` DISABLE KEYS */;
-
-INSERT INTO `studies_labels_rel` (`id`, `studyId`, `labelId`)
-VALUES
-	(1,2,2);
-
-/*!40000 ALTER TABLE `studies_labels_rel` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table studies_news_rel
@@ -208,8 +198,12 @@ LOCK TABLES `studies_template_values` WRITE;
 
 INSERT INTO `studies_template_values` (`id`, `studyId`, `templateId`, `value`)
 VALUES
-	(5,1,1,'Value1'),
-	(6,1,1,'value2');
+	(35,19,1,'abc'),
+	(36,19,1,'cde'),
+	(37,1,1,'Value123'),
+	(38,1,1,'value223'),
+	(39,2,1,'Wert1'),
+	(40,2,1,'Wert2');
 
 /*!40000 ALTER TABLE `studies_template_values` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -233,6 +227,16 @@ CREATE TABLE `studies_users_rel` (
   CONSTRAINT `userstudy_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `studies_users_rel` WRITE;
+/*!40000 ALTER TABLE `studies_users_rel` DISABLE KEYS */;
+
+INSERT INTO `studies_users_rel` (`id`, `studyId`, `userId`, `registered`, `confirmed`)
+VALUES
+	(13,19,1,1,1),
+	(14,19,4,1,1);
+
+/*!40000 ALTER TABLE `studies_users_rel` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table template_fields
@@ -322,7 +326,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`, `lmuStaff`, `mmi`, `f
 VALUES
 	(1,'tutor@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,0,'Test','Tutor',1,0),
 	(3,'executor@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,1,'Test','Executor',1,1),
-	(4,'executor2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,0,'Test','Executor2',1,0),
+	(4,'executor2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,1,'Test','Executor2',1,0),
 	(5,'tutor2@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,0,'Test','Tutor2',1,0),
 	(7,'participant1@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'IfiStudent','Test',1,1),
 	(8,'participant2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,0,'LmuStudent','Test',1,0),
@@ -430,9 +434,10 @@ LOCK TABLES `userstudies` WRITE;
 
 INSERT INTO `userstudies` (`id`, `tutorId`, `executorId`, `creatorId`, `templateId`, `fromDate`, `untilDate`, `title`, `description`, `link`, `paper`, `space`, `mmi`, `compensation`, `location`, `visible`, `published`, `closed`)
 VALUES
-	(1,1,3,1,NULL,'2015-02-15','2015-02-21','Studie 1','Die Beschreibung','http://www.linklinklinl.de','',1,1,5,'der Ort',1,1,0),
-	(2,5,4,1,NULL,'2015-02-22','2015-02-28','Studie 2','Die Beschreibung 2','','',3,2,0,'der Ort 2',1,0,0),
-	(3,5,5,1,NULL,'2015-02-15','2015-02-15','Studie 3','Diese Nutzerstudie wird vom dem Tutor der sie erstellt hat auch ausgefuehrt','http://diewebseitevomtutor.de','',0,0,0,'Tutors2 Office',1,0,0);
+	(1,1,3,1,1,'2015-02-15','2015-02-21','Studie 1','Die Beschreibung','http://www.linklinklinl.de','',1,1,5,'der Ort',1,1,0),
+	(2,5,4,1,1,'2015-02-22','2015-02-28','Studie 2','Die Beschreibung 2','http://www.amaistdoof.com','',3,2,5,'der Ort 2',1,0,0),
+	(3,5,5,1,1,'2015-02-15','2015-02-15','Studie 3','Diese Nutzerstudie wird vom dem Tutor der sie erstellt hat auch ausgefuehrt','http://diewebseitevomtutor.de','',0,0,0,'Tutors2 Office',1,0,0),
+	(19,1,3,1,1,'2014-12-12','2014-12-12','Test Creation','Userstudy Beschreibung','http://www.linklmu.com','http://www.linktopaper.com',10,1,5,'LMU',1,0,1);
 
 /*!40000 ALTER TABLE `userstudies` ENABLE KEYS */;
 UNLOCK TABLES;

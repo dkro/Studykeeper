@@ -34,7 +34,7 @@ module.exports = function(app) {
   app.get('/api/users/confirm/:hash', userController.confirmUser);
   app.post('/api/users/recovery', userController.recoverPasswordRequest);
   app.get('/api/users/recover/:hash', userController.recoverPasswordAction);
-  app.get('/api/userstudiesp/:id', userStudyController.getPublicUserstudyById);
+  app.get('/api/studypublics/:id', userStudyController.getPublicUserstudyById);
 
   // --------------- Login routes ---------------
   app.post('/api/users/login', auth.loginAuthenticate, userController.login);
