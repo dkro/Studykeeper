@@ -5,14 +5,9 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         saveClick: function() {
-            var fields = [];
-            this.get('fields').forEach(function (item) {
-                fields.push(item.get('title'));
-            });
-
             var params = {
                 titleNew: this.get('title'),
-                fieldsNew: fields
+                fieldsNew: this.get('fields')
             };
 
             this.resetValidation();
@@ -49,6 +44,9 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         this.set('titleInvalid', null);
     },
 
+    init: function() {
+        this.get('fields').forEach()
+    },
 
     isTemplateCreation: false,
 

@@ -23,9 +23,15 @@ StudyManager.TemplateController = Ember.Controller.extend({
         },
 
         updateTemplate: function(newData) {
+            var fields = [];
+
+            newData.fieldsNew.forEach(function (item) {
+                fields.push(item.get('title'));
+            });
+
             var thisTemplate = this.get('model');
             thisTemplate.set('title', newData.titleNew);
-            thisTemplate.set('fields', newData.fieldsNew);
+            thisTemplate.set('fields', fields);
 
             var that = this;
             var name = thisTemplate.get('title');

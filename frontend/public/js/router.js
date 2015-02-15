@@ -344,7 +344,14 @@ StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.set('title', model.get('title'));
-    controller.set('fields', model.get('fields'));
+    var fields = [];
+    model.get('fields').forEach(function(item) {
+      var field = StudyManager.Tfield.create();
+      field.set('title', item);
+
+      fields.pushObject(field);
+    });
+    controller.set('fields', fields);
     controller.reset();
   }
 });
