@@ -282,16 +282,16 @@ module.exports.userFromNameWithConfirmationData = function(user){
   });
 };
 
-module.exports.userHasRole = function(userId, role){
+module.exports.userHasRole = function(userId, roleArr){
   return new Promise(function(resolve, reject){
     User.getUserById(userId, function(err, result){
       if (err) {
         reject(err);
       } else if (result.length > 0) {
-        if (result[0].role===role) {
+        if (roleArr.indexOf(result[0].role > -1)) {
           resolve(result[0]);
         } else {
-          reject("Die Nutzerrolle stimmt nicht überein. Erwartet: " + role + " Erhalten: " + result[0].role);
+          reject("Der Nutzer hat keine der erwarteten Rollen. Erwartet: " + roleArr + " Nutzerrolle: " + result[0].role);
         }
       } else {
         reject("Der Nutzer wurde nicht gefunden");

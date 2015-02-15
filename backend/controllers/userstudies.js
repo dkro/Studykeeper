@@ -11,8 +11,8 @@ module.exports.createUserstudy = function(req, res, next) {
 
   var promises = [UserstudyPromise.validFullUserstudyReq(req),
     UserPromise.userFromToken(req),
-    UserPromise.userHasRole(req.body.userstudy.tutor, "tutor"),
-    UserPromise.userHasRole(req.body.userstudy.executor, "executor")];
+    UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
+    UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"])];
 
   Promise.all(promises).then(function(results){
     results[0].creatorId = results[1].id;

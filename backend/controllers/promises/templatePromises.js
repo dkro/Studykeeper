@@ -14,7 +14,7 @@ module.exports.validFullTemplateReq = function(req){
         validationErrors.push("Template Title ungültig. minimum 3 characters: " + req.body.template.title);
       }
       if (req.body.template.fields.length===0){
-        validationErrors.push("Es ist mindestens ein Template Field benötigt");
+        validationErrors.push("Es wird mindestens ein Template Field benötigt");
       } else if (req.body.template.fields.length > 10) {
         validationErrors.push("Es sind maximal zehn Template Fields möglich");
       } else {
