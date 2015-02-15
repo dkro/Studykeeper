@@ -46,8 +46,8 @@ module.exports.validFullUserstudyReq = function(req){
       if (!req.body.userstudy.space || !Validator.isNumeric(req.body.userstudy.space)) {
         validationErrors.push("Teilnehmeranzahl ungültig. Zahl erwartet: " + req.body.userstudy.space);
       }
-      if (!req.body.userstudy.templateId || !Validator.isNumeric(req.body.userstudy.templateId)) {
-        validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.templateId);
+      if (!req.body.userstudy.template || !Validator.isNumeric(req.body.userstudy.template)) {
+        validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.template);
       }
       if (!req.body.userstudy.templateValues || !Array.isArray(req.body.userstudy.templateValues)) {
         validationErrors.push("templateValues ungültig. Array erwartet: " + req.body.userstudy.templateValues);
@@ -113,7 +113,7 @@ module.exports.validFullUserstudyReq = function(req){
         requiredStudies: req.body.userstudy.requiredStudies,
         news: req.body.userstudy.news,
         labels: req.body.userstudy.labels,
-        templateId: req.body.userstudy.templateId,
+        templateId: req.body.userstudy.template,
         templateValues: req.body.userstudy.templateValues
       };
       resolve(userStudyData);

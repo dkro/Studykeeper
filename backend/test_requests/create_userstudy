@@ -3,7 +3,7 @@
     "title": "Test Creation",
     "tutor": 1,
     "executor": 3,
-    "templateId": 1,
+    "template": 1,
     "fromDate": "2014-12-12",
     "untilDate": "2014-12-12",
     "description": "Userstudy Beschreibung",
