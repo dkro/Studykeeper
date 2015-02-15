@@ -11,6 +11,7 @@ StudyManager.Router.map(function() {
   this.resource('userstudy-public', { path: '/userstudies/public/:userstudy_id' });
   this.resource('userstudy-edit', { path: '/userstudies/:userstudy_id/studyEdit' });
   this.resource('userstudy-creation', { path: '/createStudy' });
+  this.resource('userstudy-confirm', { path: '/userstudies/:userstudy_id/studyConfirm' });
   this.resource('labels');
   this.resource('users');
   this.resource('user', { path: '/users/:user_id' });
@@ -211,6 +212,36 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('possibleTutors', allTutors);
     controller.set('possibleExecutors', allExecutors);
     controller.determineAsyncProperties();
+  }
+});
+
+StudyManager.UserstudyConfirmRoute = StudyManager.AuthenticationRoute.extend({
+  model: function(params) {
+    var that = this;
+
+    return Ember.RSVP.hash({
+      allUsers: that.store.find('user'),
+      study: that.store.find('userstudy', params.userstudy_id)
+    });
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    var usersWithCompensation = [];
+
+    model.study.get('registeredUsers').forEach(function(user, index) {
+      var canGetMMI = user.get('collectsMMI');
+
+      var userWithCompensation = {
+        user: user,
+        canGetMMI: canGetMMI,
+        chosenCompensation: canGetMMI ? 'MMI-Punkte' : 'Amazon-Gutschein'
+      };
+
+      usersWithCompensation.pushObject(userWithCompensation);
+    });
+
+    controller.set('usersWithCompensation', usersWithCompensation);
   }
 });
 

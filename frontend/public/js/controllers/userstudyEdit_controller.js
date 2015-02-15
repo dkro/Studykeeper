@@ -34,7 +34,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             thisStudy.set('link', newData.linkNew);
             thisStudy.set('mmi', newData.mmiNew);
             thisStudy.set('compensation', newData.amazonNew);
-            // TODO: space!
+            thisStudy.set('space', newData.capacityNew);
             thisStudy.get('labels').clear();
             thisStudy.get('labels').pushObjects(this.get('selectedLabels'));
             thisStudy.get('news').clear();

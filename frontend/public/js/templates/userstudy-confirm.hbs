@@ -1,0 +1,41 @@
+<h2 class="management--single__heading">Studie abschließen</h2>
+
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
+<div class="table-responsive management--all__table">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Entlohnung</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#if usersWithCompensation}}
+            {{#each user in usersWithCompensation}}
+                <tr class="management--all__row">
+                    <td>{{user.user.username}}</td>
+                    <td>{{user.user.firstname}}</td>
+                    <td>{{user.user.lastname}}</td>
+                    {{#if user.canGetMMI}}
+                        {{custom-select values=confirmOptions currentSelected=user.chosenCompensation}}
+                    {{else}}
+                        <td>Amazon-Gutschein</td>
+                    {{/if}}
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td class="management--all__emptyFilter" colspan="4">- Keine angemeldeten Nutzer -</td>
+            </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>
+
+<button class="btn btn-primary">Studie abschließen</button>
+<button class="btn btn-default">Abbrechen</button>
