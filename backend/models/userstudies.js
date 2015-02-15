@@ -261,6 +261,32 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
   });
 };
 
+module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
+      'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId AS template, us.creatorId AS creator '+
+      'FROM userstudies us ' +
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
+      'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
+      'WHERE (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?)' +
+      'AND (srr.studyId IS NULL OR (surful.userId=? AND surful.confirmed=1 AND surful.id IS NOT NULL))  ' +
+      'GROUP BY us.id;',
+      [user.id,user.id,user.id],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
 module.exports.getUsersRegisteredToStudy = function(userstudyId, callback){
   mysql.getConnection(function(connection) {
     connection.query("SELECT DISTINCT u.id FROM users u " +

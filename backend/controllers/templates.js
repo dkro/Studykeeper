@@ -18,7 +18,6 @@ module.exports.createTemplate = function(req, res, next){
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
-          template.id = insertId;
           res.json({status: 'success', message: 'Template erstellt.', template: template});
           return next();
         }

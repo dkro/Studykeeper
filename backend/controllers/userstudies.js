@@ -111,28 +111,7 @@ module.exports.getUserstudyById = function(req, res, next) {
     } else {
 
       var userstudy = result[0];
-      if (userstudy.requiredStudies === null) {
-        userstudy.requiredStudies = [];
-      } else {
-        userstudy.requiredStudies = userstudy.requiredStudies.split(",").map(function(x){return parseInt(x);});
-      }
-      if (userstudy.news === null) {
-        userstudy.news = [];
-      } else {
-        userstudy.news = userstudy.news.split(",").map(function(x){return parseInt(x);});
-      }
-      if (userstudy.labels === null) {
-        userstudy.labels = [];
-      } else {
-        userstudy.labels = userstudy.labels.split(",").map(function(x){return parseInt(x);});
-      }
-      if (userstudy.registeredUsers === null) {
-        userstudy.registeredUsers = [];
-      } else {
-        userstudy.registeredUsers = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
-      }
-
-      userstudy.closed = !!userstudy.closed;
+      parseUserstudy(userstudy);
       res.json({userstudy: userstudy});
       return next();
     }
@@ -161,35 +140,33 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
 module.exports.allUserstudies = function(req, res, next) {
   UserPromise.userFromToken(req)
     .then(function(user){
-      if (user.role === 'tutor'){
-        UserStudy.getAllUserstudies(function(err, list){
+      if (user.role === 'tutor') {
+        UserStudy.getAllUserstudies(function (err, list) {
           if (err) {
-            res.json({status:'failure', message: 'Server Fehler.', internal: err});
+            res.json({status: 'failure', message: 'Server Fehler.', internal: err});
             return next();
           } else {
+            Async.eachSeries(list, function (item, callback) {
+              parseUserstudy(item);
+              callback();
+            }, function (err) {
+              if (err) {
+                res.json({status: 'failure', message: 'Server Fehler.', internal: err});
+                return next();
+              } else {
+                res.json({userstudies: list});
+                return next();
+              }
+            });
+          }
+        });
+      } else if (user.role === 'executor') {
+        UserStudy.getAllUserstudiesFilteredForExecutor(user, function(err, list){
+          if (err) {
+            throw err;
+          } else {
             Async.eachSeries(list, function(item, callback){
-              if (item.requiredStudies === null) {
-                item.requiredStudies = [];
-              } else {
-                item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.news === null) {
-                item.news = [];
-              } else {
-                item.news = item.news.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.labels === null) {
-                item.labels = [];
-              } else {
-                item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.registeredUsers === null) {
-                item.registeredUsers = [];
-              } else {
-                item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
-              }
-
-              item.closed = !!item.closed;
+              parseUserstudy(item);
               callback();
             }, function(err){
               if(err){
@@ -208,28 +185,7 @@ module.exports.allUserstudies = function(req, res, next) {
             throw err;
           } else {
             Async.eachSeries(list, function(item, callback){
-              if (item.requiredStudies === null) {
-                item.requiredStudies = [];
-              } else {
-                item.requiredStudies = item.requiredStudies.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.news === null) {
-                item.news = [];
-              } else {
-                item.news = item.news.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.labels === null) {
-                item.labels = [];
-              } else {
-                item.labels = item.labels.split(",").map(function(x){return parseInt(x);});
-              }
-              if (item.registeredUsers === null) {
-                item.registeredUsers = [];
-              } else {
-                item.registeredUsers = item.registeredUsers.split(",").map(function(x){return parseInt(x);});
-              }
-
-              item.closed = !!item.closed;
+              parseUserstudy(item);
               callback();
             }, function(err){
               if(err){
@@ -248,6 +204,32 @@ module.exports.allUserstudies = function(req, res, next) {
     res.json(500, {status: 'failure', message: err});
     return next();
   });
+};
+
+var parseUserstudy = function (userstudy) {
+  if (userstudy.requiredStudies === null) {
+    userstudy.requiredStudies = [];
+  } else {
+    userstudy.requiredStudies = userstudy.requiredStudies.split(",").map(function(x){return parseInt(x);});
+  }
+  if (userstudy.news === null) {
+    userstudy.news = [];
+  } else {
+    userstudy.news = userstudy.news.split(",").map(function(x){return parseInt(x);});
+  }
+  if (userstudy.labels === null) {
+    userstudy.labels = [];
+  } else {
+    userstudy.labels = userstudy.labels.split(",").map(function(x){return parseInt(x);});
+  }
+  if (userstudy.registeredUsers === null) {
+    userstudy.registeredUsers = [];
+  } else {
+    userstudy.registeredUsers = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
+  }
+
+  userstudy.closed = !!userstudy.closed;
+  return userstudy;
 };
 
 module.exports.allUserstudiesCreatedByUser = function(req, res, next) {
