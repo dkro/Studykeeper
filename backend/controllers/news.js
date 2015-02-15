@@ -9,11 +9,12 @@ module.exports.createNews = function (req, res, next) {
 
   NewsPromise.validNewsReq(req)
     .then(function (news) {
-      News.addNews(news, function (err) {
+      News.addNews(news, function (err,result) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'News erstellt', news: news});
+          news.id = result.insertId;
+          res.json({news: news});
           return next();
         }
       });
@@ -64,7 +65,7 @@ module.exports.deleteNews = function (req, res, next) {
             res.json({status: 'failure', message: 'Server Fehler.', internal: err});
             return next();
           } else {
-            res.json({status: 'success', message: 'News wurde gelöscht.'});
+            res.json({});
             return next();
           }
         });

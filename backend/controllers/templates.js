@@ -13,12 +13,13 @@ module.exports.createTemplate = function(req, res, next){
       return TemplatePromise.templateAvailable(template.title);
     })
     .then(function(){
-      Template.addTemplate(template, function(err){
+      Template.addTemplate(template, function(err, id){
         if (err) {
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
-          res.json({status: 'success', message: 'Template erstellt.', template: template});
+          template.id = id;
+          res.json({template: template});
           return next();
         }
       });
@@ -72,7 +73,7 @@ module.exports.deleteTemplate = function(req, res, next){
               res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
               return next();
             } else {
-              res.json({status: 'success', message: 'Template gelöscht.'});
+              res.json({});
               return next();
             }
           });

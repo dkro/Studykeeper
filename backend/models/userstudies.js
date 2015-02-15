@@ -170,7 +170,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
 module.exports.getUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
@@ -193,7 +193,7 @@ module.exports.getUserstudyById = function (id, callback) {
 module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
@@ -216,7 +216,7 @@ module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback)
 module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
@@ -259,7 +259,7 @@ module.exports.getPublicUserstudyById = function (id, callback) {
 module.exports.getAllUserstudies = function (callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
@@ -284,7 +284,7 @@ module.exports.getAllUserstudies = function (callback) {
 module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
@@ -310,7 +310,7 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
 module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
