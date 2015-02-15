@@ -3,9 +3,10 @@ StudyManager.PasswordRecoveryController = Ember.Controller.extend({
         recoverPassword: function() {
             this.set('statusMessage', null);
             var that = this;
+            var payload = { userEmail: this.get('userEmail')};
 
             if (this.emailIsValid()) {
-                Ember.$.post('/api/users/recovery', this.get('userEmail')).then(function(response) {
+                Ember.$.post('/api/users/recovery', payload).then(function(response) {
                     that.set('passwordRecoverySuccessful', true);
                 }, function(error) {
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false })
