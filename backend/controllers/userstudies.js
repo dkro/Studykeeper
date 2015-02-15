@@ -50,8 +50,7 @@ module.exports.editUserstudy = function(req, res, next) {
       if (user.role === "executor") {
         UserStudy.getStudiesUserIsExecutor({id:user.id},function(err,result){
           if (err) {
-            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-            return next();
+            throw(err);
           } else {
             var allowed = false;
             for (var i = 0; i < result.length; i+=1) {
@@ -64,9 +63,8 @@ module.exports.editUserstudy = function(req, res, next) {
             if (allowed){
               return user;
             } else {
-              res.json({status:'failure', message: 'Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
-              'nur Nutzerstudien editieren die Sie ausführen.'});
-              return next();
+              throw('Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
+              'nur Nutzerstudien editieren die Sie ausführen.');
             }
           }
         });
@@ -86,7 +84,7 @@ module.exports.editUserstudy = function(req, res, next) {
     .then(function() {
       UserStudy.editUserStudy(userstudy, function (err) {
         if (err) {
-          res.json({status:'failure', message: 'Server Fehler.', internal: err});
+          res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde geändert.', userstudy: userstudy});

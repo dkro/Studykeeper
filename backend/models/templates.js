@@ -141,7 +141,7 @@ module.exports.editTemplate = function (template, callback) {
               if (err) {
                 connection.rollback(function () {
                   connection.release();
-                  throw err;
+                  callback(err);
                 });
               } else {
                 connection.release();

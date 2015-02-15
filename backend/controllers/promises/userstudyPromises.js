@@ -71,7 +71,7 @@ module.exports.validFullUserstudyReq = function(req){
         validationErrors.push("News ungültig. Array von Zahlen erwartet: " + req.body.userstudy.news);
       }
       if (!req.body.userstudy.registeredUsers || Array.isArray(req.body.userstudy.registeredUsers)) {
-        for (var m=0; j<req.body.userstudy.registeredUsers; m+=1){
+        for (var m=0; m<req.body.userstudy.registeredUsers; m+=1){
           if (!Validator.isNumeric(req.body.userstudy.registeredUsers)) {
             validationErrors.push("registeredUsers ungültig. Zahl erwartet: " + req.body.userstudy.registeredUsers);
           }

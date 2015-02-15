@@ -134,7 +134,7 @@ module.exports.editUserStudy = function (data, callback) {
             if (err) {
               connection.rollback(function () {
                 connection.release();
-                throw err;
+                callback(err);
               });
             } else {
               connection.release();
