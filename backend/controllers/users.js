@@ -318,7 +318,7 @@ module.exports.createUser = function(req, res, next) {
                 'beim senden der ConfirmationMail.', internal: err});
                 next();
               } else {
-                res.json({message: 'Ein neuer Nutzer wurde erfolgreich erstellt und eine Email mit seinem Password versandt.'});
+                res.json({user: user});
                 next();
               }
             });
@@ -402,7 +402,7 @@ module.exports.deleteUser = function(req, res, next) {
         if (err) {
           throw err;
         } else {
-          res.json({status: 'success', message: 'Nutzer wurde erfolgreich gelöscht.'});
+          res.json({});
           return next();
         }
       });

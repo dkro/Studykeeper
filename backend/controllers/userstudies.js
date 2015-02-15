@@ -16,12 +16,13 @@ module.exports.createUserstudy = function(req, res, next) {
 
   Promise.all(promises).then(function(results){
     results[0].creatorId = results[1].id;
-    UserStudy.addUserStudy(results[0], function (err) {
+    UserStudy.addUserStudy(results[0], function (err,userstudy) {
       if (err) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         return next();
       } else {
-        res.json({status: 'success', message: 'Die Nutzerstudie wurde erstellt.', userstudy: results[0]});
+        results[0].id = userstudy.insertId;
+        res.json({userstudy: results[0]});
         return next();
       }
     });
@@ -67,7 +68,7 @@ module.exports.deleteUserstudy = function(req, res, next) {
           res.json({status:'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
-          res.json({status: 'success', message: 'Die Nutzerstudie wurde gelöscht.'});
+          res.json({});
           return next();
         }
       });
@@ -266,6 +267,7 @@ var parseUserstudy = function (userstudy) {
   }
 
   userstudy.closed = !!userstudy.closed;
+  userstudy.published = !!userstudy.published;
   return userstudy;
 };
 

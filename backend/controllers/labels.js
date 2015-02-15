@@ -14,11 +14,12 @@ module.exports.createLabel = function(req, res, next){
     return LabelPromise.labelAvailable(label);
   })
   .then(function(){
-    Label.addLabel(label, function(err){
+    Label.addLabel(label, function(err,result){
       if (err) {
         throw err;
       } else {
-        res.json({status: 'success', message: 'Label erstellt.', label: label});
+        label.id = result.insertId;
+        res.json({label: label});
         return next();
       }
     });
@@ -38,7 +39,7 @@ module.exports.deleteLabel = function(req, res, next){
               if (err) {
                 throw err;
               } else {
-                res.json({status: 'success', message: 'Label gelöscht.'});
+                res.json({});
                 return next();
               }
             });

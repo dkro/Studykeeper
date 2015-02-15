@@ -16,57 +16,54 @@ module.exports.addTemplate = function (template, callback) {
       connection.beginTransaction(function (err) {
         if (err) {
           throw err;
-        }
+        } else {
         // Create template
-        connection.query('INSERT INTO templates (title) VALUES (?)', queryData.title, function (err) {
-
+        connection.query('INSERT INTO templates (title) VALUES (?)', queryData.title, function (err, result) {
           if (err) {
             connection.rollback(function () {
               throw err;
             });
-          }
+          } else {
+            // Create Fields
+            var promises = [];
+            id = result.insertId;
+            for (var i = 0; i < queryData.fields.length; i += 1) {
+              promises.push(new Promise(function (resolve, reject) {
 
-          // Create Fields
-          var promises = [];
-          for (var i = 0; i < queryData.fields.length; i += 1) {
-            promises.push(new Promise(function (resolve, reject) {
+                connection.query('INSERT INTO template_fields ' +
+                  '(templateId,title,value) ' +
+                  'VALUES (?,?,?)',
+                  [id, queryData.fields[i].title, queryData.fields[i].value],
+                  function (err) {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve();
+                    }
+                  });
+              }));
+            }
 
-              connection.query('INSERT INTO template_fields ' +
-                '(templateId,title,value) ' +
-                'VALUES (' +
-                '(SELECT id FROM templates WHERE title=?),' +
-                '?,?)',
-                [queryData.title, queryData.fields[i].title, queryData.fields[i].value],
-                function (err,result) {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    id = result.insertId;
-                    resolve();
-                  }
-                });
-            }));
-          }
-
-          Promise.all(promises).then(function () {
-            connection.commit(function (err) {
-              if (err) {
-                connection.rollback(function () {
+            Promise.all(promises).then(function () {
+              connection.commit(function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    connection.release();
+                    throw err;
+                  });
+                } else {
                   connection.release();
-                  throw err;
-                });
-              } else {
-                connection.release();
-                callback(err,id);
-              }
+                  callback(err,id);
+                }
+              });
+            }).catch(function (err) {
+              connection.rollback(function () {
+                throw err;
+              });
             });
-          }).catch(function (err) {
-            connection.rollback(function () {
-              throw err;
-            });
-          });
-
+          }
         });
+        }
       });
     });
   }
