@@ -23,10 +23,6 @@ StudyManager.TemplateCreationController = Ember.ArrayController.extend({
             var name = newTemplate.get('title');
 
             newTemplate.save().then(function(response) {
-                that.store.find('template').filterBy('id', null).forEach(function(item) {
-                    item.deleteRecord();
-                });
-
                 that.transitionToRoute('templates').then(function () {
                     that.get('controllers.templates').set('statusMessage', { message: 'Template \"' + name + '\" erstellt!', isSuccess: true });
                 });
