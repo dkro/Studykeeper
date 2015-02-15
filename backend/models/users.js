@@ -246,6 +246,19 @@ module.exports.confirmUser = function(hash,callback){
   });
 };
 
+module.exports.addMMI = function(userId, userstudyId ,callback){
+  mysql.getConnection(function(connection){
+    connection.query("UPDATE users SET " +
+      "mmi=mmi+(SELECT mmi FROM userstudies WHERE id=?) " +
+      "WHERE id=?",
+      [userstudyId,userId],
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
 module.exports.getPasswordRetrievalData = function(hash, callback){
   mysql.getConnection(function(connection){
     connection.query("SELECT upr.*, u.username FROM users_pw_recovery upr " +

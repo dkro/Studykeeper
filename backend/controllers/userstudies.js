@@ -389,40 +389,69 @@ module.exports.removeUserFromStudy = function(req, res, next){
 };
 
 module.exports.confirmUserParticipation = function(req, res, next){
-  var promises = [UserPromise.userExistsById(req.params.userId),
-  UserstudyPromise.userstudyExists({id:req.params.id})];
+  var getsMMI = req.body.getsMMI;
 
-  var user;
-  var userstudy;
+  if (!getsMMI) {
+    res.json(500, {status: 'failure', message: "Kommunikations Fehler.", internal: "Erwartet {getsMMI:boolean}"});
+  } else {
+    var promises = [UserPromise.userExistsById(req.params.userId), UserstudyPromise.userstudyExists({id:req.params.id})];
+    var user;
+    var userstudy;
 
-  Promise.all(promises)
-    .then(function(result){
-      user = result[0];
-      userstudy = result[1];
+    Promise.all(promises)
+      .then(function(result){
+        user = result[0];
+        userstudy = result[1];
 
-      return UserstudyPromise.userIsRegisteredToStudy(user.id,userstudy.id);
-    })
-    .then(function(){
-      return UserstudyPromise.userIsNotConfirmed(user.id,userstudy.id);
-    })
-    .then(function() {
-      UserStudy.confirmUser(user, userstudy, function (err) {
-        if (err) {
-          res.json({status:'failure', message: 'Server Fehler.', internal: err});
-          return next();
-        } else {
-          res.json({
-            status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt.',
-            user: user, userstudy: userstudy
-          });
-          return next();
-        }
+        return UserstudyPromise.userIsRegisteredToStudy(user.id,userstudy.id);
+      })
+      .then(function(){
+        return UserstudyPromise.userIsNotConfirmed(user.id,userstudy.id);
+      })
+      .then(function() {
+        UserStudy.confirmUser(user, userstudy, function (err) {
+          if (err) {
+            res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+            return next();
+          } else {
+            if (getsMMI) {
+              if (user.lmuStaff) {
+                User.addMMI(user.id,userstudy.id,function(err,result){
+                  if (err) {
+                    res.json(500, {status:'failure', message: 'Nutzerteilnahme bestätigt. Es gab jedoch Probleme ' +
+                    'bei der zuteilung der MMI Punkte. Bitte kontaktieren sie uns mit der folgenden Error Nachricht: ' +  err});
+                  } else {
+                    res.json({
+                      status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt. Dem Nutzer wurden ' +
+                      'die MMI Punkte der Nutzerstudie gutgeschrieben.',
+                      user: user, userstudy: userstudy
+                    });
+                  }
+                })
+              } else {
+                res.json({
+                  status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt. ' +
+                  'Es wurden jedoch dem Nutzer keine MMI Punkte zugeteilt, da er nicht berechtigt ist. Nur ' +
+                  'Nutzer mit lmu email Adressen sind dazu berechtigt MMI Punkt zu sammeln.',
+                  user: user, userstudy: userstudy
+                });
+                return next();
+              }
+            } else {
+              res.json({
+                status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt.',
+                user: user, userstudy: userstudy
+              });
+              return next();
+            }
+          }
+        });
+      })
+      .catch(function(err){
+        res.json(500, {status: 'failure', message: err});
+        return next();
       });
-    })
-    .catch(function(err){
-      res.json(500, {status: 'failure', message: err});
-      return next();
-    });
+  }
 };
 
 module.exports.closeUserstudy = function(req, res, next){
