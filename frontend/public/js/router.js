@@ -199,10 +199,6 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
       return study.get('id') !== model.study.get('id');
     });
     controller.set('allRequiredStudies', possibleRequiredStudies);
-    controller.set('selectedLabels', model.study.get('labels'));
-    controller.set('selectedNews', model.study.get('news'));
-    controller.set('registeredUsers', model.study.get('registeredUsers'));
-    controller.set('requiredStudies', model.study.get('requiredStudies'));
     var allTutors = model.allUsers.filter(function(user) {
       return user.get('role') === 'tutor';
     });

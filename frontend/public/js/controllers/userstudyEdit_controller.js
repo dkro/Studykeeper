@@ -36,17 +36,6 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             thisStudy.set('compensation', newData.amazonNew);
             thisStudy.set('space', newData.capacityNew);
             thisStudy.set('templateValues', newData.templateValuesNew);
-            thisStudy.get('labels').clear();
-            thisStudy.get('labels').pushObjects(this.get('selectedLabels'));
-            thisStudy.get('news').clear();
-            thisStudy.get('news').pushObjects(this.get('selectedNews'));
-            thisStudy.set('template', this.get('template'));
-            thisStudy.set('executor', this.get('executor'));
-            thisStudy.set('tutor', this.get('tutor'));
-            thisStudy.get('registeredUsers').clear();
-            thisStudy.get('registeredUsers').pushObjects(this.get('registeredUsers'));
-            thisStudy.get('requiredStudies').clear();
-            thisStudy.get('requiredStudies').pushObjects(this.get('requiredStudies'));
 
             var that = this;
             var name = thisStudy.get('title');
@@ -148,19 +137,11 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     tutor: null,
 
-    selectedLabels: [],
-
-    selectedNews: [],
-
-    registeredUsers: [],
-
     possibleTutors: [],
 
     possibleExecutors: [],
 
     template: null,
 
-    allRequiredStudies: [],
-
-    requiredStudies: []
+    allRequiredStudies: []
 });
