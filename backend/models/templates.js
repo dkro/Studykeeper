@@ -33,7 +33,7 @@ module.exports.addTemplate = function (template, callback) {
                 connection.query('INSERT INTO template_fields ' +
                   '(templateId,title) ' +
                   'VALUES (?,?)',
-                  [id, queryData.fields[i].title],
+                  [id, queryData.fields[i]],
                   function (err) {
                     if (err) {
                       reject(err);
@@ -122,7 +122,7 @@ module.exports.editTemplate = function (template, callback) {
                   'VALUES (' +
                   '(SELECT id FROM templates WHERE title=?),' +
                   '?)',
-                  [queryData.title, queryData.fields[i].title],
+                  [queryData.title, queryData.fields[i]],
                   function (err) {
                     if (err) {
                       reject(err);

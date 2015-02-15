@@ -1,6 +1,6 @@
 {
   "template" : {
     "title" : "template title5",
-    "fields" : ["field1 title","field2 title"]
+    "fields" : ["field1 title","field2 title","field 3 title"]
   }
 }
