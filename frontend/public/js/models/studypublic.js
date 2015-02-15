@@ -10,10 +10,9 @@ StudyManager.Studypublic = DS.Model.extend({
     compensation: DS.attr('number'),
     mmi: DS.attr('number'),
     closed: DS.attr('boolean'),
-    capacity: DS.attr('number'),
-    freeSpace: DS.attr('number'),
     labels: DS.hasMany('label', { async: true }),
-    template: DS.belongsTo('template', { async: true })
+    template: DS.belongsTo('template', { async: true }),
+    templateValues: DS.attr('array')
 });
 
 StudyManager.Studypublic.FIXTURES = [
@@ -30,10 +29,9 @@ StudyManager.Studypublic.FIXTURES = [
         compensation: 5,
         mmi: 2,
         closed: true,
-        capacity: 30,
-        freeSpace: 28,
         labels: [1, 2],
-        template: 1
+        template: 1,
+        templateValues: ['Studie0_A1_Value', 'Studie0_A2_Value']
     },
     {
         id: 2,
@@ -48,10 +46,9 @@ StudyManager.Studypublic.FIXTURES = [
         compensation: 10,
         mmi: 3,
         closed: false,
-        capacity: 20,
-        freeSpace: 18,
         labels: [2],
-        template: 1
+        template: 1,
+        templateValues: ['StudieA_A1_Value', 'StudieA_A2_Value']
     },
     {
         id: 3,
@@ -68,10 +65,9 @@ StudyManager.Studypublic.FIXTURES = [
         compensation: 5,
         mmi: 1,
         closed: true,
-        capacity: 50,
-        freeSpace: 49,
         labels: [],
-        template: 1
+        template: 1,
+        templateValues: ['StudieB_A1_Value', 'StudieB_A2_Value']
     },
     {
         id: 4,
@@ -90,10 +86,9 @@ StudyManager.Studypublic.FIXTURES = [
         compensation: 20,
         mmi: 4,
         closed: true,
-        capacity: 10,
-        freeSpace: 9,
         labels: [1, 2, 3],
-        template: 2
+        template: 2,
+        templateValues: ['StudieC_B1_Value', 'StudieC_B2_Value']
     },
     {
         id: 5,
@@ -113,9 +108,8 @@ StudyManager.Studypublic.FIXTURES = [
         compensation: 5,
         mmi: 2,
         closed: false,
-        capacity: 25,
-        freeSpace: 25,
         labels: [4],
-        template: 2
+        template: 2,
+        templateValues: ['StudieD_B1_Value', 'StudieD_B2_Value']
     }
 ];

@@ -17,27 +17,15 @@ StudyManager.TemplateController = Ember.Controller.extend({
                     });
                 }, function(error) {
                     thisTemplate.rollback();
-                    var aMessage = 'Template \"' + name + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: aMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
 
         updateTemplate: function(newData) {
-            var usedFields = [];
-
-            newData.fieldsNew.forEach(function(field, index) {
-                var addedField = {
-                    title: field.get('title'),
-                    value: field.get('value')
-                };
-
-                usedFields.push(addedField);
-            });
-
             var thisTemplate = this.get('model');
             thisTemplate.set('title', newData.titleNew);
-            thisTemplate.set('fields', usedFields);
+            thisTemplate.set('fields', newData.fieldsNew);
 
             var that = this;
             var name = thisTemplate.get('title');

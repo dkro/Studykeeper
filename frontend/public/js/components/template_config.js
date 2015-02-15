@@ -18,10 +18,7 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         addField: function() {
-            var field = StudyManager.Field.create({
-                title: '',
-                value: ''
-            });
+            var field = '';
 
             this.get('fields').pushObject(field);
         },

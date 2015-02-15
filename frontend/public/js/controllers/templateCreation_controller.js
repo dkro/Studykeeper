@@ -3,20 +3,9 @@ StudyManager.TemplateCreationController = Ember.ArrayController.extend({
 
     actions: {
         createTemplate: function(newData) {
-            var usedFields = [];
-
-            newData.fieldsNew.forEach(function(field, index) {
-                var addedField = {
-                    title: field.get('title'),
-                    value: field.get('value')
-                };
-
-                usedFields.push(addedField);
-            });
-
             var newTemplate = this.store.createRecord('template', {
                 title: newData.titleNew,
-                fields: usedFields
+                fields: newData.fieldsNew
             });
 
             var that = this;

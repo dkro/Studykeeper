@@ -175,7 +175,7 @@ StudyManager.UserstudyPublicRoute = Ember.Route.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.determineLoggedIn();
+    controller.determineNeededProperties();
   }
 });
 

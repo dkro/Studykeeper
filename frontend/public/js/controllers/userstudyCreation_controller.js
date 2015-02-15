@@ -12,7 +12,8 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
                 space: newData.capacityNew,
                 link: newData.linkNew,
                 mmi: newData.mmiNew,
-                compensation: newData.amazonNew
+                compensation: newData.amazonNew,
+                templateValues: newData.templateValuesNew
             });
 
             newStudy.get('labels').pushObjects(this.get('selectedLabels'));

@@ -52,6 +52,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.determineCanEdit();
         this.determineIsRegistered();
         this.determineFreeSpace();
+        this.determineTemplateFields();
     },
 
     canEdit: false,
@@ -59,6 +60,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     determineCanEdit: function() {
         var userRole = this.get('controllers.application').get('userRole');
         var currentUserId = this.get('controllers.application').get('currentUserId');
+        var that = this;
 
         this.get('model').get('executor').then(function(executor) {
             var executorId = executor.get('id');
@@ -66,7 +68,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             var isExecutor = userRole === 'executor' && executorId === currentUserId;
             var canEdit = (isTutor || isExecutor);
 
-            this.set('canEdit', canEdit);
+            that.set('canEdit', canEdit);
         });
     },
 
@@ -89,6 +91,23 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var freeSpace = this.get('model').get('space') - registeredUsersCount;
 
         this.set('freeSpace', freeSpace);
+    },
+
+    fieldNameToValues: [],
+
+    determineTemplateFields: function() {
+        var fieldsToValues = [];
+        var vals = this.get('model').get('templateValues');
+        var that = this;
+
+        this.get('model').get('template').then(function(template) {
+            template.get('fields').forEach(function(field, index) {
+                var entry = { title: field, value: vals.objectAt(index) };
+                fieldsToValues.push(entry);
+            });
+
+            that.set('fieldNameToValues', fieldsToValues);
+        })
     },
 
     statusMessage: null

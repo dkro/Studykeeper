@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    {{#each field in model.template.fields}}
+    {{#each field in fieldNameToValues}}
         <div class="data__row">
             <div class="data__cell--description">{{field.title}}: </div>
             <div class="data__cell--value">{{field.value}}</div>

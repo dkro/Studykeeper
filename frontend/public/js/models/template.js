@@ -8,31 +8,13 @@ StudyManager.Template.FIXTURES = [
     {
         id: 1,
         title: 'Option A',
-        fields: [
-            {
-                title: "A1Title",
-                value: "A1Value"
-            },
-            {
-                title: "A2Title",
-                value: "A2Value"
-            }
-        ],
+        fields: ['A1', 'A2'],
         userstudies: [1, 2, 3]
     },
     {
         id: 2,
         title: 'Option B',
-        fields: [
-            {
-                title: "B1Title",
-                value: "B1Value"
-            },
-            {
-                title: "B2Title",
-                value: "B2Value"
-            }
-        ],
+        fields: ['B1', 'B2', 'B3'],
         userstudies: [4, 5]
     }
 ];

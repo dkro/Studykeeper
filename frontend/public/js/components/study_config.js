@@ -5,6 +5,12 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
         },
 
         saveClick: function() {
+            var values = [];
+
+            this.get('templateFieldsToValue').forEach(function(item, index) {
+                values.push(item.get('value'));
+            });
+
             var params = {
                 titleNew: this.get('title'),
                 fromNew: this.get('fromDate'),
@@ -14,7 +20,8 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
                 linkNew: this.get('link'),
                 amazonNew: this.get('amazon'),
                 mmiNew: this.get('mmi'),
-                capacityNew: this.get('capacity')
+                capacityNew: this.get('capacity'),
+                templateValuesNew: values
             };
 
             this.resetValidation();
@@ -83,6 +90,11 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
         this.set('isValidState', isValid);
 
         return isValid;
+    },
+
+    init: function() {
+        this._super();
+        this.templateChanged();
     },
 
     resetValidation: function() {
@@ -187,6 +199,37 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
     templates: [],
 
     template: null,
+
+    templateChanged: function () {
+        var fieldsToValues = [];
+        var vals = this.get('templateValues');
+        var newVals = [];
+        var that = this;
+
+        if (!Ember.empty(this.get('template'))) {
+            this.get('template').get('fields').forEach(function(field, index) {
+                if (Ember.empty(vals)) {
+                    var val = '';
+                } else {
+                    var val = vals.objectAt(index) === undefined ? '' : vals.objectAt(index);
+                }
+
+                var entry = StudyManager.Field.create();
+                entry.set('title', field);
+                entry.set('value', val);
+
+                newVals.push(val);
+                fieldsToValues.pushObject(entry);
+            });
+        }
+
+        that.set('templateValues', vals);
+        that.set('templateFieldsToValue', fieldsToValues);
+    }.observes('template'),
+
+    templateValues: [],
+
+    templateFieldsToValue: [],
 
     executor: null,
 
