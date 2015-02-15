@@ -11,7 +11,7 @@ module.exports.validFullTemplateReq = function(req){
       validationErrors.push("Template Request hat ein falsches Format");
     } else {
       if (!Validator.isLength(req.body.template.title, 3)) {
-        validationErrors.push("Template Title ungültig. minimum 3 characters: " + req.body.template.title);
+        validationErrors.push("Template Titel ungültig. minimum 3 characters: " + req.body.template.title);
       }
       if (req.body.template.fields.length===0){
         validationErrors.push("Es wird mindestens ein Template Field benötigt");
@@ -20,15 +20,11 @@ module.exports.validFullTemplateReq = function(req){
       } else {
           for (var i=0; i < req.body.template.fields.length; i += 1){
             if (!Validator.isLength(req.body.template.fields[i].title, 3)) {
-              validationErrors.push("Template Field Title ungültig. Minimum 3 Charakter: " + req.body.template.fields[i].title);
-            }
-            if (req.body.template.fields[i].value && !Validator.isLength(req.body.template.fields[i].value, 3)) {
-              validationErrors.push("Template Field Value ungültig, Minimum 3 Charakter: " + req.body.template.fields[i].value);
+              validationErrors.push("Template Feld Titel ungültig. Minimum 3 Charakter: " + req.body.template.fields[i].title);
             }
 
             fields.push({
-              title: Validator.toString(req.body.template.fields[i].title),
-              value: Validator.toString(req.body.template.fields[i].value)
+              title: Validator.toString(req.body.template.fields[i].title)
             });
           }
       }
@@ -51,9 +47,7 @@ module.exports.templateExists = function(templateId){
     Template.getTemplateById(templateId, function(err, result){
       if (err) {
         reject(err);
-      }
-
-      if (result.length > 0){
+      } else if (result.length > 0){
         resolve(result[0]);
       } else {
         reject("Template wurde nicht gefunden.");
@@ -67,10 +61,8 @@ module.exports.templateAvailable = function(templateName) {
     Template.getTemplateByTitle(templateName, function(err, result){
       if (err){
         reject(err);
-      }
-
-      if (result.length > 0) {
-        reject("Template Title schon vergeben.");
+      } else if (result.length > 0) {
+        reject("Template Titel schon vergeben.");
       } else {
         resolve(result[0]);
       }

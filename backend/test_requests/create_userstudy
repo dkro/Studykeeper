@@ -1,21 +1,22 @@
 {
   "userstudy": {
-    "title": "userstudy tita",
-    "tutor": 6,
-    "executor": 7,
-    "template": 2,
+    "title": "Test Creation",
+    "tutor": 1,
+    "executor": 3,
+    "templateId": 1,
     "fromDate": "2014-12-12",
     "untilDate": "2014-12-12",
-    "description": "userstudy description x",
-    "doodleLink": "http://www.doodlelink.com",
+    "description": "Userstudy Beschreibung",
+    "link": "http://www.linklmu.com",
     "paper": "http://www.linktopaper.com",
     "mmi": "1",
-    "compensation": "22",
-    "location": "location secret",
-    "space": 20,
-    "requiredStudies" : [1,6],
-    "labels" : [8],
+    "compensation": "5",
+    "location": "LMU",
+    "space": 10,
+    "requiredStudies" : [],
+    "labels" : [],
     "registeredUsers" : [],
-    "news" : [2]
+    "news" : [],
+    "templateValues" : []
   }
 }

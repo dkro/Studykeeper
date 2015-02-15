@@ -1,5 +1,6 @@
 "use strict";
 var Userstudy    = require('../../models/userstudies');
+var Template    = require('../../models/templates');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
@@ -9,46 +10,49 @@ module.exports.validFullUserstudyReq = function(req){
     if (!req.body.userstudy) {
       validationErrors.push("Nutzerstudien request hat ein falsches Format.");
     } else {
-      if (!Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
+      if (!req.body.userstudy.title || !Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
         validationErrors.push("Title ungültig. Minimum 3 Charakter: " + req.body.userstudy.title);
       }
-      if (!Validator.isNumeric(req.body.userstudy.tutor)) {
+      if (!req.body.userstudy.tutor || !Validator.isNumeric(req.body.userstudy.tutor)) {
         validationErrors.push("Tutor-ID ungültig. Zahl erwartet: " + req.body.userstudy.tutor);
       }
-      if (!Validator.isNumeric(req.body.userstudy.executor)) {
+      if (!req.body.userstudy.executor || !Validator.isNumeric(req.body.userstudy.executor)) {
         validationErrors.push("Executor-ID ungültig. Zahl erwartet:: " + req.body.userstudy.executor);
       }
-      if (!Validator.isDate(req.body.userstudy.fromDate)) {
+      if (!req.body.userstudy.fromDate || !Validator.isDate(req.body.userstudy.fromDate)) {
         validationErrors.push("FromDate ungültig. Datum Fromat erwartet YYYY-MM-DD: " + req.body.userstudy.fromDate);
       }
-      if (!Validator.isDate(req.body.userstudy.untilDate)) {
+      if (!req.body.userstudy.untilDate || !Validator.isDate(req.body.userstudy.untilDate)) {
         validationErrors.push("UntilDate ungültig. Datum Fromat erwartet  YYYY-MM-DD: " + req.body.userstudy.untilDate);
       }
-      if (!Validator.isLength(req.body.userstudy.description, 3)) {
+      if (!req.body.userstudy.description || !Validator.isLength(req.body.userstudy.description, 3)) {
         validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
       }
-      if (req.body.userstudy.link  && !Validator.isURL(req.body.userstudy.link)) {
+      if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link)) {
         validationErrors.push("DoodleLink ungültig. URL Format erwartet: " + req.body.userstudy.doodleLink);
       }
-      if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
+      if (req.body.userstudy.paper && !Validator.isURL(req.body.userstudy.paper)) {
         validationErrors.push("Paper ungültig. URL Format erwartet: " + req.body.userstudy.paper);
       }
-      if (!Validator.isFloat(req.body.userstudy.mmi)) {
+      if (!req.body.userstudy.mmi || !Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
       }
-      if (!Validator.isNumeric(req.body.userstudy.compensation)) {
+      if (!req.body.userstudy.compensation || !Validator.isNumeric(req.body.userstudy.compensation)) {
         validationErrors.push("Amazon Punkte ungültig. Zahl erwartet: " + req.body.userstudy.compensation);
       }
-      if (!Validator.isLength(req.body.userstudy.location, 3)) {
+      if (!req.body.userstudy.location || !Validator.isLength(req.body.userstudy.location, 3)) {
         validationErrors.push("Ort ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
       }
-      if (!Validator.isNumeric(req.body.userstudy.space)) {
+      if (!req.body.userstudy.space || !Validator.isNumeric(req.body.userstudy.space)) {
         validationErrors.push("Teilnehmeranzahl ungültig. Zahl erwartet: " + req.body.userstudy.space);
       }
-      if (req.body.userstudy.templateId && !Validator.isNumeric(req.body.userstudy.templateId)) {
+      if (!req.body.userstudy.templateId || !Validator.isNumeric(req.body.userstudy.templateId)) {
         validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.templateId);
       }
-      if (Array.isArray(req.body.userstudy.requiredStudies)) {
+      if (!req.body.userstudy.templateValues || !Array.isArray(req.body.userstudy.templateValues)) {
+        validationErrors.push("templateValues ungültig. Array erwartet: " + req.body.userstudy.templateValues);
+      }
+      if (!req.body.userstudy.requiredStudies || Array.isArray(req.body.userstudy.requiredStudies)) {
         for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
           if (!Validator.isNumeric(req.body.userstudy.requiredStudies)) {
             validationErrors.push("requiredStudies ungültig. Zahl erwartet: " + req.body.userstudy.requiredStudies);
@@ -57,7 +61,7 @@ module.exports.validFullUserstudyReq = function(req){
       } else {
         validationErrors.push("requiredStudies ungültig, Array von Zahlen erwartet: " + req.body.userstudy.isFutureStudyFor);
       }
-      if (Array.isArray(req.body.userstudy.news)) {
+      if (!req.body.userstudy.news || Array.isArray(req.body.userstudy.news)) {
         for (var j=0; j<req.body.userstudy.news; j+=1){
           if (!Validator.isNumeric(req.body.userstudy.news)) {
             validationErrors.push("News ungültig. Zahl erwartet: " + req.body.userstudy.news);
@@ -66,7 +70,7 @@ module.exports.validFullUserstudyReq = function(req){
       } else {
         validationErrors.push("News ungültig. Array von Zahlen erwartet: " + req.body.userstudy.news);
       }
-      if (Array.isArray(req.body.userstudy.labels)) {
+      if (!req.body.userstudy.labels || Array.isArray(req.body.userstudy.labels)) {
         for (var k=0; k<req.body.userstudy.labels; k+=1){
           if (!Validator.isNumeric(req.body.userstudy.labels)) {
             validationErrors.push("labels ungültig. Zahl erwartet: " + req.body.userstudy.labels);
@@ -99,7 +103,8 @@ module.exports.validFullUserstudyReq = function(req){
         requiredStudies: req.body.userstudy.requiredStudies,
         news: req.body.userstudy.news,
         labels: req.body.userstudy.labels,
-        templateId: req.body.userstudy.template
+        templateId: req.body.userstudy.templateId,
+        templateValues: req.body.userstudy.templateValues
       };
       resolve(userStudyData);
     }
@@ -108,7 +113,6 @@ module.exports.validFullUserstudyReq = function(req){
 
 module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
-
     Userstudy.getUserstudyById(userstudy.id,function(err,result){
       if (err) {
         reject(err);
@@ -118,7 +122,6 @@ module.exports.userstudyExists = function(userstudy) {
         resolve(result[0]);
       }
     });
-
   });
 };
 
@@ -296,6 +299,23 @@ module.exports.userRegisteredStudies = function(user) {
         reject(err);
       } else {
         resolve(result);
+      }
+    });
+  });
+};
+
+module.exports.studyTemplateValueCountIsTemplateTitleCount = function(templateId,templateValuesArr) {
+  return new Promise(function (resolve, reject) {
+    Template.getTemplateById(templateId, function (err, template) {
+      if (err) {
+        reject(err);
+      } else if (template.length === 0 ){
+        reject("Template wurde nicht gefunden.");
+      } else if (templateValuesArr.length === template.length) {
+        resolve();
+      } else {
+        reject("Die Anzahl der Titel für das Template stimmt nicht mit der gesendeten Anzahl an Feldern überein. " +
+        "Erwartet: " + template.length + " Erhalten: " + templateValuesArr.length);
       }
     });
   });

@@ -9,7 +9,7 @@ module.exports.addUserStudy = function (data, callback) {
     description: data.description, link: data.link, paper: data.paper, space: data.space, mmi: data.mmi,
     compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
-    creatorId: data.creatorId
+    creatorId: data.creatorId, templateValues: data.templateValues
   };
   mysql.getConnection(function(connection) {
     // Start a Transaction
@@ -42,7 +42,8 @@ module.exports.addUserStudy = function (data, callback) {
           var promises = [
             addUserstudyRelations(connection, userstudyId, 'news', queryData.news),
             addUserstudyRelations(connection, userstudyId, 'labels', queryData.labels),
-            addUserstudyRelations(connection, userstudyId, 'requires', queryData.requiredStudies)
+            addUserstudyRelations(connection, userstudyId, 'requires', queryData.requiredStudies),
+            addTemplateValues(connection,userstudyId,queryData.templateId,queryData.templateValues)
           ];
           return Promise.all(promises);
         })
@@ -79,7 +80,8 @@ module.exports.editUserStudy = function (data, callback) {
     id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate,
     until: data.untilDate, description: data.description, link: data.link, paper: data.paper,
     space: data.space, mmi: data.mmi, compensation: data.compensation, location: data.location,
-    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId
+    requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
+    templateValues: data.templateValues
   };
   mysql.getConnection(function(connection) {
     connection.beginTransaction(function (err) {
@@ -109,7 +111,8 @@ module.exports.editUserStudy = function (data, callback) {
           var promises = [
             delUserstudyRelations(connection, userstudyId, 'news'),
             delUserstudyRelations(connection, userstudyId, 'labels'),
-            delUserstudyRelations(connection, userstudyId, 'requires')
+            delUserstudyRelations(connection, userstudyId, 'requires'),
+            delTemplateValues(connection,userstudyId,queryData.templateId)
           ];
           return Promise.all(promises);
         })
@@ -117,7 +120,8 @@ module.exports.editUserStudy = function (data, callback) {
           var promises = [
             addUserstudyRelations(connection, results[0], 'news', queryData.news),
             addUserstudyRelations(connection, results[1], 'labels', queryData.labels),
-            addUserstudyRelations(connection, results[2], 'requires', queryData.requiredStudies)
+            addUserstudyRelations(connection, results[2], 'requires', queryData.requiredStudies),
+            addTemplateValues(connection,results[3],queryData.templateId,queryData.templateValues)
           ];
           return Promise.all(promises);
         })
@@ -174,11 +178,13 @@ module.exports.getUserstudyById = function (id, callback) {
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId AS template, us.creatorId AS creator ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? ' +
       'GROUP BY us.id;',
@@ -197,11 +203,13 @@ module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback)
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId AS template, us.creatorId AS creator ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? AND us.visible=1 AND us.published=1 ' +
       'GROUP BY us.id;',
@@ -220,11 +228,13 @@ module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callb
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId AS template, us.creatorId AS creator ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? AND (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?) ' +
       'GROUP BY us.id;',
@@ -263,11 +273,13 @@ module.exports.getAllUserstudies = function (callback) {
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId as template, us.creatorId AS creator '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'GROUP BY us.id;',
       function(err,result){
@@ -288,11 +300,13 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId AS template, us.creatorId AS creator '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE us.visible=1 AND us.published=1 ' +
@@ -314,11 +328,13 @@ module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) 
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
       'us.templateId AS template, us.creatorId AS creator '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?)' +
@@ -569,7 +585,7 @@ var addUserstudyRelations = function(connection, userstudyId, type, relationIds)
     }
 
     if (!tableName) {
-      reject({message: "wrong type for userstudy relation... recieved: " + type + " expected: [news/labels,requires]"});
+      reject({message: "wrong type for userstudy relation... recieved: " + type + " expected: [news/labels/requires]"});
     } else if (relationIds.length === 0){
       resolve(userstudyId);
     } else {
@@ -660,6 +676,44 @@ module.exports.getStudiesRelationFor = function(userstudyId, type, callback){
           });
       });
     }
+};
+
+var addTemplateValues = function (connection, userstudyId, templateId, valueArr) {
+  valueArr = valueArr || [];
+
+  return new Promise(function(resolve,reject) {
+    if (valueArr.length === 0) {
+      resolve(userstudyId);
+    } else {
+      var queryString = 'INSERT INTO studies_template_values (studyId, templateId, value) ' +
+        'VALUES (' + connection.escape(userstudyId) + ',' + connection.escape(templateId) + ',' + connection.escape(valueArr[0]) + ')';
+      for (var i = 1; i < valueArr.length; i += 1) {
+        queryString = queryString.concat(',(' + connection.escape(userstudyId) + ',' + connection.escape(templateId) + ',' + connection.escape(valueArr[i]) + ')');
+      }
+      connection.query(queryString,
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(userstudyId);
+          }
+        });
+    }
+  });
+};
+
+var delTemplateValues = function (connection, userstudyId, templateId) {
+  return new Promise(function(resolve,reject) {
+    connection.query('DELETE FROM studies_template_values WHERE studyId=? AND templateId=?',
+      [userstudyId,templateId],
+      function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(userstudyId);
+        }
+      });
+  });
 };
 
 

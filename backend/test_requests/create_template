@@ -3,12 +3,10 @@
     "title" : "template title5",
     "fields" : [
       {
-        "title" : "field1 title",
-        "value" : "field1 descr"
+        "title" : "field1 title"
       },
       {
-        "title" : "field2 title",
-        "value" : "field2 descr"
+        "title" : "field2 title"
       }
     ]
   }

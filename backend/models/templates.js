@@ -31,9 +31,9 @@ module.exports.addTemplate = function (template, callback) {
               promises.push(new Promise(function (resolve, reject) {
 
                 connection.query('INSERT INTO template_fields ' +
-                  '(templateId,title,value) ' +
-                  'VALUES (?,?,?)',
-                  [id, queryData.fields[i].title, queryData.fields[i].value],
+                  '(templateId,title) ' +
+                  'VALUES (?,?)',
+                  [id, queryData.fields[i].title],
                   function (err) {
                     if (err) {
                       reject(err);
@@ -118,11 +118,11 @@ module.exports.editTemplate = function (template, callback) {
               promises.push(new Promise(function (resolve, reject) {
 
                 connection.query('INSERT INTO template_fields ' +
-                  '(templateId,title,value) ' +
+                  '(templateId,title) ' +
                   'VALUES (' +
                   '(SELECT id FROM templates WHERE title=?),' +
-                  '?,?)',
-                  [queryData.title, queryData.fields[i].title, queryData.fields[i].value],
+                  '?)',
+                  [queryData.title, queryData.fields[i].title],
                   function (err) {
                     if (err) {
                       reject(err);
@@ -163,19 +163,65 @@ module.exports.editTemplate = function (template, callback) {
 
 module.exports.removeTemplate = function (templateId, callback) {
   mysql.getConnection(function(connection) {
-      connection.query('DELETE FROM templates WHERE id=?',
-        templateId,
-        function(err,result){
-          connection.release();
-          callback(err,result);
-        }
-      );
+    connection.beginTransaction(function (err) {
+      if (err) {
+        connection.release();
+        throw err;
+      }
+      // Delete Relation
+      new Promise(function (resolve, reject) {
+        connection.query("DELETE FROM template_fields WHERE templateId=?",
+          templateId,
+          function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+      })
+        // Delete Template
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            connection.query("DELETE FROM templates WHERE id=?",
+              templateId,
+              function (err) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+          });
+        })
+        // Finally commit
+        .then(function () {
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                connection.release();
+                throw err;
+              });
+            } else {
+              connection.release();
+              callback(err);
+            }
+          });
+        })
+        // Catch all erors
+        .catch(function (err) {
+          connection.rollback(function () {
+            connection.release();
+            callback(err);
+          });
+        });
+    });
   });
 };
 
 module.exports.getAllTemplates = function (callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value, ' +
+    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle,  ' +
                      'GROUP_CONCAT(DISTINCT us.id) AS userstudies ' +
                      'FROM templates t ' +
                      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
@@ -191,7 +237,7 @@ module.exports.getAllTemplates = function (callback) {
 
 module.exports.getTemplateById = function (templateId, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT  t.id, t.title, tf.title AS fieldTitle, tf.value, ' +
+    connection.query('SELECT  t.id, t.title, tf.title AS fieldTitle, ' +
                      'GROUP_CONCAT(DISTINCT us.id) AS userstudies ' +
                      'FROM templates t ' +
                      'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
@@ -209,7 +255,8 @@ module.exports.getTemplateById = function (templateId, callback) {
 
 module.exports.getTemplateByTitle = function (templateTitle, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle, tf.value FROM templates t ' +
+    connection.query('SELECT t.id, t.title, tf.title AS fieldTitle ' +
+      'FROM templates t ' +
       'LEFT JOIN template_fields tf ON t.id=tf.templateId ' +
       'WHERE t.title=? ',
       templateTitle,
@@ -221,7 +268,4 @@ module.exports.getTemplateByTitle = function (templateTitle, callback) {
   });
 };
 
-module.exports.mapTemplatetoUserstudy = function (template, userstudy, callback) {
-
-};
 

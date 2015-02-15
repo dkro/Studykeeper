@@ -9,20 +9,26 @@ var Async       = require('async');
 
 module.exports.createUserstudy = function(req, res, next) {
 
-  var promises = [UserstudyPromise.validFullUserstudyReq(req),
-    UserPromise.userFromToken(req),
-    UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
-    UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"])];
+  var userstudy = {};
+  UserstudyPromise.validFullUserstudyReq(req)
+  .then(function(result){
+    userstudy = result;
+    var promises = [UserPromise.userFromToken(req),
+      UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
+      UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
+      UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
 
-  Promise.all(promises).then(function(results){
-    results[0].creatorId = results[1].id;
-    UserStudy.addUserStudy(results[0], function (err,userstudy) {
+    return Promise.all(promises);
+  })
+  .then(function(results){
+    userstudy.creatorId = results[0].id;
+    UserStudy.addUserStudy(userstudy, function (err,userstudyId) {
       if (err) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         return next();
       } else {
-        results[0].id = userstudy.insertId;
-        res.json({userstudy: results[0]});
+        userstudy.id = userstudyId;
+        res.json({userstudy: userstudy});
         return next();
       }
     });
@@ -39,7 +45,12 @@ module.exports.editUserstudy = function(req, res, next) {
       userstudy = result;
       userstudy.id = req.params.id;
 
-      return UserstudyPromise.userstudyExists(userstudy);
+      var promises = [UserstudyPromise.userstudyExists(userstudy),
+        UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
+        UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
+        UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
+
+      return Promise.all(promises);
     })
     .then(function() {
       UserStudy.editUserStudy(userstudy, function (err) {
@@ -265,32 +276,16 @@ var parseUserstudy = function (userstudy) {
   } else {
     userstudy.registeredUsers = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
   }
+  if (userstudy.templateValues === null) {
+    userstudy.templateValues = [];
+  } else {
+    userstudy.templateValues = userstudy.templateValues.split(",").map(function(x){return x;});
+  }
 
   userstudy.closed = !!userstudy.closed;
   userstudy.published = !!userstudy.published;
   return userstudy;
 };
-
-module.exports.allUserstudiesCreatedByUser = function(req, res, next) {
-
-  UserPromise.userFromToken(req)
-    .then(function(user){
-      UserStudy.getStudiesCreatedByUser(user, function(err, list){
-        if (err) {
-          res.json({status:'failure', message: 'Server Fehler.', internal: err});
-          return next();
-        } else {
-          res.json({userstudies: list});
-          return next();
-        }
-      });
-    })
-    .catch(function (err){
-      res.json(500, {status: 'failure', message: err});
-      return next();
-    });
-};
-
 
 module.exports.registerUserToStudy = function(req, res, next){
   var userstudyId = req.params.studyId;

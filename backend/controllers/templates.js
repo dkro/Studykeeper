@@ -52,7 +52,8 @@ module.exports.editTemplate = function (req, res, next) {
       } else {
         result.userstudies = result.userstudies.split(",").map(function(x){return parseInt(x);});
         res.json(500, {status: 'failure',
-          message: 'Das Template konnte nicht verändert werden, da mindestens eine Nutzerstudie dieses Template hat. ' +
+          message: 'Das Template konnte nicht verändert werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
+          'benutzt. ' +
           'Nutzerstudien ' + result.userstudies,
           userstudies: result.userstudies});
         return next();
@@ -80,8 +81,8 @@ module.exports.deleteTemplate = function(req, res, next){
         } else {
           template.userstudies = template.userstudies.split(",").map(function(x){return parseInt(x);});
           res.json(500, {status: 'failure',
-            message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template hat.',
-            userstudies: template.userstudies});
+            message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
+            'benutzt. Nutzerstudien: ' + template.userstudies});
           return next();
         }
     })
@@ -151,15 +152,13 @@ var parseTemplateSQL = function(templateArray){
       template.userstudies = templateArray[i].userstudies;
       template.fields = [];
       template.fields.push({
-        title : templateArray[i].fieldTitle,
-        value : templateArray[i].value
+        title : templateArray[i].fieldTitle
       });
       templates.push(template);
       iteratorTemplate = iteratorTemplate += 1;
     } else {
       templates[iteratorTemplate].fields.push({
-        title : templateArray[i].fieldTitle,
-        value : templateArray[i].value
+        title : templateArray[i].fieldTitle
       });
     }
   }
