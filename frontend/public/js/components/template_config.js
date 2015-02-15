@@ -7,7 +7,7 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         saveClick: function() {
             var fields = [];
             this.get('fields').forEach(function (item) {
-                fields.push(item);
+                fields.push(item.get('title'));
             });
 
             var params = {
@@ -23,7 +23,8 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         addField: function() {
-            var field = '';
+            var field = StudyManager.Tfield.create();
+            field.set('title', '');
 
             this.get('fields').pushObject(field);
         },
