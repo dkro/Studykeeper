@@ -44,10 +44,6 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         this.set('titleInvalid', null);
     },
 
-    init: function() {
-        this.get('fields').forEach()
-    },
-
     isTemplateCreation: false,
 
     title: null,
