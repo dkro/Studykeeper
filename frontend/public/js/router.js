@@ -330,8 +330,12 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
-    controller.set('model', model);
-    controller.set('templatesList', model);
+    var templates = this.store.filter('template', function (template) {
+      return !(Ember.empty(template.get('id')));
+    });
+
+    controller.set('model', templates);
+    controller.set('templatesList', templates);
     controller.reset();
   }
 });
@@ -358,8 +362,12 @@ StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
-    controller.set('model', model);
-    controller.set('newsList', model);
+    var news = this.store.filter('news', function (news) {
+      return !(Ember.empty(news.get('id')));
+    });
+
+    controller.set('model', news);
+    controller.set('newsList', news);
     controller.reset();
   }
 });
