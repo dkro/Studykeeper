@@ -5,9 +5,14 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
         },
 
         saveClick: function() {
+            var fields = [];
+            this.get('fields').forEach(function (item) {
+                fields.push(item);
+            });
+
             var params = {
                 titleNew: this.get('title'),
-                fieldsNew: this.get('fields')
+                fieldsNew: fields
             };
 
             this.resetValidation();
