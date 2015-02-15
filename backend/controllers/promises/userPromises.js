@@ -28,6 +28,9 @@ module.exports.validSignupReq = function(req){
     if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
       validationErrors.push({message: "MMI ungültig. 0 oder 1 erwartet."});
     }
+    if ((req.body.user.username.indexOf("@cip.ifi.lmu.de") < 0 || req.body.user.username.indexOf("@campus.lmu.de") < 0) && req.body.user.mmi.toString() === "1") {
+      validationErrors.push({message: "Nur Nutzer mit @campus.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln."});
+    }
     if (validationErrors.length > 0) {
       reject(validationErrors.join());
     } else {
