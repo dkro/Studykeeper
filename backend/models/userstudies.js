@@ -113,7 +113,7 @@ module.exports.editUserStudy = function (data, callback) {
             delUserstudyRelations(connection, userstudyId, 'news'),
             delUserstudyRelations(connection, userstudyId, 'labels'),
             delUserstudyRelations(connection, userstudyId, 'requires'),
-            delTemplateValues(connection,userstudyId,queryData.templateId),
+            delTemplateValues(connection,userstudyId),
             delRegisteredUsers(connection,userstudyId)
           ];
           return Promise.all(promises);
@@ -779,10 +779,10 @@ var addTemplateValues = function (connection, userstudyId, templateId, valueArr)
   });
 };
 
-var delTemplateValues = function (connection, userstudyId, templateId) {
+var delTemplateValues = function (connection, userstudyId) {
   return new Promise(function(resolve,reject) {
-    connection.query('DELETE FROM studies_template_values WHERE studyId=? AND templateId=?',
-      [userstudyId,templateId],
+    connection.query('DELETE FROM studies_template_values WHERE studyId=?',
+      userstudyId,
       function (err) {
         if (err) {
           reject(err);

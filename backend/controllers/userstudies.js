@@ -64,7 +64,8 @@ module.exports.editUserstudy = function(req, res, next) {
             if (allowed){
               return user;
             } else {
-              res.json({status:'failure', message: 'Der Nutzer hat keine Rechte an diese Nutzerstudie zu editieren.'});
+              res.json({status:'failure', message: 'Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
+              'nur Nutzerstudien editieren die Sie ausführen.'});
               return next();
             }
           }
@@ -476,7 +477,7 @@ module.exports.confirmUserParticipation = function(req, res, next){
                       user: user, userstudy: userstudy
                     });
                   }
-                })
+                });
               } else {
                 res.json({
                   status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt. ' +
