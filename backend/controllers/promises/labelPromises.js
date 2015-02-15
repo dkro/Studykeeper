@@ -14,7 +14,7 @@ module.exports.validLabelReq = function(req){
       }
     }
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var labelData = {
         title: Validator.toString(req.body.label.title)

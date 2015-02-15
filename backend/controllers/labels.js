@@ -14,11 +14,10 @@ module.exports.createLabel = function(req, res, next){
     return LabelPromise.labelAvailable(label);
   })
   .then(function(){
-    Label.addLabel(label, function(err,result){
+    Label.addLabel(label, function(err){
       if (err) {
         throw err;
       } else {
-        label.id = result.insertId;
         res.json({status: 'success', message: 'Label erstellt.', label: label});
         return next();
       }

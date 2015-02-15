@@ -6,13 +6,13 @@ var Validator    = require('validator');
 module.exports.validFullTemplateReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
+    var fields = [];
     if (!req.body.template) {
       validationErrors.push("Template Request hat ein falsches Format");
     } else {
       if (!Validator.isLength(req.body.template.title, 3)) {
         validationErrors.push("Template Title ungültig. minimum 3 characters: " + req.body.template.title);
       }
-      var fields = [];
       if (req.body.template.fields.length===0){
         validationErrors.push("Es ist mindestens ein Template Field benötigt");
       } else if (req.body.template.fields.length > 10) {
@@ -35,7 +35,7 @@ module.exports.validFullTemplateReq = function(req){
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var templateData = {
         title: Validator.toString(req.body.template.title),

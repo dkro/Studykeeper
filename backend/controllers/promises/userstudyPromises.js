@@ -81,7 +81,7 @@ module.exports.validFullUserstudyReq = function(req){
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors);
+      reject(validationErrors.join(' '));
     } else {
       var userStudyData = {
         title: Validator.toString(req.body.userstudy.title),

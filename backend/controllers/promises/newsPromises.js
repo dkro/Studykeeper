@@ -25,7 +25,7 @@ module.exports.validNewsReq = function(req){
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var newsData = {
         title: Validator.toString(req.body.news.title),

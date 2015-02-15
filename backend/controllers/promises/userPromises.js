@@ -3,6 +3,10 @@ var User         = require('../../models/users');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
+var lmuStaff = function(req) {
+  return (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0);
+};
+
 module.exports.validSignupReq = function(req){
   return new Promise(function(resolve, reject){
     var validationErrors = [];
@@ -28,11 +32,11 @@ module.exports.validSignupReq = function(req){
     if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
       validationErrors.push({message: "MMI ungültig. 0 oder 1 erwartet."});
     }
-    if ((req.body.user.username.indexOf("@cip.ifi.lmu.de") < 0 || req.body.user.username.indexOf("@campus.lmu.de") < 0) && req.body.user.mmi.toString() === "1") {
+    if (!lmuStaff(req) && req.body.user.mmi.toString() === "1") {
       validationErrors.push({message: "Nur Nutzer mit @campus.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln."});
     }
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -45,7 +49,7 @@ module.exports.validSignupReq = function(req){
         role:'participant',
         lmuStaff: 0
       };
-      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+      if (lmuStaff(req)) {
         userData.lmuStaff = 1;
       } else {
         userData.lmuStaff = 0;
@@ -67,7 +71,7 @@ module.exports.validLoginReq = function(req){
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var userData = {
         username: Validator.toString(req.body.username)
@@ -99,10 +103,19 @@ module.exports.validCreateUserReq = function(req){
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
         validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
       }
+      var roleArr2 = ['executor','tutor'];
+      if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
+        validationErrors.push('Der Nutzer kann kein executor oder tutor sein. Nur Nutzer mit ' +
+        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können diese Rollen beinhalten.');
+      }
+      if (!lmuStaff(req) && req.body.user.collectsMMI === true) {
+        validationErrors.push('Der Nutzer kann keine MMI Punkte sammeln. Nur Nutzer mit ' +
+        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können MMI Punkte sammeln.');
+      }
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -115,7 +128,7 @@ module.exports.validCreateUserReq = function(req){
         role    : Validator.toString(req.body.user.role),
         lmuStaff: 0
       };
-      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+      if (lmuStaff(req)) {
         userData.lmuStaff = 1;
       } else {
         userData.lmuStaff = 0;
@@ -147,10 +160,19 @@ module.exports.validEditUserReq = function(req){
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
         validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
       }
+      var roleArr2 = ['executor','tutor'];
+      if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
+        validationErrors.push('Der Nutzer kann kein executor oder tutor sein. Nur Nutzer mit ' +
+        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können diese Rollen beinhalten.');
+      }
+      if (!lmuStaff(req) && req.body.user.collectsMMI === true) {
+        validationErrors.push('Der Nutzer kann keine MMI Punkte sammeln. Nur Nutzer mit ' +
+        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können MMI Punkte sammeln.');
+      }
     }
 
     if (validationErrors.length > 0) {
-      reject(validationErrors.join());
+      reject(validationErrors.join(' '));
     } else {
       var userData = {
         username: Validator.toString(req.body.user.username),
@@ -162,7 +184,7 @@ module.exports.validEditUserReq = function(req){
         lmuStaff: 0,
         id: req.params.id
       };
-      if (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0) {
+      if (lmuStaff(req)) {
         userData.lmuStaff = 1;
       } else {
         userData.lmuStaff = 0;
