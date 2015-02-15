@@ -300,6 +300,17 @@ module.exports.userHasRole = function(userId, roleArr){
   });
 };
 
+
+module.exports.userIsLMU = function(user){
+  return new Promise(function(resolve, reject){
+    if (user.lmuStaff) {
+      resolve(user);
+    } else {
+      reject("Der Nutzer hat keine LMU Email-Adresse und kann daher keine MMI Punkte sammeln.");
+    }
+  });
+};
+
 module.exports.executorHasNoOpenStudies = function(userId) {
   return new Promise(function(resolve,reject){
     User.getOpenStudieIdsForExecutor(userId, function(err,result){
