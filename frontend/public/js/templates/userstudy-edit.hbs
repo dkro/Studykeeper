@@ -4,6 +4,8 @@
     <button class="btn btn-danger management--single__deleteButton" {{action 'deleteStudy'}}>Studie löschen</button>
 {{/if}}
 
+<button class="btn btn-primary" {{action 'goToStudyConfirm'}}>Studie abschließen</button>
+
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}

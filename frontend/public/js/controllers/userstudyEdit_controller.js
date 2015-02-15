@@ -64,7 +64,11 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         },
 
         cancelView: function() {
-            this.transitionToRoute('userstudy', this.get('model').study);
+            this.transitionToRoute('userstudy', this.get('model').study.get('id'));
+        },
+
+        goToStudyConfirm: function() {
+            this.transitionToRoute('userstudy-confirm', this.get('model').study.get('id'));
         }
     },
 
