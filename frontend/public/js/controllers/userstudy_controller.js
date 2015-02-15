@@ -28,10 +28,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                         }
                     }).then(
                         function(response) {
-                            that.store.fetch('userstudy', studyId).then(function(study) {
-                                that.sendAction('refreshRoute');
-                                that.set('statusMessage', { message: successMessage, isSuccess: true });
-                            });
+                            that.sendAction('refreshRoute');
+                            that.set('statusMessage', { message: successMessage, isSuccess: true });
                         },
                         function(error) {
                             that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
