@@ -60,11 +60,14 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var userRole = this.get('controllers.application').get('userRole');
         var currentUserId = this.get('controllers.application').get('currentUserId');
 
-        var isTutor = userRole === 'tutor';
-        var isExecutor = userRole === 'executor' && this.get('model').get('executor').get('id') === currentUserId;
-        var canEdit = (isTutor || isExecutor);
+        this.get('model').get('executor').then(function(executor) {
+            var executorId = executor.get('id');
+            var isTutor = userRole === 'tutor';
+            var isExecutor = userRole === 'executor' && executorId === currentUserId;
+            var canEdit = (isTutor || isExecutor);
 
-        this.set('canEdit', canEdit);
+            this.set('canEdit', canEdit);
+        });
     },
 
     isRegistered: false,
