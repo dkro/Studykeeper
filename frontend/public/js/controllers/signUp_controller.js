@@ -66,6 +66,7 @@ StudyManager.SignupController = Ember.Controller.extend({
         this.set('passwordConfirmValidationClass', '');
         this.set('passwordConfirmHelpText', null);
 
+        this.set('collectsMMI', false);
         this.set('isShowingMMIHelpText', false);
     },
 
@@ -80,13 +81,12 @@ StudyManager.SignupController = Ember.Controller.extend({
                 username:  this.get('username'),
                 password:  this.get('password'),
                 confirmPassword:  this.get('passwordConfirm'),
-                mmi: 0
+                mmi: this.get('collectsMMI')
             }
         };
 
         var that = this;
 
-        // TODO: Remove hardcoded server stuff!
         Ember.$.post('/api/users/signup', userData).then(function(response) {
             that.set('signUpSuccessful', true);
         }, function(error) {
