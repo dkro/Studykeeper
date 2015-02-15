@@ -79,42 +79,80 @@ module.exports.deleteUserstudy = function(req, res, next) {
 };
 
 module.exports.publishUserstudy = function(req, res, next) {
+  UserstudyPromise.userstudyExists({id:req.params.id})
+  .then(function(userstudy){
+    UserStudy.publishUserstudy(userstudy, function(err) {
+      if (err) {
+        res.json({status:'failure', message: 'Server Fehler.', internal: err});
+        return next();
+      } else {
+        res.json({status: 'success', message: 'Die Nutzerstudie wurde veröffentlicht.', userstudy: req.params.id});
+        return next();
+      }
+    });
+  })
+  .catch(function(err){
+    res.json(500, {status: 'failure', message: err});
+    return next();
+  });
+};
 
-    UserstudyPromise.userstudyExists({id:req.params.id})
-    .then(function(userstudy){
-      UserStudy.publishUserstudy(userstudy, function(err) {
-        if (err) {
-          res.json({status:'failure', message: 'Server Fehler.', internal: err});
-          return next();
-        } else {
-          res.json({status: 'success', message: 'Die Nutzerstudie wurde veröffentlicht.', userstudy: req.params.id});
-          return next();
-        }
-      });
+module.exports.getUserstudyById = function(req, res, next) {
+  UserPromise.userFromToken(req)
+    .then(function(user){
+      if (user.role === 'tutor') {
+        UserStudy.getUserstudyById(req.params.id, function (err, result) {
+          if (err) {
+            res.json({status: 'failure', message: 'Server Fehler.', internal: err});
+            return next();
+          } else if (result.length === 0 ){
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            return next();
+          } else {
+
+            var userstudy = result[0];
+            parseUserstudy(userstudy);
+            res.json({userstudy: userstudy});
+            return next();
+          }
+        });
+      } else if (user.role === 'executor') {
+        UserStudy.getUserstudyByIdFilteredForExecutor(req.params.id, user.id, function(err, result){
+          if (err) {
+            throw err;
+          } else if (result.length === 0 ){
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            return next();
+          } else {
+
+            var userstudy = result[0];
+            parseUserstudy(userstudy);
+            res.json({userstudy: userstudy});
+            return next();
+          }
+        });
+      } else {
+        UserStudy.getUserstudyByIdFilteredForUser(req.params.id, user.id, function(err, result){
+          if (err) {
+            throw err;
+          } else if (result.length === 0 ){
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            return next();
+          } else {
+
+            var userstudy = result[0];
+            parseUserstudy(userstudy);
+            res.json({userstudy: userstudy});
+            return next();
+          }
+        });
+      }
     })
-    .catch(function(err){
+    .catch(function (err){
       res.json(500, {status: 'failure', message: err});
       return next();
     });
 
-};
-
-module.exports.getUserstudyById = function(req, res, next) {
-  UserStudy.getUserstudyById(req.params.id, function(err,result){
-    if (err) {
-      res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-      return next();
-    } else if (result.length === 0 ){
-      res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
-      return next();
-    } else {
-
-      var userstudy = result[0];
-      parseUserstudy(userstudy);
-      res.json({userstudy: userstudy});
-      return next();
-    }
-  });
 };
 
 module.exports.getPublicUserstudyById = function(req, res, next) {
