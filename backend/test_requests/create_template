@@ -1,13 +1,6 @@
 {
   "template" : {
     "title" : "template title5",
-    "fields" : [
-      {
-        "title" : "field1 title"
-      },
-      {
-        "title" : "field2 title"
-      }
-    ]
+    "fields" : ["field1 title","field2 title"]
   }
 }

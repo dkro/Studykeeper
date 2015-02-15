@@ -151,15 +151,11 @@ var parseTemplateSQL = function(templateArray){
       template.title = templateArray[i].title;
       template.userstudies = templateArray[i].userstudies;
       template.fields = [];
-      template.fields.push({
-        title : templateArray[i].fieldTitle
-      });
+      template.fields.push(templateArray[i].fieldTitle);
       templates.push(template);
       iteratorTemplate = iteratorTemplate += 1;
     } else {
-      templates[iteratorTemplate].fields.push({
-        title : templateArray[i].fieldTitle
-      });
+      templates[iteratorTemplate].fields.push(templateArray[i].fieldTitle);
     }
   }
 

@@ -15,17 +15,15 @@ module.exports.validFullTemplateReq = function(req){
       }
       if (req.body.template.fields.length===0){
         validationErrors.push("Es wird mindestens ein Template Field benötigt");
-      } else if (req.body.template.fields.length > 10) {
+      } else if (req.body.template.fields.length > 9) {
         validationErrors.push("Es sind maximal zehn Template Fields möglich");
       } else {
           for (var i=0; i < req.body.template.fields.length; i += 1){
-            if (!Validator.isLength(req.body.template.fields[i].title, 3)) {
-              validationErrors.push("Template Feld Titel ungültig. Minimum 3 Charakter: " + req.body.template.fields[i].title);
+            if (!Validator.isLength(req.body.template.fields[i], 3)) {
+              validationErrors.push("Template Feld Titel ungültig. Minimum 3 Charakter: " + req.body.template.fields[i]);
             }
 
-            fields.push({
-              title: Validator.toString(req.body.template.fields[i].title)
-            });
+            fields.push(Validator.toString(req.body.template.fields[i]));
           }
       }
     }
