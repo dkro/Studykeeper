@@ -168,7 +168,6 @@ module.exports.getUserstudy = function (userstudy, callback) {
 };
 
 module.exports.getUserstudyById = function (id, callback) {
-  // todo visible for all?
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
       'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
@@ -184,6 +183,53 @@ module.exports.getUserstudyById = function (id, callback) {
       'WHERE us.id=? ' +
       'GROUP BY us.id;',
       id, function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback) {
+  mysql.getConnection(function(connection){
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
+      'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId AS template, us.creatorId AS creator ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
+      'WHERE us.id=? AND us.visible=1 AND us.published=1 ' +
+      'GROUP BY us.id;',
+      id, function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
+module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callback) {
+  mysql.getConnection(function(connection){
+    connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
+      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, ' +
+      'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
+      'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
+      'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
+      'us.templateId AS template, us.creatorId AS creator ' +
+      'FROM userstudies us ' +
+      'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
+      'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
+      'WHERE us.id=? AND (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?) ' +
+      'GROUP BY us.id;',
+      [id,userId],
+      function(err,result){
         connection.release();
         callback(err,result);
       }
@@ -382,7 +428,7 @@ module.exports.getStudiesFinishedByUser = function(userId, callback){
         callback(err,result);
       });
   });
-}
+};
 
 
 module.exports.getLabelsForStudy = function(userstudy, callback){
