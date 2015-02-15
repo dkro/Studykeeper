@@ -13,7 +13,7 @@ module.exports.createTemplate = function(req, res, next){
       return TemplatePromise.templateAvailable(template.title);
     })
     .then(function(){
-      Template.addTemplate(template, function(err,insertId){
+      Template.addTemplate(template, function(err){
         if (err) {
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           return next();

@@ -16,12 +16,11 @@ module.exports.createUserstudy = function(req, res, next) {
 
   Promise.all(promises).then(function(results){
     results[0].creatorId = results[1].id;
-    UserStudy.addUserStudy(results[0], function (err,insertId) {
+    UserStudy.addUserStudy(results[0], function (err) {
       if (err) {
         res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         return next();
       } else {
-        results[0].id = insertId;
         res.json({status: 'success', message: 'Die Nutzerstudie wurde erstellt.', userstudy: results[0]});
         return next();
       }
