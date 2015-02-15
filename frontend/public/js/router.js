@@ -162,6 +162,12 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
     return this.store.fetch('userstudy', params.userstudy_id);
   },
 
+  actions: {
+    refreshRoute: function() {
+      this.refresh();
+    }
+  },
+
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.determineNeededProperties();
