@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: studykeeper
-# Generation Time: 2015-02-15 13:41:29 +0000
+# Generation Time: 2015-02-15 18:37:13 +0000
 # ************************************************************
 
 
@@ -39,6 +39,18 @@ CREATE TABLE `auth` (
   CONSTRAINT `user` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `auth` WRITE;
+/*!40000 ALTER TABLE `auth` DISABLE KEYS */;
+
+INSERT INTO `auth` (`id`, `userId`, `roleId`, `token`, `timestamp`)
+VALUES
+	(15,4,2,'71211e80-b529-11e4-be6c-5d3b38b74993','2015-02-15 16:48:00'),
+	(16,4,2,'12d377a0-b52a-11e4-be6c-5d3b38b74993','2015-02-15 16:48:26'),
+	(17,4,2,'36761640-b52a-11e4-be6c-5d3b38b74993','2015-02-15 16:50:39'),
+	(19,1,1,'044ed9f0-b538-11e4-86f0-75c23b632ba4','2015-02-15 19:21:50');
+
+/*!40000 ALTER TABLE `auth` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table labels
@@ -174,6 +186,35 @@ CREATE TABLE `studies_requires_rel` (
 
 
 
+# Dump of table studies_template_values
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `studies_template_values`;
+
+CREATE TABLE `studies_template_values` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `studyId` int(11) unsigned NOT NULL,
+  `templateId` int(11) unsigned NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `templatevalue_studies` (`studyId`),
+  KEY `templatevalues_template` (`templateId`),
+  CONSTRAINT `templatevalue_studies` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `templatevalues_template` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `studies_template_values` WRITE;
+/*!40000 ALTER TABLE `studies_template_values` DISABLE KEYS */;
+
+INSERT INTO `studies_template_values` (`id`, `studyId`, `templateId`, `value`)
+VALUES
+	(5,1,1,'Value1'),
+	(6,1,1,'value2');
+
+/*!40000 ALTER TABLE `studies_template_values` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 # Dump of table studies_users_rel
 # ------------------------------------------------------------
 
@@ -203,12 +244,27 @@ CREATE TABLE `template_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `templateId` int(11) unsigned NOT NULL,
   `title` varchar(64) NOT NULL DEFAULT '',
-  `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `template_fields_rel` (`templateId`),
   CONSTRAINT `template_fields_rel` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `template_fields` WRITE;
+/*!40000 ALTER TABLE `template_fields` DISABLE KEYS */;
+
+INSERT INTO `template_fields` (`id`, `templateId`, `title`)
+VALUES
+	(1,1,'Felde Nummer1'),
+	(2,1,'Feld Nummer2'),
+	(3,2,'Feld 1 Template 2'),
+	(4,2,'Feld 2 Template 2'),
+	(5,2,'Feld 3 Template 2'),
+	(6,2,'Feldinhalt 4 Template 2'),
+	(7,3,'Feld 1 Template 3'),
+	(8,4,'Feld 1 Template 4');
+
+/*!40000 ALTER TABLE `template_fields` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table templates
@@ -223,6 +279,18 @@ CREATE TABLE `templates` (
   UNIQUE KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `templates` WRITE;
+/*!40000 ALTER TABLE `templates` DISABLE KEYS */;
+
+INSERT INTO `templates` (`id`, `title`)
+VALUES
+	(1,'Template 1'),
+	(2,'Template 2'),
+	(3,'Template 3'),
+	(4,'Template 4');
+
+/*!40000 ALTER TABLE `templates` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table users
@@ -260,7 +328,9 @@ VALUES
 	(8,'participant2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,0,'LmuStudent','Test',1,0),
 	(9,'participant3@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip','Test',1,0),
 	(10,'participant4@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip2','Test',1,0),
-	(11,'unconfirmed@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'unconfirmed','Test',1,1);
+	(11,'unconfirmed@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'unconfirmed','Test',1,1),
+	(12,'deleted12','$2a$10$SMN6536bm2EA.4lHlrghrOkK5yJtgqS0Nce4tIspmmoduRn6YolhW',3,0,0,'deleted','deleted',0,0),
+	(13,'deleted13','$2a$10$ocvmkGBXF0dEMLzu.XUUeO76SMDAHimpjihJWvmqC5lbudrpI/hzC',3,0,0,'deleted','deleted',0,0);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -294,7 +364,9 @@ VALUES
 	(9,7,1,'2015-02-15 14:16:41',''),
 	(10,8,1,'2015-02-15 14:16:44',''),
 	(11,9,1,'2015-02-15 14:16:56',''),
-	(12,10,1,'2015-02-15 14:17:02','');
+	(12,10,1,'2015-02-15 14:17:02',''),
+	(13,12,0,'2015-02-15 16:16:54','acab1c70-b525-11e4-b59a-b9807bf1f21c'),
+	(14,13,0,'2015-02-15 16:39:59','e62214b0-b528-11e4-be6c-5d3b38b74993');
 
 /*!40000 ALTER TABLE `users_confirm` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -358,8 +430,9 @@ LOCK TABLES `userstudies` WRITE;
 
 INSERT INTO `userstudies` (`id`, `tutorId`, `executorId`, `creatorId`, `templateId`, `fromDate`, `untilDate`, `title`, `description`, `link`, `paper`, `space`, `mmi`, `compensation`, `location`, `visible`, `published`, `closed`)
 VALUES
-	(1,1,3,1,NULL,'2015-02-15','2015-02-21','Studie 1','Die Beschreibung','http://www.linklinklinl.de','',1,1,5,'der Ort',1,0,0),
-	(2,5,4,1,NULL,'2015-02-22','2015-02-28','Studie 2','Die Beschreibung 2','','',3,2,0,'der Ort 2',1,0,0);
+	(1,1,3,1,NULL,'2015-02-15','2015-02-21','Studie 1','Die Beschreibung','http://www.linklinklinl.de','',1,1,5,'der Ort',1,1,0),
+	(2,5,4,1,NULL,'2015-02-22','2015-02-28','Studie 2','Die Beschreibung 2','','',3,2,0,'der Ort 2',1,0,0),
+	(3,5,5,1,NULL,'2015-02-15','2015-02-15','Studie 3','Diese Nutzerstudie wird vom dem Tutor der sie erstellt hat auch ausgefuehrt','http://diewebseitevomtutor.de','',0,0,0,'Tutors2 Office',1,0,0);
 
 /*!40000 ALTER TABLE `userstudies` ENABLE KEYS */;
 UNLOCK TABLES;
