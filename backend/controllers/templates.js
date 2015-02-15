@@ -38,16 +38,25 @@ module.exports.editTemplate = function (req, res, next) {
       template.id = req.params.id;
       return TemplatePromise.templateExists(template.id);
     })
-    .then(function () {
-      Template.editTemplate(template, function (err) {
-        if (err) {
-          res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
-          return next();
-        } else {
-          res.json({status: 'success', message: 'Template geändert', template: template});
-          return next();
-        }
-      });
+    .then(function (result) {
+      if (!result.userstudies || result.userstudies === null) {
+        Template.editTemplate(template, function (err) {
+          if (err) {
+            res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+            return next();
+          } else {
+            res.json({status: 'success', message: 'Template geändert', template: template});
+            return next();
+          }
+        });
+      } else {
+        result.userstudies = result.userstudies.split(",").map(function(x){return parseInt(x);});
+        res.json(500, {status: 'failure',
+          message: 'Das Template konnte nicht verändert werden, da mindestens eine Nutzerstudie dieses Template hat. ' +
+          'Nutzerstudien ' + result.userstudies,
+          userstudies: result.userstudies});
+        return next();
+      }
     })
     .catch(function (err) {
       res.json(500, {status: 'failure', message: err});
