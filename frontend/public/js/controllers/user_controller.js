@@ -17,8 +17,7 @@ StudyManager.UserController = Ember.Controller.extend({
                     });
                 }, function(error) {
                     thisUser.rollback();
-                    var aMessage = 'Nutzer \"' + name + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: aMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
@@ -41,8 +40,7 @@ StudyManager.UserController = Ember.Controller.extend({
                 });
             }, function(error) {
                 thisUser.rollback();
-                var aMessage = 'Nutzer \"' + name + '\" konnte nicht geändert werden!';
-                that.set('statusMessage', { message: aMessage, isSuccess: false });
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 
