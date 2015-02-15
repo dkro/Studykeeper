@@ -6,7 +6,7 @@ module.exports.addUserStudy = function (data, callback) {
   var id;
   var queryData = {
     title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
-    description: data.description, link: data.doodleLink, paper: data.paper, space: data.space, mmi: data.mmi,
+    description: data.description, link: data.link, paper: data.paper, space: data.space, mmi: data.mmi,
     compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
     creatorId: data.creatorId
@@ -77,7 +77,7 @@ module.exports.addUserStudy = function (data, callback) {
 module.exports.editUserStudy = function (data, callback) {
   var queryData = {
     id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate,
-    until: data.untilDate, description: data.description, link: data.doodleLink, paper: data.paper,
+    until: data.untilDate, description: data.description, link: data.link, paper: data.paper,
     space: data.space, mmi: data.mmi, compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId
   };

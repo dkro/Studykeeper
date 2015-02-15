@@ -6,8 +6,8 @@
 # http://code.google.com/p/sequel-pro/
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
-# Database: userstudymanager
-# Generation Time: 2015-02-13 12:27:21 +0000
+# Database: studykeeper
+# Generation Time: 2015-02-15 13:41:29 +0000
 # ************************************************************
 
 
@@ -53,6 +53,17 @@ CREATE TABLE `labels` (
   UNIQUE KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `labels` WRITE;
+/*!40000 ALTER TABLE `labels` DISABLE KEYS */;
+
+INSERT INTO `labels` (`id`, `title`)
+VALUES
+	(1,'Label1'),
+	(2,'Label2'),
+	(3,'Label3');
+
+/*!40000 ALTER TABLE `labels` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table news
@@ -69,6 +80,16 @@ CREATE TABLE `news` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `news` WRITE;
+/*!40000 ALTER TABLE `news` DISABLE KEYS */;
+
+INSERT INTO `news` (`id`, `title`, `date`, `description`, `link`)
+VALUES
+	(1,'News 1','2015-02-15','This news has the date 15.02.2015','http://www.lmu.de'),
+	(2,'News 2','2015-12-17','This news has the date 17.12.2015','http://www.medien.ifi.lmu.de');
+
+/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table roles
@@ -87,10 +108,9 @@ LOCK TABLES `roles` WRITE;
 
 INSERT INTO `roles` (`id`, `name`)
 VALUES
-	(1,'admin'),
-	(2,'tutor'),
-	(3,'executor'),
-	(4,'participant');
+	(1,'tutor'),
+	(2,'executor'),
+	(3,'participant');
 
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -112,6 +132,15 @@ CREATE TABLE `studies_labels_rel` (
   CONSTRAINT `study_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `studies_labels_rel` WRITE;
+/*!40000 ALTER TABLE `studies_labels_rel` DISABLE KEYS */;
+
+INSERT INTO `studies_labels_rel` (`id`, `studyId`, `labelId`)
+VALUES
+	(1,2,2);
+
+/*!40000 ALTER TABLE `studies_labels_rel` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table studies_news_rel
@@ -208,8 +237,8 @@ CREATE TABLE `users` (
   `role` int(11) unsigned NOT NULL,
   `lmuStaff` tinyint(1) NOT NULL DEFAULT '0',
   `mmi` int(11) NOT NULL DEFAULT '0',
-  `firstname` varchar(11) DEFAULT NULL,
-  `lastname` varchar(11) DEFAULT NULL,
+  `firstname` varchar(64) DEFAULT NULL,
+  `lastname` varchar(64) DEFAULT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '1',
   `collectsMMI` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -218,6 +247,23 @@ CREATE TABLE `users` (
   CONSTRAINT `role` FOREIGN KEY (`role`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+
+INSERT INTO `users` (`id`, `username`, `password`, `role`, `lmuStaff`, `mmi`, `firstname`, `lastname`, `visible`, `collectsMMI`)
+VALUES
+	(1,'tutor@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,0,'Test','Tutor',1,0),
+	(3,'executor@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,1,'Test','Executor',1,1),
+	(4,'executor2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,0,'Test','Executor2',1,0),
+	(5,'tutor2@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,0,'Test','Tutor2',1,0),
+	(7,'participant1@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'IfiStudent','Test',1,1),
+	(8,'participant2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,0,'LmuStudent','Test',1,0),
+	(9,'participant3@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip','Test',1,0),
+	(10,'participant4@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip2','Test',1,0),
+	(11,'unconfirmed@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'unconfirmed','Test',1,1);
+
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table users_confirm
@@ -236,6 +282,22 @@ CREATE TABLE `users_confirm` (
   CONSTRAINT `confirmUser` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `users_confirm` WRITE;
+/*!40000 ALTER TABLE `users_confirm` DISABLE KEYS */;
+
+INSERT INTO `users_confirm` (`id`, `userId`, `confirmed`, `timestamp`, `hash`)
+VALUES
+	(4,1,1,'2015-02-15 14:06:04','123'),
+	(5,3,1,'2015-02-15 14:16:25',''),
+	(6,4,1,'2015-02-15 14:16:29',''),
+	(7,5,1,'2015-02-15 14:16:32',''),
+	(9,7,1,'2015-02-15 14:16:41',''),
+	(10,8,1,'2015-02-15 14:16:44',''),
+	(11,9,1,'2015-02-15 14:16:56',''),
+	(12,10,1,'2015-02-15 14:17:02','');
+
+/*!40000 ALTER TABLE `users_confirm` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table users_pw_recovery
@@ -291,6 +353,16 @@ CREATE TABLE `userstudies` (
   CONSTRAINT `tutor_userstudy_rel` FOREIGN KEY (`tutorId`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `userstudies` WRITE;
+/*!40000 ALTER TABLE `userstudies` DISABLE KEYS */;
+
+INSERT INTO `userstudies` (`id`, `tutorId`, `executorId`, `creatorId`, `templateId`, `fromDate`, `untilDate`, `title`, `description`, `link`, `paper`, `space`, `mmi`, `compensation`, `location`, `visible`, `published`, `closed`)
+VALUES
+	(1,1,3,1,NULL,'2015-02-15','2015-02-21','Studie 1','Die Beschreibung','http://www.linklinklinl.de','',1,1,5,'der Ort',1,0,0),
+	(2,5,4,1,NULL,'2015-02-22','2015-02-28','Studie 2','Die Beschreibung 2','','',3,2,0,'der Ort 2',1,0,0);
+
+/*!40000 ALTER TABLE `userstudies` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 

@@ -7,7 +7,7 @@ exports.loginAuthenticate = function(req, res, next) {
         if(err) {
           res.json(500, {status: "failure", message: 'Server Error', internal: err});
         } else if(user.length === 0 || user === false) {
-          res.json(401, {status: "failure", message: "Ungültige Anmeldaten.", internal: info});
+          res.json(401, {status: "failure", message: "Ungültige Anmeldedaten.", internal: info});
         } else {
           next();
         }

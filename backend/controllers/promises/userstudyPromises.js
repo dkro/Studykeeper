@@ -27,7 +27,7 @@ module.exports.validFullUserstudyReq = function(req){
       if (!Validator.isLength(req.body.userstudy.description, 3)) {
         validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
       }
-      if (req.body.userstudy.doodleLink  && !Validator.isURL(req.body.userstudy.doodleLink)) {
+      if (req.body.userstudy.link  && !Validator.isURL(req.body.userstudy.link)) {
         validationErrors.push("DoodleLink ungültig. URL Format erwartet: " + req.body.userstudy.doodleLink);
       }
       if (req.body.userstudy.paper  && !Validator.isURL(req.body.userstudy.paper)) {
@@ -90,7 +90,7 @@ module.exports.validFullUserstudyReq = function(req){
         fromDate: Validator.toString(req.body.userstudy.fromDate),
         untilDate: Validator.toString(req.body.userstudy.untilDate),
         description: Validator.toString(req.body.userstudy.description),
-        doodleLink: Validator.toString(req.body.userstudy.doodleLink),
+        link: Validator.toString(req.body.userstudy.link),
         paper: Validator.toString(req.body.userstudy.paper),
         mmi: Validator.toString(req.body.userstudy.mmi),
         compensation: Validator.toString(req.body.userstudy.compensation),
