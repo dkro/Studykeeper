@@ -31,7 +31,7 @@ StudyManager.Userstudy.FIXTURES = [
         link: 'http://www.google.com',
         compensation: 5,
         mmi: 2,
-        closed: true,
+        closed: false,
         space: 30,
         published: true,
         news: [1],

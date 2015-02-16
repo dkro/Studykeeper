@@ -87,6 +87,8 @@
 
 .management--single__deleteButton {
     margin-bottom: 3em;
+    margin-right: 2em;
+    display: inline-block;
 }
 
 .management--single__datePicker {
@@ -94,8 +96,11 @@
     cursor: pointer !important;
 }
 
-
-
+.management--single__confirmPublishButton {
+    display: inline-block;
+    margin-bottom: 3em;
+    vertical-align: top;
+}
 
 
 

@@ -21,11 +21,13 @@
                     <td>{{user.user.username}}</td>
                     <td>{{user.user.firstname}}</td>
                     <td>{{user.user.lastname}}</td>
-                    {{#if user.canGetMMI}}
-                        {{custom-select values=confirmOptions currentSelected=user.chosenCompensation}}
-                    {{else}}
-                        <td>Amazon-Gutschein</td>
-                    {{/if}}
+                    <td>
+                        {{#if user.canGetMMI}}
+                            {{view "select" content=confirmOptions value=user.chosenCompensation classNames="form-control input-sm"}}
+                        {{else}}
+                            Amazon-Gutschein
+                        {{/if}}
+                    </td>
                 </tr>
             {{/each}}
         {{else}}
@@ -37,5 +39,5 @@
     </table>
 </div>
 
-<button class="btn btn-primary">Studie abschließen</button>
+<button class="btn btn-primary" {{action 'confirmStudy'}}>Studie abschließen</button>
 <button class="btn btn-default" {{action 'cancel'}}>Abbrechen</button>
