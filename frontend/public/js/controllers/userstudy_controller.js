@@ -28,7 +28,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                         }
                     }).then(
                         function(response) {
-                            that.sendAction('refreshRoute');
+                            that.refreshStudy();
                             that.set('statusMessage', { message: successMessage, isSuccess: true });
                         },
                         function(error) {
@@ -44,6 +44,10 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         publicButtonClick: function() {
             this.transitionToRoute('userstudy-public', this.get('model').get('id'));
         }
+    },
+
+    refreshStudy: function() {
+        this.sendAction('refreshRoute');
     },
 
     determineNeededProperties: function() {
