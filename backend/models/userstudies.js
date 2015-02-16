@@ -525,7 +525,7 @@ module.exports.closeUserstudy = function(userstudyId, closeArr, callback){
               promises.push(new Promise(function (resolve, reject) {
                 connection.query("UPDATE users SET " +
                   "mmi=mmi+(SELECT mmi FROM userstudies WHERE id=?) " +
-                  "WHERE id=?",
+                  "WHERE id=? AND lmuStaff=1",
                   [userstudyId,closeArr[i].userId],
                   function (err) {
                     if (err) {

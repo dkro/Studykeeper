@@ -506,7 +506,6 @@ module.exports.closeUserstudy = function(req, res, next){
       for (var i = 0; i < users.length; i += 1) {
         promises.push(UserstudyPromise.userIsRegisteredToStudy(users[i].id,userstudy.id));
         promises.push(UserstudyPromise.userIsNotConfirmed(users[i].id,userstudy.id));
-        promises.push(UserPromise.userIsLMU(users[i]));
       }
 
       promises.push(UserstudyPromise.userstudyIsOpen(userstudy));
