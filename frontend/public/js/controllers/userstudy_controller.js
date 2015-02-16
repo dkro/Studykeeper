@@ -47,7 +47,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     },
 
     refreshStudy: function() {
-        this.sendAction('refreshRoute');
+        this.send('refreshRoute');
     },
 
     determineNeededProperties: function() {
