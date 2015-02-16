@@ -57,7 +57,7 @@ module.exports = function(app) {
   app.del('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.deleteUserstudy);
   app.put('/api/userstudies/:id', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor']), userStudyController.editUserstudy);
   app.post('/api/userstudies/:id/publish',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.publishUserstudy);
-  app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, auth.requiresRole(['tutor']), userStudyController.closeUserstudy);
+  app.post('/api/userstudies/:id/close',  auth.tokenAuthenticate, auth.requiresRole(['tutor','executor']), userStudyController.closeUserstudy);
 
   app.post('/api/userstudies/:studyId/register/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.registerUserToStudy);
   app.post('/api/userstudies/:studyId/signoff/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.signoff);

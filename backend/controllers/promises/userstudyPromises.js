@@ -369,4 +369,35 @@ module.exports.studyTemplateValueCountIsTemplateTitleCount = function(templateId
   });
 };
 
+module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
+  return new Promise(function (resolve, reject) {
+    if (user.role === "executor") {
+      Userstudy.getStudiesUserIsExecutor({id:user.id},function(err,result){
+        if (err) {
+          throw(err);
+        } else {
+          var allowed = false;
+          for (var i = 0; i < result.length; i+=1) {
+            if (result[i].id === parseInt(userstudyId)) {
+              allowed = true;
+              break;
+            }
+          }
+
+          if (allowed){
+            resolve(user);
+          } else {
+            reject('Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
+            'nur Nutzerstudien editieren die Sie ausführen.');
+          }
+        }
+      });
+    } else if (user.role === "tutor") {
+      resolve(user);
+    } else {
+      reject("Keine Rechte");
+    }
+  });
+};
+
 

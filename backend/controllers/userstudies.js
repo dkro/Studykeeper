@@ -47,30 +47,7 @@ module.exports.editUserstudy = function(req, res, next) {
       return UserPromise.userFromToken(req);
     })
     .then(function(user){
-      if (user.role === "executor") {
-        UserStudy.getStudiesUserIsExecutor({id:user.id},function(err,result){
-          if (err) {
-            throw(err);
-          } else {
-            var allowed = false;
-            for (var i = 0; i < result.length; i+=1) {
-              if (result[i].id === parseInt(userstudy.id)) {
-                allowed = true;
-                break;
-              }
-            }
-
-            if (allowed){
-              return user;
-            } else {
-              throw('Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
-              'nur Nutzerstudien editieren die Sie ausführen.');
-            }
-          }
-        });
-      } else {
-        return user;
-      }
+      return UserstudyPromise.userIsExecutorForStudyOrTutor(user,userstudy.id);
     })
     .then(function(){
       var promises = [UserstudyPromise.userstudyExists(userstudy),
@@ -506,13 +483,17 @@ module.exports.closeUserstudy = function(req, res, next){
 
   var userstudy = {};
   var closeReq = {};
+  var userFromToken = {};
   var promises = [UserstudyPromise.userstudyExists({id:req.params.id}),
-    UserstudyPromise.validCloseRequest(req)];
+    UserstudyPromise.validCloseRequest(req),
+    UserPromise.userFromToken(req)];
 
   Promise.all(promises)
     .then(function(results){
       userstudy = results[0];
       closeReq = results[1];
+      userFromToken = results[2];
+
       promises = [];
       for (var i = 0; i < results.length; i += 1) {
         promises.push(UserPromise.userExistsById(results[1][i].userId));
@@ -529,6 +510,7 @@ module.exports.closeUserstudy = function(req, res, next){
       }
 
       promises.push(UserstudyPromise.userstudyIsOpen(userstudy));
+      promises.push(UserstudyPromise.userIsExecutorForStudyOrTutor(userFromToken,userstudy.id));
       return Promise.all(promises);
     })
     .then(function() {
