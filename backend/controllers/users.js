@@ -58,6 +58,7 @@ module.exports.getUserById = function(req, res, next) {
         user.isTutorFor = tutorIds;
         user.registeredFor = registeredFor;
         user.lmuStaff = !!user.lmuStaff;
+        user.collectsMMI = !!user.collectsMMI;
         res.json({user: user});
         return next();
       })
@@ -93,6 +94,7 @@ module.exports.getUsers = function(req, res, next) {
             item.registeredFor = item.registeredFor.split(",").map(function(x){return parseInt(x);});
           }
 
+          item.collectsMMI = !!item.collectsMMI;
           item.lmuStaff = !!item.lmuStaff;
           callback();
         }, function(err){

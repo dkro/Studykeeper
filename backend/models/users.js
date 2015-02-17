@@ -7,7 +7,7 @@ var Promise    = require('es6-promise').Promise;
 module.exports.getUsers = function(callback) {
   mysql.getConnection(function(connection) {
     connection.query("SELECT u.id, u.username, r.name AS role, u.lmuStaff, u.mmi," +
-      "u.firstname,u.lastname," +
+      "u.firstname,u.lastname,u.collectsMMI, " +
       "GROUP_CONCAT(DISTINCT sur.studyId) AS registeredFor, " +
       "GROUP_CONCAT(DISTINCT ust.id) AS isTutorFor, " +
       "GROUP_CONCAT(DISTINCT usex.id) AS isExecutorFor " +
@@ -29,7 +29,7 @@ module.exports.getUsers = function(callback) {
 module.exports.getUserById = function(id, callback) {
   mysql.getConnection(function(connection) {
     connection.query("SELECT u.id, u.username, r.name AS role, u.lmuStaff, u.mmi," +
-      "u.firstname,u.lastname " +
+      "u.firstname,u.lastname,u.collectsMMI " +
       "FROM users u " +
       "LEFT JOIN roles r ON r.id=u.role " +
       "WHERE u.id=? AND u.visible=1;",
