@@ -29,7 +29,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                     }).then(
                         function(response) {
                             that.store.fetch('userstudy', that.get('model').get('id')).then(function(study) {
-                                that.transitionToRoute('userstudy', study);
+                                that.set('model', study);
+                                that.determineNeededProperties();
                                 that.set('statusMessage', { message: successMessage, isSuccess: true });
                             })
                         },
@@ -46,12 +47,6 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         publicButtonClick: function() {
             this.transitionToRoute('userstudy-public', this.get('model').get('id'));
         }
-    },
-
-    refreshStudy: function() {
-        self.get('controllers.posts').pushObject(data);
-        self.transitionToRoute('posts');
-
     },
 
     determineNeededProperties: function() {
