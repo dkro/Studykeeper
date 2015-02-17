@@ -97,13 +97,11 @@
         </button>
     {{/if}}
 
-    {{#if published}}
-        <button class="btn btn-default study__publicButton" {{action 'publicButtonClick'}}>Öffentliche Version</button>
-    {{/if}}
-
     <button class="btn btn-default study__cancelButton" {{action 'cancelButtonClick'}}>Alle Studien</button>
 
-    {{#unless model.published}}
+    {{#if published}}
+        <button class="btn btn-default study__publicButton" {{action 'publicButtonClick'}}>Öffentliche Version</button>
+    {{else}}
         <button class="btn btn-primary study__publishButton" {{action 'publishButtonClick'}}>Studie veröffentlichen</button>
-    {{/unless}}
+    {{/if}}
 </div>

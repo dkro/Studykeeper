@@ -170,7 +170,12 @@ StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserstudyPublicRoute = Ember.Route.extend({
   model: function(params) {
-    return this.store.fetch('studypublic', params.userstudy_id);
+    var that = this;
+
+    return this.store.fetch('studypublic', params.userstudy_id).then(function(response) {
+    }, function(error) {
+      that.transitionTo('index');
+    });
   },
 
   setupController: function(controller, model) {
