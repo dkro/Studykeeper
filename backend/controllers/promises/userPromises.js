@@ -109,12 +109,12 @@ module.exports.validCreateUserReq = function(req){
       }
       var roleArr2 = ['executor','tutor'];
       if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
-        validationErrors.push('Der Nutzer kann kein executor oder tutor sein. Nur Nutzer mit ' +
-        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können diese Rollen beinhalten.');
+        validationErrors.push('Dem Nutzer kann nicht die Rolle Tutor oder ausführender Student zugewiesen werden. Nur Nutzer mit ' +
+        '\"@cip.ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können diese Rollen besitzen.');
       }
       if (!lmuStaff(req) && req.body.user.collectsMMI === true) {
         validationErrors.push('Der Nutzer kann keine MMI Punkte sammeln. Nur Nutzer mit ' +
-        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können MMI Punkte sammeln.');
+        '\"@cip.ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können MMI Punkte sammeln.');
       }
     }
 
