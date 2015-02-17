@@ -16,13 +16,19 @@
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
         <div class="data__cell--value data--person">
-            {{model.executorFirstname}} {{model.executorLastname}} <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+            {{model.executorFirstname}} {{model.executorLastname}}
+            <a {{bind-attr href="mailToExecutor"}} target="_top">
+                <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+            </a>
         </div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Betreuer: </div>
         <div class="data__cell--value data--person">
-            {{model.tutorFirstname}} {{model.tutorLastname}} <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+            {{model.tutorFirstname}} {{model.tutorLastname}}
+            <a {{bind-attr href="mailToTutor"}} target="_top">
+                <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+            </a>
         </div>
     </div>
     <div class="data__row">
