@@ -495,8 +495,8 @@ module.exports.closeUserstudy = function(req, res, next){
       userFromToken = results[2];
 
       promises = [];
-      for (var i = 0; i < results.length; i += 1) {
-        promises.push(UserPromise.userExistsById(results[1][i].userId));
+      for (var i = 0; i < closeReq.length; i += 1) {
+        promises.push(UserPromise.userExistsById(closeReq[i].userId));
       }
 
       return Promise.all(promises);
@@ -505,9 +505,17 @@ module.exports.closeUserstudy = function(req, res, next){
       promises = [];
       for (var i = 0; i < users.length; i += 1) {
         promises.push(UserstudyPromise.userIsRegisteredToStudy(users[i].id,userstudy.id));
-        promises.push(UserstudyPromise.userIsNotConfirmed(users[i].id,userstudy.id));
       }
 
+      promises.push(new Promise(function(resolve,reject){
+        if (userstudy.registeredUsers.length !== closeReq.length){
+          reject("Die Nutzeranzahl zum Abschliessen der Nutzerstudie stimmt nicht mit der Nutzeranzahl der registrierten " +
+          "Nutzer überein. Registrierte Nutzer: " + userstudy.registeredUsers.length + " Anzahl der Nutzer, die " +
+          "abgeschlossen werden sollen: " + closeReq.length);
+        } else {
+          resolve();
+        }
+      }));
       promises.push(UserstudyPromise.userIsExecutorForStudyOrTutor(userFromToken,userstudy.id));
       return Promise.all(promises);
     })
