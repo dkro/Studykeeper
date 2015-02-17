@@ -230,7 +230,8 @@ module.exports.login = function(req, res, next) {
               id: user.id,
               username: user.username,
               role: user.role,
-              token: tokens[0].token
+              token: tokens[0].token,
+              lmuStaff: !!user.lmuStaff
               }
             });
             return next();
