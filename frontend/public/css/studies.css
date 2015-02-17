@@ -129,6 +129,10 @@
     margin-bottom: 2em;
 }
 
+.study__header__label {
+    font-size: 0.4em;
+    vertical-align: middle;
+}
 
 @media screen and (min-width: 768px) {
     .studies__column--name {

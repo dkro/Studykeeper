@@ -1,4 +1,9 @@
-<h1 class="study__name">{{model.title}}</h1>
+<h1 class="study__name">
+    {{model.title}}
+    {{#if model.closed}}
+        <span class="label label-warning study__header__label">Abgeschlossen</span>
+    {{/if}}
+</h1>
 
 <div class="study__dateRange">
     <span class="glyphicon glyphicon-calendar study__dateRange--delimiter"></span> {{model.fromDate}} - {{model.untilDate}}
@@ -61,18 +66,37 @@
     </div>
 </div>
 
+{{#if model.closed}}
+    {{#if canEdit}}
+        <div class="alert alert-warning" role="alert">
+            <strong>Achtung!</strong> <br>
+            Die Studie wurde bereits abgeschlossen und die Amazon-Gutscheine und MMI-Punkte wurden für alle Teilnehmer
+            persistent gespeichert. <br>
+            Wenn Sie die Studie verändern oder neu abschließen, werden diese alten Änderungen
+            nicht überschrieben!
+        </div>
+    {{/if}}
+{{/if}}
+
 <div class="study__button__wrapper">
-    <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>
+    {{#if model.closed}}
         {{#if canEdit}}
-            Bearbeiten
-        {{else}}
-            {{#if isRegistered}}
-                Von dieser Studie abmelden
-            {{else}}
-                Zu dieser Studie anmelden
-            {{/if}}
+            <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>Bearbeiten</button>
         {{/if}}
-    </button>
+    {{else}}
+        <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>
+            {{#if canEdit}}
+                Bearbeiten
+            {{else}}
+                {{#if isRegistered}}
+                    Von dieser Studie abmelden
+                {{else}}
+                    Zu dieser Studie anmelden
+                {{/if}}
+            {{/if}}
+        </button>
+    {{/if}}
+
     <button class="btn btn-default study__publicButton" {{action 'publicButtonClick'}}>Öffentliche Version</button>
     <button class="btn btn-default study__cancelButton" {{action 'cancelButtonClick'}}>Alle Studien</button>
     {{#unless model.published}}
