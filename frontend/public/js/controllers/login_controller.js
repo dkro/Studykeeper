@@ -14,7 +14,6 @@ StudyManager.LoginController = Ember.Controller.extend({
                 that.get('controllers.application').set('token', response.user.token);
                 that.get('controllers.application').set('currentUserId', response.user.id);
                 that.get('controllers.application').set('userRole', response.user.role);
-                that.get('controllers.application').set('isLMUStaff', response.user.lmuStaff);
                 that.get('controllers.application').set('isLoggedIn', true);
 
                 that.transitionToRoute('dashboard');

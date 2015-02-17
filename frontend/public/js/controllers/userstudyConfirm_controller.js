@@ -1,5 +1,5 @@
 StudyManager.UserstudyConfirmController = Ember.Controller.extend({
-    needs: ['application', 'userstudy-edit'],
+    needs: ['application', 'userstudy-edit', 'userstudy'],
 
     actions: {
         cancel: function() {
@@ -7,13 +7,16 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
         },
 
         confirmStudy: function() {
-            var confirmText = 'Wenn Sie die Studie abschließen, werden alle Einstellungen persistent gespeichert.\n\n' +
-                              'Sie können dann keine Änderungen mehr vornehmen!\n\n' +
-                              'Wollen Sie die Studie wirklich schon abschließen?';
+            var confirmText = 'Wenn Sie die Studie abschließen, werden allen ausgewählten Teilnehmern die entsprechende' +
+                              'Entlohnung gutgeschrieben.\n\n' +
+                              'Sie können die Studie dann weiterhin editieren und auch erneut abschließen, aber bereits' +
+                              'zugewiesenen Entlohnungen werden nicht rückgängig gemacht!\n\n' +
+                              'Wollen Sie die Studie wirklich abschließen?';
 
             if (confirm(confirmText)) {
-                var payload = [];
-                var text = '';
+                var studyId = this.get('model').study.get('id');
+                var that = this;
+                var innerPayload = [];
 
                 this.get('usersWithCompensation').forEach(function(user) {
                     var userId = user.user.get('id');
@@ -25,10 +28,29 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                     };
 
                     payload.push(confirmedUser);
-                    text += 'userId: ' + userId + ' ||| getsMMI: ' + comp + '\n';
                 });
 
-                alert(text);
+                var payload = {
+                    users: innerPayload
+                };
+
+                Ember.$.ajax({
+                    url: '/api/userstudies/' + studyId + '/close',
+                    type: "POST",
+                    data: payload,
+                    beforeSend: function(request) {
+                        request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)
+                    }
+                }).then(
+                    function(response) {
+                        that.transitionToRoute('userstudy', studyId).then(function() {
+                            that.get('controllers.userstudy').set('statusMessage', { message: 'Studie erfolgreich abgeschlossen!', isSuccess: true });
+                        });
+                    },
+                    function(error) {
+                        that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                    });
+
             }
         }
     },
