@@ -26,8 +26,8 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
     mailToExecutor: null,
 
     determineMailTos: function() {
-        this.set('mailToTutor', this.get('model').get('tutorEmail'));
-        this.set('mailToExecutor', this.get('model').get('tutorEmail'));
+        this.set('mailToTutor', 'mailto:' + this.get('model').get('tutorEmail'));
+        this.set('mailToExecutor', 'mailto:' + this.get('model').get('tutorEmail'));
     },
 
     isLoggedIn: false
