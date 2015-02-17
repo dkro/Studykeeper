@@ -148,7 +148,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
     return Ember.RSVP.hash({
       searchTags: this.store.find('label'),
-      studies: this.store.fetch('userstudy')
+      studies: this.store.fetchAll('userstudy')
     });
   },
 
