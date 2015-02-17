@@ -52,7 +52,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             var studyId = this.get('model').get('id');
             var that = this;
             var successMessage = successMessage = 'Studie wurde veröffentlich!';
-            var usedUrl = '/api/userstudies/' + studyId + '/publish/';
+            var usedUrl = '/api/userstudies/' + studyId + '/publish';
 
             Ember.$.ajax({
                 url: usedUrl,
