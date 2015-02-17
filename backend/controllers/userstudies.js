@@ -187,16 +187,19 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
       userstudy.closed = !!userstudy.closed;
 
       userstudy.templateKeysToValues = [];
+
+      var titles = [];
       if (userstudy.titles === null) {
         userstudy.titles = [];
       } else {
-        var titles = userstudy.titles.split(",").map(function(x){return x;});
+        titles = userstudy.titles.split(",").map(function(x){return x;});
       }
 
+      var values = [];
       if (userstudy.valuess === null) {
         userstudy.valuess = [];
       } else {
-        var values = userstudy.valuess.split(",").map(function(x){return x;});
+        values = userstudy.valuess.split(",").map(function(x){return x;});
       }
 
       if (userstudy.labels === null) {
@@ -541,9 +544,10 @@ module.exports.closeUserstudy = function(req, res, next){
       }
 
       promises.push(new Promise(function(resolve,reject){
-        if (userstudy.registeredUsers.length !== closeReq.length){
+        var registered = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
+        if (registered.length !== closeReq.length){
           reject("Die Nutzeranzahl zum Abschliessen der Nutzerstudie stimmt nicht mit der Nutzeranzahl der registrierten " +
-          "Nutzer überein. Registrierte Nutzer: " + userstudy.registeredUsers.length + " Anzahl der Nutzer, die " +
+          "Nutzer überein. Registrierte Nutzer: " + registered.length + " Anzahl der Nutzer, die " +
           "abgeschlossen werden sollen: " + closeReq.length);
         } else {
           resolve();

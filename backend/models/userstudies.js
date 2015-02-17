@@ -518,16 +518,59 @@ module.exports.publishUserstudy = function(userstudy, callback){
 
 module.exports.deleteUserstudy = function (userstudyId, callback) {
   mysql.getConnection(function(connection) {
-    connection.query('UPDATE userstudies ' +
-      'SET visible=0 ' +
-      'WHERE id=? ',
-      userstudyId,
-      function(err,result){
+    connection.beginTransaction(function (err) {
+      if (err) {
         connection.release();
-        callback(err,result);
+        throw err;
       }
-    );
-  });
+      // Create the userstudy in userstudies Table
+          var promises = [
+            delUserstudyRelations(connection, userstudyId, 'news'),
+            delUserstudyRelations(connection, userstudyId, 'labels'),
+            delUserstudyRelations(connection, userstudyId, 'requires'),
+            delTemplateValues(connection,userstudyId),
+            delRegisteredUsers(connection,userstudyId)
+          ];
+        Promise.all(promises)
+        .then(function(){
+          return new Promise(function(resolve,reject){
+            connection.query('DELETE FROM userstudies ' +
+              'WHERE id=? ',
+              userstudyId,
+              function(err){
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(userstudyId);
+                }
+              }
+            );
+          });
+        })
+        // Finally commit
+        .then(function(){
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                connection.release();
+                callback(err);
+              });
+            } else {
+              connection.release();
+              callback();
+            }
+          });
+        })
+        // Catch all erors
+        .catch(function(err){
+          connection.rollback(function () {
+            connection.release();
+            callback(err);
+            throw err;
+          });
+        });
+      });
+    });
 };
 
 module.exports.closeUserstudy = function(userstudyId, closeArr, callback){
