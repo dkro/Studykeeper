@@ -187,16 +187,19 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
       userstudy.closed = !!userstudy.closed;
 
       userstudy.templateKeysToValues = [];
+
+      var titles = [];
       if (userstudy.titles === null) {
         userstudy.titles = [];
       } else {
-        var titles = userstudy.titles.split(",").map(function(x){return x;});
+        titles = userstudy.titles.split(",").map(function(x){return x;});
       }
 
+      var values = [];
       if (userstudy.valuess === null) {
         userstudy.valuess = [];
       } else {
-        var values = userstudy.valuess.split(",").map(function(x){return x;});
+        values = userstudy.valuess.split(",").map(function(x){return x;});
       }
 
       if (userstudy.labels === null) {
