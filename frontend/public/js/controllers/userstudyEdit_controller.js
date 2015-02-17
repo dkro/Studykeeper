@@ -36,6 +36,9 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             thisStudy.set('compensation', newData.amazonNew);
             thisStudy.set('space', newData.capacityNew);
             thisStudy.set('templateValues', newData.templateValuesNew);
+            thisStudy.set('tutor', this.get('tutor'));
+            thisStudy.set('executor', this.get('executor'));
+            thisStudy.set('template', this.get('template'));
 
             var that = this;
             var name = thisStudy.get('title');
