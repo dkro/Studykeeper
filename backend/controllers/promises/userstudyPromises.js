@@ -31,19 +31,16 @@ module.exports.validFullUserstudyReq = function(req){
       if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link)) {
         validationErrors.push("DoodleLink ungültig. URL Format erwartet: " + req.body.userstudy.doodleLink);
       }
-      if (req.body.userstudy.paper && !Validator.isURL(req.body.userstudy.paper)) {
-        validationErrors.push("Paper ungültig. URL Format erwartet: " + req.body.userstudy.paper);
-      }
-      if (!req.body.userstudy.mmi || !Validator.isFloat(req.body.userstudy.mmi)) {
+      if (!req.body.userstudy.hasOwnProperty("mmi") || !Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
       }
-      if (!req.body.userstudy.compensation || !Validator.isNumeric(req.body.userstudy.compensation)) {
+      if (!req.body.userstudy.hasOwnProperty("compensation") || !Validator.isInt(req.body.userstudy.compensation)) {
         validationErrors.push("Amazon Punkte ungültig. Zahl erwartet: " + req.body.userstudy.compensation);
       }
       if (!req.body.userstudy.location || !Validator.isLength(req.body.userstudy.location, 3)) {
         validationErrors.push("Ort ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
       }
-      if (!req.body.userstudy.space || !Validator.isNumeric(req.body.userstudy.space)) {
+      if (!req.body.userstudy.hasOwnProperty("space") || !Validator.isInt(req.body.userstudy.space)) {
         validationErrors.push("Teilnehmeranzahl ungültig. Zahl erwartet: " + req.body.userstudy.space);
       }
       if (!req.body.userstudy.template || !Validator.isNumeric(req.body.userstudy.template)) {
@@ -104,7 +101,6 @@ module.exports.validFullUserstudyReq = function(req){
         untilDate: Validator.toString(req.body.userstudy.untilDate),
         description: Validator.toString(req.body.userstudy.description),
         link: Validator.toString(req.body.userstudy.link),
-        paper: Validator.toString(req.body.userstudy.paper),
         mmi: Validator.toString(req.body.userstudy.mmi),
         compensation: Validator.toString(req.body.userstudy.compensation),
         location: Validator.toString(req.body.userstudy.location),

@@ -11,29 +11,29 @@ module.exports.validSignupReq = function(req){
   return new Promise(function(resolve, reject){
     var validationErrors = [];
 
-    if (!Validator.isEmail(req.body.user.username)) {
+    if (!req.body.user.username || !Validator.isEmail(req.body.user.username)) {
       validationErrors.push("Email ungültig.");
     }
-    if (!Validator.isLength(req.body.user.firstname,1)) {
+    if (!req.body.user.firstname || !Validator.isLength(req.body.user.firstname,1)) {
       validationErrors.push("Vorname ungültig.");
     }
-    if (!Validator.isLength(req.body.user.lastname,1)) {
+    if (!req.body.user.lastname || !Validator.isLength(req.body.user.lastname,1)) {
       validationErrors.push("Nachname ungültig.");
     }
-    if (!Validator.isLength(req.body.user.password,7)) {
+    if (!req.body.user.password || !Validator.isLength(req.body.user.password,7)) {
       validationErrors.push("Passwort ungültig. Minimum 7 Charakter.");
     }
-    if (!Validator.isLength(req.body.user.confirmPassword,7)) {
+    if (!req.body.user.confirmPassword || !Validator.isLength(req.body.user.confirmPassword,7)) {
       validationErrors.push("Passwort bestätigung ungültig, Minimum 7 Charakter.");
     }
     if (req.body.user.password !== req.body.user.confirmPassword){
       validationErrors.push("Passwörter stimmen nicht überein.");
     }
-    if (req.body.user.mmi.toString() !== "0" && req.body.user.mmi.toString() !== "1") {
-      validationErrors.push({message: "MMI ungültig. 0 oder 1 erwartet."});
+    if (req.body.user.mmi !== "true" && req.body.user.mmi !== "false") {
+      validationErrors.push("MMI ungültig. Boolean erwartet.");
     }
-    if (!lmuStaff(req) && req.body.user.mmi.toString() === "1") {
-      validationErrors.push({message: "Nur Nutzer mit @campus.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln."});
+    if (!lmuStaff(req) && req.body.user.mmi === "true") {
+      validationErrors.push("Nur Nutzer mit @campus.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln.");
     }
     if (validationErrors.length > 0) {
       reject(validationErrors.join(' '));
@@ -44,7 +44,6 @@ module.exports.validSignupReq = function(req){
         lastname: Validator.toString(req.body.user.lastname),
         password: Validator.toString(req.body.user.password),
         confirmPassword : Validator.toString(req.body.user.confirmPassword),
-        collectsMMI: Validator.toString(req.body.user.mmi),
         mmi: 0,
         role:'participant',
         lmuStaff: 0
@@ -53,6 +52,11 @@ module.exports.validSignupReq = function(req){
         userData.lmuStaff = 1;
       } else {
         userData.lmuStaff = 0;
+      }
+      if (req.body.user.mmi === "true") {
+        userData.collectsMMI = 1;
+      } else {
+        userData.collectsMMI = 0;
       }
       resolve(userData);
     }

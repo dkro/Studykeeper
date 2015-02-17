@@ -6,7 +6,7 @@ module.exports.addUserStudy = function (data, callback) {
   var id;
   var queryData = {
     title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate, until: data.untilDate,
-    description: data.description, link: data.link, paper: data.paper, space: data.space, mmi: data.mmi,
+    description: data.description, link: data.link, space: data.space, mmi: data.mmi,
     compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
     creatorId: data.creatorId, templateValues: data.templateValues, registeredUsers: data.registeredUsers
@@ -21,13 +21,13 @@ module.exports.addUserStudy = function (data, callback) {
       // Create the userstudy in userstudies Table
       new Promise(function(resolve,reject){
         connection.query('INSERT INTO userstudies ' +
-          '(tutorId,executorId,fromDate,untilDate,title,description,link,paper,space,mmi,compensation,' +
+          '(tutorId,executorId,fromDate,untilDate,title,description,link,space,mmi,compensation,' +
           'location,visible,published,closed,creatorId,templateId) ' +
           'VALUES ((SELECT id FROM users WHERE id=?),(SELECT id FROM users WHERE id=?),' +
-          '?,?,?,?,?,?,?,?,?,?,1,0,0,?,?);',
+          '?,?,?,?,?,?,?,?,?,1,0,0,?,?);',
           [queryData.tutorId,
             queryData.executorId,queryData.from, queryData.until, queryData.title, queryData.description,
-            queryData.link, queryData.paper, queryData.space,queryData.mmi, queryData.compensation, queryData.location,
+            queryData.link, queryData.space,queryData.mmi, queryData.compensation, queryData.location,
             queryData.creatorId, queryData.templateId],
           function(err,result){
             if (err) {
@@ -79,7 +79,7 @@ module.exports.addUserStudy = function (data, callback) {
 module.exports.editUserStudy = function (data, callback) {
   var queryData = {
     id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate,
-    until: data.untilDate, description: data.description, link: data.link, paper: data.paper,
+    until: data.untilDate, description: data.description, link: data.link,
     space: data.space, mmi: data.mmi, compensation: data.compensation, location: data.location,
     requiredStudies: data.requiredStudies, news: data.news, labels: data.labels, templateId: data.templateId,
     templateValues: data.templateValues, registeredUsers: data.registeredUsers
@@ -93,11 +93,11 @@ module.exports.editUserStudy = function (data, callback) {
       // Create the userstudy in userstudies Table
       new Promise(function(resolve,reject){
         connection.query('UPDATE userstudies ' +
-          'SET tutorId=?,executorId=?, fromDate=?, untilDate=?, title=?, description=?, link=?, paper=?,' +
+          'SET tutorId=?,executorId=?, fromDate=?, untilDate=?, title=?, description=?, link=?, ' +
           'space=?, mmi=?, compensation=?,location=?, templateId=? ' +
           'WHERE id=?;',
           [queryData.tutorId, queryData.executorId, queryData.from, queryData.until, queryData.title,queryData.description,
-            queryData.link,queryData.paper, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
+            queryData.link, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
             queryData.templateId, queryData.id],
           function(err){
             if (err) {
@@ -161,7 +161,7 @@ module.exports.getUserstudy = function (userstudy, callback) {
   mysql.getConnection(function(connection) {
     connection.query(
       'SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, ' +
       'us.location, us.closed ' +
       'FROM userstudies us '+
       'WHERE us.id=? AND us.title=?',
@@ -177,12 +177,12 @@ module.exports.getUserstudy = function (userstudy, callback) {
 module.exports.getUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId AS template, us.creatorId AS creator ' +
+      'us.templateId AS template ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -202,12 +202,12 @@ module.exports.getUserstudyById = function (id, callback) {
 module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId AS template, us.creatorId AS creator ' +
+      'us.templateId AS template ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -215,8 +215,13 @@ module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback)
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? AND us.visible=1 AND us.published=1 ' +
+      'AND (srr.studyId IS NULL OR srr.id IN (' +
+      'SELECT srr2.id FROM  studies_requires_rel srr2 ' +
+      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
+      'WHERE sur2.userId=? AND sur2.confirmed=1 ' +
+      'GROUP by sur2.studyId)) ' +
       'GROUP BY us.id;',
-      id, function(err,result){
+      [id,userId], function(err,result){
         connection.release();
         callback(err,result);
       }
@@ -227,21 +232,21 @@ module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback)
 module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callback) {
   mysql.getConnection(function(connection){
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId AS template, us.creatorId AS creator ' +
+      'us.templateId AS template ' +
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
       'LEFT JOIN studies_requires_rel srr ON us.id=srr.studyId ' +
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
-      'WHERE us.id=? AND (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?) ' +
+      'WHERE us.id=? AND ((us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?)) ' +
       'GROUP BY us.id;',
-      [id,userId],
+      [id,userId,userId],
       function(err,result){
         connection.release();
         callback(err,result);
@@ -256,7 +261,7 @@ module.exports.getPublicUserstudyById = function (id, callback) {
       'tutor.username AS tutorEmail, tutor.firstname AS tutorFirstname, tutor.lastname AS tutorLastname, ' +
       'executor.username AS executorEmail, executor.firstname AS executorFirstname, executor.lastname AS executorLastname, ' +
       'us.fromDate, us.untilDate, us.closed, ' +
-      'us.title, us.description, us.link, us.paper, us.mmi, us.compensation, us.location ' +
+      'us.title, us.description, us.link, us.mmi, us.compensation, us.location ' +
       'FROM userstudies us ' +
       'LEFT JOIN users tutor ON us.tutorId=tutor.id ' +
       'LEFT JOIN users executor ON us.executorId=executor.id ' +
@@ -272,12 +277,12 @@ module.exports.getPublicUserstudyById = function (id, callback) {
 module.exports.getAllUserstudies = function (callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies, ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId as template, us.creatorId AS creator '+
+      'us.templateId as template '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -299,12 +304,12 @@ module.exports.getAllUserstudies = function (callback) {
 module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId AS template, us.creatorId AS creator '+
+      'us.templateId AS template '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -313,7 +318,11 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE us.visible=1 AND us.published=1 ' +
-      'AND (srr.studyId IS NULL OR (surful.userId=? AND surful.confirmed=1 AND surful.id IS NOT NULL))  ' +
+      'AND (srr.studyId IS NULL OR srr.id IN (' +
+      'SELECT srr2.id FROM  studies_requires_rel srr2 ' +
+      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
+      'WHERE sur2.userId=? AND sur2.confirmed=1 ' +
+      'GROUP by sur2.studyId)) ' +
       'GROUP BY us.id;',
       [user.id,user.id],
       function(err,result){
@@ -327,12 +336,12 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
 module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
-      'us.title, us.description, us.link, us.paper, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
+      'us.title, us.description, us.link, us.space, us.mmi, us.compensation, us.location, us.closed, us.published, ' +
       'GROUP_CONCAT(DISTINCT slr.labelId) AS labels, GROUP_CONCAT(DISTINCT snr.newsId) AS news, ' +
       'GROUP_CONCAT(DISTINCT srr.requiresId) AS requiredStudies,  ' +
       'GROUP_CONCAT(DISTINCT sur.userId) AS registeredUsers, ' +
       'GROUP_CONCAT(DISTINCT stv.value) AS templateValues, ' +
-      'us.templateId AS template, us.creatorId AS creator '+
+      'us.templateId AS template '+
       'FROM userstudies us ' +
       'LEFT JOIN studies_news_rel snr ON us.id=snr.studyId ' +
       'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
@@ -340,8 +349,12 @@ module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) 
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
-      'WHERE (us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?)' +
-      'AND (srr.studyId IS NULL OR (surful.userId=? AND surful.confirmed=1 AND surful.id IS NOT NULL))  ' +
+      'WHERE ((us.visible=1 AND us.published=1) OR (us.visible=1 AND us.executorId=?)) ' +
+      'AND (srr.studyId IS NULL OR srr.id IN (' +
+        'SELECT srr2.id FROM  studies_requires_rel srr2 ' +
+        'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
+        'WHERE sur2.userId=? AND sur2.confirmed=1 ' +
+        'GROUP by sur2.studyId)) ' +
       'GROUP BY us.id;',
       [user.id,user.id,user.id],
       function(err,result){
