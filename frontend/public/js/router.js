@@ -120,7 +120,8 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
         registeredStudies: user.get('registeredFor'),
         createdStudies: user.get('isExecutorFor'),
         mmiPoints: user.get('mmi'),
-        news: that.store.find('news')
+        news: that.store.find('news'),
+        collectsMMI: user.get('collectsMMI')
       });
     });
   },
@@ -132,6 +133,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('model', model);
     controller.set('history', history);
     controller.set('futureRegisteredStudies', futureStudies);
+    controller.set('collectsMMI', model.collectsMMI);
     controller.determineInitialProperties();
   }
 });

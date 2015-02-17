@@ -80,19 +80,12 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         localStorage.token = this.get('token');
     }.observes('token'),
 
-    isLMUStaff: localStorage.isLMUStaff,
-
-    LMUStaffChanged: function() {
-        localStorage.isLMUStaff = this.get('isLMUStaff');
-    }.observes('isLMUStaff'),
-
     resetLocalStorage: function() {
         this.set('userRole', null);
         this.set('isLoggedIn', false);
         this.set('isTutor', false);
         this.set('currentUserId', null);
         this.set('token', null);
-        this.set('isLMUStaff', false);
 
         window.localStorage.clear();
     },

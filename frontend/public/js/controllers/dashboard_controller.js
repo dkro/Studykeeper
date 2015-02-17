@@ -13,15 +13,13 @@ StudyManager.DashboardController = Ember.Controller.extend({
 
     determineInitialProperties: function() {
         var isTutor = this.get('controllers.application').get('isTutor');
-        var isLMUStaff = this.get('controllers.application').get('isLMUStaff');
 
         this.set('isTutor', isTutor);
-        this.set('isLMUStaff', isLMUStaff);
     },
 
     isTutor: false,
 
-    isLMUStaff: false
+    collectsMMI: false
 });
 
 

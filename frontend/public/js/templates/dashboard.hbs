@@ -1,7 +1,7 @@
 <div>
     <button type="button" class="btn btn-primary btn-lg dashboard__studiesButton" {{action 'displayStudies'}}>Studiensuche</button>
 
-    {{#if isLMUStaff}}
+    {{#if collectsMMI}}
         <div class="dashboard__mmiPoints">
             <span class="dashboard__mmiPoints__label">Gesammelte MMI-Punkte: <span class="dashboard__mmiPoints__value">{{model.mmiPoints}}</span></span>
         </div>
