@@ -46,6 +46,31 @@ StudyManager.UserstudyController = Ember.Controller.extend({
 
         publicButtonClick: function() {
             this.transitionToRoute('userstudy-public', this.get('model').get('id'));
+        },
+
+        publishButtonClick: function() {
+            var studyId = this.get('model').get('id');
+            var that = this;
+            var successMessage = successMessage = 'Studie wurde veröffentlich!';
+            var usedUrl = '/api/userstudies/' + studyId + '/publish/';
+
+            Ember.$.ajax({
+                url: usedUrl,
+                type: "POST",
+                beforeSend: function(request) {
+                    request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)
+                }
+            }).then(
+                function(response) {
+                    that.store.fetch('userstudy', that.get('model').get('id')).then(function(study) {
+                        that.set('model', study);
+                        that.determineNeededProperties();
+                        that.set('statusMessage', { message: successMessage, isSuccess: true });
+                    })
+                },
+                function(error) {
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+                });
         }
     },
 
