@@ -72,7 +72,8 @@ module.exports.deleteNews = function (req, res, next) {
       } else {
         news.userstudies = news.userstudies.split(",").map(function(x){return parseInt(x);});
         res.json(500, {status: 'failure',
-          message: 'Die News konnte nicht gelöscht werden, da mindestens eine Nutzerstudie diese News anzeigt.',
+          message: 'Die News konnte nicht gelöscht werden, da mindestens eine Nutzerstudie diese News momentan ' +
+          'benutzt.',
           userstudies: news.userstudies});
         return next();
       }

@@ -82,7 +82,7 @@ module.exports.deleteTemplate = function(req, res, next){
           template.userstudies = template.userstudies.split(",").map(function(x){return parseInt(x);});
           res.json(500, {status: 'failure',
             message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
-            'benutzt. Nutzerstudien: ' + template.userstudies});
+            'benutzt.', userstudies: template.userstudies});
           return next();
         }
     })
