@@ -38,8 +38,10 @@
                 <th class="studies__filter--amazon studies__column--amazon">
                     {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
                 </th>
-                <th>
-                </th>
+                {{#if isTutor}}
+                    <th>
+                    </th>
+                {{/if}}
             </tr>
             <tr>
                 <th>Von</th>
@@ -49,7 +51,9 @@
                 <th class="studies__column--executor">Durchführung</th>
                 <th class="studies__column--mmi">MMI</th>
                 <th class="studies__column--amazon">Amazon</th>
-                <th></th>
+                {{#if isTutor}}
+                    <th></th>
+                {{/if}}
             </tr>
         </thead>
         <tbody>
@@ -63,12 +67,14 @@
                         <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
                         <td class="studies__column--mmi">{{study.mmi}}</td>
                         <td class="studies__column--amazon">{{study.compensation}}€</td>
-                        <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
+                        {{#if isTutor}}
+                            <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
+                        {{/if}}
                     </tr>
                 {{/each}}
             {{else}}
                 <tr>
-                    <td class="management--all__emptyFilter" colspan="8">- Keine Ergebnisse -</td>
+                    <td class="management--all__emptyFilter" colspan="7">- Keine Ergebnisse -</td>
                 </tr>
             {{/if}}
         </tbody>
