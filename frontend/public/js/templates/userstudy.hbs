@@ -94,6 +94,41 @@
     </div>
 </div>
 
+{{#if canEdit}}
+    <div class="table-responsive management--all__table">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Teilnehmer</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if model.registeredUsers}}
+                    {{#each user in model.registeredUsers}}
+                        <tr class="management--all__row">
+                            <td>{{user.username}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>
+                                <a {{bind-attr href="user.mailTo"}} target="_top">
+                                    <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                {{else}}
+                    <tr>
+                        <td class="management--all__emptyFilter" colspan="4">- Keine angemeldeten Nutzer -</td>
+                    </tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
+{{/if}}
+
 {{#if model.closed}}
     {{#if canEdit}}
         <div class="alert alert-warning" role="alert">

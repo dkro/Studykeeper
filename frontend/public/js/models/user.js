@@ -9,7 +9,10 @@ StudyManager.User = DS.Model.extend({
     lmuStaff: DS.attr('boolean'),
     isExecutorFor: DS.hasMany('userstudy', { async: true }),
     isTutorFor: DS.hasMany('userstudy', { async: true }),
-    registeredFor: DS.hasMany('userstudy', { async: true })
+    registeredFor: DS.hasMany('userstudy', { async: true }),
+    mailTo: function () {
+        return 'mailto:' + this.get('username');
+    }.property('username')
 });
 
 StudyManager.User.FIXTURES = [
