@@ -51,7 +51,6 @@ module.exports.editUserstudy = function(req, res, next) {
     })
     .then(function(){
       var promises = [UserstudyPromise.userstudyExists(userstudy),
-        UserstudyPromise.userstudyIsOpen(userstudy),
         UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
         UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
         UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
@@ -79,9 +78,6 @@ module.exports.deleteUserstudy = function(req, res, next) {
   var userstudyId = req.params.id;
 
   UserstudyPromise.userstudyExists({id: userstudyId})
-    .then(function(result){
-      return UserstudyPromise.userstudyIsOpen(result);
-    })
     .then(function(){
       UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
@@ -189,7 +185,25 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
       var userstudy = result[0];
 
       userstudy.closed = !!userstudy.closed;
-      res.json({userstudy: userstudy});
+
+      userstudy.templateKeysToValues = [];
+      var titles = userstudy.titles.split(",").map(function(x){return x;});
+      var values = userstudy.valuess.split(",").map(function(x){return x;});
+      userstudy.labels = userstudy.labels.split(",").map(function(x){return x;});
+
+      for (var i = 0; i < titles.length; i += 1) {
+        userstudy.templateKeysToValues[i] = {};
+        userstudy.templateKeysToValues[i].title = titles[i];
+      }
+
+      for (var j = 0; j < values.length; j += 1) {
+        userstudy.templateKeysToValues[j].value = values[j];
+      }
+
+      delete userstudy.titles;
+      delete userstudy.valuess;
+
+      res.json({studypublic: userstudy});
       return next();
     }
   });
@@ -308,7 +322,8 @@ module.exports.registerUserToStudy = function(req, res, next){
         [UserstudyPromise.userstudyExists({id:userstudyId}),
         UserstudyPromise.userIsNOTRegisteredToStudy(userId,userstudyId),
         UserstudyPromise.userstudyHasSpace(userstudyId),
-        UserstudyPromise.userCompletedAllRequiredStudies(userId,userstudyId)];
+        UserstudyPromise.userCompletedAllRequiredStudies(userId,userstudyId),
+        UserstudyPromise.userstudyIsOpen(userstudyId)];
       return Promise.all(promises);
     })
     .then(function(){
@@ -341,6 +356,9 @@ module.exports.signoff = function(req, res, next){
      })
     .then(function(){
       return UserstudyPromise.userIsNotConfirmed(userId,userstudyId);
+    })
+    .then(function(){
+      return UserstudyPromise.userstudyIsOpen(userstudyId);
     })
     .then(function(){
       UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
@@ -495,8 +513,8 @@ module.exports.closeUserstudy = function(req, res, next){
       userFromToken = results[2];
 
       promises = [];
-      for (var i = 0; i < results.length; i += 1) {
-        promises.push(UserPromise.userExistsById(results[1][i].userId));
+      for (var i = 0; i < closeReq.length; i += 1) {
+        promises.push(UserPromise.userExistsById(closeReq[i].userId));
       }
 
       return Promise.all(promises);
@@ -505,10 +523,17 @@ module.exports.closeUserstudy = function(req, res, next){
       promises = [];
       for (var i = 0; i < users.length; i += 1) {
         promises.push(UserstudyPromise.userIsRegisteredToStudy(users[i].id,userstudy.id));
-        promises.push(UserstudyPromise.userIsNotConfirmed(users[i].id,userstudy.id));
       }
 
-      promises.push(UserstudyPromise.userstudyIsOpen(userstudy));
+      promises.push(new Promise(function(resolve,reject){
+        if (userstudy.registeredUsers.length !== closeReq.length){
+          reject("Die Nutzeranzahl zum Abschliessen der Nutzerstudie stimmt nicht mit der Nutzeranzahl der registrierten " +
+          "Nutzer überein. Registrierte Nutzer: " + userstudy.registeredUsers.length + " Anzahl der Nutzer, die " +
+          "abgeschlossen werden sollen: " + closeReq.length);
+        } else {
+          resolve();
+        }
+      }));
       promises.push(UserstudyPromise.userIsExecutorForStudyOrTutor(userFromToken,userstudy.id));
       return Promise.all(promises);
     })
