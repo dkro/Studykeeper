@@ -127,8 +127,13 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
-    var history = model.registeredStudies.filterBy('closed', true);
-    var futureStudies = model.registeredStudies.filterBy('closed', false);
+    var history = model.registeredStudies.filter(function(study) {
+      return study.get('closed');
+    });
+
+    var futureStudies = model.registeredStudies.filter(function(study) {
+      return !study.get('closed');
+    });
 
     controller.set('model', model);
     controller.set('history', history);
