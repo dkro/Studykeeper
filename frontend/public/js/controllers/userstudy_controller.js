@@ -28,8 +28,10 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                         }
                     }).then(
                         function(response) {
-                            that.refreshStudy();
-                            that.set('statusMessage', { message: successMessage, isSuccess: true });
+                            that.store.fetch('userstudy', that.get('model').get('id')).then(function(study) {
+                                that.transitionToRoute('userstudy', study);
+                                that.set('statusMessage', { message: successMessage, isSuccess: true });
+                            })
                         },
                         function(error) {
                             that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
@@ -47,7 +49,9 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     },
 
     refreshStudy: function() {
-        this.send('refreshRoute');
+        self.get('controllers.posts').pushObject(data);
+        self.transitionToRoute('posts');
+
     },
 
     determineNeededProperties: function() {
