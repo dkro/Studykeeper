@@ -7,9 +7,9 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
         },
 
         confirmStudy: function() {
-            var confirmText = 'Wenn Sie die Studie abschließen, werden allen ausgewählten Teilnehmern die entsprechende' +
+            var confirmText = 'Wenn Sie die Studie abschließen, werden allen ausgewählten Teilnehmern die entsprechende ' +
                               'Entlohnung gutgeschrieben.\n\n' +
-                              'Sie können die Studie dann weiterhin editieren und auch erneut abschließen, aber bereits' +
+                              'Sie können die Studie dann weiterhin editieren und auch erneut abschließen, aber bereits ' +
                               'zugewiesenen Entlohnungen werden nicht rückgängig gemacht!\n\n' +
                               'Wollen Sie die Studie wirklich abschließen?';
 
@@ -27,7 +27,7 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                         getsMMI: comp
                     };
 
-                    payload.push(confirmedUser);
+                    innerPayload.push(confirmedUser);
                 });
 
                 var payload = {
