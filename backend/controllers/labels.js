@@ -46,7 +46,8 @@ module.exports.deleteLabel = function(req, res, next){
           } else {
             label.userstudies = label.userstudies.split(",").map(function(x){return parseInt(x);});
             res.json(500, {status: 'failure',
-              message: 'Das Label konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Label hat.',
+              message: 'Das Label konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Label momentan ' +
+              'benutzt.',
               userstudies: label.userstudies});
             return next();
           }
