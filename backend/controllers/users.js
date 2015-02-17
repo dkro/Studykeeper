@@ -381,10 +381,11 @@ module.exports.editUser = function(req, res, next) {
 
 var sendUserWelcomeMail = function(email,password,callback) {
   var mail = {
+    from: 'StudyKeeper <no-reply@studykeeper.com>',
     to: email,
     subject: 'Es wurde ein Account für Sie erstellt.',
-    html: "Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen" +
-    " Ihrer Email Adresse bekommen. Nachdem Sie Ihr Email Adresse bestätigt haben können Sie sich mit Ihrer Email-Adresse" +
+    html: "Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen " +
+    "Ihrer Email Adresse bekommen. Nachdem Sie Ihr Email Adresse bestätigt haben können Sie sich mit Ihrer Email-Adresse " +
     "und diesem Passwort: " + password + " bei der folgenden URL einloggen " +
     "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001\">http://studykeeper.medien.ifi.lmu.de:10001</a> " +
     "Das Passwort können Sie jederzeit unter der Account Konfiguration ändern."};
@@ -453,7 +454,7 @@ module.exports.recoverPasswordRequest = function(req, res, next){
         });
       })
       .catch(function(err){
-        res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        res.json(500, {status: 'failure', message: err});
         next();
       });
   }
@@ -539,9 +540,9 @@ var sendPasswordRetrievalRequest = function(email, callback){
       var mail = {
         from: 'StudyKeeper <no-reply@studykeeper.com>',
         to: email,
-        subject: 'Password vergessen?',
-        html: "Bitte clicken Sie auf folgenden Link um Ihr Passwort zurück zu setzen. Falls Sie diese Mail nicht  " +
-        "angefordert haben bitte ignorieren Sie diese Mail. "+
+        subject: 'Passwort vergessen?',
+        html: "Bitte klicken Sie auf folgenden Link, um Ihr Passwort zurückzusetzen. Falls Sie diese Mail nicht  " +
+        "angefordert haben, ignorieren Sie diese Mail. "+
         "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001/api/users/recover/" + hash + "\">hier</a>"};
       Mail.sendMail(mail,function(err,result){
         if (err) {
@@ -560,7 +561,7 @@ var sendPasswordRetrievalAction = function(email, newpw, callback){
     to: email,
     subject: 'Ihr Passwort wurde zurückgesetzt',
     html: "Ihr Passwort wurde zurückgesetzt. Ihr neues Passwort lautet: " + newpw + ". Bitte loggen Sie sich " +
-    "damit ein und ändern Ihr Passwort in den Account Konfigurationen." +
+    "mit diesem ein und ändern Sie Ihr Passwort in den Account Einstellungen. " +
     "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001\">http://studykeeper.medien.ifi.lmu.de:10001</a> "};
   Mail.sendMail(mail,function(err,result){
     if (err) {
@@ -607,7 +608,7 @@ module.exports.changePW = function(req, res, next) {
                 } else if (!isPasswordMatch) {
                   res.send(500,{
                     status: 'failure',
-                    message: 'Falsches Password.'
+                    message: 'Ihr altes Passwort ist nicht korrekt.'
                   });
                   return next();
                 } else {
