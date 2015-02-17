@@ -168,7 +168,6 @@ module.exports.userstudyIsOpen = function(userstudy) {
   });
 };
 
-
 module.exports.userstudyHasSpace = function(userstudyId) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudyById(userstudyId,function(err,result){

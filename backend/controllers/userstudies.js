@@ -51,7 +51,6 @@ module.exports.editUserstudy = function(req, res, next) {
     })
     .then(function(){
       var promises = [UserstudyPromise.userstudyExists(userstudy),
-        UserstudyPromise.userstudyIsOpen(userstudy),
         UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
         UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
         UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
@@ -79,9 +78,6 @@ module.exports.deleteUserstudy = function(req, res, next) {
   var userstudyId = req.params.id;
 
   UserstudyPromise.userstudyExists({id: userstudyId})
-    .then(function(result){
-      return UserstudyPromise.userstudyIsOpen(result);
-    })
     .then(function(){
       UserStudy.deleteUserstudy(userstudyId, function(err){
         if (err) {
@@ -308,7 +304,8 @@ module.exports.registerUserToStudy = function(req, res, next){
         [UserstudyPromise.userstudyExists({id:userstudyId}),
         UserstudyPromise.userIsNOTRegisteredToStudy(userId,userstudyId),
         UserstudyPromise.userstudyHasSpace(userstudyId),
-        UserstudyPromise.userCompletedAllRequiredStudies(userId,userstudyId)];
+        UserstudyPromise.userCompletedAllRequiredStudies(userId,userstudyId),
+        UserstudyPromise.userstudyIsOpen(userstudyId)];
       return Promise.all(promises);
     })
     .then(function(){
@@ -341,6 +338,9 @@ module.exports.signoff = function(req, res, next){
      })
     .then(function(){
       return UserstudyPromise.userIsNotConfirmed(userId,userstudyId);
+    })
+    .then(function(){
+      return UserstudyPromise.userstudyIsOpen(userstudyId);
     })
     .then(function(){
       UserStudy.unmapUserFromStudy(userId,userstudyId, function(err){
@@ -508,7 +508,6 @@ module.exports.closeUserstudy = function(req, res, next){
         promises.push(UserstudyPromise.userIsNotConfirmed(users[i].id,userstudy.id));
       }
 
-      promises.push(UserstudyPromise.userstudyIsOpen(userstudy));
       promises.push(UserstudyPromise.userIsExecutorForStudyOrTutor(userFromToken,userstudy.id));
       return Promise.all(promises);
     })
