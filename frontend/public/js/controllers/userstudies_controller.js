@@ -22,8 +22,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     study.rollback();
-                    var failMessage = 'Studie \"' + name + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },

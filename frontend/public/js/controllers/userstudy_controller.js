@@ -6,6 +6,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
             if (this.get('canEdit')) {
                 this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
             } else {
+                this.set('statusMessage', null);
+
                 var studyId = this.get('model').get('id');
                 var currentUserId = this.get('controllers.application').get('currentUserId');
                 var that = this;
@@ -49,6 +51,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         },
 
         publishButtonClick: function() {
+            this.set('statusMessage', null);
+
             var studyId = this.get('model').get('id');
             var that = this;
             var successMessage = 'Die Studie wurde veröffentlicht!';
@@ -80,6 +84,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.determineFreeSpace();
         this.determineTemplateFields();
         this.determineMailTos();
+
+        this.set('statusMessage', null);
     },
 
     canEdit: false,

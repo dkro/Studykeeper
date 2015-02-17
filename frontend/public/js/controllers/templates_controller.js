@@ -22,8 +22,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     template.rollback();
-                    var failMessage = 'Template \"' + title + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: failMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
@@ -46,6 +45,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         }
 
         this.set('totalFieldsCount', counts);
+        this.set('isLoading', false);
     },
 
     statusMessage: null,

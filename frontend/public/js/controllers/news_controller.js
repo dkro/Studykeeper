@@ -40,6 +40,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         this.set('statusMessage', null);
         this.set('titleFilter', null);
         this.set('selectedDateFilter', null);
+        this.set('isLoading', false);
     },
 
     statusMessage: null,

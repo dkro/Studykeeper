@@ -3,6 +3,8 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     actions: {
         deleteStudy: function() {
+            this.set('statusMessage', null);
+
             var thisStudy = this.get('model').study;
             var that = this;
             var name = thisStudy.get('title');
@@ -17,13 +19,14 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
                     });
                 }, function(error) {
                     thisStudy.rollback();
-                    var aMessage = 'Studie \"' + name + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: aMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
 
         updateStudy: function(newData) {
+            this.set('statusMessage', null);
+
             var thisStudy = this.get('model').study;
             var id = thisStudy.get('id');
             thisStudy.set('title', newData.titleNew);
@@ -50,8 +53,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             }, function(error) {
                 thisStudy.rollback();
                 that.transitionToRoute('userstudy', id).then(function () {
-                    var aMessage = error.responseJSON.message;
-                    that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: false });
+                    that.get('controllers.userstudy').set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             });
         },
@@ -80,6 +82,8 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         this.determineExecutor();
         this.determineTutor();
         this.determineTemplate();
+
+        this.set('statusMessage', null);
     },
 
     /**

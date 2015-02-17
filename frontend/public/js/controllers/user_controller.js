@@ -3,6 +3,7 @@ StudyManager.UserController = Ember.Controller.extend({
 
     actions: {
         deleteUser: function() {
+            this.set('statusMessage', null);
             var thisUser = this.get('model');
             var that = this;
             var name = thisUser.get('username');
@@ -23,6 +24,8 @@ StudyManager.UserController = Ember.Controller.extend({
         },
 
         updateUser: function(newData) {
+            this.set('statusMessage', null);
+
             var thisUser = this.get('model');
             thisUser.set('username', newData.usernameNew);
             thisUser.set('firstname', newData.firstnameNew);
@@ -53,6 +56,10 @@ StudyManager.UserController = Ember.Controller.extend({
         this._super();
         this.set('roles', this.get('controllers.application').get('roles'));
         this.set('mmiValues', this.get('controllers.application').get('mmiValues'));
+    },
+
+    reset: function() {
+        this.set('statusMessage', null);
     },
 
     statusMessage: null,

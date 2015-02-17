@@ -14,6 +14,8 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                               'Wollen Sie die Studie wirklich abschließen?';
 
             if (confirm(confirmText)) {
+                this.set('statusMessage', null);
+
                 var studyId = this.get('model').study.get('id');
                 var that = this;
                 var innerPayload = [];
@@ -53,6 +55,10 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
 
             }
         }
+    },
+
+    reset: function() {
+        this.set('statusMessage', null);
     },
 
     statusMessage: null,

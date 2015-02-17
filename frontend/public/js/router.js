@@ -165,9 +165,9 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 
 
     controller.set('model', model);
+    controller.reset();
     controller.set('studiesList', filteredStudies);
     controller.set('searchTags', transformedTags);
-    controller.reset();
   }
 });
 
@@ -243,6 +243,8 @@ StudyManager.UserstudyConfirmRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.reset();
+
     var usersWithCompensation = [];
 
     model.study.get('registeredUsers').forEach(function(user, index) {
@@ -276,6 +278,7 @@ StudyManager.UserstudyCreationRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.reset();
 
     var allTutors = model.allUsers.filter(function(user) {
       return user.get('role') === 'tutor';
@@ -316,8 +319,8 @@ StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.set('usersList', model);
     controller.reset();
+    controller.set('usersList', model);
   }
 });
 
@@ -328,6 +331,7 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.reset();
     controller.set('firstName', model.get('firstname'));
     controller.set('lastName', model.get('lastname'));
     controller.set('userName', model.get('username'));
@@ -338,6 +342,9 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
 });
 
 StudyManager.UserCreationRoute = StudyManager.AuthenticationRoute.extend({
+  setupController: function(controller) {
+    controller.reset();
+  }
 });
 
 StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
@@ -347,8 +354,8 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.set('templatesList', model);
     controller.reset();
+    controller.set('templatesList', model);
   }
 });
 
@@ -359,7 +366,9 @@ StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.reset();
     controller.set('title', model.get('title'));
+
     var fields = [];
     model.get('fields').forEach(function(item) {
       var field = StudyManager.Tfield.create();
@@ -368,11 +377,13 @@ StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
       fields.pushObject(field);
     });
     controller.set('fields', fields);
-    controller.reset();
   }
 });
 
 StudyManager.TemplateCreationRoute = StudyManager.AuthenticationRoute.extend({
+  setupController: function(controller) {
+    controller.reset();
+  }
 });
 
 StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
@@ -394,14 +405,17 @@ StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.reset();
     controller.set('title', model.get('title'));
     controller.set('date', model.get('date'));
     controller.set('description', model.get('description'));
     controller.set('link', model.get('link'));
-    controller.reset();
   }
 });
 
 StudyManager.NewsCreationRoute = StudyManager.AuthenticationRoute.extend({
+  setupController: function(controller) {
+    controller.reset();
+  }
 });
 

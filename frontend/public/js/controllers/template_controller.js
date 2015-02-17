@@ -3,6 +3,7 @@ StudyManager.TemplateController = Ember.Controller.extend({
 
     actions: {
         deleteTemplate: function() {
+            this.set('statusMessage', null);
             var thisTemplate = this.get('model');
             var that = this;
             var name = thisTemplate.get('title');
@@ -23,6 +24,7 @@ StudyManager.TemplateController = Ember.Controller.extend({
         },
 
         updateTemplate: function(newData) {
+            this.set('statusMessage', null);
             var fields = [];
 
             newData.fieldsNew.forEach(function (item) {

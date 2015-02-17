@@ -35,6 +35,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
     },
 
     doPasswordChange: function () {
+        this.set('statusMessage', null);
         var userId = this.get('model').get('id');
         var that = this;
 

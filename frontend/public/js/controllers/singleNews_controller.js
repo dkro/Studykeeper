@@ -3,6 +3,7 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
     actions: {
         deleteNews: function() {
+            this.set('statusMessage', null);
             var thisNews = this.get('model');
             var that = this;
             var name = thisNews.get('title');
@@ -17,13 +18,13 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
                     });
                 }, function(error) {
                     thisNews.rollback();
-                    var aMessage = 'News \"' + name + '\" konnte nicht gelöscht werden!';
-                    that.set('statusMessage', { message: aMessage, isSuccess: false });
+                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
         },
 
         updateNews: function(newData) {
+            this.set('statusMessage', null);
             var thisNews = this.get('model');
             thisNews.set('title', newData.titleNew);
             thisNews.set('date', newData.dateNew);

@@ -3,6 +3,7 @@ StudyManager.TemplateCreationController = Ember.ArrayController.extend({
 
     actions: {
         createTemplate: function(newData) {
+            this.set('statusMessage', null);
             var fields = [];
 
             newData.fieldsNew.forEach(function (item) {
@@ -32,5 +33,12 @@ StudyManager.TemplateCreationController = Ember.ArrayController.extend({
         }
     },
 
-    statusMessage: null
+    reset: function() {
+        this.set('statusMessage', null);
+        this.set('fields', null);
+    },
+
+    statusMessage: null,
+
+    fields: null
 });

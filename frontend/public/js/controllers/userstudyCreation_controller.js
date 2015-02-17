@@ -3,6 +3,8 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
 
     actions: {
         createStudy: function(newData) {
+            this.set('statusMessage', null);
+
             var newStudy = this.store.createRecord('userstudy', {
                 title: newData.titleNew,
                 fromDate: newData.fromNew,
@@ -53,6 +55,10 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
         amazonValues.removeObject(null);
         this.set('amazonValues', amazonValues);
         this.set('isTutorUser', this.get('controllers.application').get('isTutor'));
+    },
+
+    reset: function() {
+        this.set('statusMessage', null);
     },
 
     statusMessage: null,

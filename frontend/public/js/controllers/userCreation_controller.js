@@ -3,6 +3,8 @@ StudyManager.UserCreationController = Ember.Controller.extend({
 
     actions: {
         createUser: function(newData) {
+            this.set('statusMessage', null);
+
             var newUser = this.store.createRecord('user', {
                 firstname: newData.firstnameNew,
                 lastname: newData.lastnameNew,
@@ -33,7 +35,14 @@ StudyManager.UserCreationController = Ember.Controller.extend({
     init: function() {
         this._super();
         this.set('roles', this.get('controllers.application').get('roles'));
-        this.set('mmiValues', this.get('controllers.application').get('mmiValues'));
+
+        var mmiValues = this.get('controllers.application').get('mmiValues');
+        mmiValues.removeObject(null);
+        this.set('mmiValues', mmiValues);
+    },
+
+    reset: function() {
+        this.set('statusMessage', null);
     },
 
     firstNameInvalid: null,
