@@ -257,15 +257,24 @@ module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callb
 
 module.exports.getPublicUserstudyById = function (id, callback) {
   mysql.getConnection(function(connection){
-    connection.query('SELECT us.id, ' +
+    connection.query('SELECT us.id,  ' +
       'tutor.username AS tutorEmail, tutor.firstname AS tutorFirstname, tutor.lastname AS tutorLastname, ' +
       'executor.username AS executorEmail, executor.firstname AS executorFirstname, executor.lastname AS executorLastname, ' +
       'us.fromDate, us.untilDate, us.closed, ' +
-      'us.title, us.description, us.link, us.mmi, us.compensation, us.location ' +
+      'us.title, us.description, us.link, us.mmi, us.compensation, us.location, ' +
+      'GROUP_CONCAT(DISTINCT la.title) AS labels, ' +
+      'GROUP_CONCAT(DISTINCT stv.value) AS valuess, ' +
+      'GROUP_CONCAT(DISTINCT tf.title) AS titles ' +
       'FROM userstudies us ' +
       'LEFT JOIN users tutor ON us.tutorId=tutor.id ' +
       'LEFT JOIN users executor ON us.executorId=executor.id ' +
-      'WHERE us.id=? AND us.visible=1 AND us.published=1',
+      'LEFT JOIN studies_labels_rel slr ON us.id=slr.studyId ' +
+      'LEFT JOIN labels la ON la.id=slr.labelId ' +
+      'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
+      'LEFT JOIN templates temp ON temp.id=us.templateId ' +
+      'LEFT JOIN template_fields tf ON tf.templateId=temp.id ' +
+      'WHERE us.id=1 AND us.visible=1 AND us.published=1 ' +
+      'GROUP BY us.id',
       id, function(err,result){
         connection.release();
         callback(err,result);

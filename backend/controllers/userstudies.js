@@ -185,7 +185,25 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
       var userstudy = result[0];
 
       userstudy.closed = !!userstudy.closed;
-      res.json({userstudy: userstudy});
+
+      userstudy.templateKeysToValues = [];
+      var titles = userstudy.titles.split(",").map(function(x){return x;});
+      var values = userstudy.valuess.split(",").map(function(x){return x;});
+      userstudy.labels = userstudy.labels.split(",").map(function(x){return x;});
+
+      for (var i = 0; i < titles.length; i += 1) {
+        userstudy.templateKeysToValues[i] = {};
+        userstudy.templateKeysToValues[i].title = titles[i];
+      }
+
+      for (var j = 0; j < values.length; j += 1) {
+        userstudy.templateKeysToValues[j].value = values[j];
+      }
+
+      delete userstudy.titles;
+      delete userstudy.valuess;
+
+      res.json({studypublic: userstudy});
       return next();
     }
   });
