@@ -21,7 +21,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
                     var successMessage = 'Template \"' + title + '\" wurde erfolgreich gelöscht!';
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
-                    user.rollback();
+                    template.rollback();
                     var failMessage = 'Template \"' + title + '\" konnte nicht gelöscht werden!';
                     that.set('statusMessage', { message: failMessage, isSuccess: false });
                 });
