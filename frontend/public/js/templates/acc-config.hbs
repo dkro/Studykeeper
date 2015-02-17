@@ -1,5 +1,9 @@
 <h2 class="accountConfig__header">Account konfigurieren</h2>
 
+{{#if statusMessage}}
+    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{/if}}
+
 <form class="form-horizontal">
     <div class="form-group">
         <label class="col-sm-2 control-label accountConfig__body__label">Name:</label>
@@ -58,7 +62,3 @@
         </div>
     </div>
 </form>
-
-{{#if statusMessage}}
-    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="accConfig__statusMessage"}}
-{{/if}}

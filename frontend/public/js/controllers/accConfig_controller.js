@@ -23,7 +23,6 @@ StudyManager.AccConfigController = Ember.Controller.extend({
 
             if (this.get('newPasswordConfirm') === null || this.get('newPassword') !== this.get('newPasswordConfirm')) {
                 errorTexts[index] = 'Die Passwörter stimmen nicht überein!';
-                index++;
                 this.set('isNewPasswordConfirmValid', false);
             }
 
@@ -36,17 +35,30 @@ StudyManager.AccConfigController = Ember.Controller.extend({
     },
 
     doPasswordChange: function () {
-        var thisUser = this.get('model');
-        thisUser.set('password', this.get('newPassword'));
-
+        var userId = this.get('model').get('id');
         var that = this;
-        thisUser.save().then(function(response) {
-            that.set('isEditIcon', true);
-            that.set('statusMessage', { message: 'Passwort erfolgreich geändert!', isSuccess: true });
-        }, function(error) {
-            thisUser.rollback();
-            that.set('statusMessage', { message: 'TODO: Password Change failed!', isSuccess: false });
-        });
+
+        var payload = {
+            oldPassword: this.get('oldPassword'),
+            newPassword: this.get('newPassword'),
+            newPasswordConfirmation: this.get('newPasswordConfirm')
+        };
+
+        Ember.$.ajax({
+            url: '/api/users/' + userId + '/changePassword/',
+            type: "POST",
+            data: payload,
+            beforeSend: function(request) {
+                request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)
+            }
+        }).then(
+            function(response) {
+                that.set('isEditIcon', true);
+                that.set('statusMessage', { message: 'Passwort erfolgreich geändert!', isSuccess: true });
+            },
+            function(error) {
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
+            });
     },
 
     reset: function() {
