@@ -152,6 +152,17 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
       return item.get('title');
     });
 
+    var text = '';
+
+    model.studies.forEach(function (study) {
+      var id = study.get('id');
+      var title = study.get('title');
+
+      text += 'ID: ' + id + '   TITLE: ' + title + '  ||||  '
+    });
+
+    console.log(text);
+
     controller.set('model', model);
     controller.set('studiesList', model.studies);
     controller.set('searchTags', transformedTags);
