@@ -273,7 +273,7 @@ module.exports.getPublicUserstudyById = function (id, callback) {
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN templates temp ON temp.id=us.templateId ' +
       'LEFT JOIN template_fields tf ON tf.templateId=temp.id ' +
-      'WHERE us.id=1 AND us.visible=1 AND us.published=1 ' +
+      'WHERE us.id=? AND us.visible=1 AND us.published=1 ' +
       'GROUP BY us.id',
       id, function(err,result){
         connection.release();
