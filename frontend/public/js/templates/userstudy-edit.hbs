@@ -5,10 +5,7 @@
         <button class="btn btn-danger management--single__deleteButton" {{action 'deleteStudy'}}>Studie löschen</button>
     {{/if}}
 
-
-    {{#unless model.study.closed}}
-            <button class="btn btn-primary management--single__confirmPublishButton" {{action 'goToStudyConfirm'}}>Studie abschließen</button>
-    {{/unless}}
+    <button class="btn btn-primary management--single__confirmPublishButton" {{action 'goToStudyConfirm'}}>Studie abschließen</button>
 </div>
 
 {{#if statusMessage}}
