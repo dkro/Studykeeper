@@ -9,17 +9,21 @@
         <div class="data__cell--description">Studientyp: </div>
         <div class="data__cell--value">
             {{#each label in model.labels}}
-                <span class="study__label">{{label.title}}</span>
+                <span class="study__label">{{label}}</span>
             {{/each}}
         </div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
-        <div class="data__cell--value data--person">{{model.executor}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
+        <div class="data__cell--value data--person">
+            {{model.executorFirstname}} {{model.executorLastname}} <span class="glyphicon glyphicon-envelope data--person__mail"></span>
+        </div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Betreuer: </div>
-        <div class="data__cell--value data--person">{{model.tutor}} <span class="glyphicon glyphicon-envelope data--person__mail"></span></div>
+        <div class="data__cell--value data--person">
+            {{model.tutorFirstname}} {{model.tutorLastname}}<span class="glyphicon glyphicon-envelope data--person__mail"></span>
+        </div>
     </div>
     <div class="data__row">
         <div class="data__cell--description">Ort: </div>
@@ -39,16 +43,16 @@
             </div>
         </div>
     </div>
-    {{#each field in fieldNameToValues}}
+    {{#each field in model.templateKeysToValues}}
         <div class="data__row">
             <div class="data__cell--description">{{field.title}}: </div>
             <div class="data__cell--value">{{field.value}}</div>
         </div>
     {{/each}}
     <div class="data__row">
-        <div class="data__cell--description">Doodle: </div>
+        <div class="data__cell--description">Link: </div>
         <div class="data__cell--value">
-            <a target="_blank" {{bind-attr href="model.link"}}>Zum Doodle</a>
+            <a target="_blank" {{bind-attr href="model.link"}}>Zur Studie</a>
         </div>
     </div>
     <div class="data__row">

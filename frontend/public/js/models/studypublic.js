@@ -3,16 +3,19 @@ StudyManager.Studypublic = DS.Model.extend({
     description: DS.attr('string'),
     fromDate: DS.attr('isodate'),
     untilDate: DS.attr('isodate'),
-    executor: DS.attr('string'),
-    tutor: DS.attr('string'),
+    tutorFirstname: DS.attr('string'),
+    tutorLastname: DS.attr('string'),
+    tutorEmail: DS.attr('string'),
+    executorFirstname: DS.attr('string'),
+    executorLastname: DS.attr('string'),
+    executorEmail: DS.attr('string'),
     location: DS.attr('string'),
     link: DS.attr('string'),
     compensation: DS.attr('number'),
     mmi: DS.attr('number'),
     closed: DS.attr('boolean'),
-    labels: DS.hasMany('label', { async: true }),
-    template: DS.belongsTo('template', { async: true }),
-    templateValues: DS.attr('array')
+    labels: DS.attr('array'),
+    templateKeysToValues: DS.attr('array')
 });
 
 StudyManager.Studypublic.FIXTURES = [
@@ -22,16 +25,22 @@ StudyManager.Studypublic.FIXTURES = [
         description: 'This study is totally awesome. I really like it. I loooooooooooooooveeeeee it.',
         fromDate: '20.09.2011',
         untilDate: '21.09.2011',
-        executor: "Max Mustermann",
-        tutor: "Max Mustermann",
+        tutorFirstname: 'Max',
+        tutorLastname: 'Mustermann',
+        tutorEmail: 'mustermann@campus.lmu.de',
+        executorFirstname: 'Max',
+        executorLastname: 'Mustermann',
+        executorEmail: 'mustermann@campus.lmu.de',
         location: 'Hauptgebäude, Raum 045',
         link: 'http://www.google.com',
         compensation: 5,
         mmi: 2,
         closed: true,
-        labels: [1, 2],
-        template: 1,
-        templateValues: ['Studie0_A1_Value', 'Studie0_A2_Value']
+        labels: ['Option A', 'Option B'],
+        templateKeysToValues: [
+            {title: 'A1', value: 'Studie0_A1_Value'},
+            {title: 'A2', value: 'Studie0_A2_Value'}
+        ]
     },
     {
         id: 2,
@@ -39,16 +48,22 @@ StudyManager.Studypublic.FIXTURES = [
         description: 'Short description.',
         fromDate: '20.09.2015',
         untilDate: '21.09.2015',
-        executor: "Max Mustermann",
-        tutor: "Max Mustermann",
+        tutorFirstname: 'Max',
+        tutorLastname: 'Mustermann',
+        tutorEmail: 'mustermann@campus.lmu.de',
+        executorFirstname: 'Max',
+        executorLastname: 'Mustermann',
+        executorEmail: 'mustermann@campus.lmu.de',
         location: 'Hauptgebäude, Raum 045',
         link: 'http://www.google.com',
         compensation: 10,
         mmi: 3,
         closed: false,
-        labels: [2],
-        template: 1,
-        templateValues: ['StudieA_A1_Value', 'StudieA_A2_Value']
+        labels: ['Option B'],
+        templateKeysToValues: [
+            {title: 'A1', value: 'StudieA_A1_Value'},
+            {title: 'A2', value: 'StudieA_A2_Value'}
+        ]
     },
     {
         id: 3,
@@ -58,16 +73,22 @@ StudyManager.Studypublic.FIXTURES = [
         'Description. Description. Description. Description. Description. Description. Description. Description. Description. ',
         fromDate: '10.03.2012',
         untilDate: '21.09.2012',
-        executor: 'Max2 Mustermann2',
-        tutor: 'Max2 Mustermann2',
+        tutorFirstname: 'Max2',
+        tutorLastname: 'Mustermann2',
+        tutorEmail: 'mustermann2@campus.lmu.de',
+        executorFirstname: 'Max2',
+        executorLastname: 'Mustermann2',
+        executorEmail: 'mustermann2@campus.lmu.de',
         location: 'Amalienstraße, Raum 5',
         link: 'http://www.ifi.lmu.de',
         compensation: 5,
         mmi: 1,
         closed: true,
         labels: [],
-        template: 1,
-        templateValues: ['StudieB_A1_Value', 'StudieB_A2_Value']
+        templateKeysToValues: [
+            {title: 'A1', value: 'StudieB_A1_Value'},
+            {title: 'A2', value: 'StudieB_A2_Value'}
+        ]
     },
     {
         id: 4,
@@ -79,16 +100,22 @@ StudyManager.Studypublic.FIXTURES = [
         'TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST',
         fromDate: '02.02.2010',
         untilDate: '15.02.2010',
-        executor: 'Max2 Mustermann2',
-        tutor: 'Max2 Mustermann2',
+        tutorFirstname: 'Max2',
+        tutorLastname: 'Mustermann2',
+        tutorEmail: 'mustermann2@campus.lmu.de',
+        executorFirstname: 'Max2',
+        executorLastname: 'Mustermann2',
+        executorEmail: 'mustermann2@campus.lmu.de',
         location: 'Schellingstraße 3, Raum 012',
         link: 'http://www.lmu.de',
         compensation: 20,
         mmi: 4,
         closed: true,
-        labels: [1, 2, 3],
-        template: 2,
-        templateValues: ['StudieC_B1_Value', 'StudieC_B2_Value']
+        labels: ['Option A', 'Option B', 'Option C'],
+        templateKeysToValues: [
+            {title: 'B1', value: 'StudieC_B1_Value'},
+            {title: 'B2', value: 'StudieC_B2_Value'}
+        ]
     },
     {
         id: 5,
@@ -101,15 +128,21 @@ StudyManager.Studypublic.FIXTURES = [
         'est Lorem ipsum dolor sit amet.',
         fromDate: '08.09.2015',
         untilDate: '27.09.2015',
-        executor: 'Max2 Mustermann2',
-        tutor: 'Max2 Mustermann2',
+        tutorFirstname: 'Max2',
+        tutorLastname: 'Mustermann2',
+        tutorEmail: 'mustermann2@campus.lmu.de',
+        executorFirstname: 'Max2',
+        executorLastname: 'Mustermann2',
+        executorEmail: 'mustermann2@campus.lmu.de',
         location: 'Hauptgebäude, Raum B145',
         link: 'http://www.sueddeutsche.de',
         compensation: 5,
         mmi: 2,
         closed: false,
-        labels: [4],
-        template: 2,
-        templateValues: ['StudieD_B1_Value', 'StudieD_B2_Value']
+        labels: ['Option D'],
+        templateKeysToValues: [
+            {title: 'B1', value: 'StudieD_B1_Value'},
+            {title: 'B2', value: 'StudieD_B2_Value'}
+        ]
     }
 ];
