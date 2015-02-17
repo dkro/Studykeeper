@@ -172,7 +172,8 @@ StudyManager.UserstudyPublicRoute = Ember.Route.extend({
   model: function(params) {
     var that = this;
 
-    return this.store.fetch('studypublic', params.userstudy_id).then(function(response) {
+    return this.store.fetch('studypublic', params.userstudy_id).then(function(study) {
+      return study;
     }, function(error) {
       that.transitionTo('login');
     });
