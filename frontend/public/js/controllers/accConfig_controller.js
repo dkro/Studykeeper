@@ -45,7 +45,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         };
 
         Ember.$.ajax({
-            url: '/api/users/' + userId + '/changePassword/',
+            url: '/api/users/' + userId + '/changePassword',
             type: "POST",
             data: payload,
             beforeSend: function(request) {
