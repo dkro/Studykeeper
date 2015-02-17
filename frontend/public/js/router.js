@@ -117,6 +117,7 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
 
     return this.store.find('user', uId).then(function(user) {
       return Ember.RSVP.hash({
+        allStudies: that.store.find('userstudy'),
         registeredStudies: user.get('registeredFor'),
         createdStudies: user.get('isExecutorFor'),
         mmiPoints: user.get('mmi'),
@@ -147,7 +148,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
   model: function() {
     return Ember.RSVP.hash({
       searchTags: this.store.find('label'),
-      studies: this.store.find('userstudy')
+      studies: this.store.fetch('userstudy')
     });
   },
 
