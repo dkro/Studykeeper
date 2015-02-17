@@ -231,7 +231,7 @@ module.exports.login = function(req, res, next) {
               username: user.username,
               role: user.role,
               token: tokens[0].token,
-              lmuStaff: !!user.lmuStaff
+              collectsMMI: !!user.collectsMMI
               }
             });
             return next();

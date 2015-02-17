@@ -78,7 +78,7 @@ module.exports.getUserByName = function(username, callback) {
 
 module.exports.getUserByNameWithConfirmationData = function(username, callback) {
   mysql.getConnection(function(connection) {
-    connection.query("SELECT u.id, u.username, u.password, r.name AS role, u.lmuStaff, u.mmi, u.firstname, u.lastname, " +
+    connection.query("SELECT u.id, u.username, u.password, r.name AS role, u.lmuStaff, u.collectsMMI, u.mmi, u.firstname, u.lastname, " +
       "uc.confirmed " +
       "FROM users u " +
       "LEFT JOIN roles r ON u.role=r.id " +
