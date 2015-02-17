@@ -152,16 +152,11 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
       return item.get('title');
     });
 
-    var text = '';
-
-    model.studies.forEach(function (study) {
-      var id = study.get('id');
-      var title = study.get('title');
-
-      text += 'ID: ' + id + '   TITLE: ' + title + '  ||||  '
+    // Workaround because of Ember cache
+    var filteredStudies = model.studies.filter(function (study) {
+        return !(study.get('title') === undefined);
     });
 
-    console.log(text);
 
     controller.set('model', model);
     controller.set('studiesList', model.studies);
