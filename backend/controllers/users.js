@@ -358,6 +358,17 @@ module.exports.editUser = function(req, res, next) {
       }
     })
     .then(function(){
+      return new Promise(function(resolve,reject){
+       User.deleteAllTokensForUser(user.id, function(err) {
+         if (err) {
+           reject(err);
+         } else {
+           resolve();
+         }
+       });
+      });
+    })
+    .then(function(){
       User.editUser(user,function(err) {
         if (err){
           if (err.code === "ER_DUP_ENTRY"){

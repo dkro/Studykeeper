@@ -498,6 +498,18 @@ module.exports.deleteToken = function (token, callback) {
   });
 };
 
+module.exports.deleteAllTokensForUser = function (userId, callback) {
+  mysql.getConnection(function(connection) {
+    connection.query("DELETE FROM auth WHERE userId=?",
+      userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      }
+    );
+  });
+};
+
 module.exports.updateToken = function(token, callback) {
   var queryData = {
     token: token,

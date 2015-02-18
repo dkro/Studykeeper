@@ -157,7 +157,7 @@ module.exports.validEditUserReq = function(req){
       if (!Validator.isLength(req.body.user.lastname, 3)) {
         validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
       }
-      if (!Validator.isNumeric(req.body.user.mmi)) {
+      if (!Validator.isFloat(req.body.user.mmi)) {
         validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
       }
       var roleArr = ['participant','executor','tutor'];
