@@ -60,7 +60,7 @@ module.exports.editUserstudy = function(req, res, next) {
     .then(function() {
       UserStudy.editUserStudy(userstudy, function (err) {
         if (err) {
-          res.json(500, {status:'failure', message: err);
+          res.json(500, {status:'failure', message: err});
           return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde geändert.', userstudy: userstudy});
