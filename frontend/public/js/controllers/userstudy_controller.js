@@ -85,8 +85,12 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.determineTemplateFields();
         this.determineMailTos();
 
+        var isTutor = this.get('controllers.application').get('isTutor');
+        this.set('isTutor', isTutor);
         this.set('statusMessage', null);
     },
+
+    isTutor: false,
 
     canEdit: false,
 
