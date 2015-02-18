@@ -380,7 +380,7 @@ module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
           }
 
           if (allowed){
-            resolve(user);
+            resolve(true);
           } else {
             reject('Sie haben keine Rechte diese Nutzerstudie zu editieren. Sie können ' +
             'nur Nutzerstudien editieren die Sie ausführen.');
@@ -388,7 +388,7 @@ module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
         }
       });
     } else if (user.role === "tutor") {
-      resolve(user);
+      resolve(false);
     } else {
       reject("Keine Rechte");
     }

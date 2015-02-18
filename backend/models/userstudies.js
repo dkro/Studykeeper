@@ -76,7 +76,7 @@ module.exports.addUserStudy = function (data, callback) {
   });
 };
 
-module.exports.editUserStudy = function (data, callback) {
+module.exports.editUserStudy = function (data, isExecutor, callback) {
   var queryData = {
     id:data.id, title: data.title, tutorId: data.tutorId, executorId: data.executorId, from: data.fromDate,
     until: data.untilDate, description: data.description, link: data.link,
@@ -90,15 +90,30 @@ module.exports.editUserStudy = function (data, callback) {
         connection.release();
         throw err;
       }
+
+      var query = "";
+      var queryArr = [];
+      if (isExecutor) {
+        query = 'UPDATE userstudies ' +
+        'SET fromDate=?, untilDate=?, title=?, description=?, link=?, ' +
+        'space=?, mmi=?, compensation=?,location=?, templateId=? ' +
+        'WHERE id=?;';
+        queryArr = [ queryData.from, queryData.until, queryData.title,queryData.description,
+          queryData.link, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
+          queryData.templateId, queryData.id];
+      } else {
+        query = 'UPDATE userstudies ' +
+        'SET tutorId=?,executorId=?, fromDate=?, untilDate=?, title=?, description=?, link=?, ' +
+        'space=?, mmi=?, compensation=?,location=?, templateId=? ' +
+        'WHERE id=?;';
+        queryArr = [queryData.tutorId, queryData.executorId,queryData.from, queryData.until, queryData.title,queryData.description,
+          queryData.link, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
+          queryData.templateId, queryData.id];
+      }
       // Create the userstudy in userstudies Table
       new Promise(function(resolve,reject){
-        connection.query('UPDATE userstudies ' +
-          'SET tutorId=?,executorId=?, fromDate=?, untilDate=?, title=?, description=?, link=?, ' +
-          'space=?, mmi=?, compensation=?,location=?, templateId=? ' +
-          'WHERE id=?;',
-          [queryData.tutorId, queryData.executorId, queryData.from, queryData.until, queryData.title,queryData.description,
-            queryData.link, queryData.space, queryData.mmi,queryData.compensation, queryData.location,
-            queryData.templateId, queryData.id],
+        connection.query(query,
+          queryArr,
           function(err){
             if (err) {
               reject(err);

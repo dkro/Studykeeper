@@ -4,7 +4,7 @@ var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
 var lmuStaff = function(req) {
-  return (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0);
+  return (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0 || req.body.user.username.indexOf("@ifi.lmu.de") >= 0);
 };
 
 module.exports.validSignupReq = function(req){
@@ -33,7 +33,7 @@ module.exports.validSignupReq = function(req){
       validationErrors.push("MMI ungültig. Boolean erwartet.");
     }
     if (!lmuStaff(req) && req.body.user.mmi === "true") {
-      validationErrors.push("Nur Nutzer mit @campus.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln.");
+      validationErrors.push("Nur Nutzer mit @campus.lmu.de, @ifi.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln.");
     }
     if (validationErrors.length > 0) {
       reject(validationErrors.join(' '));
@@ -110,11 +110,11 @@ module.exports.validCreateUserReq = function(req){
       var roleArr2 = ['executor','tutor'];
       if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
         validationErrors.push('Dem Nutzer kann nicht die Rolle Tutor oder ausführender Student zugewiesen werden. Nur Nutzer mit ' +
-        '\"@cip.ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können diese Rollen besitzen.');
+        '\"@cip.ifi.lmu.de\", \"@ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können diese Rollen besitzen.');
       }
       if (!lmuStaff(req) && req.body.user.collectsMMI === true) {
         validationErrors.push('Der Nutzer kann keine MMI Punkte sammeln. Nur Nutzer mit ' +
-        '\"@cip.ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können MMI Punkte sammeln.');
+        '\"@cip.ifi.lmu.de\", \"@ifi.lmu.de\" oder \"@campus.lmu.de\" Email Adressen können MMI Punkte sammeln.');
       }
     }
 
@@ -167,11 +167,11 @@ module.exports.validEditUserReq = function(req){
       var roleArr2 = ['executor','tutor'];
       if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
         validationErrors.push('Der Nutzer kann kein executor oder tutor sein. Nur Nutzer mit ' +
-        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können diese Rollen beinhalten.');
+        '@cip.ifi.lmu.de, @ifi.lmu.de oder @campus.lmu.de email Adressen können diese Rollen beinhalten.');
       }
       if (!lmuStaff(req) && req.body.user.collectsMMI === true) {
         validationErrors.push('Der Nutzer kann keine MMI Punkte sammeln. Nur Nutzer mit ' +
-        '@cip.ifi.lmu.de oder @campus.lmu.de email Adressen können MMI Punkte sammeln.');
+        '@cip.ifi.lmu.de, @ifi.lmu.de  oder @campus.lmu.de email Adressen können MMI Punkte sammeln.');
       }
     }
 

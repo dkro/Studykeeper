@@ -40,6 +40,7 @@ module.exports.createUserstudy = function(req, res, next) {
 
 module.exports.editUserstudy = function(req, res, next) {
   var userstudy;
+  var isExecutor = false;
   UserstudyPromise.validFullUserstudyReq(req)
     .then(function(result){
       userstudy = result;
@@ -49,7 +50,8 @@ module.exports.editUserstudy = function(req, res, next) {
     .then(function(user){
       return UserstudyPromise.userIsExecutorForStudyOrTutor(user,userstudy.id);
     })
-    .then(function(){
+    .then(function(executorBoolean){
+      isExecutor = executorBoolean;
       var promises = [UserstudyPromise.userstudyExists(userstudy),
         UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
         UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
@@ -58,7 +60,7 @@ module.exports.editUserstudy = function(req, res, next) {
       return Promise.all(promises);
     })
     .then(function() {
-      UserStudy.editUserStudy(userstudy, function (err) {
+      UserStudy.editUserStudy(userstudy, isExecutor, function (err) {
         if (err) {
           res.json(500, {status:'failure', message: err});
           return next();
