@@ -35,10 +35,10 @@ StudyManager.TemplateCreationController = Ember.ArrayController.extend({
 
     reset: function() {
         this.set('statusMessage', null);
-        this.set('fields', null);
+        this.set('fields', []);
     },
 
     statusMessage: null,
 
-    fields: null
+    fields: []
 });

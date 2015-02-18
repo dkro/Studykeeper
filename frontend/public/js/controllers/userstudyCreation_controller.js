@@ -59,6 +59,22 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
+        this.set('title', null);
+        this.set('fromDate', null);
+        this.set('toDate', null);
+        this.set('location', null);
+        this.set('description', null);
+        this.set('link', null);
+        this.set('capacity', 0);
+        this.set('mmi', 0);
+        this.set('amazon', 0);
+        this.set('executor', null);
+        this.set('tutor', null);
+        this.set('selectedLabels', []);
+        this.set('selectedNews', []);
+        this.set('registeredUsers', []);
+        this.set('template', null);
+        this.set('requiredStudies', []);
     },
 
     statusMessage: null,
