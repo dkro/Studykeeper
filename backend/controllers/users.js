@@ -385,10 +385,10 @@ var sendUserWelcomeMail = function(email,password,callback) {
     to: email,
     subject: 'Es wurde ein Account für Sie erstellt.',
     html: "Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen " +
-    "Ihrer Email Adresse bekommen. Nachdem Sie Ihr Email Adresse bestätigt haben können Sie sich mit Ihrer Email-Adresse " +
-    "und diesem Passwort: " + password + " bei der folgenden URL einloggen " +
+    "Ihrer Email Adresse bekommen. Nachdem Sie Ihre Email Adresse bestätigt haben, können Sie sich mit dieser " +
+    "und diesem Passwort: " + password + " bei der folgenden URL anmelden: " +
     "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001\">http://studykeeper.medien.ifi.lmu.de:10001</a> " +
-    "Das Passwort können Sie jederzeit unter der Account Konfiguration ändern."};
+    " Das Passwort können Sie jederzeit in den Account Einstellungen ändern."};
   Mail.sendMail(mail,function(err,result){
     if (err) {
       callback(err);

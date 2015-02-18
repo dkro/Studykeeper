@@ -28,8 +28,8 @@ module.exports.validFullUserstudyReq = function(req){
       if (!req.body.userstudy.description || !Validator.isLength(req.body.userstudy.description, 3)) {
         validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
       }
-      if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link)) {
-        validationErrors.push("DoodleLink ungültig. URL Format erwartet: " + req.body.userstudy.doodleLink);
+      if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link, {require_protocol: true})) {
+        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet: " + req.body.userstudy.doodleLink);
       }
       if (!req.body.userstudy.hasOwnProperty("mmi") || !Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
