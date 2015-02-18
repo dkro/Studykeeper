@@ -24,7 +24,7 @@ module.exports.createUserstudy = function(req, res, next) {
     userstudy.creatorId = results[0].id;
     UserStudy.addUserStudy(userstudy, function (err,userstudyId) {
       if (err) {
-        res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
+        res.json(500, {status: 'failure', message: err});
         return next();
       } else {
         userstudy.id = userstudyId;
@@ -60,7 +60,7 @@ module.exports.editUserstudy = function(req, res, next) {
     .then(function() {
       UserStudy.editUserStudy(userstudy, function (err) {
         if (err) {
-          res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
+          res.json(500, {status:'failure', message: err);
           return next();
         } else {
           res.json({status: 'success', message: 'Die Nutzerstudie wurde geändert.', userstudy: userstudy});

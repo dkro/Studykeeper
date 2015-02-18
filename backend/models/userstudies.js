@@ -67,7 +67,7 @@ module.exports.addUserStudy = function (data, callback) {
           connection.rollback(function () {
             connection.release();
             if(err.code === "ER_DUP_ENTRY") {
-              err = {message: "Userstudy title already taken."};
+              err = "Es gibt bereits eine Studie mit diesem Titel. Bitte wählen Sie einen anderen.";
             }
             callback(err);
           });
@@ -147,7 +147,7 @@ module.exports.editUserStudy = function (data, callback) {
           connection.rollback(function () {
             connection.release();
             if(err.code === "ER_DUP_ENTRY") {
-              err = {message: "Userstudy title already taken."};
+              err = "Es gibt bereits eine Studie mit diesem Titel. Bitte wählen Sie einen anderen.";
             }
             callback(err);
             throw err;

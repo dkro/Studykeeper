@@ -29,7 +29,7 @@ module.exports.validFullUserstudyReq = function(req){
         validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
       }
       if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link, {require_protocol: true})) {
-        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet: " + req.body.userstudy.doodleLink);
+        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet: " + req.body.userstudy.link);
       }
       if (!req.body.userstudy.hasOwnProperty("mmi") || !Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
