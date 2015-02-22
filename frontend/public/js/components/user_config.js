@@ -5,6 +5,9 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
         },
 
         saveClick: function() {
+            this.set('isLoading', true);
+            this.set('createUpdateDataWasValid', true);
+
             var params = {
                 usernameNew: this.get('userName'),
                 firstnameNew: this.get('firstName'),
@@ -18,6 +21,9 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
 
             if (this.isValid(params)) {
                 this.sendAction('save', params);
+            } else {
+                this.set('isLoading', false);
+                this.set('createUpdateDataWasValid', false);
             }
         }
     },
@@ -56,6 +62,10 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
 
 
     isUserCreation: false,
+
+    isLoading: false,
+
+    createUpdateDataWasValid: true,
 
     firstName: null,
 

@@ -18,11 +18,15 @@ StudyManager.UserCreationController = Ember.Controller.extend({
             var name = newUser.get('username');
 
             newUser.save().then(function(response) {
+                that.set('isLoading', false);
+                that.set('createDataWasValid', true);
                 that.transitionToRoute('users').then(function () {
                     that.get('controllers.users').set('statusMessage', { message: 'Nutzer \"' + name + '\" erstellt!', isSuccess: true });
                 });
             }, function(error) {
                 newUser.deleteRecord();
+                that.set('isLoading', false);
+                that.set('createDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
@@ -43,6 +47,8 @@ StudyManager.UserCreationController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
+        this.set('isLoading', false);
+        this.set('createDataWasValid', true);
     },
 
     firstNameInvalid: null,
@@ -55,5 +61,9 @@ StudyManager.UserCreationController = Ember.Controller.extend({
 
     mmiValues: null,
 
-    roles: null
+    roles: null,
+
+    isLoading: false,
+
+    createDataWasValid: true
 });

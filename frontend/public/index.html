@@ -132,12 +132,16 @@
                 {{/if}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" class="btn btn-primary component__config__saveButton" {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'saveClick'}}>
+                        {{#if isLoading}}
+                            {{loading-status}}
+                        {{else}}
                             {{#if isUserCreation}}
                                 Nutzer erstellen
                             {{else}}
                                 Änderungen speichern
                             {{/if}}
+                        {{/if}}
                         </button>
                         <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>Abbrechen</button>
                     </div>

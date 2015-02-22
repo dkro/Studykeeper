@@ -383,5 +383,19 @@
 
 .loading--login {
     font-size: 2em;
-    color: #000000;
+    color: gray;
+}
+
+.loading--delete {
+    color: #ffffff;
+}
+
+.loading--table {
+    color: gray;
+    font-size: 10em;
+}
+
+.loading__wrapper--table {
+    text-align: center;
+    vertical-align: middle;
 }

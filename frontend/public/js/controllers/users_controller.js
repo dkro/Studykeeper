@@ -3,6 +3,7 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     actions: {
         showUserConfig: function(user) {
+            this.set('isTableLoading', true);
             this.transitionToRoute('user', user);
         },
 
@@ -16,12 +17,15 @@ StudyManager.UsersController = Ember.Controller.extend({
             var that = this;
 
             if (confirm('Wollen Sie den User \"' + name + '\" wirklich löschen?')) {
+                this.set('isTableLoading', true);
                 user.deleteRecord();
                 user.save().then(function(response) {
+                    that.set('isTableLoading', false);
                     var successMessage = 'Nutzer \"' + name + '\" wurde erfolgreich gelöscht!';
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     user.rollback();
+                    that.set('isTableLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -53,7 +57,10 @@ StudyManager.UsersController = Ember.Controller.extend({
         this.set('userNameFilter', null);
         this.set('mmiFilter', null);
         this.set('roleFilter', null);
+        this.set('isTableLoading', false);
     },
+
+    isTableLoading: false,
 
     statusMessage: null,
 

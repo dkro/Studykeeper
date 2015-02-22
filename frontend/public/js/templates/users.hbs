@@ -41,21 +41,29 @@
             </tr>
         </thead>
         <tbody>
-            {{#if usersList}}
-                {{#each user in usersList}}
-                    <tr class="management--all__row" {{action 'showUserConfig' user}}>
-                        <td>{{user.role}}</td>
-                        <td>{{user.username}}</td>
-                        <td>{{user.firstname}}</td>
-                        <td>{{user.lastname}}</td>
-                        <td>{{user.mmi}}</td>
-                        <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteUser' user}}></span></td>
-                    </tr>
-                {{/each}}
-            {{else}}
+            {{#if isTableLoading}}
                 <tr>
-                    <td class="management--all__emptyFilter" colspan="6">- Keine Ergebnisse -</td>
+                    <td class="loading__wrapper--table" colspan="6">
+                        {{loading-status additionalClassNames="loading--table"}}
+                    </td>
                 </tr>
+            {{else}}
+                {{#if usersList}}
+                    {{#each user in usersList}}
+                        <tr class="management--all__row" {{action 'showUserConfig' user}}>
+                            <td>{{user.role}}</td>
+                            <td>{{user.username}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>{{user.mmi}}</td>
+                            <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteUser' user}}></span></td>
+                        </tr>
+                    {{/each}}
+                {{else}}
+                    <tr>
+                        <td class="management--all__emptyFilter" colspan="6">- Keine Ergebnisse -</td>
+                    </tr>
+                {{/if}}
             {{/if}}
         </tbody>
     </table>

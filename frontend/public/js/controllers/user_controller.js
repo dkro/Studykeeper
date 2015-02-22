@@ -3,6 +3,7 @@ StudyManager.UserController = Ember.Controller.extend({
 
     actions: {
         deleteUser: function() {
+            this.set('isDeleteLoading', true);
             this.set('statusMessage', null);
             var thisUser = this.get('model');
             var that = this;
@@ -12,12 +13,14 @@ StudyManager.UserController = Ember.Controller.extend({
                 thisUser.deleteRecord();
 
                 thisUser.save().then(function(response) {
+                    that.set('isDeleteLoading', false);
                     that.transitionToRoute('users').then(function () {
                         var aMessage = 'Nutzer \"' + name + '\" erfolgreich gelöscht!';
                         that.get('controllers.users').set('statusMessage', { message: aMessage, isSuccess: true });
                     });
                 }, function(error) {
                     thisUser.rollback();
+                    that.set('isDeleteLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -37,12 +40,16 @@ StudyManager.UserController = Ember.Controller.extend({
             var that = this;
             var name = thisUser.get('username');
             thisUser.save().then(function(response) {
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', true);
                 that.transitionToRoute('users').then(function () {
                     var aMessage = 'Nutzer \"' + name + '\" erfolgreich geändert!';
                     that.get('controllers.users').set('statusMessage', { message: aMessage, isSuccess: true });
                 });
             }, function(error) {
                 thisUser.rollback();
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
@@ -60,7 +67,16 @@ StudyManager.UserController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
+        this.set('isUpdateLoading', false);
+        this.set('isDeleteLoading', false);
+        this.set('updateDataWasValid', true);
     },
+
+    updateDataWasValid: true,
+
+    isUpdateLoading: false,
+
+    isDeleteLoading: false,
 
     statusMessage: null,
 
