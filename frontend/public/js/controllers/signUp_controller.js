@@ -2,6 +2,9 @@ StudyManager.SignupController = Ember.Controller.extend({
     actions: {
         validateAllAction: function() {
             this.set('isDataNotValid', false);
+            this.set('isLoading', true);
+            this.set('signUpDataWasValid', true);
+
 
             this.validateFirstName();
             this.validateLastName();
@@ -11,6 +14,9 @@ StudyManager.SignupController = Ember.Controller.extend({
 
             if (!this.get('isDataNotValid')) {
                 this.doSignUp();
+            } else {
+                this.set('isLoading', false);
+                this.set('signUpDataWasValid', false);
             }
         },
 
@@ -45,6 +51,8 @@ StudyManager.SignupController = Ember.Controller.extend({
         this.set('isDataNotValid', false);
         this.set('signUpSuccessful', false);
         this.set('statusMessage', null);
+        this.set('isLoading', false);
+        this.set('signUpDataWasValid', true);
 
         this.set('firstName', '');
         this.set('firstNameValidationClass', '');
@@ -87,15 +95,18 @@ StudyManager.SignupController = Ember.Controller.extend({
 
         var that = this;
 
-        Ember.$.post('/api/users/signup', userData).then(function(response) {
+        Ember.$.post('http://localhost:10001/api/users/signup', userData).then(function(response) {
+            that.set('isLoading', false);
             that.set('signUpSuccessful', true);
         }, function(error) {
+            that.set('isLoading', false);
+            that.set('signUpDataWasValid', false);
             that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false })
         });
     },
 
     validateFirstName: function() {
-        if (Ember.empty(this.firstName)) {
+        if (Ember.empty(this.get('firstName'))) {
             this.set('firstNameHelpText', 'Bitte geben Sie einen Vornamen an!');
             this.set('firstNameValidationClass', 'has-error');
             this.set('isDataNotValid', true);
@@ -106,7 +117,7 @@ StudyManager.SignupController = Ember.Controller.extend({
     }.observes('firstName'),
 
     validateLastName: function() {
-        if (Ember.empty(this.lastName)) {
+        if (Ember.empty(this.get('lastName'))) {
             this.set('lastNameHelpText', 'Bitte geben Sie einen Nachnamen an!');
             this.set('lastNameValidationClass', 'has-error');
             this.set('isDataNotValid', true);
@@ -117,7 +128,7 @@ StudyManager.SignupController = Ember.Controller.extend({
     }.observes('lastName'),
 
     validateEmail: function() {
-        if (Ember.empty(this.username) || !this.isRegularEmail(this.username)) {
+        if (Ember.empty(this.get('username')) || !this.isRegularEmail(this.get('username'))) {
             this.set('emailHelpText', 'Bitte geben Sie eine Email-Adresse an!');
             this.set('emailValidationClass', 'has-error');
             this.set('isDataNotValid', true);
@@ -133,7 +144,7 @@ StudyManager.SignupController = Ember.Controller.extend({
     },
 
     validatePassword: function() {
-        if (this.password.length < 7) {
+        if (this.get('password').length < 7) {
             this.set('passwordHelpText', 'Das Passwort muss mindestens 7 Zeichen enthalten!');
             this.set('passwordValidationClass', 'has-error');
             this.set('isDataNotValid', true);
@@ -144,11 +155,11 @@ StudyManager.SignupController = Ember.Controller.extend({
     }.observes('password'),
 
     validatePasswordConfirm: function() {
-        if (this.passwordConfirm.length === 0) {
+        if (this.get('passwordConfirm').length === 0) {
             this.set('passwordConfirmHelpText', 'Das Passwort muss mindestens 7 Zeichen enthalten!');
             this.set('passwordConfirmValidationClass', 'has-error');
             this.set('isDataNotValid', true);
-        } else if (this.password !== this.passwordConfirm) {
+        } else if (this.get('password') !== this.get('passwordConfirm')) {
             this.set('passwordConfirmHelpText', 'Die Passwörter stimmen nicht überein!');
             this.set('passwordConfirmValidationClass', 'has-error');
             this.set('isDataNotValid', true);
