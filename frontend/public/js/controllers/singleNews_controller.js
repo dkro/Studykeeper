@@ -3,6 +3,7 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
     actions: {
         deleteNews: function() {
+            this.set('isDeleteLoading', true);
             this.set('statusMessage', null);
             var thisNews = this.get('model');
             var that = this;
@@ -12,12 +13,14 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
                 thisNews.deleteRecord();
 
                 thisNews.save().then(function(response) {
+                    that.set('isDeleteLoading', false);
                     that.transitionToRoute('news').then(function () {
                         var aMessage = 'News \"' + name + '\" erfolgreich gelöscht!';
                         that.get('controllers.news').set('statusMessage', { message: aMessage, isSuccess: true });
                     });
                 }, function(error) {
                     thisNews.rollback();
+                    that.set('isDeleteLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -34,12 +37,16 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
             var that = this;
             var name = thisNews.get('title');
             thisNews.save().then(function(response) {
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', true);
                 that.transitionToRoute('news').then(function () {
                     var aMessage = 'News \"' + name + '\" erfolgreich geändert!';
                     that.get('controllers.news').set('statusMessage', { message: aMessage, isSuccess: true });
                 });
             }, function(error) {
                 thisNews.rollback();
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
@@ -51,7 +58,16 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
+        this.set('isUpdateLoading', false);
+        this.set('isDeleteLoading', false);
+        this.set('updateDataWasValid', true);
     },
+
+    updateDataWasValid: true,
+
+    isUpdateLoading: false,
+
+    isDeleteLoading: false,
 
     statusMessage: null,
 

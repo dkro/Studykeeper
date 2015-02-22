@@ -1,10 +1,17 @@
 <h2 class="management--single__heading">News bearbeiten</h2>
 
-<button class="btn btn-danger management--single__deleteButton" {{action 'deleteNews'}}>News löschen</button>
+<button class="btn btn-danger management--single__deleteButton" {{bind-attr disabled=isDeleteLoading}} {{action 'deleteNews'}}>
+    {{#if isDeleteLoading}}
+        {{loading-status additionalClassNames="loading--delete"}}
+    {{else}}
+        News löschen
+    {{/if}}
+</button>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
 
-{{news-config isNewsCreation=false title=title date=date description=description link=link save="updateNews" cancel="cancelView"}}
+{{news-config isNewsCreation=false title=title date=date description=description link=link
+              isSaveLoading=isUpdateLoading createUpdateDataWasValid=updateDataWasValid save="updateNews" cancel="cancelView"}}

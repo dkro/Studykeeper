@@ -15,11 +15,15 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
             var name = newNews.get('title');
 
             newNews.save().then(function(response) {
+                that.set('isLoading', false);
+                that.set('createDataWasValid', true);
                 that.transitionToRoute('news').then(function () {
                     that.get('controllers.news').set('statusMessage', { message: 'News \"' + name + '\" erstellt!', isSuccess: true });
                 });
             }, function(error) {
                 newNews.deleteRecord();
+                that.set('isLoading', false);
+                that.set('createDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
@@ -35,6 +39,8 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
         this.set('date', null);
         this.set('description', null);
         this.set('link', null);
+        this.set('isLoading', false);
+        this.set('createDataWasValid', true);
     },
 
     statusMessage: null,
@@ -45,5 +51,9 @@ StudyManager.NewsCreationController = Ember.Controller.extend({
 
     description: null,
 
-    link: null
+    link: null,
+
+    isLoading: false,
+
+    createDataWasValid: true
 });

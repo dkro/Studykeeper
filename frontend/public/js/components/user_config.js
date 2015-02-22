@@ -1,11 +1,12 @@
 StudyManager.UserConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {
+            this.set('isCancelLoading', true);
             this.sendAction('cancel');
         },
 
         saveClick: function() {
-            this.set('isLoading', true);
+            this.set('isSaveLoading', true);
             this.set('createUpdateDataWasValid', true);
 
             var params = {
@@ -22,7 +23,7 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
             if (this.isValid(params)) {
                 this.sendAction('save', params);
             } else {
-                this.set('isLoading', false);
+                this.set('isSaveLoading', false);
                 this.set('createUpdateDataWasValid', false);
             }
         }
@@ -63,7 +64,9 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
 
     isUserCreation: false,
 
-    isLoading: false,
+    isSaveLoading: false,
+
+    isCancelLoading: false,
 
     createUpdateDataWasValid: true,
 

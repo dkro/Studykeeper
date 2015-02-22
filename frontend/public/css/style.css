@@ -383,11 +383,32 @@
 
 .loading--login {
     font-size: 2em;
-    color: gray;
+    color: black;
+}
+
+.loading--passwordRecovery {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    font-size: 1.2em;
+}
+
+.loading--signUp {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    font-size: 1.5em;
+}
+
+.loading--accConfig {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    color: black;
 }
 
 .loading--delete {
     color: #ffffff;
+    margin-left: 2em;
+    margin-right: 2em;
+    font-size: 1.2em;
 }
 
 .loading--table {
@@ -398,4 +419,17 @@
 .loading__wrapper--table {
     text-align: center;
     vertical-align: middle;
+}
+
+.loading__config--save {
+    margin-left: 3em;
+    margin-right: 3em;
+    color: white;
+    font-size: 1.2em;
+}
+
+.loading__config--cancel {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    color: black;
 }

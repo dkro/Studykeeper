@@ -3,6 +3,7 @@ StudyManager.NewsController = Ember.Controller.extend({
 
     actions: {
         showNewsConfig: function(news) {
+            this.set('isTableLoading', true);
             this.transitionToRoute('single-news', news);
         },
 
@@ -16,12 +17,15 @@ StudyManager.NewsController = Ember.Controller.extend({
             var that = this;
 
             if (confirm('Wollen Sie die News \"' + title + '\" wirklich löschen?')) {
+                this.set('isTableLoading', true);
                 news.deleteRecord();
                 news.save().then(function(response) {
+                    that.set('isTableLoading', false);
                     var successMessage = 'News \"' + title + '\" wurde erfolgreich gelöscht!';
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     news.rollback();
+                    that.set('isTableLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -41,7 +45,10 @@ StudyManager.NewsController = Ember.Controller.extend({
         this.set('titleFilter', null);
         this.set('selectedDateFilter', null);
         this.set('isLoading', false);
+        this.set('isTableLoading', false);
     },
+
+    isTableLoading: false,
 
     statusMessage: null,
 

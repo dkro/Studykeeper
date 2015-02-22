@@ -1,10 +1,14 @@
 StudyManager.NewsConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {
+            this.set('isCancelLoading', true);
             this.sendAction('cancel');
         },
 
         saveClick: function() {
+            this.set('isSaveLoading', true);
+            this.set('createUpdateDataWasValid', true);
+
             var params = {
                 titleNew: this.get('title'),
                 dateNew: this.get('date'),
@@ -16,6 +20,9 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
 
             if (this.isValid(params)) {
                 this.sendAction('save', params);
+            } else {
+                this.set('isSaveLoading', true);
+                this.set('createUpdateDataWasValid', false);
             }
         }
     },
@@ -55,6 +62,12 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
 
 
     isNewsCreation: false,
+
+    isSaveLoading: false,
+
+    isCancelLoading: false,
+
+    createUpdateDataWasValid: true,
 
     title: null,
 
