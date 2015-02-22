@@ -12,7 +12,7 @@
 
     <button {{bind-attr class=":btn :login__button loginDataWasValid:btn-default:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'login'}}>
         {{#if isLoading}}
-            <span class="fa fa-spinner fa-pulse loading--login"></span>
+            {{loading-status additionalClassNames="loading--login"}}
         {{else}}
             Login
         {{/if}}

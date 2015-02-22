@@ -63,7 +63,7 @@
 
         <button {{bind-attr class=":btn :signUp__button signUpDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validateAllAction'}}>
             {{#if isLoading}}
-                <span class="fa fa-spinner fa-pulse loading--login"></span>
+                {{loading-status additionalClassNames="loading--login"}}
             {{else}}
                 Account anlegen
             {{/if}}
