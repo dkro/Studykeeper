@@ -2,7 +2,7 @@
     <form role="form">
         <div class="form-group">
             <label for="emailLoginInput">Email</label>
-            {{input value=username type="email" id="emailLoginInput" placeholder="abc@campus.lmu.de" classNames="form-control" action="login"}}
+            {{input value=username type="email" id="emailLoginInput" placeholder="user@campus.lmu.de" classNames="form-control" action="login"}}
         </div>
         <div class="form-group">
             <label for="passwordLoginInput">Password</label>
@@ -10,7 +10,13 @@
         </div>
     </form>
 
-    <button class="btn btn-default login__button" {{action 'login'}}>Login</button>
+    <button {{bind-attr class=":btn :login__button loginDataWasValid:btn-default:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'login'}}>
+        {{#if isLoading}}
+            <span class="fa fa-spinner fa-pulse loading--login"></span>
+        {{else}}
+            Login
+        {{/if}}
+    </button>
 
     {{#if statusMessage}}
         {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="login__alert"}}

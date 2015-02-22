@@ -4,6 +4,8 @@ StudyManager.LoginController = Ember.Controller.extend({
     actions: {
         login: function() {
             // DEFAULT
+            this.set('isLoading', true);
+            this.set('loginDataWasValid', true);
 
             var userData = this.getProperties('username', 'password');
             var that = this;
@@ -16,8 +18,11 @@ StudyManager.LoginController = Ember.Controller.extend({
                 that.get('controllers.application').set('userRole', response.user.role);
                 that.get('controllers.application').set('isLoggedIn', true);
 
+                that.set('isLoading', false);
                 that.transitionToRoute('dashboard');
             }, function(error) {
+                    that.set('isLoading', false);
+                    that.set('loginDataWasValid', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
 /*
@@ -66,9 +71,15 @@ StudyManager.LoginController = Ember.Controller.extend({
         this.setProperties({
             statusMessage: '',
             username: '',
-            password: ''
+            password: '',
+            isLoading: false,
+            loginDataWasValid: true
         });
     },
 
-    statusMessage: null
+    statusMessage: null,
+
+    isLoading: false,
+
+    loginDataWasValid: true
 });

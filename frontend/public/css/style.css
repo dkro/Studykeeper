@@ -380,3 +380,8 @@
     float: right;
     margin-bottom: 2em !important;
 }
+
+.loading--login {
+    font-size: 2em;
+    color: #000000;
+}
