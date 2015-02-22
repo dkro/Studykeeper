@@ -5,6 +5,8 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         },
 
         validatePasswordChange: function() {
+            this.set('isLoading', true);
+            this.set('savingDataWasValid', true);
             this.resetValidation();
             var errorTexts = [];
             var index = 0;
@@ -30,6 +32,9 @@ StudyManager.AccConfigController = Ember.Controller.extend({
 
             if (Ember.empty(this.get('passwordValidationMessages'))) {
                 this.doPasswordChange();
+            } else {
+                this.set('isLoading', false);
+                this.set('savingDataWasValid', false);
             }
         }
     },
@@ -46,7 +51,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         };
 
         Ember.$.ajax({
-            url: '/api/users/' + userId + '/changePassword',
+            url: 'http://localhost:10001/api/users/' + userId + '/changePassword',
             type: "POST",
             data: payload,
             beforeSend: function(request) {
@@ -54,10 +59,17 @@ StudyManager.AccConfigController = Ember.Controller.extend({
             }
         }).then(
             function(response) {
+                that.set('isLoading', false);
+                that.set('savingDataWasValid', true);
+                that.set('oldPassword', null);
+                that.set('newPassword', null);
+                that.set('newPasswordConfirm', null);
                 that.set('isEditIcon', true);
                 that.set('statusMessage', { message: 'Passwort erfolgreich geändert!', isSuccess: true });
             },
             function(error) {
+                that.set('isLoading', false);
+                that.set('savingDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
     },
@@ -70,6 +82,8 @@ StudyManager.AccConfigController = Ember.Controller.extend({
         this.set('newPassword', null);
         this.set('newPasswordConfirm', null);
         this.set('statusMessage', null);
+        this.set('savingDataWasValid', true);
+        this.set('isLoading', false);
         this.resetValidation();
     },
 
