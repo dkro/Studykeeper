@@ -3,6 +3,7 @@ StudyManager.DashboardController = Ember.Controller.extend({
 
     actions: {
         displayStudies: function() {
+            this.set('isLoading', true);
             this.transitionToRoute('userstudies');
         },
 
@@ -12,10 +13,14 @@ StudyManager.DashboardController = Ember.Controller.extend({
     },
 
     determineInitialProperties: function() {
+        this.set('isLoading', false);
+
         var isTutor = this.get('controllers.application').get('isTutor');
 
         this.set('isTutor', isTutor);
     },
+
+    isLoading: false,
 
     isTutor: false,
 

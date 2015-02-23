@@ -1,5 +1,11 @@
 <div>
-    <button type="button" class="btn btn-primary btn-lg dashboard__studiesButton" {{action 'displayStudies'}}>Studiensuche</button>
+    <button type="button" class="btn btn-primary btn-lg" {{bind-attr disabled=isLoading}} {{action 'displayStudies'}}>
+        {{#if isLoading}}
+            {{loading-status additionalClassNames="loading__studySearch--dashboard"}}
+        {{else}}
+            Studiensuche
+        {{/if}}
+    </button>
 
     {{#if collectsMMI}}
         <div class="dashboard__mmiPoints">

@@ -433,3 +433,10 @@
     margin-right: 1.5em;
     color: black;
 }
+
+.loading__studySearch--dashboard {
+    margin-left: 2em;
+    margin-right: 2em;
+    color: white;
+    font-size: 1.3em;
+}
