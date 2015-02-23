@@ -1,10 +1,14 @@
 StudyManager.StudyConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {
+            this.set('isCancelLoading', true);
             this.sendAction('cancel');
         },
 
         saveClick: function() {
+            this.set('isSaveLoading', true);
+            this.set('createUpdateDataWasValid', true);
+
             var values = [];
 
             this.get('templateFieldsToValue').forEach(function(item, index) {
@@ -28,6 +32,9 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
 
             if (this.isValid(params)) {
                 this.sendAction('save', params);
+            } else {
+                this.set('isSaveLoading', false);
+                this.set('createUpdateDataWasValid', false);
             }
         }
     },
@@ -128,6 +135,12 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
     isValidState: true,
 
     isStudyCreation: false,
+
+    isSaveLoading: false,
+
+    isCancelLoading: false,
+
+    createUpdateDataWasValid: true,
 
     isTutorUser: false,
 

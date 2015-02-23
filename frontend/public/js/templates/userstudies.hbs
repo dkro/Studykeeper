@@ -57,25 +57,33 @@
             </tr>
         </thead>
         <tbody>
-            {{#if studiesList}}
-                {{#each study in studiesList}}
-                    <tr {{bind-attr class=":studies__row study.closed:studies__row--expired:studies__row--notExpired"}} {{action 'showStudyConfig' study}}>
-                        <td>{{study.fromDate}}</td>
-                        <td>{{study.untilDate}}</td>
-                        <td class="studies__column--name">{{study.title}}</td>
-                        <td class="studies__column--location">{{study.location}}</td>
-                        <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
-                        <td class="studies__column--mmi">{{study.mmi}}</td>
-                        <td class="studies__column--amazon">{{study.compensation}}€</td>
-                        {{#if isTutor}}
-                            <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
-                        {{/if}}
-                    </tr>
-                {{/each}}
-            {{else}}
+            {{#if isTableLoading}}
                 <tr>
-                    <td class="management--all__emptyFilter" colspan="7">- Keine Ergebnisse -</td>
+                    <td class="loading__wrapper--table" colspan="7">
+                        {{loading-status additionalClassNames="loading--table"}}
+                    </td>
                 </tr>
+            {{else}}
+                {{#if studiesList}}
+                    {{#each study in studiesList}}
+                        <tr {{bind-attr class=":studies__row study.closed:studies__row--expired:studies__row--notExpired"}} {{action 'showStudyConfig' study}}>
+                            <td>{{study.fromDate}}</td>
+                            <td>{{study.untilDate}}</td>
+                            <td class="studies__column--name">{{study.title}}</td>
+                            <td class="studies__column--location">{{study.location}}</td>
+                            <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
+                            <td class="studies__column--mmi">{{study.mmi}}</td>
+                            <td class="studies__column--amazon">{{study.compensation}}€</td>
+                            {{#if isTutor}}
+                                <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
+                            {{/if}}
+                        </tr>
+                    {{/each}}
+                {{else}}
+                    <tr>
+                        <td class="management--all__emptyFilter" colspan="7">- Keine Ergebnisse -</td>
+                    </tr>
+                {{/if}}
             {{/if}}
         </tbody>
     </table>

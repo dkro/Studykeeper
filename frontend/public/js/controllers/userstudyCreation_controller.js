@@ -29,15 +29,17 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
             var that = this;
             var name = newStudy.get('title');
             newStudy.save().then(function(response) {
+                that.set('isLoading', false);
+                that.set('createDataWasValid', true);
                 that.transitionToRoute('userstudies').then(function () {
                     var aMessage = 'Studie \"' + name + '\" erfolgreich erstellt!';
                     that.get('controllers.userstudies').set('statusMessage', { message: aMessage, isSuccess: true });
                 });
             }, function(error) {
                 newStudy.deleteRecord();
-                that.transitionToRoute('userstudies').then(function () {
-                    that.get('controllers.userstudies').set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
+                that.set('isLoading', false);
+                that.set('createDataWasValid', false);
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 
@@ -58,6 +60,8 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
     },
 
     reset: function() {
+        this.set('isLoading', false);
+        this.set('createDataWasValid', true);
         this.set('statusMessage', null);
         this.set('title', null);
         this.set('fromDate', null);
@@ -121,5 +125,9 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
 
     allRequiredStudies: [],
 
-    requiredStudies: []
+    requiredStudies: [],
+
+    isLoading: false,
+
+    createDataWasValid: true
 });

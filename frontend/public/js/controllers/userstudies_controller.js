@@ -3,6 +3,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     actions: {
         showStudyConfig: function(study) {
+            this.set('isTableLoading', true);
             this.transitionToRoute('userstudy', study);
         },
 
@@ -16,12 +17,15 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
             var that = this;
 
             if (confirm('Wollen Sie die Studie \"' + name + '\" wirklich löschen?')) {
+                this.set('isTableLoading', true);
                 study.deleteRecord();
                 study.save().then(function(response) {
+                    that.set('isTableLoading', false);
                     var successMessage = 'Studie \"' + name + '\" wurde erfolgreich gelöscht!';
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     study.rollback();
+                    that.set('isTableLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -46,6 +50,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     },
 
     reset: function() {
+        this.set('isTableLoading', false);
         this.set('statusMessage', null);
         this.set('selectedFromFilter', null);
         this.set('selectedToFilter', null);
@@ -216,6 +221,8 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     },
 
     statusMessage: null,
+
+    isTableLoading: false,
 
     isTutor: false,
 

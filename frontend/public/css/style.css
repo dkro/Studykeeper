@@ -440,3 +440,10 @@
     color: white;
     font-size: 1.3em;
 }
+
+.loading__study--confirm {
+    margin-left: 3em;
+    margin-right: 3em;
+    color: white;
+    font-size: 1.3em;
+}

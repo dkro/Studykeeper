@@ -2,17 +2,30 @@
 
 <div>
     {{#if isTutorUser}}
-        <button class="btn btn-danger management--single__deleteButton" {{action 'deleteStudy'}}>Studie löschen</button>
+        <button class="btn btn-danger management--single__deleteButton" {{bind-attr disabled=isDeleteLoading}} {{action 'deleteStudy'}}>
+            {{#if isDeleteLoading}}
+                {{loading-status additionalClassNames="loading--delete"}}
+            {{else}}
+                Studie löschen
+            {{/if}}
+        </button>
     {{/if}}
 
-    <button class="btn btn-primary management--single__confirmPublishButton" {{action 'goToStudyConfirm'}}>Studie abschließen</button>
+    <button class="btn btn-primary management--single__confirmPublishButton"  {{bind-attr disabled=isConfirmLoading}} {{action 'goToStudyConfirm'}}>
+        {{#if isConfirmLoading}}
+            {{loading-status additionalClassNames="loading__study--confirm"}}
+        {{else}}
+            Studie abschließen
+        {{/if}}
+    </button>
 </div>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
-{{study-config isStudyCreation=false save="updateStudy" cancel="cancelView" title=model.study.title fromDate=model.study.fromDate
+{{study-config isStudyCreation=false save="updateStudy" cancel="cancelView" title=model.study.title
+        isSaveLoading=isLoading createUpdateDataWasValid=createDataWasValid fromDate=model.study.fromDate
         toDate=model.study.untilDate mmi=model.study.mmi amazon=model.study.compensation mmiPoints=mmiPoints amazonValues=amazonValues
         location=model.study.location description=model.study.description link=model.study.link labels=model.allLabels
         users=model.allUsers allRequiredStudies=allRequiredStudies templates=model.allTemplates templateValues=model.study.templateValues

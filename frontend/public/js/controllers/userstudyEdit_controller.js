@@ -10,15 +10,18 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             var name = thisStudy.get('title');
 
             if (confirm('Wollen Sie die Studie \"' + name + '\" wirklich löschen?')) {
+                this.set('isDeleteLoading', true);
                 thisStudy.deleteRecord();
 
                 thisStudy.save().then(function(response) {
+                    that.set('isDeleteLoading', false);
                     that.transitionToRoute('userstudies').then(function () {
                         var aMessage = 'Studie \"' + name + '\" erfolgreich gelöscht!';
                         that.get('controllers.userstudies').set('statusMessage', { message: aMessage, isSuccess: true });
                     });
                 }, function(error) {
                     thisStudy.rollback();
+                    that.set('isDeleteLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -46,15 +49,17 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             var that = this;
             var name = thisStudy.get('title');
             thisStudy.save().then(function(response) {
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', true);
                 that.transitionToRoute('userstudy', id).then(function () {
                     var aMessage = 'Studie \"' + name + '\" erfolgreich geändert!';
                     that.get('controllers.userstudy').set('statusMessage', { message: aMessage, isSuccess: true });
                 });
             }, function(error) {
                 thisStudy.rollback();
-                that.transitionToRoute('userstudy', id).then(function () {
-                    that.get('controllers.userstudy').set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
+                that.set('isUpdateLoading', false);
+                that.set('updateDataWasValid', false);
+                that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
         },
 
@@ -63,6 +68,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         },
 
         goToStudyConfirm: function() {
+            this.set('isConfirmLoading', true);
             this.transitionToRoute('userstudy-confirm', this.get('model').study.get('id'));
         }
     },
@@ -84,6 +90,10 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         this.determineTemplate();
 
         this.set('statusMessage', null);
+        this.set('isUpdateLoading', false);
+        this.set('isDeleteLoading', false);
+        this.set('updateDataWasValid', true);
+        this.set('isConfirmLoading', false);
     },
 
     /**
@@ -117,6 +127,14 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
     },
 
     statusMessage: null,
+
+    updateDataWasValid: true,
+
+    isUpdateLoading: false,
+
+    isDeleteLoading: false,
+
+    isConfirmLoading: false,
 
     isTutorUser: false,
 

@@ -357,14 +357,24 @@
                 {{/if}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" {{bind-attr class=":btn isValidState:btn-primary:btn-danger :component__config__saveButton"}} {{action 'saveClick'}}>
-                        {{#if isStudyCreation}}
-                            Studie erstellen
-                        {{else}}
-                            Änderungen speichern
-                        {{/if}}
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
+                            {{#if isSaveLoading}}
+                                {{loading-status additionalClassNames="loading__config--save"}}
+                            {{else}}
+                                {{#if isStudyCreation}}
+                                    Studie erstellen
+                                {{else}}
+                                    Änderungen speichern
+                                {{/if}}
+                            {{/if}}
                         </button>
-                        <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>Abbrechen</button>
+                        <button class="btn btn-default component__config__cancelButton" {{action 'cancelClick'}}>
+                            {{#if isCancelLoading}}
+                                {{loading-status additionalClassNames="loading__config--cancel"}}
+                            {{else}}
+                                Abbrechen
+                            {{/if}}
+                        </button>
                     </div>
                 </div>
             </form>
