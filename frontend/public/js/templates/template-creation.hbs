@@ -4,4 +4,5 @@
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
-{{template-config isTemplateCreation=true title="" fields=fields save="createTemplate" cancel="cancelView"}}
+{{template-config isTemplateCreation=true title="" fields=fields isSaveLoading=isLoading createUpdateDataWasValid=createDataWasValid
+                  save="createTemplate" cancel="cancelView"}}

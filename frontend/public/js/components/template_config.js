@@ -1,10 +1,14 @@
 StudyManager.TemplateConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {
+            this.set('isCancelLoading', true);
             this.sendAction('cancel');
         },
 
         saveClick: function() {
+            this.set('isSaveLoading', true);
+            this.set('createUpdateDataWasValid', true);
+
             var params = {
                 titleNew: this.get('title'),
                 fieldsNew: this.get('fields')
@@ -14,6 +18,9 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
 
             if (this.isValid(params)) {
                 this.sendAction('save', params);
+            } else {
+                this.set('isSaveLoading', false);
+                this.set('createUpdateDataWasValid', false);
             }
         },
 
@@ -45,6 +52,12 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
     },
 
     isTemplateCreation: false,
+
+    isSaveLoading: false,
+
+    isCancelLoading: false,
+
+    createUpdateDataWasValid: true,
 
     title: null,
 

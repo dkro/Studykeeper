@@ -3,6 +3,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
 
     actions: {
         showTemplateConfig: function(template) {
+            this.set('isTableLoading', true);
             this.transitionToRoute('template', template);
         },
 
@@ -16,12 +17,15 @@ StudyManager.TemplatesController = Ember.Controller.extend({
             var that = this;
 
             if (confirm('Wollen Sie das Template \"' + title + '\" wirklich löschen?')) {
+                this.set('isTableLoading', true);
                 template.deleteRecord();
                 template.save().then(function(response) {
+                    that.set('isTableLoading', false);
                     var successMessage = 'Template \"' + title + '\" wurde erfolgreich gelöscht!';
                     that.set('statusMessage', { message: successMessage, isSuccess: true });
                 }, function(error) {
                     template.rollback();
+                    that.set('isTableLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
             }
@@ -33,6 +37,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
     },
 
     reset: function() {
+        this.set('isTableLoading', null);
         this.set('statusMessage', null);
         this.set('titleFilter', null);
         this.set('fieldCountFilter', null);
@@ -47,6 +52,8 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         this.set('totalFieldsCount', counts);
         this.set('isLoading', false);
     },
+
+    isTableLoading: false,
 
     statusMessage: null,
 

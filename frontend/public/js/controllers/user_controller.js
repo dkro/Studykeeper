@@ -3,13 +3,13 @@ StudyManager.UserController = Ember.Controller.extend({
 
     actions: {
         deleteUser: function() {
-            this.set('isDeleteLoading', true);
             this.set('statusMessage', null);
             var thisUser = this.get('model');
             var that = this;
             var name = thisUser.get('username');
 
             if (confirm('Wollen Sie den User \"' + name + '\" wirklich löschen?')) {
+                this.set('isDeleteLoading', true);
                 thisUser.deleteRecord();
 
                 thisUser.save().then(function(response) {

@@ -3,13 +3,13 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
     actions: {
         deleteNews: function() {
-            this.set('isDeleteLoading', true);
             this.set('statusMessage', null);
             var thisNews = this.get('model');
             var that = this;
             var name = thisNews.get('title');
 
             if (confirm('Wollen Sie die News \"' + name + '\" wirklich löschen?')) {
+                this.set('isDeleteLoading', true);
                 thisNews.deleteRecord();
 
                 thisNews.save().then(function(response) {

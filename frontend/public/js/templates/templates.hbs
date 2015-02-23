@@ -29,18 +29,26 @@
         </tr>
         </thead>
         <tbody>
-        {{#if templatesList}}
-            {{#each template in templatesList}}
-                <tr class="management--all__row" {{action 'showTemplateConfig' template}}>
-                    <td>{{template.title}}</td>
-                    <td>{{template.fields.length}}</td>
-                    <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteTemplate' template}}></span></td>
-                </tr>
-            {{/each}}
-        {{else}}
+        {{#if isTableLoading}}
             <tr>
-                <td class="management--all__emptyFilter" colspan="3">- Keine Ergebnisse -</td>
+                <td class="loading__wrapper--table" colspan="3">
+                    {{loading-status additionalClassNames="loading--table"}}
+                </td>
             </tr>
+        {{else}}
+            {{#if templatesList}}
+                {{#each template in templatesList}}
+                    <tr class="management--all__row" {{action 'showTemplateConfig' template}}>
+                        <td>{{template.title}}</td>
+                        <td>{{template.fields.length}}</td>
+                        <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteTemplate' template}}></span></td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td class="management--all__emptyFilter" colspan="3">- Keine Ergebnisse -</td>
+                </tr>
+            {{/if}}
         {{/if}}
         </tbody>
     </table>
