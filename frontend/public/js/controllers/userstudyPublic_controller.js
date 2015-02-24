@@ -3,10 +3,12 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
 
     actions: {
         register: function() {
+            this.set('isLoading', true);
             this.transitionToRoute('login');
         },
 
         cancelButtonClick: function() {
+            this.set('isLoading', true);
             this.transitionToRoute('userstudies');
         }
     },
@@ -14,6 +16,7 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
     determineNeededProperties: function() {
         this.determineLoggedIn();
         this.determineMailTos();
+        this.set('isLoading', false);
     },
 
     determineLoggedIn: function() {
@@ -30,5 +33,7 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
         this.set('mailToExecutor', 'mailto:' + this.get('model').get('tutorEmail'));
     },
 
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    isLoading: false
 });

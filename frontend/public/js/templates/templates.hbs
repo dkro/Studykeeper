@@ -1,6 +1,12 @@
 <h2 class="management--all__heading">Alle Templates</h2>
 
-<button class="btn btn-primary management--all__createButton" {{action 'createTemplate'}}>Template erstellen</button>
+<button class="btn btn-primary management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createTemplate'}}>
+    {{#if isCreateLoading}}
+        {{loading-status additionalClassNames="loading__config--create"}}
+    {{else}}
+        Template erstellen
+    {{/if}}
+</button>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="management--all__statusMessage"}}

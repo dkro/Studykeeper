@@ -8,6 +8,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         },
 
         createUser: function() {
+            this.set('isCreateLoading', true);
             this.transitionToRoute('user-creation');
         },
 
@@ -58,7 +59,10 @@ StudyManager.UsersController = Ember.Controller.extend({
         this.set('mmiFilter', null);
         this.set('roleFilter', null);
         this.set('isTableLoading', false);
+        this.set('isCreateLoading', false);
     },
+
+    isCreateLoading: false,
 
     isTableLoading: false,
 

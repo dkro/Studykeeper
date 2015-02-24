@@ -8,6 +8,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         },
 
         createTemplate: function() {
+            this.set('isCreateLoading', true);
             this.transitionToRoute('template-creation');
         },
 
@@ -37,7 +38,8 @@ StudyManager.TemplatesController = Ember.Controller.extend({
     },
 
     reset: function() {
-        this.set('isTableLoading', null);
+        this.set('isTableLoading', false);
+        this.set('isCreateLoading', false);
         this.set('statusMessage', null);
         this.set('titleFilter', null);
         this.set('fieldCountFilter', null);
@@ -54,6 +56,8 @@ StudyManager.TemplatesController = Ember.Controller.extend({
     },
 
     isTableLoading: false,
+
+    isCreateLoading: false,
 
     statusMessage: null,
 

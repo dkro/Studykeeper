@@ -39,5 +39,17 @@
     </table>
 </div>
 
-<button class="btn btn-primary" {{action 'confirmStudy'}}>Studie abschließen</button>
-<button class="btn btn-default" {{action 'cancel'}}>Abbrechen</button>
+<button {{bind-attr class=":btn confirmDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isClosingLoading}} {{action 'confirmStudy'}}>
+    {{#if isClosingLoading}}
+        {{loading-status additionalClassNames="loading__study--confirm"}}
+    {{else}}
+        Studie abschließen
+    {{/if}}
+</button>
+<button class="btn btn-default" {{bind-attr disabled=isCancelLoading}} {{action 'cancel'}}>
+    {{#if isCancelLoading}}
+        {{loading-status additionalClassNames="loading__config--cancel"}}
+    {{else}}
+        Abbrechen
+    {{/if}}
+</button>

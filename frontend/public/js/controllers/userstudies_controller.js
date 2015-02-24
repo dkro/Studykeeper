@@ -8,6 +8,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         },
 
         createStudy: function() {
+            this.set('isCreateLoading', true);
             this.transitionToRoute('userstudy-creation');
         },
 
@@ -51,6 +52,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     reset: function() {
         this.set('isTableLoading', false);
+        this.set('isCreateLoading', false);
         this.set('statusMessage', null);
         this.set('selectedFromFilter', null);
         this.set('selectedToFilter', null);
@@ -223,6 +225,8 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     statusMessage: null,
 
     isTableLoading: false,
+
+    isCreateLoading: false,
 
     isTutor: false,
 

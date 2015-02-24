@@ -3,6 +3,7 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
 
     actions: {
         cancel: function() {
+            this.set('isCancelLoading', true);
             this.transitionToRoute('userstudy-edit', this.get('model').study.get('id'));
         },
 
@@ -14,6 +15,8 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                               'Wollen Sie die Studie wirklich abschließen?';
 
             if (confirm(confirmText)) {
+                this.set('isClosingLoading', true);
+                this.set('confirmDataWasValid', true);
                 this.set('statusMessage', null);
 
                 var studyId = this.get('model').study.get('id');
@@ -45,11 +48,14 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                     }
                 }).then(
                     function(response) {
+                        that.set('isClosingLoading', false);
                         that.transitionToRoute('userstudy', studyId).then(function() {
                             that.get('controllers.userstudy').set('statusMessage', { message: 'Studie erfolgreich abgeschlossen!', isSuccess: true });
                         });
                     },
                     function(error) {
+                        that.set('confirmDataWasValid', false);
+                        that.set('isClosingLoading', false);
                         that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                     });
 
@@ -59,9 +65,18 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
 
     reset: function() {
         this.set('statusMessage', null);
+        this.set('isClosingLoading', false);
+        this.set('isCancelLoading', false);
+        this.set('confirmDataWasValid', true);
     },
 
     statusMessage: null,
+
+    isClosingLoading: false,
+
+    confirmDataWasValid: true,
+
+    isCancelLoading: false,
 
     usersWithCompensation: [],
 

@@ -4,9 +4,11 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     actions: {
         primaryButtonClick: function() {
             if (this.get('canEdit')) {
+                this.set('isEditRegisterLoading', true);
                 this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
             } else {
                 this.set('statusMessage', null);
+                this.set('isEditRegisterLoading', true);
 
                 var studyId = this.get('model').get('id');
                 var currentUserId = this.get('controllers.application').get('currentUserId');
@@ -37,20 +39,24 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                             })
                         },
                         function(error) {
+                            that.set('isEditRegisterLoading', false);
                             that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                         });
             }
         },
 
         cancelButtonClick: function() {
+            this.set('isBackToStudiesLoading', true);
             this.transitionToRoute('userstudies');
         },
 
         publicButtonClick: function() {
+            this.set('isPublishPublicLoading', true);
             this.transitionToRoute('userstudy-public', this.get('model').get('id'));
         },
 
         publishButtonClick: function() {
+            this.set('isPublishPublicLoading', true);
             this.set('statusMessage', null);
 
             var studyId = this.get('model').get('id');
@@ -73,6 +79,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                     })
                 },
                 function(error) {
+                    that.set('isPublishPublicLoading', false);
                     that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 });
         }
@@ -88,6 +95,9 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var isTutor = this.get('controllers.application').get('isTutor');
         this.set('isTutor', isTutor);
         this.set('statusMessage', null);
+        this.set('isEditRegisterLoading', false);
+        this.set('isBackToStudiesLoading', false);
+        this.set('isPublishPublicLoading', false);
     },
 
     isTutor: false,
@@ -165,5 +175,11 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         });
     },
 
-    statusMessage: null
+    statusMessage: null,
+
+    isEditRegisterLoading: false,
+
+    isBackToStudiesLoading: false,
+
+    isPublishPublicLoading: false
 });

@@ -144,29 +144,57 @@
 <div class="study__button__wrapper">
     {{#if model.closed}}
         {{#if canEdit}}
-            <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>Bearbeiten</button>
+            <button class="btn btn-primary study__editRegisterButton" {{bind-attr disabled=isEditRegisterLoading}} {{action 'primaryButtonClick'}}>
+                {{#if isEditRegisterLoading}}
+                    {{loading-status additionalClassNames="loading__study--edit"}}
+                {{else}}
+                    Bearbeiten
+                {{/if}}
+            </button>
         {{/if}}
     {{else}}
-        <button class="btn btn-primary study__editRegisterButton" {{action 'primaryButtonClick'}}>
-            {{#if canEdit}}
-                Bearbeiten
+        <button class="btn btn-primary study__editRegisterButton" {{bind-attr disabled=isEditRegisterLoading}} {{action 'primaryButtonClick'}}>
+            {{#if isEditRegisterLoading}}
+                {{loading-status additionalClassNames="loading__study--register"}}
             {{else}}
-                {{#if isRegistered}}
-                    Von dieser Studie abmelden
+                {{#if canEdit}}
+                    Bearbeiten
                 {{else}}
-                    Zu dieser Studie anmelden
+                    {{#if isRegistered}}
+                        Von dieser Studie abmelden
+                    {{else}}
+                        Zu dieser Studie anmelden
+                    {{/if}}
                 {{/if}}
             {{/if}}
         </button>
     {{/if}}
 
-    <button class="btn btn-default study__cancelButton" {{action 'cancelButtonClick'}}>Alle Studien</button>
+    <button class="btn btn-default study__cancelButton" {{bind-attr disabled=isBackToStudiesLoading}} {{action 'cancelButtonClick'}}>
+        {{#if isBackToStudiesLoading}}
+            {{loading-status additionalClassNames="loading__study--back"}}
+        {{else}}
+            Alle Studien
+        {{/if}}
+    </button>
 
     {{#if model.published}}
-        <button class="btn btn-default study__publicButton" {{action 'publicButtonClick'}}>Öffentliche Version</button>
+        <button class="btn btn-default study__publicButton" {{bind-attr disabled=isPublishPublicLoading}} {{action 'publicButtonClick'}}>
+            {{#if isPublishPublicLoading}}
+                {{loading-status additionalClassNames="loading__study--public"}}
+            {{else}}
+                Öffentliche Version
+            {{/if}}
+        </button>
     {{else}}
         {{#if isTutor}}
-            <button class="btn btn-primary study__publishButton" {{action 'publishButtonClick'}}>Studie veröffentlichen</button>
+            <button class="btn btn-primary study__publishButton" {{bind-attr disabled=isPublishPublicLoading}} {{action 'publishButtonClick'}}>
+                {{#if isPublishPublicLoading}}
+                    {{loading-status additionalClassNames="loading__study--edit"}}
+                {{else}}
+                    Studie veröffentlichen
+                {{/if}}
+            </button>
         {{/if}}
     {{/if}}
 </div>

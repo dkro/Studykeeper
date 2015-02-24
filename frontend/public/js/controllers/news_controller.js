@@ -8,6 +8,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         },
 
         createNews: function() {
+            this.set('isCreateLoading', true);
             this.transitionToRoute('news-creation');
         },
 
@@ -46,9 +47,12 @@ StudyManager.NewsController = Ember.Controller.extend({
         this.set('selectedDateFilter', null);
         this.set('isLoading', false);
         this.set('isTableLoading', false);
+        this.set('isCreateLoading', false);
     },
 
     isTableLoading: false,
+
+    isCreateLoading: false,
 
     statusMessage: null,
 

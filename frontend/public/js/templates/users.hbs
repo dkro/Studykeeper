@@ -1,6 +1,12 @@
 <h2 class="management--all__heading">Alle User</h2>
 
-<button class="btn btn-primary management--all__createButton" {{action 'createUser'}}>User erstellen</button>
+<button class="btn btn-primary management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createUser'}}>
+    {{#if isCreateLoading}}
+        {{loading-status additionalClassNames="loading__config--create"}}
+    {{else}}
+        User erstellen
+    {{/if}}
+</button>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="management--all__statusMessage"}}

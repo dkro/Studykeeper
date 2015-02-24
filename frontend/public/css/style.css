@@ -428,6 +428,13 @@
     font-size: 1.2em;
 }
 
+.loading__config--create {
+    margin-left: 3em;
+    margin-right: 3em;
+    color: white;
+    font-size: 1.2em;
+}
+
 .loading__config--cancel {
     margin-left: 1.5em;
     margin-right: 1.5em;
@@ -446,4 +453,34 @@
     margin-right: 3em;
     color: white;
     font-size: 1.3em;
+}
+
+.loading__study--edit {
+    margin-left: 2em;
+    margin-right: 2em;
+    color: white;
+}
+
+.loading__study--back {
+    margin-left: 2em;
+    margin-right: 2em;
+    color: black;
+}
+
+.loading__study--public {
+    margin-left: 2em;
+    margin-right: 2em;
+    color: black;
+}
+
+.loading__study--publish {
+    margin-left: 3em;
+    margin-right: 3em;
+    color: white;
+}
+
+.loading__study--register {
+    margin-left: 3em;
+    margin-right: 3em;
+    color: white;
 }
