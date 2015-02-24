@@ -103,3 +103,16 @@
 .component__selectionItem__selectIcon {
     float: right;
 }
+
+.component__studiesList__switch {
+    color: cadetblue;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.component__studiesList__study {
+    cursor: pointer;
+    font-weight: bold;
+    padding-bottom: 0.4em;
+    padding-top: 0.4em;
+}

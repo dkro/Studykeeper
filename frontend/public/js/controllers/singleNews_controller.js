@@ -53,6 +53,10 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
         cancelView: function() {
             this.transitionToRoute('news');
+        },
+
+        goToStudy: function(study) {
+            this.transitionToRoute('userstudy', study);
         }
     },
 
@@ -77,5 +81,7 @@ StudyManager.SingleNewsController = Ember.Controller.extend({
 
     description: null,
 
-    link: null
+    link: null,
+
+    relatedStudies: []
 });

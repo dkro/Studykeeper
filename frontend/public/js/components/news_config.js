@@ -24,6 +24,10 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
                 this.set('isSaveLoading', true);
                 this.set('createUpdateDataWasValid', false);
             }
+        },
+
+        studyClick: function(study) {
+            this.sendAction('clickOnStudy', study);
         }
     },
 
@@ -76,6 +80,8 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
     description: null,
 
     link: null,
+
+    relatedStudies: [],
 
     titleInvalid: null,
 

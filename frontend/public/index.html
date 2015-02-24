@@ -69,6 +69,26 @@
             </div>
         </script>
 
+        <script type="text/x-handlebars" id="components/studies-list">
+            <p class="form-control-static component__studiesList__switch" {{action 'showHideStudies'}}>
+                {{#if showStudiesEnabled}}
+                    <span class="glyphicon glyphicon-chevron-down"></span> Studien ausblenden
+                {{else}}
+                    <span class="glyphicon glyphicon-chevron-right"></span> Studien einblenden
+                {{/if}}
+            </p>
+
+            {{#if showStudiesEnabled}}
+                <div class="list-group">
+                    {{#each study in studies}}
+                        <a class="list-group-item component__studiesList__study" {{action 'studyClick' study}}>
+                            {{study.title}}
+                        </a>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </script>
+
         <script type="text/x-handlebars" id="components/labels-item">
             <span class="labels__label__name">{{name}}</span>
             <div class="labels__label__removeIcon__wrapper">
@@ -197,6 +217,12 @@
                         {{/if}}
                     </div>
                 </div>
+                {{#unless isNewsCreation}}
+                    <div class="form-group">
+                        <label for="studiesNewsConfigList" class="col-sm-2 control-label">Verwendung:</label>
+                        {{studies-list studies=relatedStudies action='studyClick'}}
+                    </div>
+                {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
                         <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
