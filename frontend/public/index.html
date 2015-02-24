@@ -157,6 +157,20 @@
                         </div>
                     </div>
                 {{/if}}
+                {{#unless isUserCreation}}
+                    <div class="form-group">
+                        <label for="tutorStudiesUserConfigList" class="col-sm-2 control-label">Tutor von:</label>
+                        {{studies-list id="tutorStudiesUserConfigList" studies=tutoredStudies action='studyClick'}}
+                    </div>
+                    <div class="form-group">
+                        <label for="executorStudiesUserConfigList" class="col-sm-2 control-label">Führt aus:</label>
+                        {{studies-list id="executorStudiesUserConfigList" studies=executedStudies action='studyClick'}}
+                    </div>
+                    <div class="form-group">
+                        <label for="registeredStudiesUserConfigList" class="col-sm-2 control-label">Angemeldet bei:</label>
+                        {{studies-list id="registeredStudiesUserConfigList" studies=registeredStudies action='studyClick'}}
+                    </div>
+                {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
                         <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>

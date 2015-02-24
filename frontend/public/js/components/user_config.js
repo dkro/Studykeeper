@@ -26,6 +26,10 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
                 this.set('isSaveLoading', false);
                 this.set('createUpdateDataWasValid', false);
             }
+        },
+
+        studyClick: function(study) {
+            this.sendAction('clickOnStudy', study);
         }
     },
 
@@ -85,6 +89,12 @@ StudyManager.UserConfigComponent = Ember.Component.extend({
     roles: null,
 
     mmiOptions: null,
+
+    tutoredStudies: [],
+
+    registeredStudies: [],
+
+    executedStudies: [],
 
     firstNameInvalid: null,
 

@@ -56,6 +56,10 @@ StudyManager.UserController = Ember.Controller.extend({
 
         cancelView: function() {
             this.transitionToRoute('users');
+        },
+
+        goToStudy: function(study) {
+            this.transitionToRoute('userstudy', study);
         }
     },
 
@@ -94,5 +98,12 @@ StudyManager.UserController = Ember.Controller.extend({
 
     roles: null,
 
-    mmiValues: null
+    mmiValues: null,
+
+    tutoredStudies: [],
+
+    registeredStudies: [],
+
+    executedStudies: []
+
 });
