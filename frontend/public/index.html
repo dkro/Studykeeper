@@ -70,13 +70,20 @@
         </script>
 
         <script type="text/x-handlebars" id="components/studies-list">
-            <p class="form-control-static component__studiesList__switch" {{action 'showHideStudies'}}>
-                {{#if showStudiesEnabled}}
-                    <span class="glyphicon glyphicon-chevron-down"></span> Studien ausblenden
-                {{else}}
-                    <span class="glyphicon glyphicon-chevron-right"></span> Studien einblenden
-                {{/if}}
-            </p>
+            {{#if studies}}
+                <p class="form-control-static component__studiesList__switch" {{action 'showHideStudies'}}>
+                    {{#if showStudiesEnabled}}
+                        <span class="glyphicon glyphicon-chevron-down"></span> Studien ausblenden
+                    {{else}}
+                        <span class="glyphicon glyphicon-chevron-right"></span> Studien einblenden
+                    {{/if}}
+                </p>
+            {{else}}
+                <p class="form-control-static component__studiesList__switch--noStudies">
+                    <span class="glyphicon glyphicon-info-sign component__studiesList__switch--noStudies__icon"></span>
+                    <span class="component__studiesList__switch--noStudies__text">Keiner Studie bisher zugewiesen<span>
+                </p>
+            {{/if}}
 
             {{#if showStudiesEnabled}}
                 <div class="list-group">
@@ -220,7 +227,7 @@
                 {{#unless isNewsCreation}}
                     <div class="form-group">
                         <label for="studiesNewsConfigList" class="col-sm-2 control-label">Verwendung:</label>
-                        {{studies-list studies=relatedStudies action='studyClick'}}
+                        {{studies-list id="studiesNewsConfigList" studies=relatedStudies action='studyClick'}}
                     </div>
                 {{/unless}}
                 <div class="form-group">
@@ -448,6 +455,12 @@
                         </button>
                     </div>
                 </div>
+                {{#unless isTemplateCreation}}
+                    <div class="form-group">
+                        <label for="studiesTemplateConfigList" class="col-sm-2 control-label">Verwendung:</label>
+                        {{studies-list id="studiesTemplateConfigList" studies=relatedStudies action='studyClick'}}
+                    </div>
+                {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
                         <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>

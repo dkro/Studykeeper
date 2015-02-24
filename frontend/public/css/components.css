@@ -116,3 +116,17 @@
     padding-bottom: 0.4em;
     padding-top: 0.4em;
 }
+
+.component__studiesList__switch--noStudies {
+    color: dimgray;
+    font-weight: bold;
+}
+
+.component__studiesList__switch--noStudies__text {
+    vertical-align: text-bottom;
+}
+
+.component__studiesList__switch--noStudies__icon {
+    font-size: 1.3em;
+    margin-right: 0.2em;
+}

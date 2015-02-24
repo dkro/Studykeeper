@@ -57,6 +57,10 @@ StudyManager.TemplateController = Ember.Controller.extend({
 
         cancelView: function() {
             this.transitionToRoute('templates');
+        },
+
+        goToStudy: function(study) {
+            this.transitionToRoute('userstudy', study);
         }
     },
 
@@ -77,5 +81,7 @@ StudyManager.TemplateController = Ember.Controller.extend({
 
     title: null,
 
-    fields: []
+    fields: [],
+
+    relatedStudies: []
 });

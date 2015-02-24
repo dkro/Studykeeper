@@ -33,6 +33,10 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
 
         removeField: function(field) {
             this.get('fields').removeObject(field);
+        },
+
+        studyClick: function(study) {
+            this.sendAction('clickOnStudy', study);
         }
     },
 
@@ -60,6 +64,8 @@ StudyManager.TemplateConfigComponent = Ember.Component.extend({
     createUpdateDataWasValid: true,
 
     title: null,
+
+    relatedStudies: [],
 
     fields: [],
 

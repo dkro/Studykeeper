@@ -377,6 +377,7 @@ StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
       fields.pushObject(field);
     });
     controller.set('fields', fields);
+    controller.set('relatedStudies', model.get('userstudies'));
   }
 });
 
