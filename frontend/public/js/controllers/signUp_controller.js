@@ -95,7 +95,7 @@ StudyManager.SignupController = Ember.Controller.extend({
 
         var that = this;
 
-        Ember.$.post('http://localhost:10001/api/users/signup', userData).then(function(response) {
+        Ember.$.post('/api/users/signup', userData).then(function(response) {
             that.set('isLoading', false);
             that.set('signUpSuccessful', true);
         }, function(error) {
