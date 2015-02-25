@@ -4,7 +4,13 @@
 <div class="input-group labels__creationWrapper">
     {{input type="text" value=newLabelValue placeholder="Neuer Labelname" action="createLabel" classNames="form-control"}}
     <span class="input-group-btn">
-        <button class="btn btn-primary" type="button" {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>Erstellen</button>
+        <button {{bind-attr class=":btn createDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>
+            {{#if isCreateLoading}}
+                {{loading-status additionalClassNames="loading__label--create"}}
+            {{else}}
+                Erstellen
+            {{/if}}
+        </button>
     </span>
 </div>
 
@@ -12,11 +18,20 @@
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="labels__statusMessage"}}
 {{/if}}
 
-<ul class="list-group labels__list">
-    {{#each label in model}}
-        {{#if label.id}}
-            {{labels-item name=label.title selfId=label.id gotRemoved="deleteLabel"}}
+{{#if model}}
+    <ul class="list-group labels__list">
+        {{#if isDeleteLoading}}
+            <li class="labels__tableLoadingWrapper">
+                {{loading-status additionalClassNames="loading--table"}}
+            </li>
+        {{else}}
+            {{#each label in model}}
+                {{#if label.id}}
+                    {{labels-item name=label.title selfId=label.id relatedStudies=label.userstudies studyClicked="goToStudy" gotRemoved="deleteLabel"}}
+                {{/if}}
+            {{/each}}
         {{/if}}
-    {{/each}}
-</ul>
+    </ul>
+{{/if}}
+
 

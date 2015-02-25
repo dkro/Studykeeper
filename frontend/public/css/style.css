@@ -484,3 +484,9 @@
     margin-right: 3em;
     color: white;
 }
+
+.loading__label--create {
+    margin-left: 1em;
+    margin-right: 1em;
+    color: #ffffff;
+}

@@ -150,7 +150,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.get('model').get('template').then(function(template) {
             template.get('fields').forEach(function(field, index) {
                 var entry = { title: field, value: vals.objectAt(index) };
-                fieldsToValues.push(entry);
+                fieldsToValues.pushObject(entry);
             });
 
             that.set('fieldNameToValues', fieldsToValues);

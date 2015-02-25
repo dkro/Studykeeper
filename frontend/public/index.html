@@ -81,7 +81,7 @@
             {{else}}
                 <p class="form-control-static component__studiesList__switch--noStudies">
                     <span class="glyphicon glyphicon-info-sign component__studiesList__switch--noStudies__icon"></span>
-                    <span class="component__studiesList__switch--noStudies__text">Keiner Studie bisher zugewiesen<span>
+                    <span class="component__studiesList__switch--noStudies__text">Keiner Studie bisher zugewiesen</span>
                 </p>
             {{/if}}
 
@@ -97,10 +97,30 @@
         </script>
 
         <script type="text/x-handlebars" id="components/labels-item">
-            <span class="labels__label__name">{{name}}</span>
-            <div class="labels__label__removeIcon__wrapper">
-                <span class="glyphicon glyphicon-remove labels__label__removeIcon" {{action 'removeLabel'}}></span>
+            <span {{bind-attr class="isSelected:component__labelsItem__name--selected:component__labelsItem__name"}}>
+                {{name}}
+            </span>
+            <div class="component__labelsItem__removeIcon__wrapper">
+                <span class="glyphicon glyphicon-remove component__labelsItem__removeIcon" {{action 'removeLabel'}}></span>
             </div>
+
+            {{#if isSelected}}
+                <div class="component__labelsItem__studyWrapper">
+                    {{#if relatedStudies}}
+                        <div class="component__labelsItem__studyWrapper__description">Studien mit diesem Label:</div>
+                        {{#each study in relatedStudies}}
+                            <div class="component__labelsItem__studyWrapper__study" {{action 'clickOnStudy' study}}>
+                                <span class="glyphicon glyphicon-arrow-right component__labelsItem__studyWrapper__study__title__icon"></span>
+                                <span class="component__labelsItem__studyWrapper__study__title">{{study.title}}</span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="component__labelsItem__studyWrapper--noStudies">
+                            <span class="glyphicon glyphicon-info-sign"></span> Keiner Studie bisher zugewiesen
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
         </script>
 
         <script type="text/x-handlebars" id="components/user-config">
