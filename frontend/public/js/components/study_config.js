@@ -12,7 +12,7 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
             var values = [];
 
             this.get('templateFieldsToValue').forEach(function(item, index) {
-                values.push(item.get('value'));
+                values.pushObject(item.get('value'));
             });
 
             var params = {
@@ -231,7 +231,7 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
                 entry.set('title', field);
                 entry.set('value', val);
 
-                newVals.push(val);
+                newVals.pushObject(val);
                 fieldsToValues.pushObject(entry);
             });
         }
