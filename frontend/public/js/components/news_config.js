@@ -21,7 +21,7 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
             if (this.isValid(params)) {
                 this.sendAction('save', params);
             } else {
-                this.set('isSaveLoading', true);
+                this.set('isSaveLoading', false);
                 this.set('createUpdateDataWasValid', false);
             }
         },
@@ -35,22 +35,22 @@ StudyManager.NewsConfigComponent = Ember.Component.extend({
         var isValid = true;
 
         if (Ember.empty(data.titleNew)) {
-            this.set('titleInvalid', 'Der Titel darf nicht leer sein!')
+            this.set('titleInvalid', 'Der Titel darf nicht leer sein!');
             isValid = false;
         }
 
         if (Ember.empty(data.dateNew)) {
-            this.set('dateInvalid', 'Bitte geben Sie ein Datum an!')
+            this.set('dateInvalid', 'Bitte geben Sie ein Datum an!');
             isValid = false;
         }
 
         if (Ember.empty(data.descriptionNew)) {
-            this.set('descriptionInvalid', 'Bitte geben Sie eine Beschreibung an!')
+            this.set('descriptionInvalid', 'Bitte geben Sie eine Beschreibung an!');
             isValid = false;
         }
 
         if (Ember.empty(data.linkNew)) {
-            this.set('linkInvalid',  'Bitte geben Sie einen Link an!')
+            this.set('linkInvalid',  'Bitte geben Sie einen Link an!');
             isValid = false;
         }
 

@@ -173,7 +173,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetch('userstudy', params.userstudy_id);
+    return this.store.fetchById('userstudy', params.userstudy_id);
   },
 
   setupController: function(controller, model) {
@@ -326,7 +326,7 @@ StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetch('user', params.user_id);
+    return this.store.fetchById('user', params.user_id);
   },
 
   setupController: function(controller, model) {
@@ -364,7 +364,7 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetch('template', params.template_id);
+    return this.store.fetchById('template', params.template_id);
   },
 
   setupController: function(controller, model) {
@@ -404,7 +404,7 @@ StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetch('news', params.news_id);
+    return this.store.fetchById('news', params.news_id);
   },
 
   setupController: function(controller, model) {

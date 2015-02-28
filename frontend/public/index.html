@@ -218,8 +218,15 @@
 
         <script type="text/x-handlebars" id="components/news-config">
             <form class="form-horizontal component__config__form">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
+                        <span class="fa fa-asterisk obligatory__asterisk"></span><small class="obligatory__text">Verpflichtend</small>
+                    </div>
+                </div>
                 <div {{bind-attr class=":form-group titleInvalid:has-error"}}>
-                    <label for="titleNewsConfigInput" class="col-sm-2 control-label">Titel:</label>
+                    <label for="titleNewsConfigInput" class="col-sm-2 control-label">
+                        Titel: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="titleNewsConfigHelp" id="titleNewsConfigInput" value=title classNames="form-control" placeholder="Titel"}}
 
@@ -229,7 +236,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group dateInvalid:has-error"}}>
-                    <label for="dateNewsConfigInput" class="col-sm-2 control-label">Datum:</label>
+                    <label for="dateNewsConfigInput" class="col-sm-2 control-label">
+                        Datum: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "date-field" aria-describedby="dateNewsConfigHelp" id="dateNewsConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=date placeholder="Datum"}}
 
@@ -239,7 +248,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group descriptionInvalid:has-error"}}>
-                    <label for="descriptionNewsConfigInput" class="col-sm-2 control-label">Beschreibung:</label>
+                    <label for="descriptionNewsConfigInput" class="col-sm-2 control-label">
+                        Beschreibung: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{textarea aria-describedby="descriptionNewsConfigHelp" id="descriptionNewsConfigInput" value=description rows="3" classNames="form-control" placeholder="Beschreibung"}}
 
@@ -249,18 +260,20 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group linkInvalid:has-error"}}>
-                    <label for="linkNewsConfigInput" class="col-sm-2 control-label">Link:</label>
+                    <label for="linkNewsConfigInput" class="col-sm-2 control-label">
+                        Link: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
-                        {{input type="text" aria-describedby="linkNewsConfigHelp" id="linkNewsConfigInput" value=link classNames="form-control" placeholder="Link"}}
+                        {{input type="text" aria-describedby="linkNewsConfigHelp" id="linkNewsConfigInput" value=link classNames="form-control" placeholder="http://www.medien.ifi.lmu.de"}}
 
                         {{#if linkInvalid}}
-                        <span id="linkNewsConfigHelp" class="help-block">{{linkInvalid}}</span>
+                            <span id="linkNewsConfigHelp" class="help-block">{{linkInvalid}}</span>
                         {{/if}}
                     </div>
                 </div>
                 {{#unless isNewsCreation}}
                     <div class="form-group">
-                        <label for="studiesNewsConfigList" class="col-sm-2 control-label">Verwendung:</label>
+                        <label for="studiesNewsConfigList" class="col-sm-2 control-label">Verwendet von:</label>
                         {{studies-list id="studiesNewsConfigList" studies=relatedStudies action='studyClick'}}
                     </div>
                 {{/unless}}

@@ -61,6 +61,7 @@ StudyManager.LabelsController = Ember.Controller.extend({
         this.set('isDeleteLoading', false);
         this.set('isCreateLoading', false);
         this.set('createDataWasValid', true);
+        this.set('isHelpTextDisplayed', false);
     },
 
     statusMessage: null,
@@ -69,6 +70,8 @@ StudyManager.LabelsController = Ember.Controller.extend({
 
     isCreateButtonDisabled: true,
 
+    isHelpTextDisplayed: false,
+
     isDeleteLoading: false,
 
     isCreateLoading: false,
@@ -76,6 +79,14 @@ StudyManager.LabelsController = Ember.Controller.extend({
     createDataWasValid: true,
 
     changeCreateButtonDisabled: function() {
-        this.set('isCreateButtonDisabled', Ember.empty(this.get('newLabelValue')))
+        this.set('isCreateButtonDisabled', Ember.empty(this.get('newLabelValue')));
+
+        if (Ember.empty(this.get('newLabelValue'))) {
+            this.set('isHelpTextDisplayed', false);
+        } else {
+            this.set('statusMessage', null);
+            var shouldDisplayHelpText = (this.get('newLabelValue').length < 3);
+            this.set('isHelpTextDisplayed', shouldDisplayHelpText);
+        }
     }.observes('newLabelValue')
 });

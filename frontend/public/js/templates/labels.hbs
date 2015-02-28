@@ -2,7 +2,7 @@
 
 
 <div class="input-group labels__creationWrapper">
-    {{input type="text" value=newLabelValue placeholder="Neuer Labelname" action="createLabel" classNames="form-control"}}
+    {{input type="text" value=newLabelValue placeholder="Neuer Labelname" action="createLabel" classNames="form-control" aria-describedby="creationHelpText"}}
     <span class="input-group-btn">
         <button {{bind-attr class=":btn createDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>
             {{#if isCreateLoading}}
@@ -13,6 +13,12 @@
         </button>
     </span>
 </div>
+{{#if isHelpTextDisplayed}}
+    <span id="creationHelpText" class="help-block">
+        Ein Label muss aus mindestens drei Zeichen bestehen!
+    </span>
+{{/if}}
+
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="labels__statusMessage"}}

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse" role="navigation">
+<nav class="navbar navbar-inverse application__navBar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -8,9 +8,9 @@
                 <span class="icon-bar"></span>
             </button>
             {{#if isLoggedIn}}
-                {{#link-to 'dashboard' classNames='navbar-brand'}}LMU Studykeeper{{/link-to}}
+                {{#link-to 'dashboard' classNames='navbar-brand application__navBar__brand'}}LMU Studykeeper{{/link-to}}
             {{else}}
-                {{#link-to 'login' classNames='navbar-brand'}}LMU Studykeeper{{/link-to}}
+                {{#link-to 'login' classNames='navbar-brand application__navBar__brand'}}LMU Studykeeper{{/link-to}}
             {{/if}}
         </div>
         <div id="navbar" class="collapse navbar-collapse">
@@ -19,27 +19,20 @@
                     {{#link-to 'about'}}About{{/link-to}}
                 </li>
                 {{#if isTutor}}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Management
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                {{#link-to 'labels'}}Labels{{/link-to}}
-                            </li>
-                            <li>
-                                {{#link-to 'news'}}News{{/link-to}}
-                            </li>
-                            <li>
-                                {{#link-to 'users'}}Nutzer{{/link-to}}
-                            </li>
-                            <li>
-                                {{#link-to 'userstudies'}}Studien{{/link-to}}
-                            </li>
-                            <li>
-                                {{#link-to 'templates'}}Templates{{/link-to}}
-                            </li>
-                        </ul>
+                    <li>
+                        {{#link-to 'labels'}}Labels{{/link-to}}
+                    </li>
+                    <li>
+                        {{#link-to 'news'}}News{{/link-to}}
+                    </li>
+                    <li>
+                        {{#link-to 'users'}}Nutzer{{/link-to}}
+                    </li>
+                    <li>
+                        {{#link-to 'userstudies'}}Studien{{/link-to}}
+                    </li>
+                    <li>
+                        {{#link-to 'templates'}}Templates{{/link-to}}
                     </li>
                 {{/if}}
                 {{#if isLoggedIn}}

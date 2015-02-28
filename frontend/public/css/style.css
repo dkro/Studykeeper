@@ -9,6 +9,7 @@
     }
 
     .navBar__nav--account {
+        color: snow;
         padding-bottom: 9px !important;
     }
 
@@ -35,6 +36,38 @@
         color: white;
         border: 2px solid black;
     }
+
+    .navBar__nav--account {
+        color: snow !important;
+    }
+}
+
+.application__navBar {
+    background-color: #063;
+    border-color: black;
+}
+
+.application__navBar__brand {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+.application__navBar__brand:hover {
+    text-decoration: underline;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #dcdcdc;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    background-color: aliceblue;
+    color: darkgreen;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
+    background-color: aliceblue;
+    color: darkgreen;
 }
 
 
@@ -499,4 +532,18 @@
     margin-left: 1em;
     margin-right: 1em;
     color: #ffffff;
+}
+
+.obligatory__asterisk {
+    font-size: 0.6em;
+    vertical-align: super;
+    color: #228b22;
+    margin-right: 0.5em;
+}
+
+.obligatory__text {
+}
+
+.obligatory__wrapper {
+    text-align: right;
 }
