@@ -31,7 +31,7 @@ StudyManager.TemplateController = Ember.Controller.extend({
             var fields = [];
 
             newData.fieldsNew.forEach(function (item) {
-                fields.push(item.get('title'));
+                fields.pushObject(item.get('title'));
             });
 
             var thisTemplate = this.get('model');

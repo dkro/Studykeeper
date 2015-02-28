@@ -32,7 +32,7 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
                         getsMMI: comp
                     };
 
-                    innerPayload.push(confirmedUser);
+                    innerPayload.pushObject(confirmedUser);
                 });
 
                 var payload = {
