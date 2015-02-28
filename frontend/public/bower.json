@@ -20,7 +20,7 @@
   "dependencies": {
     "bootstrap": "~3.3.1",
     "ember": "~1.8.1",
-    "ember-data": "~1.0.0-beta.12",
+    "ember-data": "~1.0.0-beta.15",
     "ember-pikaday": "~0.1.8",
     "fontawesome": "~4.3.0"
   },
