@@ -17,7 +17,7 @@ StudyManager.StudySearchformComponent = Ember.Component.extend({
         this.reset();
     },
 
-    defaultOption: 'Studientag auswählen...',
+    defaultOption: 'Studientyp auswählen...',
 
     currentSelected: this.defaultOption,
 
