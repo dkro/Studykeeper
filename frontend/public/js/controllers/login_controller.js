@@ -18,8 +18,15 @@ StudyManager.LoginController = Ember.Controller.extend({
                 that.get('controllers.application').set('userRole', response.user.role);
                 that.get('controllers.application').set('isLoggedIn', true);
 
+                if (!Ember.empty(that.get('controllers.application').get('toTransitionedStudy'))) {
+                    var studyId = that.get('controllers.application').get('toTransitionedStudy');
+                    that.get('controllers.application').set('toTransitionedStudy', null);
+                    that.transitionToRoute('userstudy', studyId);
+                } else {
+                    that.transitionToRoute('dashboard');
+                }
+
                 that.set('isLoading', false);
-                that.transitionToRoute('dashboard');
             }, function(error) {
                     that.set('isLoading', false);
                     that.set('loginDataWasValid', false);

@@ -4,6 +4,7 @@ StudyManager.UserstudyPublicController = Ember.Controller.extend({
     actions: {
         register: function() {
             this.set('isLoading', true);
+            this.get('controllers.application').set('toTransitionedStudy', this.get('model').get('id'));
             this.transitionToRoute('login');
         },
 
