@@ -181,6 +181,16 @@
     font-size: 0.95em;
 }
 
+.signUp__field--mmiFlag__helpTextInfoIcon {
+    float: left;
+    margin-right: 0.5em;
+}
+
+.signUp__field--mmiFlag__helpText {
+    display: block;
+    overflow: hidden;
+}
+
 .signUp__statusMessage {
 
 }

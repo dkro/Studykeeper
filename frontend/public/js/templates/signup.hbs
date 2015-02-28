@@ -35,13 +35,16 @@
             <div id="mmiCheckbox" class="checkbox signUp__field--mmiFlag">
                 <label>
                     {{input type="checkbox" checked=collectsMMI}}
-                    Ich möchte <strong class="signUp__field--mmiFlag--highlighting" {{action 'showMMIHelpText'}}>MMI-Punkte <span class="glyphicon glyphicon-question-sign signUp__field--mmiFlag__helpTextIcon"></span></strong> sammeln!
+                    Ich möchte <strong class="signUp__field--mmiFlag--highlighting">MMI-Punkte <span class="glyphicon glyphicon-question-sign signUp__field--mmiFlag__helpTextIcon"></span></strong> sammeln!
                 </label>
             </div>
             {{#if isShowingMMIHelpText}}
                 <span id="helpBlock" class="help-block signUp__field--mmiFlag">
-                <span class="glyphicon glyphicon-info-sign"></span> MMI-Punkte werden für das "Modul WP 18.2" für den Studiengang Medieninformatik, mit Anwendungsfach Mensch-Maschine-Interaktion, benötigt.
-            </span>
+                    <span class="glyphicon glyphicon-info-sign signUp__field--mmiFlag__helpTextInfoIcon"></span>
+                    <span class="signUp__field--mmiFlag__helpText">MMI-Punkte werden für das "Modul WP 18.2" für den Studiengang Medieninformatik, mit Anwendungsfach Mensch-Maschine-Interaktion, benötigt.<br>
+                    Um diese sammeln zu können , müssen Sie eine gültige Email Adresse der LMU München besitzen (Zum Beispiel "mustermanncampus.lmu.de" oder
+                    "max.mustermann@ifi.lmu.de") und sich mit dieser registrieren!</span>
+                </span>
             {{/if}}
         </div>
         <div {{bind-attr class=":form-group passwordValidationClass"}}>
