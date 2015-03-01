@@ -53,9 +53,7 @@ module.exports.editTemplate = function (req, res, next) {
         result.userstudies = result.userstudies.split(",").map(function(x){return parseInt(x);});
         res.json(500, {status: 'failure',
           message: 'Das Template konnte nicht verändert werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
-          'benutzt. ' +
-          'Nutzerstudien ' + result.userstudies,
-          userstudies: result.userstudies});
+          'benutzt.'});
         return next();
       }
     })
@@ -82,7 +80,7 @@ module.exports.deleteTemplate = function(req, res, next){
           template.userstudies = template.userstudies.split(",").map(function(x){return parseInt(x);});
           res.json(500, {status: 'failure',
             message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
-            'benutzt.', userstudies: template.userstudies});
+            'benutzt.'});
           return next();
         }
     })
