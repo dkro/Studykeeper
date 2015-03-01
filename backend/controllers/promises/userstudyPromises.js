@@ -8,51 +8,51 @@ module.exports.validFullUserstudyReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
     if (!req.body.userstudy) {
-      validationErrors.push("Nutzerstudien request hat ein falsches Format.");
+      validationErrors.push("Nutzerstudien Anfrage hat ein falsches Format.");
     } else {
       if (!req.body.userstudy.title || !Validator.isAlpha(req.body.userstudy.title) && !Validator.isLength(req.body.userstudy.title, 3)) {
-        validationErrors.push("Title ungültig. Minimum 3 Charakter: " + req.body.userstudy.title);
+        validationErrors.push("Title ungültig. Minimum 3 Charakter. Erhalten: " + req.body.userstudy.title);
       }
       if (!req.body.userstudy.tutor || !Validator.isNumeric(req.body.userstudy.tutor)) {
-        validationErrors.push("Tutor-ID ungültig. Zahl erwartet: " + req.body.userstudy.tutor);
+        validationErrors.push("Tutor-ID ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.tutor);
       }
       if (!req.body.userstudy.executor || !Validator.isNumeric(req.body.userstudy.executor)) {
-        validationErrors.push("Executor-ID ungültig. Zahl erwartet:: " + req.body.userstudy.executor);
+        validationErrors.push("Executor-ID ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.executor);
       }
       if (!req.body.userstudy.fromDate || !Validator.isDate(req.body.userstudy.fromDate)) {
-        validationErrors.push("FromDate ungültig. Datum Fromat erwartet YYYY-MM-DD: " + req.body.userstudy.fromDate);
+        validationErrors.push("FromDate ungültig. Datum Fromat erwartet YYYY-MM-DD. Erhalten: " + req.body.userstudy.fromDate);
       }
       if (!req.body.userstudy.untilDate || !Validator.isDate(req.body.userstudy.untilDate)) {
-        validationErrors.push("UntilDate ungültig. Datum Fromat erwartet  YYYY-MM-DD: " + req.body.userstudy.untilDate);
+        validationErrors.push("UntilDate ungültig. Datum Fromat erwartet  YYYY-MM-DD. Erhalten: " + req.body.userstudy.untilDate);
       }
       if (!req.body.userstudy.description || !Validator.isLength(req.body.userstudy.description, 3)) {
-        validationErrors.push("Description ungültig. Minimum 3 Charakter: " + req.body.userstudy.description);
+        validationErrors.push("Description ungültig. Minimum 3 Charakter. Erhalten: " + req.body.userstudy.description);
       }
       if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link, {require_protocol: true})) {
-        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet: " + req.body.userstudy.link);
+        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet. Erhalten: " + req.body.userstudy.link);
       }
       if (!req.body.userstudy.hasOwnProperty("mmi") || !Validator.isFloat(req.body.userstudy.mmi)) {
-        validationErrors.push("MMI Points ungültig. Zahl erwartet: " + req.body.userstudy.mmi);
+        validationErrors.push("MMI-Punkte ungültig. Es wird eine Zahl erwartet. Erhalten: " + req.body.userstudy.mmi);
       }
-      if (!req.body.userstudy.hasOwnProperty("compensation") || !Validator.isInt(req.body.userstudy.compensation)) {
-        validationErrors.push("Amazon Punkte ungültig. Zahl erwartet: " + req.body.userstudy.compensation);
+      if (!req.body.userstudy.hasOwnProperty("compensation")) {
+        validationErrors.push("Prämie ungültig. Erhalten: " + req.body.userstudy.compensation);
       }
       if (!req.body.userstudy.location || !Validator.isLength(req.body.userstudy.location, 3)) {
-        validationErrors.push("Ort ungültig. Minimum 3 Charakter: " + req.body.userstudy.location);
+        validationErrors.push("Ort ungültig. Minimum 3 Charakter. Erhalten: " + req.body.userstudy.location);
       }
       if (!req.body.userstudy.hasOwnProperty("space") || !Validator.isInt(req.body.userstudy.space)) {
-        validationErrors.push("Teilnehmeranzahl ungültig. Zahl erwartet: " + req.body.userstudy.space);
+        validationErrors.push("Teilnehmeranzahl ungültig. Es wird eine Zahl erwartet. Erhalten: " + req.body.userstudy.space);
       }
       if (!req.body.userstudy.template || !Validator.isNumeric(req.body.userstudy.template)) {
-        validationErrors.push("TemplateId ungültig. Zahl erwartet: " + req.body.userstudy.template);
+        validationErrors.push("Die Template-Id ist ungültig. Es wird eine Zahl erwartet. Erhalten: " + req.body.userstudy.template);
       }
       if (!req.body.userstudy.templateValues || !Array.isArray(req.body.userstudy.templateValues)) {
-        validationErrors.push("templateValues ungültig. Array erwartet: " + req.body.userstudy.templateValues);
+        validationErrors.push("Die templateValues ungültig. Es wird ein Array erwartet. Erhalten: " + req.body.userstudy.templateValues);
       }
       if (!req.body.userstudy.requiredStudies || Array.isArray(req.body.userstudy.requiredStudies)) {
         for (var i=0; i<req.body.userstudy.requiredStudies; i+=1){
           if (!Validator.isNumeric(req.body.userstudy.requiredStudies)) {
-            validationErrors.push("requiredStudies ungültig. Zahl erwartet: " + req.body.userstudy.requiredStudies);
+            validationErrors.push("requiredStudies ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.requiredStudies);
           }
         }
       } else {
@@ -61,32 +61,32 @@ module.exports.validFullUserstudyReq = function(req){
       if (!req.body.userstudy.news || Array.isArray(req.body.userstudy.news)) {
         for (var j=0; j<req.body.userstudy.news; j+=1){
           if (!Validator.isNumeric(req.body.userstudy.news)) {
-            validationErrors.push("News ungültig. Zahl erwartet: " + req.body.userstudy.news);
+            validationErrors.push("News ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.news);
           }
         }
       } else {
-        validationErrors.push("News ungültig. Array von Zahlen erwartet: " + req.body.userstudy.news);
+        validationErrors.push("News ungültig. Array von Zahlen erwartet. Erhalten: " + req.body.userstudy.news);
       }
       if (!req.body.userstudy.registeredUsers || Array.isArray(req.body.userstudy.registeredUsers)) {
         for (var m=0; m<req.body.userstudy.registeredUsers; m+=1){
           if (!Validator.isNumeric(req.body.userstudy.registeredUsers)) {
-            validationErrors.push("registeredUsers ungültig. Zahl erwartet: " + req.body.userstudy.registeredUsers);
+            validationErrors.push("registeredUsers ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.registeredUsers);
           }
         }
       } else {
-        validationErrors.push("registeredUsers ungültig. Array von Zahlen erwartet: " + req.body.userstudy.registeredUsers);
+        validationErrors.push("registeredUsers ungültig. Array von Zahlen erwartet. Erhalten: " + req.body.userstudy.registeredUsers);
       }
       if (!req.body.userstudy.labels || Array.isArray(req.body.userstudy.labels)) {
         for (var k=0; k<req.body.userstudy.labels; k+=1){
           if (!Validator.isNumeric(req.body.userstudy.labels)) {
-            validationErrors.push("labels ungültig. Zahl erwartet: " + req.body.userstudy.labels);
+            validationErrors.push("labels ungültig. Zahl erwartet. Erhalten: " + req.body.userstudy.labels);
           }
         }
       } else {
-        validationErrors.push("labels ungültig. Array von Zahlen erwartet: " + req.body.userstudy.labels);
+        validationErrors.push("labels ungültig. Array von Zahlen erwartet. Erhalten: " + req.body.userstudy.labels);
       }
       if (req.body.userstudy.fromDate > req.body.userstudy.untilDate) {
-        validationErrors.push("Das from-Datum muss vor dem until-Datum liegen.");
+        validationErrors.push("Das vom-Datum muss vor dem dann-Datum liegen.");
       }
     }
 
