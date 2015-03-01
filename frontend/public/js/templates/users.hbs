@@ -17,7 +17,7 @@
         <thead>
             <tr>
                 <th>
-                    {{custom-select values=roles currentSelected=roleFilter}}
+                    {{custom-select values=roles currentSelected=roleFilter promptText="Alle"}}
                 </th>
                 <th>
                     {{input action="filterUsers" click="wayne" type="text" value=userNameFilter classNames="form-control input-sm" placeholder="Filter User"}}
@@ -29,7 +29,7 @@
                     {{input action="filterUsers" type="text" value=lastNameFilter classNames="form-control input-sm" placeholder="Filter Nachname"}}
                 </th>
                 <th>
-                    {{custom-select values=mmiFilterOptions currentSelected=mmiFilter}}
+                    {{custom-select values=mmiFilterOptions currentSelected=mmiFilter promptText="Alle"}}
                 </th>
                 <th>
                     {{#if isLoading}}

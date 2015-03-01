@@ -20,7 +20,7 @@
                 {{input action="filterNews" type="text" value=titleFilter classNames="form-control input-sm" placeholder="Filter Titel"}}
             </th>
             <th>
-                {{view "date-field" readonly="readonly" classNames="form-control input-sm management--all__datePicker" value=selectedDateFilter}}
+                {{view "date-field" readonly="readonly" classNames="form-control input-sm management--all__datePicker" value=selectedDateFilter placeholder="Filter Datum"}}
                 <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearDatePicker'}}></span>
             </th>
             <th>

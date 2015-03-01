@@ -4,5 +4,7 @@ StudyManager.CustomSelectComponent = Ember.Component.extend({
 
     currentSelected: null,
 
+    promptText: null,
+
     values: []
 });

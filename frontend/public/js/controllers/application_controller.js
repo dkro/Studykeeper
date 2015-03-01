@@ -36,10 +36,9 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         this._super();
 
         var mmiPoints = [];
-        mmiPoints[0] = null;
         var val = 0;
 
-        for (var i = 1; i <= 30; i++) {
+        for (var i = 0; i <= 30; i++) {
             mmiPoints[i] = parseFloat(val);
             val += 0.5;
         }
@@ -125,5 +124,5 @@ StudyManager.ApplicationController = Ember.Controller.extend({
 
     mmiValues: null,
 
-    amazonValues: [null, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    amazonValues: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 });

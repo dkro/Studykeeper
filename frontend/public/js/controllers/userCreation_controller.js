@@ -41,7 +41,6 @@ StudyManager.UserCreationController = Ember.Controller.extend({
         this.set('roles', this.get('controllers.application').get('roles'));
 
         var mmiValues = this.get('controllers.application').get('mmiValues');
-        mmiValues.removeObject(null);
         this.set('mmiValues', mmiValues);
     },
 

@@ -41,7 +41,6 @@ StudyManager.UsersController = Ember.Controller.extend({
         this._super();
 
         var filterableRoles = [];
-        filterableRoles.pushObject('');
         filterableRoles.pushObjects(this.get('controllers.application').get('roles'));
         this.set('roles', filterableRoles);
 

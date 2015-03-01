@@ -39,10 +39,10 @@
                     {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Person" value=selectedExecutorFilter}}
                 </th>
                 <th class="studies__filter--mmi studies__column--mmi">
-                    {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter}}
+                    {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter promptText="Alle"}}
                 </th>
                 <th class="studies__filter--amazon studies__column--amazon">
-                    {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter}}
+                    {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter promptText="Alle"}}
                 </th>
                 {{#if isTutor}}
                     <th>
