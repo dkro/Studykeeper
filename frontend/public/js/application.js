@@ -36,6 +36,18 @@ Ember.Handlebars.helper('typeOutput', function(item, type, options) {
     return res;
 });
 
+Ember.Handlebars.helper('toGermanRole', function(role, options) {
+    var res = 'Teilnehmer';
+
+    if (role === 'executor') {
+        res = 'Ausführend';
+    } else if (role === 'tutor') {
+        res = 'Tutor';
+    }
+
+    return res;
+});
+
 // Important: Ember.js has new deprecations added for "global lookup of views" in version 1.8.
 // That means: Views for example have to be named : "TestView" or "SuperTestView"
 // and are used in the HTML file by using "{{view "test"}}" or {{view "super-test"}}

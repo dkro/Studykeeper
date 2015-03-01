@@ -337,10 +337,10 @@ StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('userName', model.get('username'));
     controller.set('mmiPoints', model.get('mmi'));
     controller.set('isMMIUser', model.get('collectsMMI'));
-    controller.set('selectedRole', model.get('role'));
     controller.set('tutoredStudies', model.get('isTutorFor'));
     controller.set('registeredStudies', model.get('registeredFor'));
     controller.set('executedStudies', model.get('isExecutorFor'));
+    controller.determineSelectedRole();
   }
 });
 

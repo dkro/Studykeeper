@@ -35,7 +35,7 @@ StudyManager.UserController = Ember.Controller.extend({
             thisUser.set('lastname', newData.lastnameNew);
             thisUser.set('mmi', newData.mmiNew);
             thisUser.set('collectsMMI', newData.isMMIUserNew);
-            thisUser.set('role', newData.selectedRoleNew);
+            thisUser.set('role', this.get('controllers.application').toServiceRole(newData.selectedRoleNew));
 
             var that = this;
             var name = thisUser.get('username');
@@ -76,6 +76,11 @@ StudyManager.UserController = Ember.Controller.extend({
         this.set('updateDataWasValid', true);
     },
 
+    determineSelectedRole: function() {
+        var clientRole = this.get('controllers.application').toClientRole(this.get('model').get('role'));
+        this.set('selectedRole', clientRole);
+    },
+
     updateDataWasValid: true,
 
     isUpdateLoading: false,
@@ -105,5 +110,4 @@ StudyManager.UserController = Ember.Controller.extend({
     registeredStudies: [],
 
     executedStudies: []
-
 });

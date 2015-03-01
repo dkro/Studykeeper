@@ -11,7 +11,7 @@ StudyManager.UserCreationController = Ember.Controller.extend({
                 username: newData.usernameNew,
                 mmi: newData.mmiNew,
                 collectsMMI: newData.isMMIUserNew,
-                role: newData.selectedRoleNew
+                role: this.get('controllers.application').toServiceRole(newData.selectedRoleNew)
             });
 
             var that = this;

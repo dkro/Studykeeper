@@ -57,7 +57,7 @@
                 {{#if usersList}}
                     {{#each user in usersList}}
                         <tr class="management--all__row" {{action 'showUserConfig' user}}>
-                            <td>{{user.role}}</td>
+                            <td>{{toGermanRole user.role}}</td>
                             <td>{{user.username}}</td>
                             <td>{{user.firstname}}</td>
                             <td>{{user.lastname}}</td>

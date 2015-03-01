@@ -97,7 +97,31 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         window.localStorage.clear();
     },
 
-    roles: ['executor', 'participant', 'tutor'],
+    roles: ['Ausführend', 'Teilnehmer', 'Tutor'],
+
+    toServiceRole: function(clientRole) {
+        var res = 'participant';
+
+        if (clientRole === 'Ausführend') {
+            res = 'executor';
+        } else if (clientRole === 'Tutor') {
+            res = 'tutor';
+        }
+
+        return res;
+    },
+
+    toClientRole: function(serviceRole) {
+        var res = 'Teilnehmer';
+
+        if (serviceRole === 'executor') {
+            res = 'Ausführend';
+        } else if (serviceRole === 'tutor') {
+            res = 'Tutor';
+        }
+
+        return res;
+    },
 
     mmiValues: null,
 

@@ -46,7 +46,6 @@ StudyManager.UsersController = Ember.Controller.extend({
         this.set('roles', filterableRoles);
 
         var filterMMIOptions = [];
-        filterMMIOptions.pushObject(null);
         filterMMIOptions.pushObjects(this.get('controllers.application').get('mmiValues'));
         this.set('mmiFilterOptions', filterMMIOptions);
     },
@@ -160,7 +159,8 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('roleFilter')))) {
-            res = role === this.get('roleFilter');
+            var adaptedFilter = this.get('controllers.application').toServiceRole(this.get('roleFilter'));
+            res = role === adaptedFilter;
         }
 
         return res;
