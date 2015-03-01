@@ -125,8 +125,15 @@
 
         <script type="text/x-handlebars" id="components/user-config">
             <form class="form-horizontal component__config__form">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
+                        <small class="obligatory__text">Erforderlich</small><span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </div>
+                </div>
                 <div {{bind-attr class=":form-group firstNameInvalid:has-error"}}>
-                    <label for="firstNameUserConfigInput" class="col-sm-2 control-label">Vorname:</label>
+                    <label for="firstNameUserConfigInput" class="col-sm-2 control-label">
+                        Vorname:  <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="firstNameUserConfigHelp" id="firstNameUserConfigInput" value=firstName classNames="form-control" placeholder="Vorname"}}
 
@@ -136,7 +143,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group lastNameInvalid:has-error"}}>
-                    <label for="lastNameUserConfigInput" class="col-sm-2 control-label">Nachname:</label>
+                    <label for="lastNameUserConfigInput" class="col-sm-2 control-label">
+                        Nachname:  <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="lastNameUserConfigHelp" id="lastNameUserConfigInput" value=lastName classNames="form-control" placeholder="Nachname"}}
 
@@ -146,9 +155,11 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group userNameInvalid:has-error"}}>
-                    <label for="emailUserConfigInput" class="col-sm-2 control-label">Email:</label>
+                    <label for="emailUserConfigInput" class="col-sm-2 control-label">
+                        Email:  <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
-                        {{input type="email" aria-describedby="userNameUserConfigHelp" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="Email"}}
+                        {{input type="email" aria-describedby="userNameUserConfigHelp" id="emailUserConfigInput" value=userName classNames="form-control" placeholder="nutzer@campus.lmu.de"}}
 
                         {{#if userNameInvalid}}
                             <span id="userNameUserConfigHelp" class="help-block">{{userNameInvalid}}</span>
@@ -156,7 +167,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="roleUserConfigSelect" class="col-sm-2 control-label">Rolle:</label>
+                    <label for="roleUserConfigSelect" class="col-sm-2 control-label">
+                        Rolle:  <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "select" id="roleUserConfigSelect" content=roles value=selectedRole classNames="form-control component__config__select"}}
                     </div>
@@ -164,9 +177,18 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <label>
-                            {{input type="checkbox" checked=isMMIUser}}
+                            {{input aria-describedby="mmiUserConfigSelectHelp" type="checkbox" checked=isMMIUser}}
                             Sammelt MMI-Punkte
                         </label>
+                        {{#if isMMIUser}}
+                            <span id="mmiUserConfigSelectHelp" class="help-block">
+                                <span class="glyphicon glyphicon-info-sign management--single__helpInfo__icon"></span>
+                                <span class="management--single__helpInfo__text">
+                                    MMI-Punkte können nur mit einer gültigen Email Adresse der LMU München gesammelt werden!<br>
+                                    Zum Beispiel: <strong>"mustermann@campus.lmu.de"</strong> oder <strong>"max.mustermann@ifi.lmu.de"</strong>.
+                                </span>
+                            </span>
+                        {{/if}}
                     </div>
                 </div>
                 {{#if isMMIUser}}
@@ -220,7 +242,7 @@
             <form class="form-horizontal component__config__form">
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
-                        <span class="fa fa-asterisk obligatory__asterisk"></span><small class="obligatory__text">Verpflichtend</small>
+                        <small class="obligatory__text">Erforderlich</small><span class="fa fa-asterisk obligatory__asterisk"></span>
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group titleInvalid:has-error"}}>
@@ -304,8 +326,15 @@
 
         <script type="text/x-handlebars" id="components/study-config">
             <form class="form-horizontal component__config__form">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
+                        <small class="obligatory__text">Erforderlich</small><span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </div>
+                </div>
                 <div {{bind-attr class=":form-group titleInvalid:has-error"}}>
-                    <label for="titleStudyConfigInput" class="col-sm-2 control-label">Titel:</label>
+                    <label for="titleStudyConfigInput" class="col-sm-2 control-label">
+                        Titel: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="titleStudyConfigHelp" id="titleStudyConfigInput" value=title classNames="form-control" placeholder="Titel"}}
 
@@ -315,7 +344,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group fromDateInvalid:has-error"}}>
-                    <label for="fromStudyConfigInput" class="col-sm-2 control-label">Von:</label>
+                    <label for="fromStudyConfigInput" class="col-sm-2 control-label">
+                        Von: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "date-field" aria-describedby="fromStudyConfigHelp" id="fromStudyConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=fromDate placeholder="Zeitraum von"}}
 
@@ -325,7 +356,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group toDateInvalid:has-error"}}>
-                    <label for="toStudyConfigInput" class="col-sm-2 control-label">Bis:</label>
+                    <label for="toStudyConfigInput" class="col-sm-2 control-label">
+                        Bis: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "date-field" aria-describedby="toStudyConfigHelp" id="toStudyConfigInput" readonly="readonly" classNames="form-control management--single__datePicker" value=toDate placeholder="Zeitraum bis"}}
 
@@ -336,20 +369,26 @@
                 </div>
                 {{#if isTutorUser}}
                     <div class="form-group">
-                        <label for="tutorStudyConfigSelect" class="col-sm-2 control-label">Tutor:</label>
+                        <label for="tutorStudyConfigSelect" class="col-sm-2 control-label">
+                            Tutor: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                        </label>
                         <div class="col-sm-10">
                             {{view "select" id="tutorStudyConfigSelect" content=possibleTutors optionValuePath="content.id" optionLabelPath="content.username" selection=tutor classNames="form-control"}}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="executorStudyConfigSelect" class="col-sm-2 control-label">Ausführung:</label>
+                        <label for="executorStudyConfigSelect" class="col-sm-2 control-label">
+                            Ausführung: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                        </label>
                         <div class="col-sm-10">
                             {{view "select" id="executorStudyConfigSelect" content=possibleExecutors optionValuePath="content.id" optionLabelPath="content.username" selection=executor classNames="form-control"}}
                         </div>
                     </div>
                 {{/if}}
                 <div {{bind-attr class=":form-group locationInvalid:has-error"}}>
-                    <label for="locationStudyConfigInput" class="col-sm-2 control-label">Ort:</label>
+                    <label for="locationStudyConfigInput" class="col-sm-2 control-label">
+                        Ort: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="locationStudyConfigHelp" id="locationStudyConfigInput" value=location classNames="form-control" placeholder="Ort"}}
 
@@ -359,7 +398,9 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group descriptionInvalid:has-error"}}>
-                    <label for="descriptionStudyConfigTextArea" class="col-sm-2 control-label">Beschreibung:</label>
+                    <label for="descriptionStudyConfigTextArea" class="col-sm-2 control-label">
+                        Beschreibung: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{textarea rows="3" aria-describedby="descriptionStudyConfigInputHelp" id="descriptionStudyConfigTextArea" value=description classNames="form-control" placeholder="Beschreibung"}}
 
@@ -369,9 +410,11 @@
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group linkInvalid:has-error"}}>
-                    <label for="linkStudyConfigInput" class="col-sm-2 control-label">Link:</label>
+                    <label for="linkStudyConfigInput" class="col-sm-2 control-label">
+                        Link: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
-                        {{input type="text" aria-describedby="linkStudyConfigInputHelp" id="linkStudyConfigInput" value=link classNames="form-control" placeholder="Link"}}
+                        {{input type="text" aria-describedby="linkStudyConfigInputHelp" id="linkStudyConfigInput" value=link classNames="form-control" placeholder="http://www.medien.ifi.lmu.de"}}
 
                         {{#if linkInvalid}}
                             <span id="linkStudyConfigInputHelp" class="help-block">{{linkInvalid}}</span>
@@ -379,19 +422,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="mmiStudyConfigSelect" class="col-sm-2 control-label">MMI-Punkte:</label>
+                    <label for="mmiStudyConfigSelect" class="col-sm-2 control-label">
+                        MMI-Punkte: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "select" id="mmiStudyConfigSelect" content=mmiPoints value=mmi classNames="form-control component__config__select"}}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="amazonStudyConfigSelect" class="col-sm-2 control-label">Amazon:</label>
+                    <label for="amazonStudyConfigSelect" class="col-sm-2 control-label">
+                        Ersatzprämie: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{view "select" id="amazonStudyConfigSelect" content=amazonValues value=amazon classNames="form-control component__config__select"}}
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group spaceInvalid:has-error"}}>
-                    <label for="spaceStudyConfigSelect" class="col-sm-2 control-label">Kapazität:</label>
+                    <label for="spaceStudyConfigSelect" class="col-sm-2 control-label">
+                        Kapazität: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input id="spaceStudyConfigSelect" aria-describedby="spaceStudyConfigInputHelp" value=capacity classNames="form-control" type="text" placeholder="Studienkapazität"}}
 
@@ -469,8 +518,15 @@
 
         <script type="text/x-handlebars" id="components/template-config">
             <form class="form-horizontal component__config__form">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
+                        <small class="obligatory__text">Erforderlich</small><span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </div>
+                </div>
                 <div {{bind-attr class=":form-group :component__config--template__title__wrapper titleInvalid:has-error"}}>
-                    <label for="titleTemplateConfigInput" class="col-sm-2 control-label">Titel:</label>
+                    <label for="titleTemplateConfigInput" class="col-sm-2 control-label">
+                        Titel: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
                     <div class="col-sm-10">
                         {{input type="text" aria-describedby="titleTemplateConfigHelp" id="titleTemplateConfigInput" value=title classNames="form-control" placeholder="Titel"}}
 
@@ -479,11 +535,11 @@
                         {{/if}}
                     </div>
                 </div>
-                {{#if fields}}
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Felder:</label>
-                    </div>
-                {{/if}}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        Felder: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                    </label>
+                </div>
                 {{#each field in fields}}
                     <div class="form-group component__config--template__field__nameWrapper">
                         <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>

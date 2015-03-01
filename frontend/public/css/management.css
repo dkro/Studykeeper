@@ -88,12 +88,6 @@
     font-weight: bold;
 }
 
-.management--single__deleteButton {
-    margin-bottom: 1em;
-    margin-right: 2em;
-    display: inline-block;
-}
-
 .management--single__datePicker {
     background-color: white !important;
     cursor: pointer !important;
@@ -103,6 +97,32 @@
     display: inline-block;
     margin-bottom: 3em;
     vertical-align: top;
+}
+
+.management--single__helpInfo__icon {
+    float: left;
+    margin-right: 0.5em;
+}
+
+.management--single__helpInfo__text {
+    display: block;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 768px) {
+    .management--single__deleteButton {
+        margin-bottom: 1em;
+        margin-right: 2em;
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .management--single__deleteButton {
+        margin-bottom: 3em;
+        margin-right: 2em;
+        display: inline-block;
+    }
 }
 
 

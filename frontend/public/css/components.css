@@ -23,13 +23,13 @@
     }
 
     .component__config__cancelButton {
-        display: inline-block;
-        vertical-align: top;
+        display: block;
     }
 
     .component__config__saveButton {
+        display: block;
         margin-bottom: 2em;
-        display: inline-block;
+        margin-right: 1em;
     }
 
     .component__config__buttonsWrapper {
@@ -57,7 +57,6 @@
 }
 
 .component__config--template__field__nameInputGroup{
-    margin-left: 2em;
     max-width: 95%;
     display: inline-table;
 }
@@ -82,7 +81,7 @@
 }
 
 .component__config--template__addField__wrapper {
-    margin-top: 3em;
+    margin-top: 1em;
 }
 
 .component__config--template__addField__button {

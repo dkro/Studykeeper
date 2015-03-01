@@ -538,10 +538,10 @@
     font-size: 0.6em;
     vertical-align: super;
     color: #228b22;
-    margin-right: 0.5em;
 }
 
 .obligatory__text {
+    margin-right: 0.5em;
 }
 
 .obligatory__wrapper {
