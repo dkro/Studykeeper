@@ -5,6 +5,7 @@ StudyManager.Router.map(function() {
   this.route('acc-config', { path: '/account' });
   this.route('about');
   this.route('logout');
+  this.route('bla');
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
@@ -65,6 +66,12 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
     this.transitionTo('login').then(function () {
       that.controllerFor('login').set('statusMessage', { message: 'Sie müssen eingeloggt sein, um diese Seite sehen zu können!', isSuccess: false });
     });
+  }
+});
+
+StudyManager.BlaRoute = Ember.Route.extend({
+  beforeModel: function(transition){
+    console.log(transition.queryParams.message);
   }
 });
 
