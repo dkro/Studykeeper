@@ -61,8 +61,6 @@ module.exports = function(app) {
 
   app.post('/api/userstudies/:studyId/register/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.registerUserToStudy);
   app.post('/api/userstudies/:studyId/signoff/:id',  auth.tokenAuthenticate, auth.requiresRole(['self']), userStudyController.signoff);
-  //app.post('/api/userstudies/:id/remove/:userId',  auth.tokenAuthenticate, auth.requiresRole(['tutor','executor']), userStudyController.removeUserFromStudy);
-  //app.post('/api/userstudies/:id/confirm/:userId',  auth.tokenAuthenticate, auth.requiresRole(['executor']), userStudyController.confirmUserParticipation);
 
   // --------------- Label routes ---------------
   app.get('/api/labels', auth.tokenAuthenticate, auth.requiresRole(['tutor', 'executor', 'participant']), labelController.allLabels);
