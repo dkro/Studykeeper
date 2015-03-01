@@ -11,20 +11,20 @@
     </form>
 
     <button {{bind-attr class=":btn :login__button loginDataWasValid:btn-default:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'login'}}>
-        Login
+        {{#if isLoading}}
+            {{loading-status additionalClassNames="loading--login"}}
+        {{else}}
+            Login
+        {{/if}}
     </button>
 
     {{#if statusMessage}}
         {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess additionalClassNames="login__alert"}}
     {{/if}}
 
-    {{#if isLoading}}
-        <div class="loading--login__wrapper">
-            {{loading-status additionalClassNames="loading--login"}}
-        </div>
-    {{else}}
-        <div class="login__passwordRecovery" {{action 'toPasswordRecovery'}}>Passwort vergessen?</div>
-    {{/if}}
+    <div class="login__passwordRecovery" {{action 'toPasswordRecovery'}}>Passwort vergessen?</div>
 </div>
 
 <button class="btn btn-primary center-block login__signUpButton" {{action 'toSignUp'}}>Account erstellen</button>
+
+{{loading-status additionalClassNames="loading--fix"}}
