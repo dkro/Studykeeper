@@ -80,5 +80,5 @@ StudyManager.UserstudyConfirmController = Ember.Controller.extend({
 
     usersWithCompensation: [],
 
-    confirmOptions: ['Amazon-Gutschein', 'MMI-Punkte']
+    confirmOptions: ['Ersatzprämie', 'MMI-Punkte']
 });

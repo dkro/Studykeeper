@@ -193,7 +193,9 @@
                 </div>
                 {{#if isMMIUser}}
                     <div class="form-group">
-                        <label for="mmiUserConfigSelect" class="col-sm-2 control-label">MMI-Punkte:</label>
+                        <label for="mmiUserConfigSelect" class="col-sm-2 control-label">
+                            MMI-Punkte: <span class="fa fa-asterisk obligatory__asterisk"></span>
+                        </label>
                         <div class="col-sm-10">
                             {{view "select" id="mmiUserConfigSelect" content=mmiOptions value=selectedMMI classNames="form-control component__config__select"}}
                         </div>
@@ -434,7 +436,11 @@
                         Ersatzprämie: <span class="fa fa-asterisk obligatory__asterisk"></span>
                     </label>
                     <div class="col-sm-10">
-                        {{view "select" id="amazonStudyConfigSelect" content=amazonValues value=amazon classNames="form-control component__config__select"}}
+                        {{input type="text" aria-describedby="compensationStudyConfigInputHelp" id="compensationStudyConfigInput" value=compensation classNames="form-control" placeholder="Zum Beispiel: 15€ Amazon-Gutschein"}}
+
+                        {{#if compensationInvalid}}
+                            <span id="compensationStudyConfigInputHelp" class="help-block">{{compensationInvalid}}</span>
+                        {{/if}}
                     </div>
                 </div>
                 <div {{bind-attr class=":form-group spaceInvalid:has-error"}}>

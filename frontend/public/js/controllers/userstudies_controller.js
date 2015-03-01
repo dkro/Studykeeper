@@ -60,12 +60,10 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         this.set('selectedLocationFilter', null);
         this.set('selectedExecutorFilter', null);
         this.set('selectedMMIFilter', null);
-        this.set('selectedAmazonFilter', null);
+        this.set('selectedCompensationFilter', null);
 
         var isTutor = this.get('controllers.application').get('isTutor');
         this.set('isTutor', isTutor);
-
-        this.set('amazonFilterOptions', this.get('controllers.application').get('amazonValues'))
     },
 
     filterAll: function(shouldClearStatus) {
@@ -74,7 +72,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var filteredList = this.store.filter('userstudy', (function(study){
             return that.filterStudyTitle(study.get('title')) &&
                 that.filterExecutor(study.get('executor')) &&
-                that.filterAmazon(study.get('compensation')) &&
+                that.filterCompensation(study.get('compensation')) &&
                 that.filterMMI(study.get('mmi')) &&
                 that.filterLocation(study.get('location')) &&
                 that.filterDateRange(study.get('fromDate'), study.get('untilDate')) &&
@@ -121,11 +119,11 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         return res;
     },
 
-    filterAmazon: function(amount) {
+    filterCompensation: function(compensation) {
         var res = true;
 
-        if (!(Ember.empty(this.get('selectedAmazonFilter')))) {
-            res = amount === this.get('selectedAmazonFilter');
+        if (!(Ember.empty(this.get('selectedCompensationFilter')))) {
+            res = this.firstContainsSecond(compensation, this.get('selectedCompensationFilter'));
         }
 
         return res;
@@ -238,8 +236,6 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     mmiFilterOptions: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10],
 
-    amazonFilterOptions: [],
-
     selectedFromFilter: null,
 
     selectedFromFilterChanged: function() {
@@ -267,12 +263,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         this.filterAll(shouldClearStatus);
     }.observes('selectedMMIFilter'),
 
-    selectedAmazonFilter: null,
-
-    selectedAmazonFilterChanged: function() {
-        var shouldClearStatus = !Ember.empty(this.get('selectedAmazonFilter'));
-        this.filterAll(shouldClearStatus);
-    }.observes('selectedAmazonFilter'),
+    selectedCompensationFilter: null,
 
     selectedLabelsFilter: []
 });

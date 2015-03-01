@@ -122,7 +122,5 @@ StudyManager.ApplicationController = Ember.Controller.extend({
         return res;
     },
 
-    mmiValues: null,
-
-    amazonValues: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    mmiValues: null
 });

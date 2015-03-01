@@ -39,7 +39,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
             thisStudy.set('description', newData.descriptionNew);
             thisStudy.set('link', newData.linkNew);
             thisStudy.set('mmi', newData.mmiNew);
-            thisStudy.set('compensation', newData.amazonNew);
+            thisStudy.set('compensation', newData.compensationNew);
             thisStudy.set('space', newData.capacityNew);
             thisStudy.set('templateValues', newData.templateValuesNew);
             thisStudy.set('tutor', this.get('tutor'));
@@ -78,9 +78,6 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
         var mmiPoints = this.get('controllers.application').get('mmiValues');
         mmiPoints.removeObject(null);
         this.set('mmiPoints', mmiPoints);
-        var amazonValues = this.get('controllers.application').get('amazonValues');
-        amazonValues.removeObject(null);
-        this.set('amazonValues', amazonValues);
         this.set('isTutorUser', this.get('controllers.application').get('isTutor'));
     },
 
@@ -154,9 +151,7 @@ StudyManager.UserstudyEditController = Ember.Controller.extend({
 
     mmiPoints: [],
 
-    amazon: 0,
-
-    amazonValues: [],
+    compensation: null,
 
     executor: null,
 

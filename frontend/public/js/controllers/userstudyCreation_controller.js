@@ -14,7 +14,7 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
                 space: newData.capacityNew,
                 link: newData.linkNew,
                 mmi: newData.mmiNew,
-                compensation: newData.amazonNew,
+                compensation: newData.compensationNew,
                 templateValues: newData.templateValuesNew
             });
 
@@ -53,9 +53,6 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
         var mmiPoints = this.get('controllers.application').get('mmiValues');
         mmiPoints.removeObject(null);
         this.set('mmiPoints', mmiPoints);
-        var amazonValues = this.get('controllers.application').get('amazonValues');
-        amazonValues.removeObject(null);
-        this.set('amazonValues', amazonValues);
         this.set('isTutorUser', this.get('controllers.application').get('isTutor'));
     },
 
@@ -71,7 +68,7 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
         this.set('link', null);
         this.set('capacity', 0);
         this.set('mmi', 0);
-        this.set('amazon', 0);
+        this.set('compensation', null);
         this.set('executor', null);
         this.set('tutor', null);
         this.set('selectedLabels', []);
@@ -103,9 +100,7 @@ StudyManager.UserstudyCreationController = Ember.Controller.extend({
 
     mmiPoints: [],
 
-    amazon: 0,
-
-    amazonValues: [],
+    compensation: null,
 
     executor: null,
 

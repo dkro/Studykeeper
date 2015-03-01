@@ -22,7 +22,7 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
                 locationNew: this.get('location'),
                 descriptionNew: this.get('description'),
                 linkNew: this.get('link'),
-                amazonNew: this.get('amazon'),
+                compensationNew: this.get('compensation'),
                 mmiNew: this.get('mmi'),
                 capacityNew: this.get('capacity'),
                 templateValuesNew: values
@@ -82,6 +82,11 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
             isValid = false;
         }
 
+        if (Ember.empty(data.compensationNew)) {
+            this.set('compensationInvalid', 'Bitte geben Sie eine Ersatzprämie an!');
+            isValid = false;
+        }
+
         if (Ember.empty(data.capacityNew)) {
             this.set('spaceInvalid', 'Bitte geben Sie die maximale Anzahl an Teilnehmern an!');
             isValid = false;
@@ -112,6 +117,7 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
         this.set('descriptionInvalid', null);
         this.set('linkInvalid', null);
         this.set('spaceInvalid', null);
+        this.set('compensationInvalid', null);
     },
 
     parseDate: function(input) {
@@ -156,13 +162,11 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
 
     link: null,
 
-    amazon: null,
+    compensation: null,
 
     mmi: null,
 
     mmiPoints: [],
-
-    amazonValues: [],
 
     titleInvalid: null,
 
@@ -173,6 +177,8 @@ StudyManager.StudyConfigComponent = Ember.Component.extend({
     locationInvalid: null,
 
     descriptionInvalid: null,
+
+    compensationInvalid: null,
 
     linkInvalid: null,
 

@@ -42,7 +42,7 @@
                     {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter promptText="Alle"}}
                 </th>
                 <th class="studies__filter--amazon studies__column--amazon">
-                    {{custom-select values=amazonFilterOptions currentSelected=selectedAmazonFilter promptText="Alle"}}
+                    {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Prämie" value=selectedCompensationFilter}}
                 </th>
                 {{#if isTutor}}
                     <th>
@@ -56,7 +56,7 @@
                 <th class="studies__column--location">Ort</th>
                 <th class="studies__column--executor">Durchführung</th>
                 <th class="studies__column--mmi">MMI-Punkte</th>
-                <th class="studies__column--amazon">Prämie</th>
+                <th class="studies__column--amazon">Ersatzprämie</th>
                 {{#if isTutor}}
                     <th></th>
                 {{/if}}
@@ -79,7 +79,7 @@
                             <td class="studies__column--location">{{study.location}}</td>
                             <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
                             <td class="studies__column--mmi">{{study.mmi}}</td>
-                            <td class="studies__column--amazon">{{study.compensation}}€</td>
+                            <td class="studies__column--amazon">{{study.compensation}}</td>
                             {{#if isTutor}}
                                 <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
                             {{/if}}
