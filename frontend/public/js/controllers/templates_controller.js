@@ -45,7 +45,6 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         this.set('fieldCountFilter', null);
 
         var counts = [];
-        counts.pushObject(null);
 
         for (var i = 0; i <= 30; i++) {
             counts.pushObject(i);
