@@ -5,7 +5,7 @@ StudyManager.Router.map(function() {
   this.route('acc-config', { path: '/account' });
   this.route('about');
   this.route('logout');
-  this.route('bla');
+  this.route('status');
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
@@ -69,9 +69,17 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
   }
 });
 
-StudyManager.BlaRoute = Ember.Route.extend({
+StudyManager.StatusRoute = Ember.Route.extend({
+  message: 'Fehler',
+
+  isSuccess: false,
+
   beforeModel: function(transition){
     console.log(transition.queryParams.message);
+  },
+
+  setupController: function(controller) {
+
   }
 });
 

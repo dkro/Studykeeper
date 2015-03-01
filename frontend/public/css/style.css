@@ -498,8 +498,12 @@
 }
 
 .loading--login {
-    font-size: 2em;
+    font-size: 3em;
     color: black;
+}
+
+.loading--login__wrapper {
+    text-align: center;
 }
 
 .loading--passwordRecovery {
