@@ -508,6 +508,9 @@
     visibility: hidden;
 }
 
+.loading--notFound {
+}
+
 .loading--passwordRecovery {
     margin-left: 1.5em;
     margin-right: 1.5em;

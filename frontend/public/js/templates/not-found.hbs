@@ -1,16 +1,20 @@
 <div class="jumbotron">
     <h1>
-        404
+        Fehler 404
     </h1>
     <p>
-        Die Seite konnte nicht gefunden werden!
+        Die Seite konnte nicht gefunden werden oder existiert nicht!
     </p>
     <p>
         <a class="btn btn-primary btn-lg" href="#" role="button">
-            {{#if isLoggedIn}}
-                Zum Dashboard
+            {{#if isLoading}}
+                {{loading-status additionalClassNames="loading--notFound"}}
             {{else}}
-                Zur Startseite
+                {{#if isLoggedIn}}
+                    Zum Dashboard
+                {{else}}
+                    Zur Startseite
+                {{/if}}
             {{/if}}
         </a>
     </p>

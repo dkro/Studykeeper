@@ -3,6 +3,8 @@ StudyManager.NotFoundController = Ember.Controller.extend({
 
     actions: {
         doTransition: function() {
+            this.set('isLoading', true);
+
             if (this.get('isLoggedIn')) {
                 this.transitionToRoute('dashboard');
             } else {
@@ -12,9 +14,13 @@ StudyManager.NotFoundController = Ember.Controller.extend({
     },
 
     determineState: function() {
+        this.set('isLoading', false);
+
         var isLoggedIn = this.get('controllers.application').get('isLoggedIn');
         this.set('isLoggedIn', isLoggedIn);
     },
 
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    isLoading: false
 });
