@@ -6,6 +6,7 @@ StudyManager.Router.map(function() {
   this.route('about');
   this.route('logout');
   this.route('status');
+  this.route('not-found', {path: '/*wildcard'});
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
@@ -80,6 +81,12 @@ StudyManager.StatusRoute = Ember.Route.extend({
 
   setupController: function(controller) {
 
+  }
+});
+
+StudyManager.NotFoundRoute = Ember.Route.extend({
+  setupController: function(controller) {
+    controller.determineState();
   }
 });
 
