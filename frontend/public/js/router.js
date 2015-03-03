@@ -7,6 +7,7 @@ StudyManager.Router.map(function() {
   this.route('logout');
   this.route('status');
   this.route('not-found', {path: '/*wildcard'});
+  this.route('record-nonexisting');
   this.resource('dashboard');
   this.resource('userstudies');
   this.resource('userstudy', { path: '/userstudies/:userstudy_id' });
@@ -27,22 +28,6 @@ StudyManager.Router.map(function() {
 });
 
 StudyManager.ApplicationRoute = Ember.Route.extend({
-  actions: {
-    showModal: function(name, model) {
-      return this.render(name, {
-        into: 'application',
-        outlet: 'modal',
-        model: model
-      });
-    },
-
-    removeModal: function() {
-      return this.disconnectOutlet({
-        outlet: 'modal',
-        parentView: 'application'
-      });
-    }
-  }
 });
 
 StudyManager.AuthenticationRoute = Ember.Route.extend({
@@ -89,6 +74,22 @@ StudyManager.StatusRoute = Ember.Route.extend({
 StudyManager.NotFoundRoute = Ember.Route.extend({
   setupController: function(controller) {
     controller.determineState();
+  }
+});
+
+StudyManager.RecordNonexistingRoute = Ember.Route.extend({
+  type: null,
+
+  id: null,
+
+  beforeModel: function(transition){
+    this.set('type', transition.queryParams.type);
+    this.set('id', transition.queryParams.recordId);
+  },
+
+  setupController: function(controller) {
+    controller.reset();
+    controller.setDisplayData(this.get('type'), this.get('id'));
   }
 });
 
@@ -197,7 +198,13 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
 
 StudyManager.UserstudyRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetchById('userstudy', params.userstudy_id);
+    var that = this;
+
+    return this.store.fetchById('userstudy', params.userstudy_id).then(function(study) {
+      return study;
+    }, function(error) {
+      that.transitionTo('record-nonexisting', {queryParams: {recordId: params.userstudy_id, type: 'study'}});
+    });
   },
 
   setupController: function(controller, model) {
@@ -213,7 +220,7 @@ StudyManager.UserstudyPublicRoute = Ember.Route.extend({
     return this.store.find('studypublic', params.userstudy_id).then(function(study) {
       return study;
     }, function(error) {
-      that.transitionTo('login');
+      that.transitionTo('record-nonexisting', {queryParams: {recordId: params.userstudy_id, type: 'study'}});
     });
   },
 
@@ -233,7 +240,11 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
       allUsers: that.store.find('user'),
       allTemplates: that.store.find('template'),
       allStudies: that.store.find('userstudy'),
-      study: that.store.find('userstudy', params.userstudy_id)
+      study: that.store.find('userstudy', params.userstudy_id).then(function(study) {
+        return study;
+      }, function(error) {
+        that.transitionTo('record-nonexisting', {queryParams: {recordId: params.userstudy_id, type: 'study'}});
+      })
     });
   },
 
@@ -261,7 +272,11 @@ StudyManager.UserstudyConfirmRoute = StudyManager.AuthenticationRoute.extend({
 
     return Ember.RSVP.hash({
       allUsers: that.store.find('user'),
-      study: that.store.find('userstudy', params.userstudy_id)
+      study: that.store.find('userstudy', params.userstudy_id).then(function(study) {
+        return study;
+      }, function(error) {
+        that.transitionTo('record-nonexisting', {queryParams: {recordId: params.userstudy_id, type: 'study'}});
+      })
     });
   },
 
@@ -344,13 +359,22 @@ StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.reset();
-    controller.set('usersList', model);
+    var filteredUsers = model.filter(function (user) {
+      return !(user.get('username') === undefined);
+    });
+    controller.set('usersList', filteredUsers);
   }
 });
 
 StudyManager.UserRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetchById('user', params.user_id);
+    var that = this;
+
+    return this.store.fetchById('user', params.user_id).then(function(user) {
+      return user;
+    }, function(error) {
+      that.transitionTo('record-nonexisting', {queryParams: {recordId: params.user_id, type: 'user'}});
+    });
   },
 
   setupController: function(controller, model) {
@@ -382,13 +406,22 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.reset();
-    controller.set('templatesList', model);
+    var filteredTemplates = model.filter(function (template) {
+      return !(template.get('title') === undefined);
+    });
+    controller.set('templatesList', filteredTemplates);
   }
 });
 
 StudyManager.TemplateRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetchById('template', params.template_id);
+    var that = this;
+
+    return this.store.fetchById('template', params.template_id).then(function(template) {
+      return template;
+    }, function(error) {
+      that.transitionTo('record-nonexisting', {queryParams: {recordId: params.template_id, type: 'template'}});
+    });
   },
 
   setupController: function(controller, model) {
@@ -421,14 +454,24 @@ StudyManager.NewsRoute = StudyManager.AuthenticationRoute.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.set('newsList', model);
+
+    var filteredNews = model.filter(function (news) {
+      return !(news.get('title') === undefined);
+    });
+    controller.set('newsList', filteredNews);
     controller.reset();
   }
 });
 
 StudyManager.SingleNewsRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
-    return this.store.fetchById('news', params.news_id);
+    var that = this;
+
+    return this.store.fetchById('news', params.news_id).then(function(news) {
+      return news;
+    }, function(error) {
+        that.transitionTo('record-nonexisting', {queryParams: {recordId: params.news_id, type: 'news'}});
+    });
   },
 
   setupController: function(controller, model) {

@@ -618,7 +618,7 @@
 
 .loading__statusWrapper {
     text-align: center;
-    color: grey;
+    color: #dcdcdc;
     font-size: 12em;
 }
 
@@ -634,4 +634,15 @@
 
 .obligatory__wrapper {
     text-align: right;
+}
+
+.recordNotFound__message--primaryMessage {
+    display: block;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.recordNotFound__message--secondaryMessage {
+    display: block;
 }

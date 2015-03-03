@@ -1,0 +1,10 @@
+<div class="alert alert-danger" role="alert">
+    <span class="recordNotFound__message--primaryMessage">Fehler!</span>
+    <span class="recordNotFound__message--secondaryMessage">
+        {{#if hasDisplayData}}
+            Unbekanntes Objekt! Es existiert {{notFoundRecordType type}} mit der Id "{{recordId}}".
+        {{else}}
+            Es existiert kein Objekt mit der angefragten Id!
+        {{/if}}
+    </span>
+</div>

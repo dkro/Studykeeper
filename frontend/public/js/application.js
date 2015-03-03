@@ -78,6 +78,24 @@ Ember.Handlebars.helper('searchTableTypeEmpty', function(type, options) {
     return res;
 });
 
+Ember.Handlebars.helper('notFoundRecordType', function(type, options) {
+    var res = '';
+
+    if (type === 'NEWS_TYPE') {
+        res = 'keine News';
+    } else if (type === 'LABELS_TYPE') {
+        res = 'kein Label';
+    } else if (type === 'STUDY_TYPE') {
+        res = 'keine Studie';
+    } else if (type === 'TEMPLATE_TYPE') {
+        res = 'kein Template';
+    } else if (type === 'USER_TYPE') {
+        res = 'kein Nutzer';
+    }
+
+    return res;
+});
+
 Ember.Handlebars.helper('toGermanRole', function(role, options) {
     var res = 'Teilnehmer';
 
