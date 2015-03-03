@@ -11,7 +11,6 @@ StudyManager.LabelsController = Ember.Controller.extend({
             this.set('statusMessage', null);
 
             newLabel.save().then(function(response) {
-                that.send('refreshLabels');
                 that.set('newLabelValue', null);
                 that.set('isCreateLoading', false);
                 var message = 'Label \"' + newLabel.get('title') + '\" wurde erstellt!';
@@ -22,7 +21,6 @@ StudyManager.LabelsController = Ember.Controller.extend({
                 that.set('createDataWasValid', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                 that.set('newLabelValue', null);
-                that.send('refreshLabels');
             });
         },
 
@@ -36,7 +34,6 @@ StudyManager.LabelsController = Ember.Controller.extend({
                     label.deleteRecord();
                     var name = label.get('title');
                     label.save().then(function(response) {
-                        that.send('refreshLabels');
                         that.set('isDeleteLoading', false);
                         var message = 'Label \"' + name + '\" wurde gelöscht!';
                         that.set('statusMessage', { message: message, isSuccess: true });
@@ -44,7 +41,6 @@ StudyManager.LabelsController = Ember.Controller.extend({
                         label.rollback();
                         that.set('isDeleteLoading', false);
                         that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                        that.send('refreshLabels');
                     })
                 });
             }

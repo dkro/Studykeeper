@@ -342,12 +342,6 @@ StudyManager.LabelsRoute = StudyManager.AuthenticationRoute.extend({
 
     controller.set('model', labels);
     controller.reset();
-  },
-
-  actions: {
-    refreshLabels: function() {
-      this.refresh();
-    }
   }
 });
 
