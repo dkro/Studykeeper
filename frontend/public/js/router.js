@@ -71,16 +71,18 @@ StudyManager.AuthenticationRoute = Ember.Route.extend({
 });
 
 StudyManager.StatusRoute = Ember.Route.extend({
-  message: 'Fehler',
+  type: null,
 
-  isSuccess: false,
+  hash: null,
 
   beforeModel: function(transition){
-    console.log(transition.queryParams.message);
+    this.set('type', transition.queryParams.type);
+    this.set('hash', transition.queryParams.hash);
   },
 
   setupController: function(controller) {
-
+    controller.reset();
+    controller.requestData(this.get('type'), this.get('hash'));
   }
 });
 
