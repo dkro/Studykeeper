@@ -91,6 +91,7 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.determineFreeSpace();
         this.determineTemplateFields();
         this.determineMailTos();
+        this.determineRegisteredUsers();
 
         var isTutor = this.get('controllers.application').get('isTutor');
         this.set('isTutor', isTutor);
@@ -172,6 +173,15 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         this.get('model').get('executor').then(function(executor) {
             var res = 'mailto:' + executor.get('username');
             that.set('mailToExecutor', res);
+        });
+    },
+
+    registeredUsers: [],
+
+    determineRegisteredUsers: function() {
+        var that = this;
+        this.get('model').get('registeredUsers').then(function(users){
+            that.set('registeredUsers', users);
         });
     },
 

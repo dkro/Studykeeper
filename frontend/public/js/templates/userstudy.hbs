@@ -106,8 +106,8 @@
                 </tr>
             </thead>
             <tbody>
-                {{#if model.registeredUsers}}
-                    {{#each user in model.registeredUsers}}
+                {{#if registeredUsers}}
+                    {{#each user in registeredUsers}}
                         <tr class="management--all__row">
                             <td>{{user.username}}</td>
                             <td>{{user.firstname}}</td>
