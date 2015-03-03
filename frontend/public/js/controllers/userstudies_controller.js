@@ -181,7 +181,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         } else if (!Ember.empty(fromFilter) && Ember.empty(toFilter)) {
             res = (this.compare(from, fromFilter) >= 0) && (this.compare(to, fromFilter) >= 0);
         } else if (Ember.empty(fromFilter) && !Ember.empty(toFilter)) {
-            res = (this.compare(from, fromFilter) <= 0) && (this.compare(to, fromFilter) <= 0);
+            res = (this.compare(from, toFilter) <= 0) && (this.compare(to, toFilter) <= 0);
         }
 
         return res;

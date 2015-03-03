@@ -617,6 +617,7 @@
 }
 
 .loading__statusWrapper {
+    vertical-align: middle;
     text-align: center;
     color: #dcdcdc;
     font-size: 12em;
