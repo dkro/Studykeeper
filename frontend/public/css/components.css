@@ -213,4 +213,81 @@
     margin-right: 0.35em;
 }
 
+.component__searchTable__searchInput {
+    max-width: 60%;
+}
+
+.component__searchTable__resultList {
+    border-width: 2px;
+    border-color: #0000ff;
+}
+
+.component__searchTable__resultItem {
+    background-color: silver;
+    padding: 0.7em;
+    color: #000000;
+}
+
+.component__searchTable__resultItem__text {
+    display: inline-block;
+}
+
+.component__searchTable__noSearchResult {
+    border: 2px solid black;
+    padding: 0.5em;
+    background-color: black;
+    color: #ffffff;
+    font-weight: bold;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+}
+
+.component__searchTable__table {
+    margin-top: 2em;
+}
+
+.component__searchTable__table__empty {
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    color: dimgrey;
+}
+
+.component__searchTable__table__deselectIcon {
+    font-size: 1.2em;
+    color: #000000;
+    cursor: pointer;
+}
+
+.component__searchTable__table__deselectIcon:hover {
+    transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+}
+
+
+
+
+.component__selectButton--notSelected {
+    display: inline-block;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 1em;
+}
+
+.component__selectButton--notSelected:hover {
+    transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+}
+
+.component__selectButton--selected {
+    display: inline-block;
+    font-weight: bold;
+    color: lemonchiffon;
+    margin-right: 1em;
+}
+
+
 

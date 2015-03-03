@@ -69,6 +69,62 @@
             </div>
         </script>
 
+        <script type="text/x-handlebars" id="components/select-button">
+            {{#if isSelected}}
+                Bereits ausgewählt
+            {{else}}
+                <span title="Hinzufügen" class="glyphicon glyphicon-plus-sign"></span>
+            {{/if}}
+        </script>
+
+        <script type="text/x-handlebars" id="components/search-table">
+            {{input type="text" value=searchValue classNames="form-control input-sm component__searchTable__searchInput" placeholder=placeholderText}}
+
+            {{#if searchList}}
+                <ul class="list-group component__searchTable__resultList">
+                    {{#each entry in searchList}}
+                        <li class="list-group-item component__searchTable__resultItem">
+                            {{select-button entry=entry selectedEntities=selectedEntities}}
+                            <span class="component__searchTable__resultItem__text">
+                                {{searchTypeOutput entry type}}
+                            </span>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                {{#if showEmptySearch}}
+                    <div class="component__searchTable__noSearchResult">Keine Suchergebnisse!</div>
+                {{/if}}
+            {{/if}}
+
+            <table class="table table-hover table-responsive component__searchTable__table">
+                <thead>
+                    <tr>
+                        <th>
+                            {{searchTableTypeHeader type}}
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if selectedEntities}}
+                        {{#each entity in selectedEntities}}
+                            <tr>
+                                <td>
+                                    {{searchTypeOutput entity type}}
+                                </td>
+                                <td><span class="glyphicon glyphicon-minus-sign component__searchTable__table__deselectIcon" {{action 'deselectEntry' entity}}></span></td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr>
+                            <td class="component__searchTable__table__empty" colspan="4">- {{searchTableTypeEmpty type}} -</td>
+                        </tr>
+                    {{/if}}
+                </tbody>
+            </table>
+        </script>
+
         <script type="text/x-handlebars" id="components/studies-list">
             {{#if studies}}
                 <p class="form-control-static component__studiesList__switch" {{action 'showHideStudies'}}>
@@ -456,27 +512,27 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="registeredUsersStudyConfigList" class="col-sm-2 control-label">Angemeldet:</label>
-                    <div class="col-sm-10">
-                        {{selection-list id="registeredUsersStudyConfigList" selections=registeredUsers itemList=users itemType="USER_TYPE"}}
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="labelsStudyConfigList" class="col-sm-2 control-label">Labels:</label>
                     <div class="col-sm-10">
                         {{selection-list id="labelsStudyConfigList" selections=selectedLabels itemList=labels itemType="LABELS_TYPE"}}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="newsStudyConfigList" class="col-sm-2 control-label">News:</label>
+                    <label for="registeredUsersStudyConfig" class="col-sm-2 control-label">Teilnehmer:</label>
                     <div class="col-sm-10">
-                        {{selection-list id="newsStudyConfigList" selections=selectedNews itemList=news itemType="NEWS_TYPE"}}
+                        {{search-table id="registeredUsersStudyConfig" type="USER_TYPE" allEntities=users selectedEntities=registeredUsers placeholderText="Suche Nutzer"}}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="requiredStudyConfigList" class="col-sm-2 control-label">Voraussetzung:</label>
+                    <label for="newsStudyConfig" class="col-sm-2 control-label">News:</label>
                     <div class="col-sm-10">
-                        {{selection-list id="requiredStudyConfigList" selections=requiredStudies itemList=allRequiredStudies itemType="STUDY_TYPE"}}
+                        {{search-table id="newsStudyConfig" type="NEWS_TYPE" allEntities=news selectedEntities=selectedNews placeholderText="Suche News"}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="requiredStudyConfig" class="col-sm-2 control-label">Voraussetzung:</label>
+                    <div class="col-sm-10">
+                        {{search-table id="requiredStudyConfig" type="STUDY_TYPE" allEntities=allRequiredStudies selectedEntities=requiredStudies placeholderText="Suche Studie"}}
                     </div>
                 </div>
                 <div class="form-group">
