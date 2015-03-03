@@ -1,3 +1,11 @@
-{{#if statusMessage}}
-    {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+{{#if isLoading}}
+    <div class="loading__statusWrapper">
+        {{loading-status}}
+    </div>
+{{else}}
+    {{#if statusMessage}}
+        {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
+    {{/if}}
 {{/if}}
+
+<span class="fa fa-spinner loading--fix"></span>

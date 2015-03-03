@@ -9,9 +9,11 @@ StudyManager.StatusController = Ember.Controller.extend({
         this.set('type', null);
         this.set('hash', null);
         this.set('statusMessage', null);
+        this.set('isLoading', false);
     },
 
     requestData: function(type, hash) {
+        this.set('isLoading', true);
         this.set('type', type);
         this.set('hash', hash);
 
@@ -29,9 +31,11 @@ StudyManager.StatusController = Ember.Controller.extend({
             type: "POST"
         }).then(
             function(response) {
+                that.set('isLoading', false);
                 that.set('statusMessage', { message: response.message, isSuccess: true });
             },
             function(error) {
+                that.set('isLoading', false);
                 that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
             });
     },
@@ -40,5 +44,7 @@ StudyManager.StatusController = Ember.Controller.extend({
 
     hash: null,
 
-    statusMessage: null
+    statusMessage: null,
+
+    isLoading: false
 });

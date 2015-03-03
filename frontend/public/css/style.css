@@ -616,6 +616,12 @@
     color: #ffffff;
 }
 
+.loading__statusWrapper {
+    text-align: center;
+    color: grey;
+    font-size: 12em;
+}
+
 .obligatory__asterisk {
     font-size: 0.6em;
     vertical-align: super;
