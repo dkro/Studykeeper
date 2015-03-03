@@ -1,6 +1,7 @@
 {{#if isLoading}}
-    <div class="loading__statusWrapper">
-        {{loading-status}}
+    <div class="loading__generalLoadingWrapper">
+        {{loading-status additionalClassNames="loading__generalLoadingWrapper__text"}}
+        <div class="loading__generalLoadingWrapper__text">Lade Daten...</div>
     </div>
 {{else}}
     {{#if statusMessage}}

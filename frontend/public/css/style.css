@@ -616,11 +616,20 @@
     color: #ffffff;
 }
 
-.loading__statusWrapper {
+.loading__generalLoadingWrapper {
     vertical-align: middle;
     text-align: center;
     color: #dcdcdc;
-    font-size: 12em;
+    padding-top: 7em;
+}
+
+.loading__generalLoadingWrapper__text {
+    font-size: 30em;
+}
+
+.loading__generalLoadingWrapper__text {
+    font-weight: bold;
+    font-size: 3em;
 }
 
 .obligatory__asterisk {
