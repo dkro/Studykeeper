@@ -161,7 +161,7 @@ var sendSignUpMail = function(user, callback){
         from: 'StudyKeeper <no-reply@studykeeper.com>',
         to: user.username,
         subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
-        html: "Bitte clicken Sie <a href=\"http://studykeeper.medien.ifi.lmu.de:10001/api/users/confirm/" + hash + "\">hier</a> " +
+        html: "Bitte clicken Sie <a href=\"http://studykeeper.medien.ifi.lmu.de:10001/#/status?hash=" + hash + "&type=confirm\">hier</a> " +
         "um Ihre Email-Adresse zu bestätigten und melden sich dann " +
         "mit Ihren Nutzerdaten an."};
       Mail.sendMail(mail,function(err,result){
@@ -200,8 +200,7 @@ module.exports.confirmUser = function(req, res, next){
           if (err){
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           } else {
-            res.header('Location', '/');
-            res.send(302);
+            res.json({status: 'success', message: 'Ihre Email Adresse wurde erfolgreich bestätigt.'});
           }
         });
       }
@@ -526,10 +525,9 @@ module.exports.recoverPasswordAction = function(req, res, next){
         sendPasswordRetrievalAction(pwData.username,newpw,function(err){
           if (err) {
             res.json(500, {status: 'failure', message: 'Server Fehler beim senden der Email. ' +
-            'Bitte Kontaktieren Sie uns persönlich um Ihr Passwort ' +
-            'widerherzustellen.', internal: err});
+            'Bitte führen Sie die Passwort Wiederherstellung erneut aus und kontaktieren Sie uns über diesen Fehler.', internal: err});
           } else {
-            res.json({status: 'success', message: 'Email wurde versandt.'});
+            res.json({status: 'success', message: 'Eine Email mit Ihrem neuen Passwort wurde versandt.'});
             next();
           }
         });
@@ -554,7 +552,7 @@ var sendPasswordRetrievalRequest = function(email, callback){
         subject: 'Passwort vergessen?',
         html: "Bitte klicken Sie auf folgenden Link, um Ihr Passwort zurückzusetzen. Falls Sie diese Mail nicht  " +
         "angefordert haben, ignorieren Sie diese Mail. "+
-        "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001/api/users/recover/" + hash + "\">hier</a>"};
+        "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001/#/status?hash=" + hash + "&type=recover\">hier</a>"};
       Mail.sendMail(mail,function(err,result){
         if (err) {
           callback(err);
