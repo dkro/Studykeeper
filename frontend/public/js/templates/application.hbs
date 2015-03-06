@@ -35,6 +35,13 @@
                     <li>
                         {{#link-to 'templates'}}Templates{{/link-to}}
                     </li>
+                {{else}}
+                    {{#if isLoggedIn}}
+                        <li class="divider"></li>
+                        <li>
+                            {{#link-to 'userstudies'}}Studien{{/link-to}}
+                        </li>
+                    {{/if}}
                 {{/if}}
                 {{#if isLoggedIn}}
                     <li class="divider"></li>
