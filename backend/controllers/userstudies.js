@@ -322,7 +322,10 @@ var parseUserstudy = function (userstudy) {
   if (userstudy.templateValues === null) {
     userstudy.templateValues = [];
   } else {
-    userstudy.templateValues = userstudy.templateValues.split(",").map(function(x){return x;});
+    userstudy.templateValues = userstudy.templateValues.split(",").map(function(x){
+      x = x.replace(/\d+[:]/, "");
+      return x;
+    });
   }
 
   userstudy.closed = !!userstudy.closed;

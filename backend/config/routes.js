@@ -16,10 +16,6 @@ var newsfeedController  = require('../controllers/news');
 module.exports = function(app) {
 
   app.use(passport.initialize());
-  // todo remove this... this is a hack for Ama to be able to use the backend from windows
-  app.use(restify.CORS());
-  app.use(restify.fullResponse());
-  restify.CORS.ALLOW_HEADERS.push('authorization');
 
   // All routes are mapped to frontend/public except for /api/* routes
   // This supplies the static content of the frontend.
@@ -28,6 +24,19 @@ module.exports = function(app) {
     'directory': '../frontend/public/',
     'default' : 'index.html'
   }));
+
+  // --------------- 404 ---------------
+  app.on('ResourceNotFound', function (req, res, next) {
+    res.header('Location', '/#/notfound');
+    res.send(302);
+    next();
+  });
+
+  app.on('NotFound', function (req, res, next) {
+    res.header('Location', '/#/notfound');
+    res.send(302);
+    next();
+  });
 
   // --------------- Public routes ---------------
   app.post('/api/users/signup', userController.signup);
