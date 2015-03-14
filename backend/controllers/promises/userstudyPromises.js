@@ -28,8 +28,13 @@ module.exports.validFullUserstudyReq = function(req){
       if (!req.body.userstudy.description || !Validator.isLength(req.body.userstudy.description, 3)) {
         validationErrors.push("Description ungültig. Minimum 3 Charakter. Erhalten: " + req.body.userstudy.description);
       }
-      if (req.body.userstudy.link && !Validator.isURL(req.body.userstudy.link, {require_protocol: true})) {
-        validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet. Erhalten: " + req.body.userstudy.link);
+      if (req.body.userstudy.link) {
+        if (!/^(f|ht)tps?:\/\//i.test(req.body.userstudy.link)) {
+          req.body.userstudy.link = "http://" + req.body.userstudy.link;
+        }
+        if (!Validator.isURL(req.body.userstudy.link)) {
+          validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet. Erhalten: " + req.body.userstudy.link);
+        }
       }
       if (!req.body.userstudy.hasOwnProperty("mmi") || !Validator.isFloat(req.body.userstudy.mmi)) {
         validationErrors.push("MMI-Punkte ungültig. Es wird eine Zahl erwartet. Erhalten: " + req.body.userstudy.mmi);
