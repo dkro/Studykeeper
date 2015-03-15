@@ -230,13 +230,6 @@ module.exports.getUserstudyByIdFilteredForUser = function (id, userId, callback)
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? AND us.visible=1 AND us.published=1 ' +
-      'AND (srr.studyId IS NULL OR (srr.id = ANY ( ' +
-      'SELECT  srr2.id FROM studies_requires_rel srr2 ' +
-      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
-      'WHERE sur2.userId=? OR sur2.userId IS NULL ' +
-      'GROUP BY srr2.studyId ' +
-      'HAVING COUNT(srr2.requiresId) = SUM(sur2.confirmed) ' +
-      '))) ' +
       'GROUP BY us.id;',
       [id,userId], function(err,result){
         connection.release();
@@ -262,14 +255,7 @@ module.exports.getUserstudyByIdFilteredForExecutor = function (id, userId, callb
       'LEFT JOIN studies_template_values stv ON us.id=stv.studyId ' +
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'WHERE us.id=? AND ((us.visible=1 AND us.published=1) ' +
-      'AND (srr.studyId IS NULL OR (srr.id = ANY ( ' +
-      'SELECT  srr2.id FROM studies_requires_rel srr2 ' +
-      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
-      'WHERE sur2.userId=? OR sur2.userId IS NULL ' +
-      'GROUP BY srr2.studyId ' +
-      'HAVING COUNT(srr2.requiresId) = SUM(sur2.confirmed) ' +
-      ')))) ' +
-      'OR (us.visible=1 AND us.executorId=?) ' +
+      'OR (us.visible=1 AND us.executorId=?)) ' +
       'GROUP BY us.id;',
       [id,userId,userId],
       function(err,result){
@@ -334,7 +320,6 @@ module.exports.getAllUserstudies = function (callback) {
 
 // Returns all userstudies which either have no required studies or the user has
 // completed and confirmed all required studies
-// TODO if a study has multiple required studies and the user has completed only one it is still shown...
 module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
   mysql.getConnection(function(connection) {
     connection.query('SELECT us.id, us.tutorId AS tutor, us.executorId AS executor, us.fromDate, us.untilDate, ' +
@@ -352,13 +337,6 @@ module.exports.getAllUserstudiesFilteredForUser = function (user, callback) {
       'LEFT JOIN studies_users_rel sur ON (us.id=sur.studyId AND sur.registered=1) ' +
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE us.visible=1 AND us.published=1 ' +
-      'AND (srr.studyId IS NULL OR (srr.id = ANY ( ' +
-      'SELECT  srr2.id FROM studies_requires_rel srr2 ' +
-      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
-      'WHERE sur2.userId=? OR sur2.userId IS NULL ' +
-      'GROUP BY srr2.studyId ' +
-      'HAVING COUNT(srr2.requiresId) = SUM(sur2.confirmed) ' +
-      '))) ' +
       'GROUP BY us.id;',
       [user.id,user.id],
       function(err,result){
@@ -387,14 +365,7 @@ module.exports.getAllUserstudiesFilteredForExecutor = function (user, callback) 
       'LEFT JOIN studies_users_rel surful ON (srr.requiresId=surful.studyId AND surful.confirmed=1 AND surful.userId=?) ' +
       'WHERE ' +
       '((us.visible=1 AND us.published=1) ' +
-      'AND (srr.studyId IS NULL OR (srr.id = ANY ( ' +
-      'SELECT  srr2.id FROM studies_requires_rel srr2 ' +
-      'LEFT JOIN studies_users_rel sur2 ON sur2.studyId=srr2.requiresId ' +
-      'WHERE sur2.userId=? OR sur2.userId IS NULL ' +
-      'GROUP BY srr2.studyId ' +
-      'HAVING COUNT(srr2.requiresId) = SUM(sur2.confirmed) ' +
-      ')))) ' +
-      'OR (us.visible=1 AND us.executorId=?) ' +
+      'OR (us.visible=1 AND us.executorId=?)) ' +
       'GROUP BY us.id;',
       [user.id,user.id,user.id],
       function(err,result){
@@ -495,6 +466,16 @@ module.exports.getStudiesFinishedByUser = function(userId, callback){
     connection.query("SELECT studyId FROM studies_users_rel " +
       "WHERE userId=? AND confirmed=1 AND registered=1",
       userId,
+      function(err,result){
+        connection.release();
+        callback(err,result);
+      });
+  });
+};
+
+module.exports.getRequiredStudyList = function(callback){
+  mysql.getConnection(function(connection){
+    connection.query("SELECT studyId, GROUP_CONCAT(requiresId) AS requiresIds FROM studies_requires_rel GROUP BY studyId",
       function(err,result){
         connection.release();
         callback(err,result);

@@ -19,8 +19,13 @@ module.exports.validNewsReq = function(req){
       if (!Validator.isLength(req.body.news.description, 3)) {
         validationErrors.push("News Beschreibung ungültig, Minimum 3 Charakter: " + req.body.news.description);
       }
-      if (!Validator.isURL(req.body.news.link, {require_protocol: true})) {
-        validationErrors.push("News link ungültig. URL Format (http://www.beispiel.de) erwartet: " + req.body.news.link);
+      if (req.body.news.link) {
+        if (!/^(f|ht)tps?:\/\//i.test(req.body.news.link)) {
+          req.body.news.link= "http://" + req.body.news.link;
+        }
+        if (!Validator.isURL(req.body.news.link)) {
+          validationErrors.push("Link ungültig. URL Format (http://www.beispiel.de) erwartet. Erhalten: " + req.body.userstudy.link);
+        }
       }
     }
 

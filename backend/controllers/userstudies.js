@@ -146,8 +146,18 @@ module.exports.getUserstudyById = function(req, res, next) {
 
             var userstudy = result[0];
             parseUserstudy(userstudy);
-            res.json({userstudy: userstudy});
-            return next();
+            removeReqStudies([userstudy],user.id,function(err,result){
+              if (err) {
+                res.json(500, {status: 'failure', message: err});
+                return next();
+              } else if (result.length == 0) {
+                res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                return next();
+              } else {
+                res.json({userstudy: result});
+                return next();
+              }
+            });
           }
         });
       } else {
@@ -161,8 +171,18 @@ module.exports.getUserstudyById = function(req, res, next) {
 
             var userstudy = result[0];
             parseUserstudy(userstudy);
-            res.json({userstudy: userstudy});
-            return next();
+            removeReqStudies([userstudy],user.id,function(err,result){
+              if (err) {
+                res.json(500, {status: 'failure', message: err});
+                return next();
+              } else if (result.length == 0) {
+                res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                return next();
+              } else {
+                res.json({userstudy: result});
+                return next();
+              }
+            });
           }
         });
       }
@@ -265,8 +285,18 @@ module.exports.allUserstudies = function(req, res, next) {
                 res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
                 return next();
               } else {
-                res.json({userstudies:list});
-                return next();
+                removeReqStudies(list,user.id,function(err,result){
+                  if (err) {
+                    res.json(500, {status: 'failure', message: err});
+                    return next();
+                  } else if (result.length == 0) {
+                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                    return next();
+                  } else {
+                    res.json({userstudies: result});
+                    return next();
+                  }
+                });
               }
             });
           }
@@ -284,8 +314,18 @@ module.exports.allUserstudies = function(req, res, next) {
                 res.json(500, {status:'failure', message: 'Server Fehler.', internal: err});
                 return next();
               } else {
-                res.json({userstudies:list});
-                return next();
+                removeReqStudies(list,user.id,function(err,result){
+                  if (err) {
+                    res.json(500, {status: 'failure', message: err});
+                    return next();
+                  } else if (result.length == 0) {
+                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                    return next();
+                  } else {
+                    res.json({userstudies: result});
+                    return next();
+                  }
+                });
               }
             });
           }
@@ -297,6 +337,52 @@ module.exports.allUserstudies = function(req, res, next) {
     return next();
   });
 };
+
+var removeReqStudies = function (userstudyList, userId, cb) {
+  var reqStudies = []
+  UserStudy.getRequiredStudyList(function(err, result){
+    if (err) {
+      cb(err);
+    } else {
+      reqStudies = result
+      UserStudy.getStudiesFinishedByUser(userId, function(err,finished){
+        if (err){
+          cb(err);
+        } else {
+          var studiesToRemove = []
+          Async.each(reqStudies,
+            function(item, callback){
+              var ids = item.requiresIds.split(",").map(function(x){return parseInt(x);})
+              var finishedIds = finished.map(function(item){
+                return item.studyId
+              });
+              if (ids.every(function(val) {
+                  return finishedIds.indexOf(val) >= 0; })
+              ){
+                callback();
+              } else {
+                studiesToRemove.push(item.studyId)
+                callback()
+              };
+            },
+            function(err){
+              if (err) {
+                cb(err);
+              } else {
+                for(var i = userstudyList.length; i--;) {
+                  if(studiesToRemove.indexOf(userstudyList[i].id) >= 0 && userstudyList[i].executor !== userId) {
+                    userstudyList.splice(i, 1);
+                  }
+                }
+                cb(null,userstudyList)
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+}
 
 var parseUserstudy = function (userstudy) {
   if (userstudy.requiredStudies === null) {
