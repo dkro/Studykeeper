@@ -321,12 +321,8 @@ module.exports.executorHasNoOpenStudies = function(userId) {
       if (err) {
         reject(err);
       } else if (result.length > 0) {
-        var str = "";
-        for (var i = 0; i<result.length; i+=1){
-          str = str + " " + result[i].id;
-        }
         reject("Der Nutzer (Rolle Ausführer) hat noch offene Nutzerstudien. Seine Rolle " +
-        "kann nur zum 'participant' gändert werden wenn diese geschlossen worden sind: " + str);
+        "kann nur zum Teilnehmer gändert werden wenn diese geschlossen worden sind.");
       } else {
         resolve();
       }
@@ -340,12 +336,8 @@ module.exports.tutorHasNoOpenStudies = function(userId ){
       if (err) {
         reject(err);
       } else if (result.length > 0) {
-        var str = "";
-        for (var i = 0; i<result.length; i+=1){
-          str = str + " " + result[i].id;
-        }
         reject("Der Nutzer (Rolle Tutor) hat noch offene Nutzerstudien. Seine Rolle " +
-        "kann nur zum 'participant/executor' gändert werden wenn diese geschlossen worden sind: " + str);
+        "kann nur zum 'Teilnehmer/Ausführend' gändert werden wenn diese geschlossen worden sind.");
       } else {
         resolve();
       }
