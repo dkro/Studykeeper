@@ -20,7 +20,7 @@
                     {{custom-select values=roles currentSelected=roleFilter promptText="Alle"}}
                 </th>
                 <th>
-                    {{input action="filterUsers" click="wayne" type="text" value=userNameFilter classNames="form-control input-sm" placeholder="Filter User"}}
+                    {{input action="filterUsers" type="text" value=userNameFilter classNames="form-control input-sm" placeholder="Filter User"}}
                 </th>
                 <th>
                     {{input action="filterUsers" type="text" value=firstNameFilter classNames="form-control input-sm" placeholder="Filter Vorname"}}
@@ -31,11 +31,6 @@
                 <th>
                     {{custom-select values=mmiFilterOptions currentSelected=mmiFilter promptText="Alle"}}
                 </th>
-                <th>
-                    {{#if isLoading}}
-                        <span class="glyphicon glyphicon-refresh"></span>
-                    {{/if}}
-                </th>
             </tr>
             <tr>
                 <th>Rolle</th>
@@ -43,13 +38,12 @@
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>MMI-Punkte</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
             {{#if isTableLoading}}
                 <tr>
-                    <td class="loading__wrapper--table" colspan="6">
+                    <td class="loading__wrapper--table" colspan="5">
                         {{loading-status additionalClassNames="loading--table"}}
                     </td>
                 </tr>
@@ -62,12 +56,11 @@
                             <td>{{user.firstname}}</td>
                             <td>{{user.lastname}}</td>
                             <td>{{user.mmi}}</td>
-                            <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteUser' user}}></span></td>
                         </tr>
                     {{/each}}
                 {{else}}
                     <tr>
-                        <td class="management--all__emptyFilter" colspan="6">- Keine Ergebnisse -</td>
+                        <td class="management--all__emptyFilter" colspan="5">- Keine Ergebnisse -</td>
                     </tr>
                 {{/if}}
             {{/if}}

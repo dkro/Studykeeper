@@ -22,22 +22,16 @@
             <th>
                 {{custom-select values=totalFieldsCount currentSelected=fieldCountFilter promptText="Alle"}}
             </th>
-            <th>
-                {{#if isLoading}}
-                    <span class="glyphicon glyphicon-refresh"></span>
-                {{/if}}
-            </th>
         </tr>
         <tr>
             <th>Titel</th>
             <th>Anzahl Felder</th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
         {{#if isTableLoading}}
             <tr>
-                <td class="loading__wrapper--table" colspan="3">
+                <td class="loading__wrapper--table" colspan="2">
                     {{loading-status additionalClassNames="loading--table"}}
                 </td>
             </tr>
@@ -47,12 +41,11 @@
                     <tr class="management--all__row" {{action 'showTemplateConfig' template}}>
                         <td>{{template.title}}</td>
                         <td>{{template.fields.length}}</td>
-                        <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteTemplate' template}}></span></td>
                     </tr>
                 {{/each}}
             {{else}}
                 <tr>
-                    <td class="management--all__emptyFilter" colspan="3">- Keine Ergebnisse -</td>
+                    <td class="management--all__emptyFilter" colspan="2">- Keine Ergebnisse -</td>
                 </tr>
             {{/if}}
         {{/if}}

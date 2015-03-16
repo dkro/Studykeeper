@@ -12,26 +12,6 @@ StudyManager.TemplatesController = Ember.Controller.extend({
             this.transitionToRoute('template-creation');
         },
 
-        deleteTemplate: function(template) {
-            this.set('statusMessage', null);
-            var title = template.get('title');
-            var that = this;
-
-            if (confirm('Wollen Sie das Template \"' + title + '\" wirklich löschen?')) {
-                this.set('isTableLoading', true);
-                template.deleteRecord();
-                template.save().then(function(response) {
-                    that.set('isTableLoading', false);
-                    var successMessage = 'Template \"' + title + '\" wurde erfolgreich gelöscht!';
-                    that.set('statusMessage', { message: successMessage, isSuccess: true });
-                }, function(error) {
-                    template.rollback();
-                    that.set('isTableLoading', false);
-                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
-            }
-        },
-
         filterTemplates: function() {
             this.filterAll(true);
         }
@@ -51,7 +31,6 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         }
 
         this.set('totalFieldsCount', counts);
-        this.set('isLoading', false);
     },
 
     isTableLoading: false,
@@ -73,10 +52,8 @@ StudyManager.TemplatesController = Ember.Controller.extend({
 
     templatesList: [],
 
-    isLoading: false,
-
     filterAll: function(shouldClearStatus) {
-        this.set('isLoading', true);
+        this.set('isTableLoading', true);
         var that = this;
 
         var filteredList = this.store.filter('template', (function(template){
@@ -85,7 +62,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         }));
 
         this.set('templatesList', filteredList);
-        this.set('isLoading', false);
+        this.set('isTableLoading', false);
 
         if (shouldClearStatus) {
             this.set('statusMessage', null);

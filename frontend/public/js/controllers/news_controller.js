@@ -12,26 +12,6 @@ StudyManager.NewsController = Ember.Controller.extend({
             this.transitionToRoute('news-creation');
         },
 
-        deleteNews: function(news) {
-            this.set('statusMessage', null);
-            var title = news.get('title');
-            var that = this;
-
-            if (confirm('Wollen Sie die News \"' + title + '\" wirklich löschen?')) {
-                this.set('isTableLoading', true);
-                news.deleteRecord();
-                news.save().then(function(response) {
-                    that.set('isTableLoading', false);
-                    var successMessage = 'News \"' + title + '\" wurde erfolgreich gelöscht!';
-                    that.set('statusMessage', { message: successMessage, isSuccess: true });
-                }, function(error) {
-                    news.rollback();
-                    that.set('isTableLoading', false);
-                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
-            }
-        },
-
         filterNews: function() {
             this.filterAll(true);
         },
@@ -45,7 +25,6 @@ StudyManager.NewsController = Ember.Controller.extend({
         this.set('statusMessage', null);
         this.set('titleFilter', null);
         this.set('selectedDateFilter', null);
-        this.set('isLoading', false);
         this.set('isTableLoading', false);
         this.set('isCreateLoading', false);
     },
@@ -67,10 +46,8 @@ StudyManager.NewsController = Ember.Controller.extend({
 
     newsList: [],
 
-    isLoading: false,
-
     filterAll: function(shouldClearStatus) {
-        this.set('isLoading', true);
+        this.set('isTableLoading', true);
         var that = this;
 
         var filteredList = this.store.filter('news', (function(news){
@@ -79,7 +56,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         }));
 
         this.set('newsList', filteredList);
-        this.set('isLoading', false);
+        this.set('isTableLoading', false);
 
         if (shouldClearStatus) {
             this.set('statusMessage', null);

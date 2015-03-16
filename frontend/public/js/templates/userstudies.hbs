@@ -44,10 +44,6 @@
                 <th class="studies__filter--amazon studies__column--amazon">
                     {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Prämie" value=selectedCompensationFilter}}
                 </th>
-                {{#if isTutor}}
-                    <th>
-                    </th>
-                {{/if}}
             </tr>
             <tr>
                 <th>Von</th>
@@ -57,9 +53,6 @@
                 <th class="studies__column--executor">Durchführung</th>
                 <th class="studies__column--mmi">MMI-Punkte</th>
                 <th class="studies__column--amazon">Ersatzprämie</th>
-                {{#if isTutor}}
-                    <th></th>
-                {{/if}}
             </tr>
         </thead>
         <tbody>
@@ -80,9 +73,6 @@
                             <td class="studies__column--executor">{{study.executor.firstname}}&nbsp;{{study.executor.lastname}}</td>
                             <td class="studies__column--mmi">{{study.mmi}}</td>
                             <td class="studies__column--amazon">{{study.compensation}}</td>
-                            {{#if isTutor}}
-                                <td><span class="glyphicon glyphicon-remove management--all__deleteIcon" {{action 'deleteStudy' study}}></span></td>
-                            {{/if}}
                         </tr>
                     {{/each}}
                 {{else}}

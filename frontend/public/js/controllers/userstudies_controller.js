@@ -12,26 +12,6 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
             this.transitionToRoute('userstudy-creation');
         },
 
-        deleteStudy: function(study) {
-            this.set('statusMessage', null);
-            var name = study.get('title');
-            var that = this;
-
-            if (confirm('Wollen Sie die Studie \"' + name + '\" wirklich löschen?')) {
-                this.set('isTableLoading', true);
-                study.deleteRecord();
-                study.save().then(function(response) {
-                    that.set('isTableLoading', false);
-                    var successMessage = 'Studie \"' + name + '\" wurde erfolgreich gelöscht!';
-                    that.set('statusMessage', { message: successMessage, isSuccess: true });
-                }, function(error) {
-                    study.rollback();
-                    that.set('isTableLoading', false);
-                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
-            }
-        },
-
         labelsChanged: function(labelVals) {
             this.set('selectedLabelsFilter', labelVals);
             this.filterAll(true);
@@ -67,6 +47,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     },
 
     filterAll: function(shouldClearStatus) {
+        this.set('isTableLoading', true);
         var that = this;
 
         var filteredList = this.store.filter('userstudy', (function(study){
@@ -80,6 +61,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         }));
 
         this.set('studiesList', filteredList);
+        this.set('isTableLoading', false);
 
         if (shouldClearStatus) {
             this.set('statusMessage', null);

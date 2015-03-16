@@ -12,26 +12,6 @@ StudyManager.UsersController = Ember.Controller.extend({
             this.transitionToRoute('user-creation');
         },
 
-        deleteUser: function(user) {
-            this.set('statusMessage', null);
-            var name = user.get('username');
-            var that = this;
-
-            if (confirm('Wollen Sie den User \"' + name + '\" wirklich löschen?')) {
-                this.set('isTableLoading', true);
-                user.deleteRecord();
-                user.save().then(function(response) {
-                    that.set('isTableLoading', false);
-                    var successMessage = 'Nutzer \"' + name + '\" wurde erfolgreich gelöscht!';
-                    that.set('statusMessage', { message: successMessage, isSuccess: true });
-                }, function(error) {
-                    user.rollback();
-                    that.set('isTableLoading', false);
-                    that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
-                });
-            }
-        },
-
         filterUsers: function() {
             this.filterAll(true);
         }
@@ -90,12 +70,10 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     usersList: [],
 
-    isLoading: false,
-
     mmiFilterOptions: [],
 
     filterAll: function(shouldClearStatus) {
-        this.set('isLoading', true);
+        this.set('isTableLoading', true);
         var that = this;
 
         var filteredList = this.store.filter('user', (function(user){
@@ -107,7 +85,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         }));
 
         this.set('usersList', filteredList);
-        this.set('isLoading', false);
+        this.set('isTableLoading', false);
 
         if (shouldClearStatus) {
             this.set('statusMessage', null);
