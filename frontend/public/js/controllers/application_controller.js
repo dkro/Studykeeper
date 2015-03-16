@@ -6,7 +6,7 @@ StudyManager.ApplicationController = Ember.Controller.extend({
             var that = this;
 
             Ember.$.ajax({
-                url: "http://localhost:10001/api/users/logout",
+                url: "/api/users/logout",
                 type: "POST",
                 beforeSend: function(request) {
                     request.setRequestHeader('Authorization', 'Bearer ' + localStorage.token)

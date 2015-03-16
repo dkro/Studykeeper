@@ -12,7 +12,7 @@ StudyManager.LoginController = Ember.Controller.extend({
 
             that.set('statusMessage', null);
 
-            Ember.$.post('http://localhost:10001/api/users/login', userData).then(function(response) {
+            Ember.$.post('/api/users/login', userData).then(function(response) {
                 that.get('controllers.application').set('token', response.user.token);
                 that.get('controllers.application').set('currentUserId', response.user.id);
                 that.get('controllers.application').set('userRole', response.user.role);
