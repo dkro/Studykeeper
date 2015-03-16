@@ -231,48 +231,15 @@ StudyManager.UserstudyPublicRoute = Ember.Route.extend({
 });
 
 StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
-  dataErrorMessage: null,
-
   model: function(params) {
     var that = this;
-    this.set('dataErrorMessage', null);
 
     return Ember.RSVP.hashSettled({
-      allNews: that.store.find('news').then(function(news) {
-        return news;
-      }, function(error) {
-        var message = that.get('dataErrorMessage') + ' Fehler beim Laden der verfügbaren News!';
-        that.set('dataErrorMessage', message);
-        return [];
-      }),
-      allLabels: that.store.find('label').then(function(labels) {
-        return labels;
-      }, function(error) {
-        var message = that.get('dataErrorMessage') + ' Fehler beim Laden der verfügbaren Labels!';
-        that.set('dataErrorMessage', message);
-        return [];
-      }),
-      allUsers: that.store.find('user').then(function(users) {
-        return users;
-      }, function(error) {
-        var message = that.get('dataErrorMessage') + ' Fehler beim Laden der verfügbaren Nutzer!';
-        that.set('dataErrorMessage', message);
-        return [];
-      }),
-      allTemplates: that.store.find('template').then(function(templates) {
-        return templates;
-      }, function(error) {
-        var message = that.get('dataErrorMessage') + ' Fehler beim Laden der verfügbaren Templates!';
-        that.set('dataErrorMessage', message);
-        return [];
-      }),
-      allStudies: that.store.find('userstudy').then(function(studies) {
-        return studies;
-      }, function(error) {
-        var message = that.get('dataErrorMessage') + ' Fehler beim Laden der verfügbaren Studien!';
-        that.set('dataErrorMessage', message);
-        return [];
-      }),
+      allNews: that.store.find('news'),
+      allLabels: that.store.find('label'),
+      allUsers: that.store.find('user'),
+      allTemplates: that.store.find('template'),
+      allStudies: that.store.find('userstudy'),
       study: that.store.find('userstudy', params.userstudy_id).then(function(study) {
         return study;
       }, function(error) {
@@ -296,11 +263,6 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
     controller.set('possibleTutors', allTutors);
     controller.set('possibleExecutors', allExecutors);
     controller.determineAsyncProperties();
-
-    if (!Ember.empty(this.get('dataErrorMessage'))) {
-      var that = this;
-      controller.set('statusMessage', { message: that.get('dataErrorMessage'), isSuccess: false });
-    }
   }
 });
 
