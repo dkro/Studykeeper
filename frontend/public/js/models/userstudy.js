@@ -24,7 +24,7 @@ StudyManager.Userstudy.FIXTURES = [
     {
         id: 1,
         title: 'Studie 0',
-        description: 'This study is totally awesome. I really like it. I loooooooooooooooveeeeee it.',
+        description: 'This study is totally awesome. I really like it.',
         fromDate: '20.09.2011',
         untilDate: '21.09.2011',
         location: 'Hauptgebäude, Raum 045',
@@ -45,7 +45,7 @@ StudyManager.Userstudy.FIXTURES = [
     },
     {
         id: 2,
-        title: 'Studie A Studie A Studie A Studie A Studie A Studie A',
+        title: 'Studie A',
         description: 'Short description.',
         fromDate: '20.09.2015',
         untilDate: '21.09.2015',
