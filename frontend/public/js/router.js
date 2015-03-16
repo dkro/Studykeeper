@@ -234,7 +234,7 @@ StudyManager.UserstudyEditRoute = StudyManager.AuthenticationRoute.extend({
   model: function(params) {
     var that = this;
 
-    return Ember.RSVP.hashSettled({
+    return Ember.RSVP.hash({
       allNews: that.store.find('news'),
       allLabels: that.store.find('label'),
       allUsers: that.store.find('user'),
