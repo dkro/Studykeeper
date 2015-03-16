@@ -407,4 +407,30 @@ module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
   });
 };
 
+module.exports.allRegisteredUsersFinishedRequiredStudies = function(registeredUsers, requiredStudies) {
+  return new Promise(function(resolve,reject){
+    registeredUsers.forEach(function(val){
+      Userstudy.getStudiesFinishedByUser(val, function(err,studies){
+        if (err) {
+          reject(err);
+        } else {
+          var ids = studies.map(function(value){
+            return value.studyId;
+          });
+          var allowed = requiredStudies.every(function(element){
+            return (ids.indexOf(element) > -1);
+          });
+
+          if (allowed){
+            resolve();
+          } else {
+            reject("Mindestens ein angemeldeter Nutzer hat nicht alle vorrausgesetzte Nutzerstudien abgeschlossen. " +
+            "Bitte ändern Sie die für diese Studie vorrausgesetzte Studien oder die angemeldeten Nutzer.");
+          }
+        }
+      });
+    });
+  });
+};
+
 

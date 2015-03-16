@@ -16,7 +16,8 @@ module.exports.createUserstudy = function(req, res, next) {
     var promises = [UserPromise.userFromToken(req),
       UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
       UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
-      UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
+      UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues),
+      UserstudyPromise.allRegisteredUsersFinishedRequiredStudies(userstudy.registeredUsers,userstudy.requiredStudies)];
 
     return Promise.all(promises);
   })
@@ -55,7 +56,8 @@ module.exports.editUserstudy = function(req, res, next) {
       var promises = [UserstudyPromise.userstudyExists(userstudy),
         UserPromise.userHasRole(req.body.userstudy.tutor, ["tutor"]),
         UserPromise.userHasRole(req.body.userstudy.executor, ["executor","tutor"]),
-        UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues)];
+        UserstudyPromise.studyTemplateValueCountIsTemplateTitleCount(userstudy.templateId,userstudy.templateValues),
+        UserstudyPromise.allRegisteredUsersFinishedRequiredStudies(userstudy.registeredUsers,userstudy.requiredStudies)];
 
       return Promise.all(promises);
     })
