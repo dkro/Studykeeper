@@ -3,6 +3,7 @@ var Userstudy    = require('../../models/userstudies');
 var Template    = require('../../models/templates');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
+var Async       = require('async');
 
 module.exports.validFullUserstudyReq = function(req){
   return new Promise(function(resolve,reject) {
@@ -409,27 +410,42 @@ module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
 
 module.exports.allRegisteredUsersFinishedRequiredStudies = function(registeredUsers, requiredStudies) {
   return new Promise(function(resolve,reject){
-    registeredUsers.forEach(function(val){
-      Userstudy.getStudiesFinishedByUser(val, function(err,studies){
-        if (err) {
-          reject(err);
-        } else {
-          var ids = studies.map(function(value){
-            return value.studyId;
-          });
-          var allowed = requiredStudies.every(function(element){
-            return (ids.indexOf(element) > -1);
-          });
+    if (registeredUsers.length === 0) {
+      resolve();
+    } else {
 
-          if (allowed){
-            resolve();
+
+      Async.each(registeredUsers,
+        function(item, callback){
+          Userstudy.getStudiesFinishedByUser(item, function(err,studies){
+            if (err) {
+              reject(err);
+            } else {
+              var ids = studies.map(function(value){
+                return value.studyId;
+              });
+              var allowed = requiredStudies.every(function(element){
+                return (ids.indexOf(element) > -1);
+              });
+
+              if (allowed){
+                callback();
+              } else {
+                callback("Mindestens ein angemeldeter Nutzer hat nicht alle vorrausgesetzte Nutzerstudien abgeschlossen. " +
+                "Bitte ändern Sie die für diese Studie vorrausgesetzte Studien oder die angemeldeten Nutzer.");
+              }
+            }
+          });
+        },
+        function(err){
+          if (err) {
+            reject(err);
           } else {
-            reject("Mindestens ein angemeldeter Nutzer hat nicht alle vorrausgesetzte Nutzerstudien abgeschlossen. " +
-            "Bitte ändern Sie die für diese Studie vorrausgesetzte Studien oder die angemeldeten Nutzer.");
+            resolve();
           }
         }
-      });
-    });
+      );
+    }
   });
 };
 
