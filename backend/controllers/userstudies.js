@@ -125,7 +125,7 @@ module.exports.getUserstudyById = function(req, res, next) {
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
             return next();
           } else if (result.length === 0 ){
-            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
             return next();
           } else {
 
@@ -140,7 +140,7 @@ module.exports.getUserstudyById = function(req, res, next) {
           if (err) {
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           } else if (result.length === 0 ){
-            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
             return next();
           } else {
 
@@ -151,7 +151,7 @@ module.exports.getUserstudyById = function(req, res, next) {
                 res.json(500, {status: 'failure', message: err});
                 return next();
               } else if (result.length == 0) {
-                res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
                 return next();
               } else {
                 res.json({userstudy: result});
@@ -165,7 +165,7 @@ module.exports.getUserstudyById = function(req, res, next) {
           if (err) {
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           } else if (result.length === 0 ){
-            res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+            res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
             return next();
           } else {
 
@@ -176,7 +176,7 @@ module.exports.getUserstudyById = function(req, res, next) {
                 res.json(500, {status: 'failure', message: err});
                 return next();
               } else if (result.length == 0) {
-                res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
                 return next();
               } else {
                 res.json({userstudy: result});
@@ -200,7 +200,7 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       return next();
     } else if (result.length === 0 ){
-      res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+      res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
       return next();
     } else {
 
@@ -290,7 +290,7 @@ module.exports.allUserstudies = function(req, res, next) {
                     res.json(500, {status: 'failure', message: err});
                     return next();
                   } else if (result.length == 0) {
-                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
                     return next();
                   } else {
                     res.json({userstudies: result});
@@ -319,7 +319,7 @@ module.exports.allUserstudies = function(req, res, next) {
                     res.json(500, {status: 'failure', message: err});
                     return next();
                   } else if (result.length == 0) {
-                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie wurde nicht gefunden.'});
+                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
                     return next();
                   } else {
                     res.json({userstudies: result});
@@ -510,7 +510,7 @@ module.exports.removeUserFromStudy = function(req, res, next){
             if (allowed){
               return UserstudyPromise.userIsRegisteredToStudy(userId,userstudyId);
             } else {
-              res.json(500, {status:'failure', message: 'Der Executor hat keine Rechte an dieser Nutzerstudie Nutzer zu entfernen.'});
+              res.json(500, {status:'failure', message: 'Die ausführende Persone hat keine Rechte an dieser Nutzerstudie Nutzer zu entfernen.'});
               return next();
             }
           }
@@ -544,7 +544,8 @@ module.exports.confirmUserParticipation = function(req, res, next){
   var getsMMI = req.body.getsMMI;
 
   if (!getsMMI) {
-    res.json(500, {status: 'failure', message: "Kommunikations Fehler.", internal: "Erwartet {getsMMI:boolean}"});
+    res.json(500, {status: 'failure', message: "Die gesendeten Daten sind nicht im geforderten Format. " +
+      "Bitte wenden Sie sich an einen Administrator.", internal: "Erwartet {getsMMI:boolean}"});
   } else {
     var promises = [UserPromise.userExistsById(req.params.userId), UserstudyPromise.userstudyExists({id:req.params.id})];
     var user;
@@ -570,8 +571,8 @@ module.exports.confirmUserParticipation = function(req, res, next){
               if (user.lmuStaff) {
                 User.addMMI(user.id,userstudy.id,function(err,result){
                   if (err) {
-                    res.json(500, {status:'failure', message: 'Nutzerteilnahme bestätigt. Es gab jedoch Probleme ' +
-                    'bei der zuteilung der MMI Punkte. Bitte kontaktieren sie uns mit der folgenden Error Nachricht: ' +  err});
+                    res.json(500, {status:'failure', message: 'Die Nutzerteilnahme wurde bestätigt. Es gab jedoch Probleme ' +
+                    'bei der Verteilung der MMI Punkte. Bitte kontaktieren Sie einen Administrator mit der folgenden Fehler Nachricht: ' +  err});
                   } else {
                     res.json({
                       status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt. Dem Nutzer wurden ' +
@@ -582,16 +583,16 @@ module.exports.confirmUserParticipation = function(req, res, next){
                 });
               } else {
                 res.json({
-                  status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt. ' +
-                  'Es wurden jedoch dem Nutzer keine MMI Punkte zugeteilt, da er nicht berechtigt ist. Nur ' +
-                  'Nutzer mit lmu email Adressen sind dazu berechtigt MMI Punkt zu sammeln.',
+                  status: 'success', message: 'Die Teilnahme des Nutzers an der Nutzerstudie wurde bestätigt. ' +
+                  'Dem Nutzer konnten keine MMI Punkte zugeteilt werden, da er nicht berechtigt ist, MMI Punkte zu sammeln. Nur ' +
+                  'Nutzer mit LMU Email Adressen sind dazu berechtigt MMI Punkt zu sammeln.',
                   user: user, userstudy: userstudy
                 });
                 return next();
               }
             } else {
               res.json({
-                status: 'success', message: 'Teilnahme des Nutzers an der Nutzerstudie bestätigt.',
+                status: 'success', message: 'Die Teilnahme des Nutzers an der Nutzerstudie wurde bestätigt.',
                 user: user, userstudy: userstudy
               });
               return next();
@@ -638,7 +639,7 @@ module.exports.closeUserstudy = function(req, res, next){
         var registered = userstudy.registeredUsers.split(",").map(function(x){return parseInt(x);});
         if (registered.length !== closeReq.length){
           reject("Die Nutzeranzahl zum Abschliessen der Nutzerstudie stimmt nicht mit der Nutzeranzahl der registrierten " +
-          "Nutzer überein. Registrierte Nutzer: " + registered.length + " Anzahl der Nutzer, die " +
+          "Nutzer überein. Anzahl registrierter Nutzer: " + registered.length + " Anzahl der Nutzer, die " +
           "abgeschlossen werden sollen: " + closeReq.length);
         } else {
           resolve();
@@ -653,7 +654,7 @@ module.exports.closeUserstudy = function(req, res, next){
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
           return next();
         } else {
-          res.json({status: 'success', message: 'Nutzerstudie geschlossen. Alle Teilnehmer wurden bestätigt.', userstudy: req.params.id});
+          res.json({status: 'success', message: 'Die Nutzerstudie wurde abgeschlossen. Alle Teilnehmer wurden bestätigt.', userstudy: req.params.id});
           return next();
         }
       });

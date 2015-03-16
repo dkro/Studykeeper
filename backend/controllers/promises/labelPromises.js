@@ -7,10 +7,11 @@ module.exports.validLabelReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
     if (!req.body.label) {
-      validationErrors.push("Label request hat ein falsches Format.");
+      validationErrors.push("Die gesendeten Daten sind nicht im geforderten Format. " +
+      "Bitte wenden Sie sich an einen Administrator.");
     } else {
       if (!Validator.isLength(req.body.label.title, 3)) {
-        validationErrors.push("Label Titel invalid, minimum 3 characters: " + req.body.label.title);
+        validationErrors.push("Ein Label Titel muss mindestens aus drei Zeichen bestehen. Erhalten: \"" + req.body.label.title + "\"");
       }
     }
     if (validationErrors.length > 0) {
@@ -32,7 +33,7 @@ module.exports.labelExists = function(label){
       } else if (result.length > 0){
         resolve(result[0]);
       } else {
-        reject('Label wurde nicht gefunden.');
+        reject('Das Label existiert nicht.');
       }
     });
   });
@@ -46,7 +47,7 @@ module.exports.labelAvailable = function(label) {
       }
 
       if (result.length > 0) {
-        reject('Label existiert schon.');
+        reject("Das Label \"" + label.title + "\" existiert bereits.");
       } else {
         resolve(result[0]);
       }

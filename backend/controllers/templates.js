@@ -52,8 +52,8 @@ module.exports.editTemplate = function (req, res, next) {
       } else {
         result.userstudies = result.userstudies.split(",").map(function(x){return parseInt(x);});
         res.json(500, {status: 'failure',
-          message: 'Das Template konnte nicht verändert werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
-          'benutzt.'});
+          message: 'Dieses Template konnte nicht verändert werden, da es zurzeit von mindestens einer Nutzerstudie ' +
+          'verwendet wird.'});
         return next();
       }
     })
@@ -79,8 +79,8 @@ module.exports.deleteTemplate = function(req, res, next){
         } else {
           template.userstudies = template.userstudies.split(",").map(function(x){return parseInt(x);});
           res.json(500, {status: 'failure',
-            message: 'Das Template konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Template momentan ' +
-            'benutzt.'});
+            message: 'Dieses Template konnte nicht gelöscht werden, da es zurzeit von mindestens einer Nutzerstudie ' +
+            'verwendet wird.'});
           return next();
         }
     })
@@ -122,7 +122,7 @@ module.exports.getTemplateById = function (req, res, next){
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       return next();
     } else if (result.length === 0){
-      res.json({status: 'failure', message: 'Template wurde nicht gefunden'});
+      res.json({status: 'failure', message: 'Dieses Template existiert nicht.'});
       return next();
     } else {
       if (result[0].userstudies === null) {

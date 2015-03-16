@@ -21,16 +21,16 @@ module.exports.validSignupReq = function(req){
       validationErrors.push("Nachname ungültig.");
     }
     if (!req.body.user.password || !Validator.isLength(req.body.user.password,7)) {
-      validationErrors.push("Passwort ungültig. Minimum 7 Charakter.");
+      validationErrors.push("Passwort ungültig. Das Passwort muss mindestens aus sieben Zeichen bestehen.");
     }
     if (!req.body.user.confirmPassword || !Validator.isLength(req.body.user.confirmPassword,7)) {
-      validationErrors.push("Passwort bestätigung ungültig, Minimum 7 Charakter.");
+      validationErrors.push("Passwort Bestätigung ungültig. Sie muss mindestens aus sieben Zeichen bestehen.");
     }
     if (req.body.user.password !== req.body.user.confirmPassword){
-      validationErrors.push("Passwörter stimmen nicht überein.");
+      validationErrors.push("Die Passwörter stimmen nicht überein.");
     }
     if (req.body.user.mmi !== "true" && req.body.user.mmi !== "false") {
-      validationErrors.push("MMI ungültig. Boolean erwartet.");
+      validationErrors.push("Die MMI Flagge ist ungültig. Es wird ein Boolean erwartet.");
     }
     if (!lmuStaff(req) && req.body.user.mmi === "true") {
       validationErrors.push("Nur Nutzer mit @campus.lmu.de, @ifi.lmu.de oder @cip.ifi.lmu.de Adressen können MMI Punkte sammeln.");
@@ -68,10 +68,10 @@ module.exports.validLoginReq = function(req){
     var validationErrors = [];
 
     if (!Validator.isLength(req.body.username,1)) {
-      validationErrors.push("Email erwartet.");
+      validationErrors.push("Email ungültig.");
     }
     if (!Validator.isLength(req.body.password,1)) {
-      validationErrors.push("Passwort erwartet.");
+      validationErrors.push("Passwort ungültig.");
     }
 
     if (validationErrors.length > 0) {
@@ -89,7 +89,8 @@ module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
     if (!req.body.user) {
-      validationErrors.push("User request hat ein falsches Format");
+      validationErrors.push("Die gesendeten Daten sind nicht im geforderten Format. " +
+      "Bitte wenden Sie sich an einen Administrator.");
     } else {
       if (!Validator.isEmail(req.body.user.username)) {
         validationErrors.push("Email ungültig.");
@@ -101,11 +102,11 @@ module.exports.validCreateUserReq = function(req){
         validationErrors.push("Nachname ungültig.");
       }
       if (!Validator.isNumeric(req.body.user.mmi)) {
-        validationErrors.push("MMI Punkte ungültig. Zahl erwartet.");
+        validationErrors.push("Die MMI Punkte sind ungültig. Es wird eine Zahl erwartet.");
       }
       var roleArr = ['participant','executor','tutor'];
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
-        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+        validationErrors.push("Die Rolle ist ungültig, Es wird \"participant\", \"executor\", \"tutor\", erwartet. Erhalten: " + req.body.user.role);
       }
       var roleArr2 = ['executor','tutor'];
       if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
@@ -146,23 +147,24 @@ module.exports.validEditUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
     if (!req.body.user) {
-      validationErrors.push("User request hat ein falsches Format");
+      validationErrors.push("Die gesendeten Daten sind nicht im geforderten Format. " +
+      "Bitte wenden Sie sich an einen Administrator.");
     } else {
       if (!Validator.isEmail(req.body.user.username)) {
-        validationErrors.push("Email ungültig: " + req.body.user.username);
+        validationErrors.push("Email ungültig. Erhalten: " + req.body.user.username);
       }
-      if (!Validator.isLength(req.body.user.firstname, 3)) {
-        validationErrors.push("Vorname ungültig, Minimum  3 Charakter: " + req.body.user.firstname);
+      if (!Validator.isLength(req.body.user.firstname, 1)) {
+        validationErrors.push("Vorname ungültig. Erhalten: " + req.body.user.firstname);
       }
-      if (!Validator.isLength(req.body.user.lastname, 3)) {
-        validationErrors.push("Nachname ungültig, Minimum 3 Charakter: " + req.body.user.lastname);
+      if (!Validator.isLength(req.body.user.lastname, 1)) {
+        validationErrors.push("Nachname ungültig. Erhalten: " + req.body.user.lastname);
       }
       if (!Validator.isFloat(req.body.user.mmi)) {
         validationErrors.push("MMI ungültig. Zahl erwartet: " + req.body.user.mmi);
       }
       var roleArr = ['participant','executor','tutor'];
       if (roleArr.indexOf(req.body.user.role.toString()) === -1) {
-        validationErrors.push("Rolle ungültig, " + roleArr  +" erwartet : " + req.body.user.role);
+        validationErrors.push("Die Rolle ist ungültig, Es wird \"participant\", \"executor\", \"tutor\", erwartet. Erhalten: " + req.body.user.role);
       }
       var roleArr2 = ['executor','tutor'];
       if (!lmuStaff(req) && roleArr2.indexOf(req.body.user.role.toString()) > -1) {
@@ -204,7 +206,7 @@ module.exports.userExists = function(username){
       if (err) {
         reject(err);
       } else if (result.length === 0) {
-        reject('Der Nutzer wurde nicht gefunden.');
+        reject('Der Nutzer existiert nicht.');
       } else {
         resolve(result[0]);
       }
@@ -218,7 +220,7 @@ module.exports.userExistsById = function(userId){
       if (err) {
         reject(err);
       } else if (result.length === 0){
-        reject('Der Nutzer wurde nicht gefunden.');
+        reject('Der Nutzer existiert nicht.');
       } else {
         resolve(result[0]);
       }
@@ -234,7 +236,7 @@ module.exports.usernameAvailable = function(username){
       } else if (result.length === 0) {
         resolve();
       } else {
-        reject('Email-adresse wird schon benutzt.');
+        reject('Die Email Adresse ist bereits vergeben.');
       }
     });
   });
@@ -256,12 +258,12 @@ module.exports.userFromToken = function(req){
               result[0].token = token;
               resolve(result[0]);
             } else {
-              reject("Der Nutzer wurde nicht gefunden");
+              reject("Der Nutzer existiert nicht.");
             }
           });
         }
       } else {
-        reject("Der Authorization header ist ungültig");
+        reject("Ihre Sitzung ist ungültigt. Bitte melden Sie sich neu an.");
       }
     }
   });
@@ -276,11 +278,11 @@ module.exports.userFromNameWithConfirmationData = function(user){
         if (result[0].confirmed === 1){
           resolve(result[0]);
         } else {
-          reject("Die Email-Adresse wurde nicht bestätigt. Bitte Bestätigen Sie Ihre Email-Adresse, bevor Sie sich " +
-          "einloggen können");
+          reject("Die Email Adresse wurde noch nicht bestätigt. Bitte bestätigen Sie Ihre Email Adresse, damit Sie sich " +
+          "anmelden können.");
         }
       } else {
-        reject("Der Nutzer wurde nicht gefunden");
+        reject("Der Nutzer existiert nicht.");
       }
     });
   });
@@ -295,10 +297,10 @@ module.exports.userHasRole = function(userId, roleArr){
         if (roleArr.indexOf(result[0].role > -1)) {
           resolve(result[0]);
         } else {
-          reject("Der Nutzer hat keine der erwarteten Rollen. Erwartet: " + roleArr + " Nutzerrolle: " + result[0].role);
+          reject("Sie haben nicht die erforderlichen Rechte, um diese Aktion ausführen zu können.");
         }
       } else {
-        reject("Der Nutzer wurde nicht gefunden");
+        reject("Der Nutzer existiert nicht.");
       }
     });
   });
@@ -310,7 +312,8 @@ module.exports.userIsLMU = function(user){
     if (user.lmuStaff) {
       resolve(user);
     } else {
-      reject("Der Nutzer hat keine LMU Email-Adresse und kann daher keine MMI Punkte sammeln.");
+      reject("Der Nutzer besitzt keine LMU Email Adresse (Erforderlich: @cip.ifi.lmu.de, @campus.lmu.de, @ifi.lmu.de" +
+      ")und kann daher keine MMI Punkte sammeln.");
     }
   });
 };
@@ -321,8 +324,8 @@ module.exports.executorHasNoOpenStudies = function(userId) {
       if (err) {
         reject(err);
       } else if (result.length > 0) {
-        reject("Der Nutzer (Rolle Ausführer) hat noch offene Nutzerstudien. Seine Rolle " +
-        "kann nur zum Teilnehmer gändert werden wenn diese geschlossen worden sind.");
+        reject("Der ausführenden Person sind noch offene Nutzerstudien zugewiesen. Die Rolle " +
+        "kann nur zu einem Teilnehmer gändert werden, wenn diese Studien abgeschlossen worden sind.");
       } else {
         resolve();
       }
@@ -336,8 +339,8 @@ module.exports.tutorHasNoOpenStudies = function(userId ){
       if (err) {
         reject(err);
       } else if (result.length > 0) {
-        reject("Der Nutzer (Rolle Tutor) hat noch offene Nutzerstudien. Seine Rolle " +
-        "kann nur zum 'Teilnehmer/Ausführend' gändert werden wenn diese geschlossen worden sind.");
+        reject("Dem Tutor sind noch offene Nutzerstudien zugewiesen. Seine Rolle " +
+        "kann nur zum 'Teilnehmer/Ausführende Person' gändert werden, wenn diese abgeschlossen worden sind.");
       } else {
         resolve();
       }

@@ -55,7 +55,7 @@ module.exports.deleteNews = function (req, res, next) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       return next();
     } else if (result.length === 0) {
-      res.json(500, {status: 'failure', message: 'News wurde nicht gefunden'});
+      res.json(500, {status: 'failure', message: 'Diese News existiert nicht.'});
       return next();
     } else {
       var news = result[0];
@@ -72,8 +72,8 @@ module.exports.deleteNews = function (req, res, next) {
       } else {
         news.userstudies = news.userstudies.split(",").map(function(x){return parseInt(x);});
         res.json(500, {status: 'failure',
-          message: 'Die News konnte nicht gelöscht werden, da mindestens eine Nutzerstudie diese News momentan ' +
-          'benutzt.',
+          message: 'Diese News konnte nicht gelöscht werden, da sie zurzeit von mindestens einer Nutzerstudie ' +
+          'verwendet wird.',
           userstudies: news.userstudies});
         return next();
       }
@@ -88,7 +88,7 @@ module.exports.getNewsById = function (req, res, next) {
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       return next();
     } else if (result.length === 0) {
-      res.json({status: 'failure', message: 'News wurde nicht gefunden'});
+      res.json({status: 'failure', message: 'Diese News existiert nicht.'});
       return next();
     } else {
       var news = result[0];

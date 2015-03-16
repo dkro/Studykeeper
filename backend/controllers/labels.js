@@ -46,8 +46,8 @@ module.exports.deleteLabel = function(req, res, next){
           } else {
             label.userstudies = label.userstudies.split(",").map(function(x){return parseInt(x);});
             res.json(500, {status: 'failure',
-              message: 'Das Label konnte nicht gelöscht werden, da mindestens eine Nutzerstudie dieses Label momentan ' +
-              'benutzt.'});
+              message: 'Das Label konnte nicht gelöscht werden, da es zurzeit von mindestens einer Nutzerstudie ' +
+              'verwendet wird.'});
             return next();
           }
     })
@@ -90,7 +90,7 @@ module.exports.getLabelById = function(req, res, next){
       res.json(500, {status: 'failure', errors: err});
       return next();
     } else if (result.length === 0 ){
-      res.json({status: 'failure', message: 'Label wurde nicht gefunden'});
+      res.json(500, {status: 'failure', message: 'Dieses Label existiert nicht.'});
       return next();
     } else {
       var label = result[0];

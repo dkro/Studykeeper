@@ -8,19 +8,20 @@ module.exports.validFullTemplateReq = function(req){
     var validationErrors = [];
     var fields = [];
     if (!req.body.template) {
-      validationErrors.push("Template Request hat ein falsches Format");
+      validationErrors.push("Die gesendeten Daten sind nicht im geforderten Format. " +
+      "Bitte wenden Sie sich an einen Administrator.");
     } else {
       if (!Validator.isLength(req.body.template.title, 3)) {
-        validationErrors.push("Template Titel ungültig. minimum 3 characters: " + req.body.template.title);
+        validationErrors.push("Ein Template Titel muss mindestens aus drei Zeichen bestehen. Erhalten: \"" + req.body.template.title+ "\"");
       }
       if (req.body.template.fields.length===0){
-        validationErrors.push("Es wird mindestens ein Template Field benötigt");
+        validationErrors.push("Es wird mindestens ein Template Feld benötigt.");
       } else if (req.body.template.fields.length > 9) {
-        validationErrors.push("Es sind maximal zehn Template Fields möglich");
+        validationErrors.push("Es sind maximal zehn Template Felder möglich.");
       } else {
           for (var i=0; i < req.body.template.fields.length; i += 1){
             if (!Validator.isLength(req.body.template.fields[i], 3)) {
-              validationErrors.push("Template Feld Titel ungültig. Minimum 3 Charakter: " + req.body.template.fields[i]);
+              validationErrors.push("Ein Template Feld Titel muss mindestens aus drei Zeichen bestehen. Erhalten: \"" + req.body.template.fields[i]+ "\"");
             }
 
             fields.push(Validator.toString(req.body.template.fields[i]));
@@ -48,7 +49,7 @@ module.exports.templateExists = function(templateId){
       } else if (result.length > 0){
         resolve(result[0]);
       } else {
-        reject("Template wurde nicht gefunden.");
+        reject("Das Template existiert nicht.");
       }
     });
   });
@@ -60,7 +61,7 @@ module.exports.templateAvailable = function(templateName) {
       if (err){
         reject(err);
       } else if (result.length > 0) {
-        reject("Template Titel schon vergeben.");
+        reject("Der Template Titel \"" + templateName + "\"existiert bereits.");
       } else {
         resolve(result[0]);
       }

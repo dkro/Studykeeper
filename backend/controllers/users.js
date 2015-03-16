@@ -448,7 +448,8 @@ module.exports.recoverPasswordRequest = function(req, res, next){
   var email = req.body.userEmail;
 
   if (!email) {
-    res.json(500, {status: 'failure', message: 'Kommunikations Fehler.', internal: 'Es wird eine email-Adresse in dieser ' +
+    res.json(500, {status: 'failure', message: 'Die gesendeten Daten sind nicht im geforderten Format. ' +
+    'Bitte wenden Sie sich an einen Administrator.', internal: 'Es wird eine email-Adresse in dieser ' +
     'Form erwartet: {"userEmail":"example@email.com"}'});
   } else {
     UserPromise.userExists(email)
@@ -458,7 +459,7 @@ module.exports.recoverPasswordRequest = function(req, res, next){
             res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
             next();
           } else {
-            res.json({status: 'success', message: 'Email wurde versandt.'});
+            res.json({status: 'success', message: 'Eine Email wurde versandt.'});
             next();
           }
         });
@@ -480,8 +481,8 @@ module.exports.recoverPasswordAction = function(req, res, next){
       res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
       next();
     } else if (!result || result.length === 0) {
-      res.json(500, {status: 'failure', message: 'Keine Anfrage zur Password-Wiederherstullung gefunden. ' +
-      'Eventuell ist Sie abgelaufen und wurde entfernt.'});
+      res.json(500, {status: 'failure', message: 'Keine Anfrage zur Passwort-Wiederherstellung gefunden. ' +
+      'Eventuell ist die Anfrage abgelaufen und wurde entfernt.'});
       next();
     } else if (result[0].timestamp < ThreeDaysFromNow) {
       User.deleteOldPasswortRetrievalData(ThreeDaysFromNow,function(err){
@@ -489,7 +490,7 @@ module.exports.recoverPasswordAction = function(req, res, next){
           res.json(500, {status: 'failure', message: 'Server Fehler.', internal: err});
         } else {
           res.json(500, {status: 'failure', message: 'Die Anfrage ist älter als drei Tage. Bitte führen Sie ' +
-          'erneut eine Anfrage zur Password Wiederherstellung aus.'});
+          'erneut eine Anfrage zur Passwort-Wiederherstellung aus.'});
         }
       });
     } else {
@@ -524,8 +525,8 @@ module.exports.recoverPasswordAction = function(req, res, next){
       .then(function(){
         sendPasswordRetrievalAction(pwData.username,newpw,function(err){
           if (err) {
-            res.json(500, {status: 'failure', message: 'Server Fehler beim senden der Email. ' +
-            'Bitte führen Sie die Passwort Wiederherstellung erneut aus und kontaktieren Sie uns über diesen Fehler.', internal: err});
+            res.json(500, {status: 'failure', message: 'Server Fehler beim Senden der Email. ' +
+            'Bitte führen Sie die Passwort-Wiederherstellung erneut aus und kontaktieren Sie einen Administrator.', internal: err});
           } else {
             res.json({status: 'success', message: 'Eine Email mit Ihrem neuen Passwort wurde versandt.'});
             next();
@@ -597,7 +598,7 @@ module.exports.changePW = function(req, res, next) {
   } else if (user.newPassword.length < passwordMinimumLength) {
     res.json(500,{
       status: "failure",
-      message: "Das Passwort ist zu kurz. Es muss mindestens 7 Charakter haben."
+      message: "Das Passwort ist zu kurz. Es muss mindestens aus sieben Zeichen bestehen."
     });
     return next();
   } else {
@@ -606,7 +607,7 @@ module.exports.changePW = function(req, res, next) {
           res.send(err);
         } else {
           if (userResult.length < 1) {
-            res.send(500,{status: 'failure', message: 'Nutzer wurde nicht gefunden.'});
+            res.send(500,{status: 'failure', message: 'Der Nutzer existiert nicht.'});
             return next();
           } else {
             crypt.comparePassword(userResult[0].password,user.oldPassword,
@@ -627,7 +628,7 @@ module.exports.changePW = function(req, res, next) {
                     } else {
                       res.json({
                         status: "success",
-                        message: "Password wurde erfolgreich geändert."
+                        message: "Das Passwort wurde erfolgreich geändert."
                       });
                       return next();
                     }
