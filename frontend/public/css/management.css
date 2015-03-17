@@ -55,6 +55,7 @@
     .management--all__heading {
         margin-bottom: 0.5em;
         font-weight: bold;
+        color: darkslategray;
     }
 
     .management--all__createButton {
@@ -67,6 +68,7 @@
     .management--all__heading {
         margin-bottom: 1em;
         font-weight: bold;
+        color: darkslategray;
     }
 
     .management--all__createButton {
@@ -81,11 +83,13 @@
 
 .management--single__heading {
     font-weight: bold;
+    color: darkslategray;
 }
 
 .management--single__heading--create {
     margin-bottom: 1em;
     font-weight: bold;
+    color: darkslategray;
 }
 
 .management--single__datePicker {
@@ -132,6 +136,7 @@
 .labels__heading {
     margin-bottom: 1.5em;
     font-weight: bold;
+    color: darkslategray;
 }
 
 .labels__creationWrapper {

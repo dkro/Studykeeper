@@ -1,5 +1,5 @@
 <div>
-    <button type="button" class="btn btn-primary btn-lg" {{bind-attr disabled=isLoading}} {{action 'displayStudies'}}>
+    <button type="button" class="btn application__secondPrimaryButton btn-lg" {{bind-attr disabled=isLoading}} {{action 'displayStudies'}}>
         {{#if isLoading}}
             {{loading-status additionalClassNames="loading__studySearch--dashboard"}}
         {{else}}

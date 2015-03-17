@@ -47,7 +47,7 @@
                         </div>
                         <div class="ccountConfig__body__passwordEdit__descriptionCell"></div>
                         <div class="accountConfig__body__passwordEdit__valueCell accountConfig__body__passwordEdit__button">
-                            <button type="submit" {{bind-attr class=":btn savingDataWasValid:btn-default:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validatePasswordChange'}}>
+                            <button type="submit" {{bind-attr class=":btn savingDataWasValid:application__firstPrimaryButton:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validatePasswordChange'}}>
                                 {{#if isLoading}}
                                     {{loading-status additionalClassNames="loading--accConfig"}}
                                 {{else}}

@@ -44,7 +44,7 @@
 
 .application__navBar {
     background-color: #063;
-    border-color: black;
+    border-color: darkgreen;
 }
 
 .application__navBar__brand {
@@ -56,6 +56,27 @@
     text-decoration: underline;
 }
 
+.application__firstPrimaryButton {
+    border-color: dimgray;
+    background-color: rgb(92, 96, 93);
+    color: #ffffff;
+}
+
+.application__firstPrimaryButton:hover, .application__firstPrimaryButton:active, .application__firstPrimaryButton:focus {
+    background-color: rgb(76, 78, 76);
+    color: #ffffff;
+}
+
+.application__secondPrimaryButton {
+    border-color: dimgray;
+    background-color: darkslategray;
+    color: #ffffff;
+}
+
+.application__secondPrimaryButton:hover, .application__secondPrimaryButton:active, .application__secondPrimaryButton:focus {
+    background-color: rgb(46, 65, 65);
+    color: #ffffff;
+}
 
 
 /* OVERRIDING BOOTSTRAP STYLES */
@@ -162,6 +183,18 @@
 .login__button {
     width: 100%;
     font-weight: bold;
+    margin-top: 1em;
+}
+
+.login__button--default {
+    background-color: #386F54;
+    color: #ffffff;
+    border-color: dimgray;
+}
+
+.login__button--default:hover, .login__button--default:active, .login__button--default:focus {
+    background-color: #2A5A43;
+    color: #ffffff;
 }
 
 .login__alert {
@@ -176,7 +209,6 @@
     font-weight: bold;
     color: grey;
     cursor: pointer;
-    margin-top: 1em;
     text-align: center;
 }
 
@@ -264,6 +296,8 @@
 
 .signUp__header {
     margin-bottom: 1.5em;
+    font-weight: bold;
+    color: darkslategray;
 }
 
 .signUp__form {
@@ -318,6 +352,8 @@
 
 .passwordRecovery__heading {
     margin-bottom: 2em;
+    font-weight: bold;
+    color: darkslategray;
 }
 
 .passwordRecovery__statusMessage {

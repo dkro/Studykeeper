@@ -1,7 +1,7 @@
 <h2 class="management--all__heading">Anzeige aller Studien</h2>
 
 {{#if isTutor}}
-    <button class="btn btn-primary management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createStudy'}}>
+    <button class="btn application__secondPrimaryButton management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createStudy'}}>
         {{#if isCreateLoading}}
             {{loading-status additionalClassNames="loading__config--create"}}
         {{else}}

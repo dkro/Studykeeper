@@ -73,7 +73,7 @@
             {{/if}}
         </button>
     {{else}}
-        <button class="btn btn-default study__editRegisterButton" {{bind-attr disabled=isLoading}} {{action 'register'}}>
+        <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isLoading}} {{action 'register'}}>
             {{#if isLoading}}
                 {{loading-status additionalClassNames="loading__study--register"}}
             {{else}}

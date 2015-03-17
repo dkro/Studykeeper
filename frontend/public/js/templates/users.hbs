@@ -1,6 +1,6 @@
 <h2 class="management--all__heading">Alle User</h2>
 
-<button class="btn btn-primary management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createUser'}}>
+<button class="btn application__secondPrimaryButton management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createUser'}}>
     {{#if isCreateLoading}}
         {{loading-status additionalClassNames="loading__config--create"}}
     {{else}}

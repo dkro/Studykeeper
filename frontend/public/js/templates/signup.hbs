@@ -64,7 +64,7 @@
             {{/if}}
         </div>
 
-        <button {{bind-attr class=":btn :signUp__button signUpDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validateAllAction'}}>
+        <button {{bind-attr class=":btn :signUp__button signUpDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validateAllAction'}}>
             {{#if isLoading}}
                 {{loading-status additionalClassNames="loading--signUp"}}
             {{else}}

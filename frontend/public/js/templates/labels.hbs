@@ -4,7 +4,7 @@
 <div class="input-group labels__creationWrapper">
     {{input type="text" value=newLabelValue placeholder="Neuer Labelname" action="createLabel" classNames="form-control" aria-describedby="creationHelpText"}}
     <span class="input-group-btn">
-        <button {{bind-attr class=":btn createDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>
+        <button {{bind-attr class=":btn createDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isCreateButtonDisabled}} {{action 'createLabel'}}>
             {{#if isCreateLoading}}
                 {{loading-status additionalClassNames="loading__label--create"}}
             {{else}}

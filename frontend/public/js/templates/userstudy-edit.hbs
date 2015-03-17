@@ -11,7 +11,7 @@
         </button>
     {{/if}}
 
-    <button class="btn btn-primary management--single__confirmPublishButton"  {{bind-attr disabled=isConfirmLoading}} {{action 'goToStudyConfirm'}}>
+    <button class="btn application__secondPrimaryButton management--single__confirmPublishButton"  {{bind-attr disabled=isConfirmLoading}} {{action 'goToStudyConfirm'}}>
         {{#if isConfirmLoading}}
             {{loading-status additionalClassNames="loading__study--confirm"}}
         {{else}}
