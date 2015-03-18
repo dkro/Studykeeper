@@ -10,12 +10,12 @@ module.exports = {
         'public/js/router.js',
         'public/js/adapters/**/*.js',
         'public/js/serializer.js',
+        'public/js/helpers/**/*.js',
         'public/js/controllers/**/*.js',
         'public/js/models/**/*.js',
         'public/js/components/**/*.js',
         'public/js/transforms/**/*.js',
-        'public/js/objects/**/*.js',
-        'public/js/helpers/**/*.js'
+        'public/js/objects/**/*.js'
       ]
     }
   }

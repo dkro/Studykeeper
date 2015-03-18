@@ -1,4 +1,4 @@
-StudyManager.NewsController = Ember.Controller.extend({
+StudyManager.NewsController = Ember.Controller.extend(StudyManager.TableFilterMixin, {
     needs: 'application',
 
     actions: {
@@ -10,10 +10,6 @@ StudyManager.NewsController = Ember.Controller.extend({
         createNews: function() {
             this.set('isCreateLoading', true);
             this.transitionToRoute('news-creation');
-        },
-
-        filterNews: function() {
-            this.filterAll(true);
         },
 
         clearDatePicker: function() {
@@ -36,6 +32,11 @@ StudyManager.NewsController = Ember.Controller.extend({
     statusMessage: null,
 
     titleFilter: null,
+
+    titleFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('titleFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('titleFilter'),
 
     selectedDateFilter: null,
 
@@ -67,7 +68,7 @@ StudyManager.NewsController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('titleFilter')))) {
-            res = this.firstContainsSecond(title, this.get('titleFilter'));
+            res = this.firstContainsSecondString(title, this.get('titleFilter'));
         }
 
         return res;
@@ -77,14 +78,10 @@ StudyManager.NewsController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('selectedDateFilter')))) {
-            res = date === this.get('selectedDateFilter');
+            res = this.objectsAreEqual(date, this.get('selectedDateFilter'));
         }
 
         return res;
-    },
-
-    firstContainsSecond: function(first, second) {
-        return first.indexOf(second) > -1;
     },
 
     showMessage: function(statusMessage) {

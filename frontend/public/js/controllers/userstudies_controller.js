@@ -1,4 +1,4 @@
-StudyManager.UserstudiesController = Ember.Controller.extend({
+StudyManager.UserstudiesController = Ember.Controller.extend(StudyManager.TableFilterMixin, {
     needs: ['application'],
 
     actions: {
@@ -14,10 +14,6 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
         labelsChanged: function(labelVals) {
             this.set('selectedLabelsFilter', labelVals);
-            this.filterAll(true);
-        },
-
-        filterStudies: function() {
             this.filterAll(true);
         },
 
@@ -72,7 +68,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('selectedTitleFilter')))) {
-            res = this.firstContainsSecond(title, this.get('selectedTitleFilter'));
+            res = this.firstContainsSecondString(title, this.get('selectedTitleFilter'));
         }
 
         return res;
@@ -82,7 +78,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('selectedLocationFilter')))) {
-            res = this.firstContainsSecond(location, this.get('selectedLocationFilter'));
+            res = this.firstContainsSecondString(location, this.get('selectedLocationFilter'));
         }
 
         return res;
@@ -94,8 +90,8 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var lastName = executor.get('lastname');
 
         if (!(Ember.empty(this.get('selectedExecutorFilter')))) {
-            res = this.firstContainsSecond(firstName, this.get('selectedExecutorFilter')) ||
-                    this.firstContainsSecond(lastName, this.get('selectedExecutorFilter')) ;
+            res = this.firstContainsSecondString(firstName, this.get('selectedExecutorFilter')) ||
+                    this.firstContainsSecondString(lastName, this.get('selectedExecutorFilter')) ;
         }
 
         return res;
@@ -105,7 +101,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('selectedCompensationFilter')))) {
-            res = this.firstContainsSecond(compensation, this.get('selectedCompensationFilter'));
+            res = this.firstContainsSecondString(compensation, this.get('selectedCompensationFilter'));
         }
 
         return res;
@@ -115,7 +111,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('selectedMMIFilter')))) {
-            res = points === this.get('selectedMMIFilter');
+            res = this.objectsAreEqual(points, this.get('selectedMMIFilter'));
         }
 
         return res;
@@ -123,6 +119,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     filterLabels: function(labels) {
         var res = false;
+        var that = this;
 
         // If there are labels currently selected
         if (!(Ember.empty(this.get('selectedLabelsFilter')))) {
@@ -132,7 +129,7 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
                 labels.some(function(studyLabel) {
                     // If study has the filter label assigned
-                    if (filterLabel === studyLabel.get('title')) {
+                    if (that.objectsAreEqual(filterLabel, studyLabel.get('title'))) {
                         // Equivalent to break (See documentation for "some")
                         return hasLabel = true;
                     }
@@ -159,45 +156,14 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
         var toFilter = this.get('selectedToFilter');
 
         if (!Ember.empty(fromFilter) && !Ember.empty(toFilter)) {
-            res = this.inRange(from, fromFilter, toFilter) && this.inRange(to, fromFilter, toFilter);
+            res = this.dateIsInRange(from, fromFilter, toFilter) && this.dateIsInRange(to, fromFilter, toFilter);
         } else if (!Ember.empty(fromFilter) && Ember.empty(toFilter)) {
-            res = (this.compare(from, fromFilter) >= 0) && (this.compare(to, fromFilter) >= 0);
+            res = (this.compareDates(from, fromFilter) >= 0) && (this.compareDates(to, fromFilter) >= 0);
         } else if (Ember.empty(fromFilter) && !Ember.empty(toFilter)) {
-            res = (this.compare(from, toFilter) <= 0) && (this.compare(to, toFilter) <= 0);
+            res = (this.compareDates(from, toFilter) <= 0) && (this.compareDates(to, toFilter) <= 0);
         }
 
         return res;
-    },
-
-    parseDate: function(input) {
-        var parts = input.match(/(\d+)/g);
-        return new Date(parts[2], parts[1]-1, parts[0], 12, 0, 0, 0);
-    },
-
-    compare: function(date1, date2) {
-        //  -1 : if a < b
-        //   0 : if a = b
-        //   1 : if a > b
-        return (
-            isFinite(date1=this.parseDate(date1).valueOf()) &&
-            isFinite(date2=this.parseDate(date2).valueOf()) ?
-            (date1>date2)-(date1<date2) :
-                NaN
-        );
-    },
-
-    inRange:function(date, startRange, endRange) {
-        return (
-            isFinite(date=this.parseDate(date).valueOf()) &&
-            isFinite(startRange=this.parseDate(startRange).valueOf()) &&
-            isFinite(endRange=this.parseDate(endRange).valueOf()) ?
-            startRange <= date && date <= endRange :
-                NaN
-        );
-    },
-
-    firstContainsSecond: function(first, second) {
-        return first.indexOf(second) > -1;
     },
 
     showMessage: function(statusMessage) {
@@ -234,9 +200,24 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
 
     selectedTitleFilter: null,
 
+    selectedTitleChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedTitleFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedTitleFilter'),
+
     selectedLocationFilter: null,
 
+    selectedLocationFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedLocationFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedLocationFilter'),
+
     selectedExecutorFilter: null,
+
+    selectedExecutorFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedExecutorFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedExecutorFilter'),
 
     selectedMMIFilter: null,
 
@@ -246,6 +227,11 @@ StudyManager.UserstudiesController = Ember.Controller.extend({
     }.observes('selectedMMIFilter'),
 
     selectedCompensationFilter: null,
+
+    selectedCompensationFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('selectedCompensationFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('selectedCompensationFilter'),
 
     selectedLabelsFilter: []
 });

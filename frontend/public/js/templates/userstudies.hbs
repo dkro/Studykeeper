@@ -30,19 +30,19 @@
                     <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearToFilter'}}></span>
                 </th>
                 <th class="studies__column--name">
-                    {{input type="text" action="filterStudies" classNames="form-control input-sm studies__filterInput--name" placeholder="Filter Titel" value=selectedTitleFilter}}
+                    {{input type="text" classNames="form-control input-sm studies__filterInput--name" placeholder="Filter Titel" value=selectedTitleFilter}}
                 </th>
                 <th class="studies__column--location">
-                    {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Ort" value=selectedLocationFilter}}
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Ort" value=selectedLocationFilter}}
                 </th>
                 <th class="studies__column--executor">
-                    {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Person" value=selectedExecutorFilter}}
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Person" value=selectedExecutorFilter}}
                 </th>
                 <th class="studies__filter--mmi studies__column--mmi">
                     {{custom-select values=mmiFilterOptions currentSelected=selectedMMIFilter promptText="Alle"}}
                 </th>
                 <th class="studies__filter--amazon studies__column--amazon">
-                    {{input type="text" action="filterStudies" classNames="form-control input-sm" placeholder="Filter Prämie" value=selectedCompensationFilter}}
+                    {{input type="text" classNames="form-control input-sm" placeholder="Filter Prämie" value=selectedCompensationFilter}}
                 </th>
             </tr>
             <tr>
