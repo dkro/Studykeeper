@@ -680,6 +680,7 @@
 
 .obligatory__wrapper {
     text-align: right;
+    clear: left;
 }
 
 .recordNotFound__message--primaryMessage {

@@ -14,7 +14,8 @@ module.exports = {
         'public/js/models/**/*.js',
         'public/js/components/**/*.js',
         'public/js/transforms/**/*.js',
-        'public/js/objects/**/*.js'
+        'public/js/objects/**/*.js',
+        'public/js/helpers/**/*.js'
       ]
     }
   }
