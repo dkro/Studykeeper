@@ -1,24 +1,27 @@
-<h2 class="management--single__heading">Studie konfigurieren</h2>
+<div class="management--single__heading__wrapper">
+    <h2 class="management--single__heading">Studie konfigurieren</h2>
 
-<div>
-    {{#if isTutorUser}}
-        <button class="btn btn-danger management--single__deleteButton" {{bind-attr disabled=isDeleteLoading}} {{action 'deleteStudy'}}>
-            {{#if isDeleteLoading}}
-                {{loading-status additionalClassNames="loading--delete"}}
+    <div>
+        {{#if isTutorUser}}
+            <button class="btn btn-danger management--single__deleteButton" {{bind-attr disabled=isDeleteLoading}} {{action 'deleteStudy'}}>
+                {{#if isDeleteLoading}}
+                    {{loading-status additionalClassNames="loading--delete"}}
+                {{else}}
+                    Studie löschen
+                {{/if}}
+            </button>
+        {{/if}}
+
+        <button class="btn application__secondPrimaryButton management--single__confirmPublishButton"  {{bind-attr disabled=isConfirmLoading}} {{action 'goToStudyConfirm'}}>
+            {{#if isConfirmLoading}}
+                {{loading-status additionalClassNames="loading__study--confirm"}}
             {{else}}
-                Studie löschen
+                Studie abschließen
             {{/if}}
         </button>
-    {{/if}}
-
-    <button class="btn btn-primary management--single__confirmPublishButton"  {{bind-attr disabled=isConfirmLoading}} {{action 'goToStudyConfirm'}}>
-        {{#if isConfirmLoading}}
-            {{loading-status additionalClassNames="loading__study--confirm"}}
-        {{else}}
-            Studie abschließen
-        {{/if}}
-    </button>
+    </div>
 </div>
+
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}

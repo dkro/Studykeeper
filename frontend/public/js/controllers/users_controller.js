@@ -1,4 +1,4 @@
-StudyManager.UsersController = Ember.Controller.extend({
+StudyManager.UsersController = Ember.Controller.extend(StudyManager.TableFilterMixin, {
     needs: 'application',
 
     actions: {
@@ -10,10 +10,6 @@ StudyManager.UsersController = Ember.Controller.extend({
         createUser: function() {
             this.set('isCreateLoading', true);
             this.transitionToRoute('user-creation');
-        },
-
-        filterUsers: function() {
-            this.filterAll(true);
         }
     },
 
@@ -48,9 +44,24 @@ StudyManager.UsersController = Ember.Controller.extend({
 
     firstNameFilter: null,
 
+    firstNameFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('firstNameFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('firstNameFilter'),
+
     lastNameFilter: null,
 
+    lastNameFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('lastNameFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('lastNameFilter'),
+
     userNameFilter: null,
+
+    userNameFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('userNameFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('userNameFilter'),
 
     mmiFilter: null,
 
@@ -96,7 +107,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('firstNameFilter')))) {
-            res = this.firstContainsSecond(firstname, this.get('firstNameFilter'));
+            res = this.firstContainsSecondString(firstname, this.get('firstNameFilter'));
         }
 
         return res;
@@ -106,7 +117,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('lastNameFilter')))) {
-            res = this.firstContainsSecond(lastname, this.get('lastNameFilter'));
+            res = this.firstContainsSecondString(lastname, this.get('lastNameFilter'));
         }
 
         return res;
@@ -116,7 +127,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('userNameFilter')))) {
-            res = this.firstContainsSecond(username, this.get('userNameFilter'));
+            res = this.firstContainsSecondString(username, this.get('userNameFilter'));
         }
 
         return res;
@@ -126,7 +137,7 @@ StudyManager.UsersController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('mmiFilter')))) {
-            res = mmi === parseFloat(this.get('mmiFilter'));
+            res = this.objectsAreEqual(mmi, parseFloat(this.get('mmiFilter')));
         }
 
         return res;
@@ -137,14 +148,10 @@ StudyManager.UsersController = Ember.Controller.extend({
 
         if (!(Ember.empty(this.get('roleFilter')))) {
             var adaptedFilter = this.get('controllers.application').toServiceRole(this.get('roleFilter'));
-            res = role === adaptedFilter;
+            res = this.objectsAreEqual(role, adaptedFilter);
         }
 
         return res;
-    },
-
-    firstContainsSecond: function(first, second) {
-        return first.indexOf(second) > -1;
     },
 
     showMessage: function(statusMessage) {

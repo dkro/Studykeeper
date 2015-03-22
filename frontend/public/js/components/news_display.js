@@ -1,26 +1,22 @@
-StudyManager.StudyDisplayComponent = Ember.Component.extend({
+StudyManager.NewsDisplayComponent = Ember.Component.extend({
     tagName: 'div',
 
     classNameBindings: [':panel', ':panel-default', 'additionalClassNames'],
 
     actions: {
-        displayStudy: function(study) {
-            this.sendAction('action', study);
-        },
-
         expandOrCollapse: function() {
             if (this.get('isCollapsed')) {
-                this.set('studiesForDisplay', this.get('studiesAll'));
+                this.set('displayedNews', this.get('news'));
             } else {
-                this.set('studiesForDisplay', []);
+                this.set('displayedNews', []);
                 var that = this;
                 var counter = 0;
 
-                this.get('studiesAll').any(function(study) {
+                this.get('news').any(function(singleNews) {
                     if (counter >= 3) {
                         return true;
                     } else {
-                        that.get('studiesForDisplay').pushObject(study);
+                        that.get('displayedNews').pushObject(singleNews);
                         counter++;
                     }
                 });
@@ -30,30 +26,30 @@ StudyManager.StudyDisplayComponent = Ember.Component.extend({
         }
     },
 
-    studiesAll: null,
-
-    determineDisplayedStudies: function() {
+    determineDisplayedNews: function() {
         var counter = 0;
         var that = this;
 
-        this.get('studiesAll').any(function(study) {
+        this.get('news').any(function(singleNews) {
             if (counter >= 3) {
-                that.set('studyCountOverThreshold', true);
+                that.set('newsCountOverThreshold', true);
                 return true;
             } else {
-                that.get('studiesForDisplay').pushObject(study);
+                that.get('displayedNews').pushObject(singleNews);
                 counter++;
             }
         });
     }.on('init'),
 
+    news: null,
+
+    displayedNews: [],
+
     title: null,
 
     additionalClassNames: '',
 
-    studiesForDisplay: [],
-
     isCollapsed: true,
 
-    studyCountOverThreshold: false
+    newsCountOverThreshold: false
 });

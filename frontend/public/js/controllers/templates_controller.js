@@ -1,4 +1,4 @@
-StudyManager.TemplatesController = Ember.Controller.extend({
+StudyManager.TemplatesController = Ember.Controller.extend(StudyManager.TableFilterMixin, {
     needs: 'application',
 
     actions: {
@@ -10,10 +10,6 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         createTemplate: function() {
             this.set('isCreateLoading', true);
             this.transitionToRoute('template-creation');
-        },
-
-        filterTemplates: function() {
-            this.filterAll(true);
         }
     },
 
@@ -40,6 +36,11 @@ StudyManager.TemplatesController = Ember.Controller.extend({
     statusMessage: null,
 
     titleFilter: null,
+
+    titleFilterChanged: function() {
+        var shouldClearStatus = !Ember.empty(this.get('titleFilter'));
+        this.filterAll(shouldClearStatus);
+    }.observes('titleFilter'),
 
     fieldCountFilter: null,
 
@@ -73,7 +74,7 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('titleFilter')))) {
-            res = this.firstContainsSecond(title, this.get('titleFilter'));
+            res = this.firstContainsSecondString(title, this.get('titleFilter'));
         }
 
         return res;
@@ -83,14 +84,10 @@ StudyManager.TemplatesController = Ember.Controller.extend({
         var res = true;
 
         if (!(Ember.empty(this.get('fieldCountFilter')))) {
-            res = count === parseFloat(this.get('fieldCountFilter'));
+            res = this.objectsAreEqual(count, parseFloat(this.get('fieldCountFilter')));
         }
 
         return res;
-    },
-
-    firstContainsSecond: function(first, second) {
-        return first.indexOf(second) > -1;
     },
 
     showMessage: function(statusMessage) {

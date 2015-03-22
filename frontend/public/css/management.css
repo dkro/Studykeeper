@@ -53,24 +53,42 @@
 
 @media screen and (min-width: 768px) {
     .management--all__heading {
-        margin-bottom: 0.5em;
+        margin-top: 0;
+        margin-bottom: 0;
         font-weight: bold;
+        color: darkslategray;
+        display: inline-block;
+        float: left;
+    }
+
+    .management--all__heading__wrapper {
+        margin-top: 1em;
+        padding-bottom: 5em;
     }
 
     .management--all__createButton {
+        display: inline-block;
         float: right;
-        margin-bottom: 1em;
     }
 }
 
 @media screen and (max-width: 767px) {
     .management--all__heading {
-        margin-bottom: 1em;
+        margin-bottom: 0.5em;
         font-weight: bold;
+        color: darkslategray;
+        display: inline-block;
+        float: left;
     }
 
     .management--all__createButton {
-        margin-bottom: 0.5em;
+        display: block;
+        clear: left;
+    }
+
+    .management--all__heading__wrapper {
+        margin-top: 1em;
+        padding-bottom: 3em;
     }
 }
 
@@ -78,15 +96,6 @@
 
 
 /* SINGLE */
-
-.management--single__heading {
-    font-weight: bold;
-}
-
-.management--single__heading--create {
-    margin-bottom: 1em;
-    font-weight: bold;
-}
 
 .management--single__datePicker {
     background-color: white !important;
@@ -111,17 +120,57 @@
 
 @media screen and (min-width: 768px) {
     .management--single__deleteButton {
-        margin-bottom: 1em;
-        margin-right: 2em;
         display: inline-block;
+        float: right;
+    }
+
+    .management--single__heading__wrapper {
+        max-width: 80%;
+        margin-top: 1em;
+        padding-bottom: 6em;
+    }
+
+    .management--single__heading {
+        font-weight: bold;
+        color: darkslategray;
+        float: left;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .management--single__heading--create {
+        margin-bottom: 1em;
+        font-weight: bold;
+        color: darkslategray;
     }
 }
 
 @media screen and (max-width: 767px) {
     .management--single__deleteButton {
-        margin-bottom: 3em;
-        margin-right: 2em;
+        display: block;
+        clear: left;
+    }
+
+    .management--single__heading__wrapper {
+        max-width: 80%;
+        margin-top: 1em;
+        padding-bottom: 3em;
+    }
+
+    .management--single__heading {
+        font-weight: bold;
+        color: darkslategray;
+        float: left;
         display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0.5em;
+    }
+
+    .management--single__heading--create {
+        margin-bottom: 1em;
+        font-weight: bold;
+        color: darkslategray;
     }
 }
 
@@ -132,6 +181,7 @@
 .labels__heading {
     margin-bottom: 1.5em;
     font-weight: bold;
+    color: darkslategray;
 }
 
 .labels__creationWrapper {

@@ -39,13 +39,10 @@
         </script>
 
         <script type="text/x-handlebars" id="components/study-display">
-            <div {{bind-attr class=":panel :panel-default additionalClassNames"}}>
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{title}}</h3>
-                </div>
+                <div class="panel-heading studyDisplay__heading">{{title}}</div>
                 <div class="customizedPanel panel-body">
-                    <div class="panelDisplay__list list-group">
-                        {{#each study in studies}}
+                    <div class="panelDisplay__list--study list-group">
+                        {{#each study in studiesForDisplay}}
                         <a class="list-group-item studyDisplay__study" {{action 'displayStudy' study}}>
                             <h4 class="list-group-item-heading studyDisplay__study__header">{{study.title}}</h4>
                             <div class="list-group-item-text studyDisplay__study__body">
@@ -64,7 +61,40 @@
                             </div>
                         </a>
                         {{/each}}
+                        {{#if studyCountOverThreshold}}
+                            <div class="list-group-item studyDisplay__item--collapseControl" {{action 'expandOrCollapse'}}>
+                                {{#if isCollapsed}}
+                                    Alle anzeigen...
+                                {{else}}
+                                    Minimieren...
+                                {{/if}}
+                            </div>
+                        {{/if}}
                     </div>
+                </div>
+        </script>
+
+        <script type="text/x-handlebars" id="components/news-display">
+            <div class="panel-heading newsDisplay__heading">{{title}}</div>
+            <div class="panel-body customizedPanel">
+                <div class="list-group panelDisplay__list--news">
+                    {{#each n in displayedNews}}
+                    <a target="_blank" {{bind-attr href="n.link"}} class="list-group-item newsDisplay__item">
+                        <h3 class="list-group-item-heading">{{n.title}} <small>{{n.date}}</small></h3>
+                        <div class="list-group-item-text newsDisplay__item__body">
+                            {{n.description}}
+                        </div>
+                    </a>
+                    {{/each}}
+                    {{#if newsCountOverThreshold}}
+                        <div class="list-group-item newsDisplay__item--collapseControl" {{action 'expandOrCollapse'}}>
+                        {{#if isCollapsed}}
+                            Alle anzeigen...
+                        {{else}}
+                            Minimieren...
+                        {{/if}}
+                        </div>
+                    {{/if}}
                 </div>
             </div>
         </script>
@@ -273,7 +303,7 @@
                 {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
                         {{#if isSaveLoading}}
                             {{loading-status additionalClassNames="loading__config--save"}}
                         {{else}}
@@ -359,7 +389,7 @@
                 {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
                             {{#if isSaveLoading}}
                                 {{loading-status additionalClassNames="loading__config--save"}}
                             {{else}}
@@ -548,7 +578,7 @@
                 {{/if}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
                             {{#if isSaveLoading}}
                                 {{loading-status additionalClassNames="loading__config--save"}}
                             {{else}}
@@ -580,8 +610,8 @@
 
         <script type="text/x-handlebars" id="components/template-config">
             <form class="form-horizontal component__config__form">
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10 obligatory__wrapper">
+                <div class="form-group obligatory__wrapper">
+                    <div class="col-sm-offset-2 col-sm-10">
                         <small class="obligatory__text">Erforderlich</small><span class="fa fa-asterisk obligatory__asterisk"></span>
                     </div>
                 </div>
@@ -628,7 +658,7 @@
                 {{/unless}}
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10 component__config__buttonsWrapper">
-                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
+                        <button type="submit" {{bind-attr class=":btn :component__config__saveButton createUpdateDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isSaveLoading}} {{action 'saveClick'}}>
                             {{#if isSaveLoading}}
                                 {{loading-status additionalClassNames="loading__config--save"}}
                             {{else}}
