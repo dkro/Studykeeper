@@ -12,7 +12,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
             var index = 0;
 
             if (Ember.empty(this.get('oldPassword'))) {
-                errorTexts[index] = "Ihr altes Passwort kann nicht leer sein!";
+                errorTexts[index] = "Geben Sie Ihr altes Passwort an!";
                 index++;
                 this.set('isOldPasswordValid', false);
             }
@@ -24,7 +24,7 @@ StudyManager.AccConfigController = Ember.Controller.extend({
             }
 
             if (this.get('newPasswordConfirm') === null || this.get('newPassword') !== this.get('newPasswordConfirm')) {
-                errorTexts[index] = 'Die Passwörter stimmen nicht überein!';
+                errorTexts[index] = 'Die neuen Passwörter stimmen nicht überein!';
                 this.set('isNewPasswordConfirmValid', false);
             }
 

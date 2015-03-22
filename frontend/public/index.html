@@ -80,9 +80,9 @@
                     {{#if newsCountOverThreshold}}
                         <div class="list-group-item newsDisplay__item--collapseControl" {{action 'expandOrCollapse'}}>
                         {{#if isCollapsed}}
-                            Alle anzeigen...
+                            Ganze Historie anzeigen...
                         {{else}}
-                            Minimieren...
+                            Historie minimieren...
                         {{/if}}
                         </div>
                     {{/if}}
@@ -178,7 +178,7 @@
                 {{name}}
             </span>
             <div class="component__labelsItem__removeIcon__wrapper">
-                <span class="glyphicon glyphicon-remove component__labelsItem__removeIcon" {{action 'removeLabel'}}></span>
+                <span class="glyphicon glyphicon-remove component__labelsItem__removeIcon" {{action 'removeLabel' bubbles=false}}></span>
             </div>
 
             {{#if isSelected}}

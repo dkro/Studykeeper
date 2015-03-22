@@ -217,16 +217,21 @@
 }
 
 .accountConfig__header {
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
+    font-weight: bold;
+    color: darkslategray;
+}
+
+.accountConfig__form {
+    font-size: 1.2em;
 }
 
 .accountConfig__body__label {
     font-weight: bold;
-    color: darkslategrey;
 }
 
 .accountConfig__body--uneditableValue {
-    color: slategray;
+    color: dimgray;
     font-weight: bold;
 }
 
@@ -237,14 +242,21 @@
 
 .accountConfig__body__passwordEditIcon {
     cursor: pointer;
+    color: seagreen;
+    font-weight: bold;
+}
+
+.accountConfig__body__passwordEditIcon:hover {
+    cursor: pointer;
+    color: #004e26;
+    font-weight: bold;
+    max-width: 6em;
+    text-decoration: underline;
 }
 
 .accountConfig__body__passwordEdit {
-    border: 2px solid lightslategray;
-    padding-left: 1em;
-    padding-right: 1em;
-    padding-bottom: 1em;
-    max-width: 30em;
+    border: 1px solid darkslategray;
+    max-width: 25em;
     -webkit-border-radius: 0.3em;
     -moz-border-radius: 0.3em;
     border-radius: 0.3em;
@@ -275,9 +287,10 @@
 
 .accountConfig__body__passwordEdit__valueCell button {
     margin-top: 2em;
+    margin-bottom: 0.5em;
 }
 
-.ccountConfig__body__passwordEdit__descriptionCell {
+.accountConfig__body__passwordEdit__descriptionCell {
     display: table-cell;
     vertical-align: middle;
 }
@@ -464,10 +477,8 @@
     vertical-align: top;
 }
 
-@media screen and (min-width: 768px) {
-    .dashboardNews {
-        margin-top: 5em;
-    }
+.dashboardNews {
+    margin-top: 5em;
 }
 
 .newsDisplay__heading {
@@ -523,7 +534,8 @@
 }
 
 .studyDisplay__study__header {
-    color: darkslateblue !important;
+    color: #063 !important;
+    font-size: 1.5em;
 }
 
 .studyDisplay__item--collapseControl {

@@ -143,7 +143,7 @@
 }
 
 .component__labelsItem--selected:hover {
-    background-color: #D9EADC;
+    background-color: rgba(0, 102, 51, 0.28);
 }
 
 .component__labelsItem__removeIcon__wrapper {
@@ -171,7 +171,7 @@
 .component__labelsItem__name--selected {
     max-width: 80%;
     display: inline-block;
-    color: mediumseagreen;
+    color: darkslategray;
     font-weight: bold;
     font-size: 1.2em;
 }

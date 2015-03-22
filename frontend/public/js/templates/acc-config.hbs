@@ -1,10 +1,10 @@
-<h2 class="accountConfig__header">Account konfigurieren</h2>
+<h2 class="accountConfig__header">Account Konfiguration</h2>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
-<form class="form-horizontal">
+<form class="form-horizontal accountConfig__form">
     <div class="form-group">
         <label class="col-sm-2 control-label accountConfig__body__label">Name:</label>
         <div class="col-sm-10">
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label accountConfig__body__label">Passwort</label>
+        <label class="col-sm-2 control-label accountConfig__body__label">Passwort:</label>
         <div class="col-sm-10">
             {{#if isEditIcon}}
                 <p class="form-control-static accountConfig__body__passwordEditIcon" {{action 'showPasswordEdit'}}>
@@ -28,26 +28,26 @@
                 <div class="accountConfig__body__passwordEdit">
                     <div class="accountConfig__body__passwordEdit__wrapper">
                         <div class="accountConfig__body__passwordEdit__row">
-                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isOldPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Altes Passwort:</div>
+                            <div {{bind-attr class=":accountConfig__body__passwordEdit__descriptionCell isOldPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Altes Passwort:</div>
                             <div class="accountConfig__body__passwordEdit__valueCell">
                                 {{input type="password" id="accConfigOldPassword" value=oldPassword classBinding=":form-control :input-sm isOldPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}
                             </div>
                         </div>
                         <div class="accountConfig__body__passwordEdit__row">
-                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isNewPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Neues Passwort:</div>
+                            <div {{bind-attr class=":accountConfig__body__passwordEdit__descriptionCell isNewPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}>Neues Passwort:</div>
                             <div class="accountConfig__body__passwordEdit__valueCell">
                                 {{input type="password" id="accConfigNewPassword" value=newPassword classBinding=":form-control :input-sm isNewPasswordValid::accountConfig__body__passwordEdit__row--invalid"}}
                             </div>
                         </div>
                         <div class="accountConfig__body__passwordEdit__row">
-                            <div {{bind-attr class=":ccountConfig__body__passwordEdit__descriptionCell isNewPasswordConfirmValid::accountConfig__body__passwordEdit__row--invalid"}}>Passwort bestätigen:</div>
+                            <div {{bind-attr class=":accountConfig__body__passwordEdit__descriptionCell isNewPasswordConfirmValid::accountConfig__body__passwordEdit__row--invalid"}}>Passwort bestätigen:</div>
                             <div class="accountConfig__body__passwordEdit__valueCell">
                                 {{input type="password" id="accConfigNewPasswordConfirm" value=newPasswordConfirm classBinding=":form-control :input-sm isNewPasswordConfirmValid::accountConfig__body__passwordEdit__row--invalid"}}
                             </div>
                         </div>
-                        <div class="ccountConfig__body__passwordEdit__descriptionCell"></div>
+                        <div class="accountConfig__body__passwordEdit__descriptionCell"></div>
                         <div class="accountConfig__body__passwordEdit__valueCell accountConfig__body__passwordEdit__button">
-                            <button type="submit" {{bind-attr class=":btn savingDataWasValid:application__firstPrimaryButton:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validatePasswordChange'}}>
+                            <button type="submit" {{bind-attr class=":btn savingDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isLoading}} {{action 'validatePasswordChange'}}>
                                 {{#if isLoading}}
                                     {{loading-status additionalClassNames="loading--accConfig"}}
                                 {{else}}
