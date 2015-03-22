@@ -23,7 +23,7 @@ StudyManager.PasswordRecoveryController = Ember.Controller.extend({
                 this.set('sentDataWasValid', false);
                 this.set('isLoading', false);
                 this.set('sendButtonDisabled', false);
-                this.set('statusMessage', { message: 'Geben Sie bitte eine valide Email-Adresse an!', isSuccess: false });
+                this.set('statusMessage', { message: 'Geben Sie bitte eine valide Email Adresse an!', isSuccess: false });
             }
         }
     },

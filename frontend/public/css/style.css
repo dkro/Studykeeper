@@ -294,7 +294,7 @@
     margin-top: 2em;
 }
 
-.signUp__header {
+.default__header {
     margin-bottom: 1.5em;
     font-weight: bold;
     color: darkslategray;
@@ -314,7 +314,7 @@
 }
 
 .signUp__field--mmiFlag--highlighting {
-    color: midnightblue;
+    color: #063;
 }
 
 .signUp__field--mmiFlag__helpTextIcon {
@@ -350,12 +350,6 @@
     display: block;
 }
 
-.passwordRecovery__heading {
-    margin-bottom: 2em;
-    font-weight: bold;
-    color: darkslategray;
-}
-
 .passwordRecovery__statusMessage {
 
 }
@@ -385,16 +379,15 @@
         display: inline-block;
         vertical-align: top;
         float: right;
-        background-color: lightgray;
         padding: 0.8em;
-        border: 2px solid darkgrey;
+        border: 2px solid darkslategray;
         -webkit-border-radius: 0.9em;
         -moz-border-radius: 0.9em;
         border-radius: 0.9em;
     }
 
     .dashboard__mmiPoints__label {
-        color: #474747;
+        color: darkslategray;
         font-weight: bold;
         font-size: 1.5em ;
     }
@@ -402,8 +395,8 @@
     .dashboard__mmiPoints__value{
         color: #f5f5f5;
         padding: 0.1em 0.6em;
-        background-color: slategray;
-        border: 2px solid slategray;
+        background-color: darkslategray;
+        border: 2px solid darkslategray;
         -webkit-border-radius: 1.5em;
         -moz-border-radius: 1.5em;
         border-radius: 1.5em;
@@ -417,9 +410,8 @@
     .dashboard__mmiPoints {
         display: table;
         vertical-align: top;
-        background-color: lightgray;
         padding: 0.8em;
-        border: 2px solid darkgrey;
+        border: 2px solid darkslategray;
         -webkit-border-radius: 0.9em;
         -moz-border-radius: 0.9em;
         border-radius: 0.9em;
@@ -428,7 +420,7 @@
     }
 
     .dashboard__mmiPoints__label {
-        color: #474747;
+        color: darkslategray;
         font-weight: bold;
         font-size: 1.2em ;
     }
@@ -436,8 +428,8 @@
     .dashboard__mmiPoints__value{
         color: #f5f5f5;
         padding: 0.1em 0.6em;
-        background-color: slategray;
-        border: 2px solid slategray;
+        background-color: darkslategray;
+        border: 2px solid darkslategray;
         -webkit-border-radius: 1.5em;
         -moz-border-radius: 1.5em;
         border-radius: 1.5em;
@@ -478,28 +470,52 @@
     }
 }
 
-.dashboardNews__item {
+.newsDisplay__heading {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.newsDisplay__item {
     cursor: pointer;
 }
 
-.dashboardNews__item:hover {
+.newsDisplay__item:hover {
     background-color: #f7f7f7;
 }
 
-.dashboardNews__item__body {
+.newsDisplay__item__body {
     margin-top: 1em;
 }
 
-.dashboardNews__item__heading {
-    color: darkslateblue;
+.newsDisplay__item--collapseControl {
+    font-weight: bold;
+    color: lightslategray;
+    cursor: pointer;
+}
+
+.newsDisplay__item--collapseControl:hover {
+    background-color: #f7f7f7;
 }
 
 .customizedPanel {
     padding: 0;
 }
 
-.panelDisplay__list {
+.panelDisplay__list--study {
     margin-bottom: 0;
+    max-height: 25em;
+    overflow-y: scroll;
+}
+
+.panelDisplay__list--news {
+    margin-bottom: 0;
+    max-height: 25em;
+    overflow-y: scroll;
+}
+
+.studyDisplay__heading {
+    font-weight: bold;
+    font-size: 1.5em;
 }
 
 .studyDisplay__study {
@@ -508,6 +524,16 @@
 
 .studyDisplay__study__header {
     color: darkslateblue !important;
+}
+
+.studyDisplay__item--collapseControl {
+    font-weight: bold;
+    color: lightslategray;
+    cursor: pointer;
+}
+
+.studyDisplay__item--collapseControl:hover {
+    background-color: #f7f7f7;
 }
 
 .studyDisplay__study__body {

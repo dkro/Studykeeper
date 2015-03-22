@@ -15,34 +15,20 @@
 </div>
 
 {{#if model.news}}
-    <div class="dashboardNews panel panel-default">
-        <div class="panel-heading">Newsfeed</div>
-        <div class="panel-body customizedPanel">
-            <div class="list-group panelDisplay__list">
-                {{#each n in model.news}}
-                    <a target="_blank" {{bind-attr href="n.link"}} class="list-group-item dashboardNews__item">
-                        <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.title}} <small>{{n.date}}</small></h3>
-                        <div class="list-group-item-text dashboardNews__item__body">
-                            {{n.description}}
-                        </div>
-                    </a>
-                {{/each}}
-            </div>
-        </div>
-    </div>
+    {{news-display title="Newsfeed" news=model.news additionalClassNames="dashboardNews"}}
 {{/if}}
 
 
 <div class="studyDisplay__wrapper">
     {{#if futureRegisteredStudies}}
-        {{study-display title="Angemeldete Studien" studies=futureRegisteredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
+        {{study-display title="Angemeldete Studien" studiesAll=futureRegisteredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
     {{/if}}
 
     {{#if history}}
-        {{study-display title="Historie" studies=history additionalClassNames='studyDisplay--history' action='displayStudy'}}
+        {{study-display title="Historie" studiesAll=history additionalClassNames='studyDisplay--history' action='displayStudy'}}
     {{/if}}
 
-    {{#if model.createdStudies}}
-        {{study-display title="Meine Studien" studies=model.createdStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
+    {{#if ownCreatedStudies}}
+        {{study-display title="Meine Studien" studiesAll=ownCreatedStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
     {{/if}}
 </div>

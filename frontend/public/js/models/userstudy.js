@@ -27,7 +27,7 @@ StudyManager.Userstudy.FIXTURES = [
         description: 'This study is totally awesome. I really like it.',
         fromDate: '20.09.2011',
         untilDate: '21.09.2011',
-        location: 'Hauptgebäude, Raum 045',
+        location: 'Hauptgebäude, Raum 040988888888885 adfgakjrge earlgkeaqorgoeag alkrgmoaergoeaijg aeorgoaejrgoeij',
         link: 'http://www.google.com',
         compensation: "5€ Amazon-Gutschein",
         mmi: 2,
