@@ -32,7 +32,7 @@ module.exports.getUserById = function(id, callback) {
       "u.firstname,u.lastname,u.collectsMMI " +
       "FROM users u " +
       "LEFT JOIN roles r ON r.id=u.role " +
-      "WHERE u.id=? AND u.visible=1;",
+      "WHERE u.id=?;",
       id,
       function(err,result){
         connection.release();
@@ -378,7 +378,7 @@ module.exports.deleteUser = function(userId, callback){
     }
 
     mysql.getConnection(function(connection){
-      connection.query("UPDATE users SET username='deleted" + userId + "', firstname='deleted', lastname='deleted', " +
+      connection.query("UPDATE users SET username='Gelöschter Nutzer (" + userId + ")', firstname='Gelöscht', lastname='Gelöscht', " +
         "password='" + hash + "', visible=0 " +
         "WHERE id=?",
         userId,
