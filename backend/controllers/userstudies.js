@@ -291,9 +291,6 @@ module.exports.allUserstudies = function(req, res, next) {
                   if (err) {
                     res.json(500, {status: 'failure', message: err});
                     return next();
-                  } else if (result.length == 0) {
-                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
-                    return next();
                   } else {
                     res.json({userstudies: result});
                     return next();
@@ -319,9 +316,6 @@ module.exports.allUserstudies = function(req, res, next) {
                 removeReqStudies(list,user.id,function(err,result){
                   if (err) {
                     res.json(500, {status: 'failure', message: err});
-                    return next();
-                  } else if (result.length == 0) {
-                    res.json(500, {status: 'failure', message: 'Die Nutzerstudie existiert nicht.'});
                     return next();
                   } else {
                     res.json({userstudies: result});
