@@ -142,8 +142,9 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
 
     return this.store.find('user', uId).then(function(user) {
       return Ember.RSVP.hash({
-        currentUser: user,
         allStudies: that.store.find('userstudy'),
+        registeredStudies: user.get('registeredFor'),
+        createdStudies: user.get('isExecutorFor'),
         mmiPoints: user.get('mmi'),
         news: that.store.find('news'),
         collectsMMI: user.get('collectsMMI')
@@ -152,10 +153,20 @@ StudyManager.DashboardRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
+    var history = model.registeredStudies.filter(function(study) {
+      return study.get('closed');
+    });
+
+    var futureStudies = model.registeredStudies.filter(function(study) {
+      return !study.get('closed');
+    });
+
     controller.set('model', model);
+    controller.set('history', history);
+    controller.set('futureRegisteredStudies', futureStudies);
+    controller.set('ownCreatedStudies', model.createdStudies);
     controller.set('collectsMMI', model.collectsMMI);
     controller.determineInitialProperties();
-    controller.determineAsyncProperties();
   }
 });
 

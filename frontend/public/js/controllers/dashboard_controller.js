@@ -20,31 +20,6 @@ StudyManager.DashboardController = Ember.Controller.extend({
         this.set('isTutor', isTutor);
     },
 
-    /**
-     * This fix is necessary so that the initial values are set correctly.
-     */
-    determineAsyncProperties: function() {
-        var that = this;
-
-        this.get('model').currentUser.get('registeredFor').then(function(regStudies) {
-            var history = regStudies.filter(function(study) {
-                return study.get('closed');
-            });
-
-            var futureStudies = regStudies.filter(function(study) {
-                return !study.get('closed');
-            });
-
-            that.set('history', history);
-            that.set('futureRegisteredStudies', futureStudies);
-        });
-
-
-        this.get('model').currentUser.get('isExecutorFor').then(function(createStudies) {
-            that.set('ownCreatedStudies', createStudies);
-        });
-    },
-
     isLoading: false,
 
     isTutor: false,

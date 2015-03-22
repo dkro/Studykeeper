@@ -75,14 +75,14 @@ StudyManager.LabelsController = Ember.Controller.extend({
     createDataWasValid: true,
 
     changeCreateButtonDisabled: function() {
-        this.set('isCreateButtonDisabled', Ember.empty(this.get('newLabelValue')));
-
         if (Ember.empty(this.get('newLabelValue'))) {
             this.set('isHelpTextDisplayed', false);
+            this.set('isCreateButtonDisabled', true);
         } else {
             this.set('statusMessage', null);
             var shouldDisplayHelpText = (this.get('newLabelValue').length < 3);
             this.set('isHelpTextDisplayed', shouldDisplayHelpText);
+            this.set('isCreateButtonDisabled', shouldDisplayHelpText);
         }
     }.observes('newLabelValue')
 });

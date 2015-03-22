@@ -42,7 +42,7 @@
                 <div class="panel-heading studyDisplay__heading">{{title}}</div>
                 <div class="customizedPanel panel-body">
                     <div class="panelDisplay__list--study list-group">
-                        {{#each study in studiesForDisplay}}
+                        {{#each study in studiesDisplayed}}
                         <a class="list-group-item studyDisplay__study" {{action 'displayStudy' study}}>
                             <h4 class="list-group-item-heading studyDisplay__study__header">{{study.title}}</h4>
                             <div class="list-group-item-text studyDisplay__study__body">
@@ -61,15 +61,6 @@
                             </div>
                         </a>
                         {{/each}}
-                        {{#if studyCountOverThreshold}}
-                            <div class="list-group-item studyDisplay__item--collapseControl" {{action 'expandOrCollapse'}}>
-                                {{#if isCollapsed}}
-                                    Alle anzeigen...
-                                {{else}}
-                                    Minimieren...
-                                {{/if}}
-                            </div>
-                        {{/if}}
                     </div>
                 </div>
         </script>

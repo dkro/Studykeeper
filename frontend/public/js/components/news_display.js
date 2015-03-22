@@ -8,7 +8,7 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
             if (this.get('isCollapsed')) {
                 this.set('displayedNews', this.get('news'));
             } else {
-                this.set('displayedNews', []);
+                this.get('displayedNews').clear();
                 var that = this;
                 var counter = 0;
 
@@ -29,6 +29,7 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
     determineDisplayedNews: function() {
         var counter = 0;
         var that = this;
+        this.get('displayedNews').clear();
 
         this.get('news').any(function(singleNews) {
             if (counter >= 3) {

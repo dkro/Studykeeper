@@ -21,14 +21,14 @@
 
 <div class="studyDisplay__wrapper">
     {{#if futureRegisteredStudies}}
-        {{study-display title="Angemeldete Studien" studiesAll=futureRegisteredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
+        {{study-display title="Angemeldete Studien" studiesDisplayed=futureRegisteredStudies additionalClassNames='studyDisplay--participant' action='displayStudy'}}
     {{/if}}
 
     {{#if history}}
-        {{study-display title="Historie" studiesAll=history additionalClassNames='studyDisplay--history' action='displayStudy'}}
+        {{study-display title="Historie" studiesDisplayed=history additionalClassNames='studyDisplay--history' action='displayStudy'}}
     {{/if}}
 
     {{#if ownCreatedStudies}}
-        {{study-display title="Meine Studien" studiesAll=ownCreatedStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
+        {{study-display title="Meine Studien" studiesDisplayed=ownCreatedStudies additionalClassNames='studyDisplay--creator' action='displayStudy'}}
     {{/if}}
 </div>
