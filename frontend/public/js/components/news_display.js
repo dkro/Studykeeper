@@ -8,7 +8,7 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
             if (this.get('isCollapsed')) {
                 this.set('displayedNews', this.get('news'));
             } else {
-                this.get('displayedNews').clear();
+                var displayedNewsList = [];
                 var that = this;
                 var counter = 0;
 
@@ -16,10 +16,12 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
                     if (counter >= 3) {
                         return true;
                     } else {
-                        that.get('displayedNews').pushObject(singleNews);
+                        displayedNewsList.pushObject(singleNews);
                         counter++;
                     }
                 });
+
+                this.set('displayedNews', displayedNewsList);
             }
 
             this.set('isCollapsed', !this.get('isCollapsed'));
@@ -29,17 +31,19 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
     determineDisplayedNews: function() {
         var counter = 0;
         var that = this;
-        this.get('displayedNews').clear();
+        var displayedNewsList = [];
 
         this.get('news').any(function(singleNews) {
             if (counter >= 3) {
                 that.set('newsCountOverThreshold', true);
                 return true;
             } else {
-                that.get('displayedNews').pushObject(singleNews);
+                displayedNewsList.pushObject(singleNews);
                 counter++;
             }
         });
+
+        this.set('displayedNews', displayedNewsList);
     }.on('init'),
 
     news: null,
