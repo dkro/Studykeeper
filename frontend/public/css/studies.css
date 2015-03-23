@@ -207,6 +207,7 @@
     }
 
     .study__label {
+        white-space: nowrap;
         border: 1px solid darkslategray;
         margin-right: 0.5em;
         -webkit-border-radius: 0.6em;
@@ -292,10 +293,10 @@
     }
 
     .data--description {
-        text-align: justify;
     }
 
     .study__label {
+        display: inline-block;
         border: 1px solid darkslategray;
         margin-right: 0.5em;
         -webkit-border-radius: 0.6em;
@@ -304,5 +305,7 @@
         background-color: darkslategray;
         color: white;
         padding: 0.25em 0.4em;
+        margin-bottom: 1em;
+        white-space: nowrap;
     }
 }
