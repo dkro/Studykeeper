@@ -106,16 +106,19 @@
 
 .study__editRegisterButton {
     margin-bottom: 1em;
+    margin-right: 1em;
     display: inline-block;
 }
 
 .study__cancelButton {
     display: inline-block;
     margin-bottom: 1em;
+    margin-right: 0.5em;
 }
 
 .study__publicButton {
     margin-bottom: 1em;
+    margin-right: 0.5em;
     display: inline-block;
 }
 
