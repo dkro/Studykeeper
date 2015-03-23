@@ -1,5 +1,5 @@
 <div class="management--all__heading__wrapper">
-    <h2 class="management--all__heading">Alle News</h2>
+    <h2 class="management--all__heading">News verwalten</h2>
 
     <button class="btn application__secondPrimaryButton management--all__createButton" {{bind-attr disabled=isCreateLoading}} {{action 'createNews'}}>
         {{#if isCreateLoading}}
@@ -23,7 +23,9 @@
             </th>
             <th>
                 {{view "date-field" readonly="readonly" classNames="form-control input-sm management--all__datePicker" value=selectedDateFilter placeholder="Filter Datum"}}
-                <span class="glyphicon glyphicon-remove management--all__datePicker__clearButton" {{action 'clearDatePicker'}}></span>
+                <span class="management--all__datePicker__clearButton hint--left" data-hint="Datum zurücksetzen" {{action 'clearDatePicker'}}>
+                    <span class="fa fa-refresh management--all__datePicker__clearButton__icon"></span>
+                </span>
             </th>
         </tr>
         <tr>

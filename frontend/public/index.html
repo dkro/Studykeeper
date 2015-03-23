@@ -8,6 +8,7 @@
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css">
+        <link rel="stylesheet" href="bower_components/hint.css/hint.min.css">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/studies.css">
         <link rel="stylesheet" href="css/management.css">
@@ -177,7 +178,7 @@
             <span {{bind-attr class="isSelected:component__labelsItem__name--selected:component__labelsItem__name"}}>
                 {{name}}
             </span>
-            <div class="component__labelsItem__removeIcon__wrapper">
+            <div class="component__labelsItem__removeIcon__wrapper hint--left hint--error" data-hint="Löschen">
                 <span class="glyphicon glyphicon-remove component__labelsItem__removeIcon" {{action 'removeLabel' bubbles=false}}></span>
             </div>
 
@@ -622,21 +623,24 @@
                     <label class="col-sm-2 control-label">
                         Felder: <span class="fa fa-asterisk obligatory__asterisk"></span>
                     </label>
-                </div>
-                {{#each field in fields}}
-                    <div class="form-group component__config--template__field__nameWrapper">
-                        <div class="glyphicon glyphicon-remove component__config--template__field__remove" {{action 'removeField' field}}></div>
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="input-group component__config--template__field__nameInputGroup">
-                                <span class="input-group-addon">Name</span>
-                                {{input type="text" value=field.title placeholder="Feldname" classNames="form-control"}}
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{#each field in fields}}
+                            <div class="component__config--template__field__nameWrapper">
+                                <span class="component__config--template__field__remove" {{action 'removeField' field}}>
+                                    <span class="fa fa-minus-circle component__config--template__field__remove__icon"></span>
+                                </span>
+
+                                <div class="input-group component__config--template__field__nameInputGroup">
+                                    <span class="input-group-addon">Name</span>
+                                    {{input type="text" value=field.title placeholder="Feldname" classNames="form-control"}}
+                                </div>
                             </div>
-                        </div>
+                        {{/each}}
                     </div>
-                {{/each}}
+                </div>
                 <div class="form-group component__config--template__addField__wrapper">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-default component__config--template__addField__button" {{action 'addField'}}>
+                        <button data-hint="Feld hinzufügen" class="btn btn-default component__config--template__addField__button hint--right" {{action 'addField'}}>
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </div>

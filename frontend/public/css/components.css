@@ -48,7 +48,8 @@
 }
 
 .component__config--template__field__nameWrapper {
-    margin-bottom: 0.1em;
+    margin-bottom: 1em;
+    white-space: nowrap;
 }
 
 .component__config--template__field__valueWrapper {
@@ -68,12 +69,16 @@
 .component__config--template__field__remove {
     cursor: pointer;
     font-weight: bold;
-    color: red;
-    float: right;
-    font-size: 1.3em;
+    font-size: 1.5em;
+    display: inline-table;
+    color: darkslategray;
 }
 
-.component__config--template__field__remove:hover {
+.component__config--template__field__remove__icon {
+    vertical-align: super;
+}
+
+.component__config--template__field__remove__icon:hover {
     transform: scale(1.5);
     -moz-transform: scale(1.5);
     -webkit-transform: scale(1.5);
@@ -81,10 +86,11 @@
 
 .component__config--template__addField__wrapper {
     margin-top: 1em;
+    margin-bottom: 2em;
 }
 
 .component__config--template__addField__button {
-    float: right;
+    float: left;
 }
 
 .component__selectionList {
