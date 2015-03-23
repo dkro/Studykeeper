@@ -67,7 +67,7 @@
         </script>
 
         <script type="text/x-handlebars" id="components/news-display">
-            <div class="panel-heading newsDisplay__heading">{{title}}</div>
+            <div  {{bind-attr class=":panel-heading headerClassName"}}>{{title}}</div>
             <div class="panel-body customizedPanel">
                 <div class="list-group panelDisplay__list--news">
                     {{#each n in displayedNews}}
@@ -95,12 +95,17 @@
             {{#if isSelected}}
                 Bereits ausgewählt
             {{else}}
-                <span title="Hinzufügen" class="glyphicon glyphicon-plus-sign"></span>
+                <span class="hint--right" data-hint="Hinzufügen">
+                  <span class="glyphicon glyphicon-plus-sign component__selectButton--notSelected__icon"></span>
+                </span>
             {{/if}}
         </script>
 
         <script type="text/x-handlebars" id="components/search-table">
-            {{input type="text" value=searchValue classNames="form-control input-sm component__searchTable__searchInput" placeholder=placeholderText}}
+            <div class="input-group component__searchTable__searchInput input-group-sm">
+                <span class="input-group-addon component__searchTable__searchInput__label">Suche</span>
+                {{input type="text" value=searchValue classNames="form-control" placeholder=placeholderText}}
+            </div>
 
             {{#if searchList}}
                 <ul class="list-group component__searchTable__resultList">
@@ -135,7 +140,11 @@
                                 <td>
                                     {{searchTypeOutput entity type}}
                                 </td>
-                                <td><span class="glyphicon glyphicon-minus-sign component__searchTable__table__deselectIcon" {{action 'deselectEntry' entity}}></span></td>
+                                <td>
+                                    <span data-hint="Entfernen" class="hint--left" {{action 'deselectEntry' entity}}>
+                                        <span class="glyphicon glyphicon-minus-sign component__searchTable__table__deselectIcon"></span>
+                                    </span>
+                                </td>
                             </tr>
                         {{/each}}
                     {{else}}

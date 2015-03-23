@@ -14,32 +14,20 @@
 {{/if}}
 
 {{#if model.news}}
-    <div class="panel panel-default">
-        <div class="panel-heading">News zur Studie</div>
-        <div class="panel-body customizedPanel">
-            <div class="list-group panelDisplay__list">
-                {{#each n in model.news}}
-                    <a target="_blank" {{bind-attr href="n.link"}} class="list-group-item dashboardNews__item">
-                        <h3 class="list-group-item-heading dashboardNews__item__heading">{{n.title}} <small>{{n.date}}</small></h3>
-                        <div class="list-group-item-text dashboardNews__item__body">
-                            {{n.description}}
-                        </div>
-                    </a>
-                {{/each}}
-            </div>
-        </div>
-    </div>
+    {{news-display title="Studiennews" news=model.news headerClassName="newsDisplay__heading--studyView"}}
 {{/if}}
 
 <div class="data__wrapper">
-    <div class="data__row">
-        <div class="data__cell--description">Studientyp: </div>
-        <div class="data__cell--value">
-            {{#each label in model.labels}}
-                <span class="study__label">{{label.title}}</span>
-            {{/each}}
+    {{#if model.labels}}
+        <div class="data__row">
+            <div class="data__cell--description">Studientyp: </div>
+            <div class="data__cell--value">
+                {{#each label in model.labels}}
+                    <span class="study__label">{{label.title}}</span>
+                {{/each}}
+            </div>
         </div>
-    </div>
+    {{/if}}
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
         <div class="data__cell--value data--person">
@@ -63,17 +51,17 @@
         <div class="data__cell--value">{{model.location}}</div>
     </div>
     <div class="data__row">
-        <div class="data__cell--description">Prämien: </div>
-        <div class="data__cell--value">
-            <span class="data--payment">{{model.compensation}}</span> oder <span class="data--payment">{{model.mmi}} MMI-Punkte</span>
-        </div>
-    </div>
-    <div class="data__row">
         <div class="data__cell--description">Beschreibung: </div>
         <div class="data__cell--value">
             <div class="data--description">
                 {{model.description}}
             </div>
+        </div>
+    </div>
+    <div class="data__row">
+        <div class="data__cell--description">Prämien: </div>
+        <div class="data__cell--value">
+            <span class="data--payment">{{model.compensation}}</span> oder <span class="data--payment">{{model.mmi}} MMI-Punkte</span>
         </div>
     </div>
     {{#each field in fieldNameToValues}}
@@ -95,7 +83,7 @@
 </div>
 
 {{#if canEdit}}
-    <div class="table-responsive management--all__table">
+    <div class="table-responsive study__table__wrapper">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -108,7 +96,7 @@
             <tbody>
                 {{#if registeredUsers}}
                     {{#each user in registeredUsers}}
-                        <tr class="management--all__row">
+                        <tr>
                             <td>{{user.username}}</td>
                             <td>{{user.firstname}}</td>
                             <td>{{user.lastname}}</td>
@@ -144,8 +132,8 @@
 <div class="study__button__wrapper">
     {{#if model.closed}}
         {{#if canEdit}}
-            <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isEditRegisterLoading}} {{action 'primaryButtonClick'}}>
-                {{#if isEditRegisterLoading}}
+            <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isEditLoading}} {{action 'editButtonClick'}}>
+                {{#if isEditLoading}}
                     {{loading-status additionalClassNames="loading__study--edit"}}
                 {{else}}
                     Bearbeiten
@@ -153,30 +141,28 @@
             </button>
         {{/if}}
     {{else}}
-        <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isEditRegisterLoading}} {{action 'primaryButtonClick'}}>
-            {{#if isEditRegisterLoading}}
+        {{#if canEdit}}
+                <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isEditLoading}} {{action 'editButtonClick'}}>
+                    {{#if isEditLoading}}
+                        {{loading-status additionalClassNames="loading__study--edit"}}
+                    {{else}}
+                        Bearbeiten
+                    {{/if}}
+                </button>
+        {{/if}}
+
+        <button class="btn application__secondPrimaryButton study__editRegisterButton" {{bind-attr disabled=isRegisterLoading}} {{action 'registerButtonClick'}}>
+            {{#if isRegisterLoading}}
                 {{loading-status additionalClassNames="loading__study--register"}}
             {{else}}
-                {{#if canEdit}}
-                    Bearbeiten
-                {{else}}
                     {{#if isRegistered}}
                         Von dieser Studie abmelden
                     {{else}}
                         Zu dieser Studie anmelden
                     {{/if}}
-                {{/if}}
             {{/if}}
         </button>
     {{/if}}
-
-    <button class="btn btn-default study__cancelButton" {{bind-attr disabled=isBackToStudiesLoading}} {{action 'cancelButtonClick'}}>
-        {{#if isBackToStudiesLoading}}
-            {{loading-status additionalClassNames="loading__study--back"}}
-        {{else}}
-            Alle Studien
-        {{/if}}
-    </button>
 
     {{#if model.published}}
         <button class="btn btn-default study__publicButton" {{bind-attr disabled=isPublishPublicLoading}} {{action 'publicButtonClick'}}>
@@ -197,4 +183,12 @@
             </button>
         {{/if}}
     {{/if}}
+
+    <button class="btn btn-default study__cancelButton" {{bind-attr disabled=isBackToStudiesLoading}} {{action 'cancelButtonClick'}}>
+        {{#if isBackToStudiesLoading}}
+            {{loading-status additionalClassNames="loading__study--back"}}
+        {{else}}
+            Alle Studien
+        {{/if}}
+    </button>
 </div>

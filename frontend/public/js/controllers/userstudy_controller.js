@@ -2,13 +2,9 @@ StudyManager.UserstudyController = Ember.Controller.extend({
     needs: ['userstudies', 'application'],
 
     actions: {
-        primaryButtonClick: function() {
-            if (this.get('canEdit')) {
-                this.set('isEditRegisterLoading', true);
-                this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
-            } else {
+        registerButtonClick: function() {
                 this.set('statusMessage', null);
-                this.set('isEditRegisterLoading', true);
+                this.set('isRegisterLoading', true);
 
                 var studyId = this.get('model').get('id');
                 var currentUserId = this.get('controllers.application').get('currentUserId');
@@ -39,9 +35,15 @@ StudyManager.UserstudyController = Ember.Controller.extend({
                             })
                         },
                         function(error) {
-                            that.set('isEditRegisterLoading', false);
+                            that.set('isRegisterLoading', false);
                             that.set('statusMessage', { message: error.responseJSON.message, isSuccess: false });
                         });
+        },
+
+        editButtonClick: function() {
+            if (this.get('canEdit')) {
+                this.set('isEditLoading', true);
+                this.transitionToRoute('userstudy-edit', this.get('model').get('id'));
             }
         },
 
@@ -96,7 +98,8 @@ StudyManager.UserstudyController = Ember.Controller.extend({
         var isTutor = this.get('controllers.application').get('isTutor');
         this.set('isTutor', isTutor);
         this.set('statusMessage', null);
-        this.set('isEditRegisterLoading', false);
+        this.set('isEditLoading', false);
+        this.set('isRegisterLoading', false);
         this.set('isBackToStudiesLoading', false);
         this.set('isPublishPublicLoading', false);
     },
@@ -187,7 +190,9 @@ StudyManager.UserstudyController = Ember.Controller.extend({
 
     statusMessage: null,
 
-    isEditRegisterLoading: false,
+    isEditLoading: false,
+
+    isRegisterLoading: false,
 
     isBackToStudiesLoading: false,
 

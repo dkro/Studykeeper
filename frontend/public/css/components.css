@@ -94,7 +94,7 @@
 }
 
 .component__selectionList {
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 9em;
 }
 
@@ -219,16 +219,20 @@
 }
 
 .component__searchTable__searchInput {
-    max-width: 60%;
+    max-width: 70%;
+}
+
+.component__searchTable__searchInput__label {
+    font-weight: bold;
 }
 
 .component__searchTable__resultList {
     border-width: 2px;
-    border-color: #0000ff;
+    border-color: #063;
 }
 
 .component__searchTable__resultItem {
-    background-color: silver;
+    background-color: rgba(0, 102, 51, 0.14);;
     padding: 0.7em;
     color: #000000;
 }
@@ -238,9 +242,9 @@
 }
 
 .component__searchTable__noSearchResult {
-    border: 2px solid black;
+    border: 2px solid darkslategray;
     padding: 0.5em;
-    background-color: black;
+    background-color: darkslategray;
     color: #ffffff;
     font-weight: bold;
     -webkit-border-radius: 0.5em;
@@ -261,7 +265,7 @@
 
 .component__searchTable__table__deselectIcon {
     font-size: 1.2em;
-    color: #000000;
+    color: darkslategray;
     cursor: pointer;
 }
 
@@ -271,17 +275,15 @@
     -webkit-transform: scale(1.5);
 }
 
-
-
-
 .component__selectButton--notSelected {
     display: inline-block;
     font-size: 1.2em;
     cursor: pointer;
     margin-right: 1em;
+    color: darkslategray;
 }
 
-.component__selectButton--notSelected:hover {
+.component__selectButton--notSelected__icon:hover {
     transform: scale(1.5);
     -moz-transform: scale(1.5);
     -webkit-transform: scale(1.5);
@@ -290,7 +292,7 @@
 .component__selectButton--selected {
     display: inline-block;
     font-weight: bold;
-    color: lemonchiffon;
+    color: #5f9ea0;
     margin-right: 1em;
 }
 

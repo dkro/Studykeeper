@@ -5,6 +5,12 @@
     clear: right;
 }
 
+.management--all__table--studyConfirm {
+    margin-top: 1em;
+    clear: right;
+    margin-bottom: 2em;
+}
+
 .management--all__row {
     cursor: pointer;
 }
@@ -124,10 +130,20 @@
         float: right;
     }
 
+    .management--single__deleteButton--studyEdit {
+        display: inline-block;
+        float: right;
+    }
+
     .management--single__heading__wrapper {
         max-width: 80%;
         margin-top: 1em;
         padding-bottom: 6em;
+    }
+
+    .management--single__heading__wrapper--studyEdit {
+        max-width: 80%;
+        margin-top: 1em;
     }
 
     .management--single__heading {
@@ -137,6 +153,16 @@
         display: inline-block;
         margin-top: 0;
         margin-bottom: 0;
+    }
+
+    .management--single__heading--studyEdit {
+        font-weight: bold;
+        color: darkslategray;
+        float: left;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 1em;
     }
 
     .management--single__heading--create {
@@ -152,6 +178,12 @@
         clear: left;
     }
 
+    .management--single__deleteButton--studyEdit {
+        display: block;
+        clear: left;
+        margin-bottom: 1em;
+    }
+
     .management--single__heading__wrapper {
         max-width: 80%;
         margin-top: 1em;
@@ -159,6 +191,15 @@
     }
 
     .management--single__heading {
+        font-weight: bold;
+        color: darkslategray;
+        float: left;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0.5em;
+    }
+
+    .management--single__heading--studyEdit {
         font-weight: bold;
         color: darkslategray;
         float: left;

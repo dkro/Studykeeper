@@ -486,6 +486,10 @@
     font-size: 1.5em;
 }
 
+.newsDisplay__heading--studyView {
+    font-weight: bold;
+}
+
 .newsDisplay__item {
     cursor: pointer;
 }
@@ -515,13 +519,13 @@
 .panelDisplay__list--study {
     margin-bottom: 0;
     max-height: 25em;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .panelDisplay__list--news {
     margin-bottom: 0;
     max-height: 25em;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .studyDisplay__heading {

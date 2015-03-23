@@ -56,5 +56,7 @@ StudyManager.NewsDisplayComponent = Ember.Component.extend({
 
     isCollapsed: true,
 
-    newsCountOverThreshold: false
+    newsCountOverThreshold: false,
+
+    headerClassName: ''
 });

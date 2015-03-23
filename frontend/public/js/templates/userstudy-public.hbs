@@ -5,14 +5,16 @@
 </div>
 
 <div class="data__wrapper">
-    <div class="data__row">
-        <div class="data__cell--description">Studientyp: </div>
-        <div class="data__cell--value">
-            {{#each label in model.labels}}
-                <span class="study__label">{{label}}</span>
-            {{/each}}
+    {{#if model.labels}}
+        <div class="data__row">
+            <div class="data__cell--description">Studientyp: </div>
+            <div class="data__cell--value">
+                {{#each label in model.labels}}
+                    <span class="study__label">{{label}}</span>
+                {{/each}}
+            </div>
         </div>
-    </div>
+    {{/if}}
     <div class="data__row">
         <div class="data__cell--description">Ausführung: </div>
         <div class="data__cell--value data--person">
@@ -65,7 +67,7 @@
 
 <div class="study__button__wrapper">
     {{#if isLoggedIn}}
-        <button class="btn btn-default study__cancelButton" {{bind-attr disabled=isLoading}} {{action 'cancelButtonClick'}}>
+        <button class="btn application__secondPrimaryButton study__cancelButton" {{bind-attr disabled=isLoading}} {{action 'cancelButtonClick'}}>
             {{#if isLoading}}
                 {{loading-status additionalClassNames="loading__config--cancel"}}
             {{else}}

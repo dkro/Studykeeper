@@ -1,10 +1,10 @@
-<h2 class="management--single__heading">Studie abschließen</h2>
+<h2 class="management--single__heading--create">Studie abschließen</h2>
 
 {{#if statusMessage}}
     {{status-message message=statusMessage.message isSuccess=statusMessage.isSuccess}}
 {{/if}}
 
-<div class="table-responsive management--all__table">
+<div class="table-responsive management--all__table--studyConfirm">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -17,17 +17,19 @@
         <tbody>
         {{#if usersWithCompensation}}
             {{#each user in usersWithCompensation}}
-                <tr class="management--all__row">
+                <tr>
                     <td>{{user.user.username}}</td>
                     <td>{{user.user.firstname}}</td>
                     <td>{{user.user.lastname}}</td>
-                    <td>
-                        {{#if user.canGetMMI}}
+                    {{#if user.canGetMMI}}
+                        <td>
                             {{view "select" content=confirmOptions value=user.chosenCompensation classNames="form-control input-sm"}}
-                        {{else}}
-                            Ersatzprämie
-                        {{/if}}
-                    </td>
+                        </td>
+                    {{else}}
+                        <td class="studyConfirm__compensationColumn">
+                            {{model.study.compensation}}
+                        </td>
+                    {{/if}}
                 </tr>
             {{/each}}
         {{else}}
@@ -39,14 +41,14 @@
     </table>
 </div>
 
-<button {{bind-attr class=":btn confirmDataWasValid:btn-primary:btn-danger"}} {{bind-attr disabled=isClosingLoading}} {{action 'confirmStudy'}}>
+<button {{bind-attr class=":btn :studyConfirm__confirmButton confirmDataWasValid:application__secondPrimaryButton:btn-danger"}} {{bind-attr disabled=isClosingLoading}} {{action 'confirmStudy'}}>
     {{#if isClosingLoading}}
         {{loading-status additionalClassNames="loading__study--confirm"}}
     {{else}}
         Studie abschließen
     {{/if}}
 </button>
-<button class="btn btn-default" {{bind-attr disabled=isCancelLoading}} {{action 'cancel'}}>
+<button class="btn btn-default studyConfirm__cancelButton" {{bind-attr disabled=isCancelLoading}} {{action 'cancel'}}>
     {{#if isCancelLoading}}
         {{loading-status additionalClassNames="loading__config--cancel"}}
     {{else}}
