@@ -1,4 +1,4 @@
-StudyManager.SearchTableComponent = Ember.Component.extend({
+StudyManager.SearchTableComponent = Ember.Component.extend(StudyManager.TableFilterMixin, {
     actions: {
         deselectEntry: function(entry) {
             this.get('selectedEntities').removeObject(entry);
@@ -38,7 +38,7 @@ StudyManager.SearchTableComponent = Ember.Component.extend({
                     entityValue = entity.get('title');
                 }
 
-                return that.firstContainsSecond(entityValue, filterValue);
+                return that.firstContainsSecondString(entityValue, filterValue);
             });
 
             if (Ember.empty(filteredEntities)) {
@@ -47,9 +47,5 @@ StudyManager.SearchTableComponent = Ember.Component.extend({
 
             this.set('searchList', filteredEntities);
         }
-    }.observes('searchValue'),
-
-    firstContainsSecond: function(first, second) {
-        return first.indexOf(second) > -1;
-    }
+    }.observes('searchValue')
 });
