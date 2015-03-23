@@ -36,7 +36,8 @@ module.exports.getAllNews = function (callback) {
     'GROUP_CONCAT(DISTINCT snr.studyId) AS userstudies ' +
     'FROM news n ' +
     'LEFT JOIN studies_news_rel snr ON n.id=snr.newsId ' +
-    'GROUP BY n.id;',
+    'GROUP BY n.id ' +
+    'ORDER BY n.id DESC',
       function(err,result){
         connection.release();
         callback(err,result);

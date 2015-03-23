@@ -839,10 +839,16 @@ var addTemplateValues = function (connection, userstudyId, templateId, valueArr)
     if (valueArr.length === 0) {
       resolve(userstudyId);
     } else {
-      var queryString = 'INSERT INTO studies_template_values (studyId, templateId, value) ' +
-        'VALUES (' + connection.escape(userstudyId) + ',' + connection.escape(templateId) + ',' + connection.escape(valueArr[0]) + ')';
+      var queryString = 'INSERT INTO studies_template_values (studyId, templateId, fieldId, value) ' +
+        'VALUES (' + connection.escape(userstudyId) + ','
+        + connection.escape(templateId) + ','
+        + '(SELECT id FROM template_fields WHERE templateId=' + connection.escape(templateId) +' LIMIT 1) ,'
+        + connection.escape(valueArr[0]) + ')';
       for (var i = 1; i < valueArr.length; i += 1) {
-        queryString = queryString.concat(',(' + connection.escape(userstudyId) + ',' + connection.escape(templateId) + ',' + connection.escape(valueArr[i]) + ')');
+        queryString = queryString.concat(',(' + connection.escape(userstudyId) + ','
+        + connection.escape(templateId) + ','
+        + '(SELECT id FROM template_fields WHERE templateId=' + connection.escape(templateId) +' LIMIT 1 OFFSET ' + i + ') ,'
+        + connection.escape(valueArr[i]) + ')');
       }
       connection.query(queryString,
         function (err) {
