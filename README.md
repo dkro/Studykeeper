@@ -14,6 +14,13 @@ Edit the following values to match your mysql database.
   port: 3306,
   database: 'studykeeper'
 
+1.a  Setup the database
+
+/backend/init.sql can be used to initialize the database the first time. It has no content other than the predefined roles.
+To create the first Admin user simply register in the system via the Frontend and then change your role value in the table
+ 'users' directly in the database to match the id for the 'tutor' from the table 'roles'. This user can then directly
+ from the interface change any new users to be 'tutors' that means administrators in the system.
+
 2. Edit backend/config/routes.js
 
 On some Systems the path in 'directory' can not be resolved the way its implemented
@@ -47,6 +54,7 @@ Edit the following values to match your mail server
  var URL = "http://studykeeper.medien.ifi.lmu.de:10001"
 
  So that the String represents the URL of the environment.
+
 
 
 
