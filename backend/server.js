@@ -1,10 +1,31 @@
 "use strict";
-// Create Restify Server
 var restify   = require('restify');
 var bunyan    = require('bunyan');
 var port      = process.env.PORT || 10001;
+
+// Initialize the logger
+var log = new bunyan.createLogger({
+  name: 'studykeeper',
+  streams: [
+    {
+      stream: process.stdout,
+      level: 'trace'
+    },
+    {
+      type: 'rotating-file',
+      path: 'server.log',
+      level: 'info',
+      period: '1d',   // daily rotation
+      count: 1        // keep 1 back copy
+    }
+  ],
+  serializers: bunyan.stdSerializers
+});
+
+// Create the Restify Server
 var app       = restify.createServer({
-  name : 'Studykeeper'
+  name : 'Studykeeper',
+  log: log
 });
 app.use(restify.bodyParser({ mapParams: false}));
 
@@ -19,6 +40,14 @@ require('./config/routes.js')(app);
 app.pre(restify.pre.userAgentConnection()); // Just for curl
 app.listen(port, function(){
   console.log('%s listening at %s', app.name, app.url);
+});
+
+app.pre(function (request, response, next) {
+  request.log.info({req: request}, 'start');
+  return next();
+});
+app.on('after', function (req, res, route) {
+  req.log.info({res: res}, "finished");
 });
 
 var auditLogger = bunyan.createLogger({

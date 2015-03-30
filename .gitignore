@@ -1,5 +1,7 @@
 backend/node_modules/*
-backend/coverage/*
+backend/server.log
+backend/exit.log
+.DS_STORE
 .idea/*
 frontend/public/bower_components
 frontend/node_modules/*
