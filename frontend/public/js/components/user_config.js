@@ -1,3 +1,6 @@
+/**
+ * Generic form component used for user route and user-creation route.
+ */
 StudyManager.UserConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {

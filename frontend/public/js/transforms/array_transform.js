@@ -1,3 +1,7 @@
+/**
+ * Transform used to make it possible to use an array as type for model property.
+ * See Ember.js documentation about transform for further information.
+ */
 StudyManager.ArrayTransform = DS.Transform.extend({
     deserialize: function(serialized) {
         return (Ember.typeOf(serialized) == "array")

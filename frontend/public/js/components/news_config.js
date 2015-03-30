@@ -1,3 +1,6 @@
+/**
+ * Generic form component used for single-news route and news-creation route.
+ */
 StudyManager.NewsConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {

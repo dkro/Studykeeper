@@ -1,3 +1,6 @@
+/**
+ * Component representing a single element of a selection list component.
+ */
 StudyManager.SelectionItemComponent = Ember.Component.extend({
     tagName: 'li',
 

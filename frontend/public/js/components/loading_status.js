@@ -1,3 +1,6 @@
+/**
+ * Component for displaying animated icon for loading.
+ */
 StudyManager.LoadingStatusComponent = Ember.Component.extend({
     tagName: 'span',
 

@@ -14,6 +14,7 @@ StudyManager.UsersController = Ember.Controller.extend(StudyManager.TableFilterM
     },
 
     init: function() {
+        // Always call the parent's init method first if overriding this "init"
         this._super();
 
         var filterableRoles = [];

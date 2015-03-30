@@ -1,3 +1,7 @@
+/**
+ * Generic component used to display associated studies of a resource record.
+ * This component is especially used for the creation and editing routes of resource types other than userstudies.
+ */
 StudyManager.StudiesListComponent = Ember.Component.extend({
     tagName: 'div',
 

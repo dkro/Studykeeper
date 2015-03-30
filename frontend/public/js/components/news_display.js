@@ -1,3 +1,7 @@
+/**
+ * Component wrapping news by using a pre-defined Bootstrap component.
+ * Maximizing/Minimizing of news list is possible.
+ */
 StudyManager.NewsDisplayComponent = Ember.Component.extend({
     tagName: 'div',
 

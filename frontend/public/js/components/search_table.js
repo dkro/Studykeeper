@@ -1,3 +1,7 @@
+/**
+ * Generic component making it possible to search for records of a given resource type.
+ * Records can then be selected or unselected by using a table display.
+ */
 StudyManager.SearchTableComponent = Ember.Component.extend(StudyManager.TableFilterMixin, {
     actions: {
         deselectEntry: function(entry) {

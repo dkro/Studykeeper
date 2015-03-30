@@ -1,3 +1,6 @@
+/**
+ * Providing global and reusable helper functions for filtering.
+ */
 StudyManager.TableFilterMixin = Ember.Mixin.create({
     firstContainsSecondString: function(first, second) {
         return first.toLowerCase().indexOf(second.toLowerCase()) > -1;

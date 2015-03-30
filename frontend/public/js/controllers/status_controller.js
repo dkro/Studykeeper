@@ -12,6 +12,13 @@ StudyManager.StatusController = Ember.Controller.extend({
         this.set('isLoading', false);
     },
 
+    /**
+     * This method is called each time after a transition to the status route.
+     * This is a kind of workaround as this route is used for password recovery and account activation purposes.
+     * The controller decides for which message to display by extracting the hash data.
+     *
+     * This could be solved in a better way!
+     */
     requestData: function(type, hash) {
         this.set('isLoading', true);
         this.set('type', type);

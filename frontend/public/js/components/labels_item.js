@@ -1,3 +1,6 @@
+/**
+ * Component wrapping a single label on the labels route.
+ */
 StudyManager.LabelsItemComponent = Ember.Component.extend({
     tagName: 'li',
 

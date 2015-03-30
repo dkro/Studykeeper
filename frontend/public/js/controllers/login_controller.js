@@ -34,7 +34,7 @@ StudyManager.LoginController = Ember.Controller.extend({
             });
 /*
 
-            // MOCK
+            //Use this code for mocking by using fixtures (The code above then needs to be commented out)
             this.set('statusMessage', null);
             var userId = null;
 

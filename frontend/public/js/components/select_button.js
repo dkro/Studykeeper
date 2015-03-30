@@ -1,3 +1,6 @@
+/**
+ * The selection button used by the search table component.
+ */
 StudyManager.SelectButtonComponent = Ember.Component.extend({
     classNameBindings: ['isSelected:component__selectButton--selected:component__selectButton--notSelected'],
 

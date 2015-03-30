@@ -184,7 +184,7 @@ StudyManager.UserstudiesRoute = StudyManager.AuthenticationRoute.extend({
       return item.get('title');
     });
 
-    // Workaround because of Ember cache
+    // Workaround because of Ember caching problems
     var filteredStudies = model.studies.filter(function (study) {
         return !(study.get('title') === undefined);
     });
@@ -337,6 +337,8 @@ StudyManager.LabelsRoute = StudyManager.AuthenticationRoute.extend({
   },
 
   setupController: function(controller, model) {
+    // Workaround do avoid displaying of records with dirty state after deletion
+    // This is a problem with Ember's cache and the local copy of records
     var labels = this.store.filter('label', function (label) {
       return !label.get('isDirty');
     });
@@ -354,6 +356,8 @@ StudyManager.UsersRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.reset();
+    // Workaround do avoid displaying of records with dirty state after deletion
+    // This is a problem with Ember's cache and the local copy of records
     var filteredUsers = model.filter(function (user) {
       return !(user.get('username') === undefined);
     });
@@ -401,6 +405,8 @@ StudyManager.TemplatesRoute = StudyManager.AuthenticationRoute.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     controller.reset();
+    // Workaround do avoid displaying of records with dirty state after deletion
+    // This is a problem with Ember's cache and the local copy of records
     var filteredTemplates = model.filter(function (template) {
       return !(template.get('title') === undefined);
     });

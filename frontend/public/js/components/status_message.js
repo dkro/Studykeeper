@@ -1,3 +1,6 @@
+/**
+ * Component used for displaying error and success messages.
+ */
 StudyManager.StatusMessageComponent = Ember.Component.extend({
     tagName: 'p',
 

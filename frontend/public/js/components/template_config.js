@@ -1,3 +1,6 @@
+/**
+ * Generic form component used for template route and template-creation route.
+ */
 StudyManager.TemplateConfigComponent = Ember.Component.extend({
     actions: {
         cancelClick: function() {

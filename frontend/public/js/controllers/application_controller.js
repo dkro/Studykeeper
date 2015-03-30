@@ -22,6 +22,7 @@ StudyManager.ApplicationController = Ember.Controller.extend({
                     alert('Logout fehlgeschlagen! ' + error.responseJSON.message);
                 });
 
+            // Use this methods for mocking by using fixtures (The above code then needs to commented out instead)
             /*
             this.resetLocalStorage();
             this.transitionToRoute('login');*/

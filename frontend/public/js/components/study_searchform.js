@@ -1,3 +1,6 @@
+/**
+ * Component for selecting and unselection labels und the userstudies route.
+ */
 StudyManager.StudySearchformComponent = Ember.Component.extend({
     actions: {
         removeTag: function (tag) {
