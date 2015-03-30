@@ -7,10 +7,14 @@ var pool = mysql.createPool({
   user: 'root',
   password: '',
   port: 3306,
-  database: 'UserstudyManager'
+  database: 'studykeeper'
 });
 
-
+/**
+ * Returns die connection in the callback
+ *
+ * @param callback Function to be executed with the Connection
+ */
 function getConnection(callback) {
   pool.getConnection(function (err, connection) {
     if (err) {
@@ -43,6 +47,9 @@ module.exports.query = function () {
 
 };
 
+/**
+ * Closes the MySql Pool with all connections
+ */
 module.exports.cleanup = function() {
   pool.end(function (err){
     if (err){

@@ -1,15 +1,9 @@
 "use strict";
 var nodemailer = require('nodemailer');
 
-// Example Email
-//var mail = {
-//  from: 'Fred Foo ✔ <foo@blurdybloop.com>', // sender address
-//  to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers
-//  subject: 'Hello ✔', // Subject line
-//  text: 'Hello world ✔', // plaintext body
-//  html: '<b>Hello world ✔</b>'} // html body
-
-// create reusable transporter object using SMTP transport
+/**
+ * Create a reusable transport object using SMTP Transport
+ */
 var transporter = nodemailer.createTransport(
   {
     host: 'smtp.ifi.lmu.de',
@@ -21,7 +15,11 @@ var transporter = nodemailer.createTransport(
   }
 );
 
-// send mail with defined transport object
+/**
+ * Send Mail with defined transport object
+ * @param mail
+ * @param callback
+ */
 module.exports.sendMail = function (mail, callback) {
   transporter.sendMail(mail, function (error, info) {
     if (error) {
