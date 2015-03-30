@@ -1,6 +1,14 @@
 var passport  = require('passport');
 var UserController = require('../controllers/users');
 
+/**
+ * Authenticates the user with the Local Authentication Strategy with Passport.
+ * The username and password have to be supplied in the Request Body.
+ *
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next Next Handler in Routing Chain
+ */
 exports.loginAuthenticate = function(req, res, next) {
   passport.authenticate('local', {session: false},
       function(err, user, info){
@@ -15,6 +23,14 @@ exports.loginAuthenticate = function(req, res, next) {
   )(req, res, next);
 };
 
+/**
+ * Authenticates the user with the Bearer Token Authentication Strategy with Passport.
+ * The Token has to be supplied in the Request Header Authorization in this form: Bearer {token}
+ *
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next Next Handler in Routing Chain
+ */
 exports.tokenAuthenticate = function(req, res, next) {
   passport.authenticate('bearer', {session: false},
     function(err, token) {
@@ -30,6 +46,13 @@ exports.tokenAuthenticate = function(req, res, next) {
   )(req, res, next);
 };
 
+/**
+ * Compares the role of the user with the given role Array.
+ * The user token information has to be present in the Request Object
+ *
+ * @param role Array consisting of Strings describing the Role
+ * @returns next Next Handler in the Routing Chain
+ */
 exports.requiresRole = function(role) {
   return function (req, res, next) {
     // token auth strategy puts the token into req.token

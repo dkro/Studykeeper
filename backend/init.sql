@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: studykeeper
-# Generation Time: 2015-02-17 22:39:55 +0000
+# Generation Time: 2015-03-29 23:06:58 +0000
 # ************************************************************
 
 
@@ -35,7 +35,7 @@ CREATE TABLE `auth` (
   UNIQUE KEY `token` (`token`),
   KEY `user` (`userId`),
   KEY `role_auth_rel` (`roleId`),
-  CONSTRAINT `role_auth_rel` FOREIGN KEY (`roleId`) REFERENCES `users` (`role`) ON DELETE CASCADE,
+  CONSTRAINT `role_auth` FOREIGN KEY (`roleId`) REFERENCES `roles` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `user` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `labels`;
 
 CREATE TABLE `labels` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(32) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -62,10 +62,10 @@ DROP TABLE IF EXISTS `news`;
 
 CREATE TABLE `news` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
   `date` date NOT NULL,
   `description` text NOT NULL,
-  `link` varchar(64) DEFAULT '',
+  `link` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -122,7 +122,11 @@ CREATE TABLE `studies_news_rel` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `studyId` int(11) unsigned NOT NULL,
   `newsId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `news_rel` (`newsId`),
+  KEY `study_news_rel` (`studyId`),
+  CONSTRAINT `news_rel` FOREIGN KEY (`newsId`) REFERENCES `news` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `study_news_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -139,6 +143,7 @@ CREATE TABLE `studies_requires_rel` (
   PRIMARY KEY (`id`),
   KEY `study_main1_rel` (`studyId`),
   KEY `study_required_rel` (`requiresId`),
+  CONSTRAINT `study_required_orig` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `study_required_rel` FOREIGN KEY (`requiresId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -153,10 +158,13 @@ CREATE TABLE `studies_template_values` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `studyId` int(11) unsigned NOT NULL,
   `templateId` int(11) unsigned NOT NULL,
+  `fieldId` int(11) unsigned NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `templatevalue_studies` (`studyId`),
   KEY `templatevalues_template` (`templateId`),
+  KEY `templatevalue_field` (`fieldId`),
+  CONSTRAINT `templatevalue_field` FOREIGN KEY (`fieldId`) REFERENCES `template_fields` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `templatevalue_studies` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `templatevalues_template` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -191,7 +199,7 @@ DROP TABLE IF EXISTS `template_fields`;
 CREATE TABLE `template_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `templateId` int(11) unsigned NOT NULL,
-  `title` varchar(64) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `template_fields_rel` (`templateId`),
   CONSTRAINT `template_fields_rel` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`) ON DELETE CASCADE
@@ -206,7 +214,7 @@ DROP TABLE IF EXISTS `templates`;
 
 CREATE TABLE `templates` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(32) NOT NULL DEFAULT 'Title',
+  `title` varchar(255) NOT NULL DEFAULT 'Title',
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -220,13 +228,13 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) NOT NULL DEFAULT '',
+  `username` varchar(255) NOT NULL DEFAULT '',
   `password` char(60) NOT NULL DEFAULT '',
   `role` int(11) unsigned NOT NULL,
   `lmuStaff` tinyint(1) NOT NULL DEFAULT '0',
-  `mmi` int(11) NOT NULL DEFAULT '0',
-  `firstname` varchar(64) DEFAULT NULL,
-  `lastname` varchar(64) DEFAULT NULL,
+  `mmi` float NOT NULL DEFAULT '0',
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '1',
   `collectsMMI` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -285,13 +293,13 @@ CREATE TABLE `userstudies` (
   `templateId` int(11) unsigned DEFAULT NULL,
   `fromDate` date NOT NULL,
   `untilDate` date NOT NULL,
-  `title` varchar(32) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `link` varchar(255) DEFAULT NULL,
   `space` int(11) unsigned NOT NULL,
-  `mmi` tinyint(1) unsigned DEFAULT NULL,
-  `compensation` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `location` varchar(64) NOT NULL DEFAULT '',
+  `mmi` float unsigned DEFAULT NULL,
+  `compensation` varchar(255) NOT NULL DEFAULT '0',
+  `location` varchar(255) NOT NULL DEFAULT '',
   `visible` tinyint(1) NOT NULL DEFAULT '1',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `closed` tinyint(1) NOT NULL DEFAULT '0',

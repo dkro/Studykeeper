@@ -5,6 +5,34 @@ var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 var Async       = require('async');
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+ *  "userstudy": {
+ *   "title": "Test Creation",
+ *   "tutor": 1,
+ *   "executor": 3,
+ *   "template": 1,
+ *   "fromDate": "2014-12-12",
+ *   "untilDate": "2014-12-12",
+ *   "description": "Userstudy Beschreibung",
+ *   "link": "http://www.linklmu.com",
+ *   "paper": "http://www.linktopaper.com",
+ *   "mmi": "1",
+ *   "compensation": "5",
+ *   "location": "LMU",
+ *   "space": 10,
+ *   "requiredStudies" : [],
+ *   "labels" : [],
+ *   "registeredUsers" : [],
+ *   "news" : [],
+ *   "templateValues" : []
+ * }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated Userstudy Request
+ */
 module.exports.validFullUserstudyReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -124,6 +152,18 @@ module.exports.validFullUserstudyReq = function(req){
   });
 };
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {"users":
+    [
+      {"userId":1,"getsMMI":false},
+      {"userId":4,"getsMMI":true}
+    ]
+   }
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated Userstudy Request
+ */
 module.exports.validCloseRequest = function(req){
   return new Promise(function(resolve,reject) {
 
@@ -157,6 +197,11 @@ module.exports.validCloseRequest = function(req){
   });
 };
 
+/**
+ * Promises that the userstudy with a certain id exists
+ * @param userstudy the userstudy object with the id
+ * @returns {Promise} A Promise containing the userstudy
+ */
 module.exports.userstudyExists = function(userstudy) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudyById(userstudy.id,function(err,result){
@@ -171,6 +216,11 @@ module.exports.userstudyExists = function(userstudy) {
   });
 };
 
+/**
+ * Promises that the userstudy flag is set to open
+ * @param userstudy the userstudy object with the open flag
+ * @returns {Promise} A Promise containing the userstudy
+ */
 module.exports.userstudyIsOpen = function(userstudy) {
   return new Promise(function(resolve, reject){
     if (userstudy.closed === 1) {
@@ -181,6 +231,11 @@ module.exports.userstudyIsOpen = function(userstudy) {
   });
 };
 
+/**
+ * Promises that the userstudy has free space
+ * @param userstudyId the userstudy Id
+ * @returns {Promise} A Promise containing the userstudy
+ */
 module.exports.userstudyHasSpace = function(userstudyId) {
   return new Promise(function(resolve, reject){
     Userstudy.getUserstudyById(userstudyId,function(err,result){
@@ -203,6 +258,12 @@ module.exports.userstudyHasSpace = function(userstudyId) {
   });
 };
 
+/**
+ * Promises that the user completed all required studies
+ * @param userid the user id
+ * @param userstudyId the study id with the required studies
+ * @returns {Promise} An empty Promise
+ */
 module.exports.userCompletedAllRequiredStudies = function(userid,userstudyId) {
   return new Promise(function(resolve, reject){
     var userstudy;
@@ -239,6 +300,12 @@ module.exports.userCompletedAllRequiredStudies = function(userid,userstudyId) {
   });
 };
 
+/**
+ * Promises that the user is registered to the study
+ * @param userId the user Id
+ * @param userstudyId the userstudy Id
+ * @returns {Promise} A Promise containg the userId
+ */
 module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
   return new Promise(function(resolve, reject){
     Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
@@ -263,6 +330,12 @@ module.exports.userIsRegisteredToStudy = function(userId, userstudyId){
   });
 };
 
+/**
+ * Promises that the users participation forr a study has already been confirmed
+ * @param userId the user id
+ * @param studyId the study id
+ * @returns {Promise} An empty Promise
+ */
 module.exports.userIsNotConfirmed = function(userId,studyId){
   return new Promise(function(resolve, reject){
     Userstudy.getStudiesRelationFor(studyId, "users", function(err,result){
@@ -287,7 +360,12 @@ module.exports.userIsNotConfirmed = function(userId,studyId){
   });
 };
 
-
+/**
+ * Promsies that the user is not already registered to the study
+ * @param userId the user Id
+ * @param userstudyId the study id
+ * @returns {Promise} A Promise containing the userid
+ */
 module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
   return new Promise(function(resolve, reject){
     Userstudy.getUsersRegisteredToStudy(userstudyId, function(err,result){
@@ -312,6 +390,11 @@ module.exports.userIsNOTRegisteredToStudy = function(userId,userstudyId){
   });
 };
 
+/**
+ * Promises the labels mapped to the study
+ * @param userstudy the userstudy object
+ * @returns {Promise} A Promise containg all labels mapped to the study
+ */
 module.exports.labelsForUserstudy = function(userstudy){
   return new Promise(function(resolve, reject){
     Userstudy.getLabelsForStudy(userstudy, function(err, result) {
@@ -324,6 +407,11 @@ module.exports.labelsForUserstudy = function(userstudy){
   });
 };
 
+/**
+ * Promises the userstudies for which the user is executor
+ * @param user the user object
+ * @returns {Promise} A Promise containing all studies the user is executor for
+ */
 module.exports.userIsExecutorFor = function(user) {
   return new Promise(function (resolve, reject) {
     Userstudy.getStudiesUserIsExecutor(user, function (err, result) {
@@ -336,6 +424,11 @@ module.exports.userIsExecutorFor = function(user) {
   });
 };
 
+/**
+ * Promises the userstudies for which the user is tutor
+ * @param user the user object
+ * @returns {Promise} A Promise containing all studies the user is tutor for
+ */
 module.exports.userIsTutorFor = function(user) {
   return new Promise(function (resolve, reject) {
     Userstudy.getStudiesUserIsTutor(user, function (err, result) {
@@ -348,6 +441,11 @@ module.exports.userIsTutorFor = function(user) {
   });
 };
 
+/**
+ * Promises the studies for which the user is registered
+ * @param user the user object
+ * @returns {Promise} A Promise containing all studies the user is registered for
+ */
 module.exports.userRegisteredStudies = function(user) {
   return new Promise(function (resolve, reject) {
     Userstudy.getStudiesUserIsRegistered(user, function (err, result) {
@@ -360,6 +458,12 @@ module.exports.userRegisteredStudies = function(user) {
   });
 };
 
+/**
+ * Promises that the template value count is equal to the template title count
+ * @param templateId the template id
+ * @param templateValuesArr the array containg all template values
+ * @returns {Promise} An empty Promise
+ */
 module.exports.studyTemplateValueCountIsTemplateTitleCount = function(templateId,templateValuesArr) {
   return new Promise(function (resolve, reject) {
     Template.getTemplateById(templateId, function (err, template) {
@@ -377,6 +481,12 @@ module.exports.studyTemplateValueCountIsTemplateTitleCount = function(templateId
   });
 };
 
+/**
+ * Promises that the user is either an executor for a certain study or he is a tutor in general
+ * @param user the user object
+ * @param userstudyId the userstudy id
+ * @returns {Promise} A Promise containing a boolean
+ */
 module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
   return new Promise(function (resolve, reject) {
     if (user.role === "executor") {
@@ -408,6 +518,12 @@ module.exports.userIsExecutorForStudyOrTutor = function(user,userstudyId) {
   });
 };
 
+/**
+ * Promises that every registered user has finished very required study
+ * @param registeredUsers an Array containing all users
+ * @param requiredStudies an Array containing all required studies
+ * @returns {Promise} An empty Promise
+ */
 module.exports.allRegisteredUsersFinishedRequiredStudies = function(registeredUsers, requiredStudies) {
   return new Promise(function(resolve,reject){
     if (registeredUsers.length === 0) {

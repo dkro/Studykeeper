@@ -7,7 +7,9 @@ var crypt          = require('../utilities/encryption');
 
 module.exports = function() {
 
-  // Local Strategy used to initially login the user
+  /**
+   * Local Authentication Strategy used to authenticate the User with Username and Password
+   */
   Passport.use(new LocalStrategy(
       function(username, password, done) {
         User.getUserByName(username, function(err, user) {
@@ -36,7 +38,9 @@ module.exports = function() {
       }
   ));
 
-  // Bearer Strategy used to authenticate after login
+  /**
+   * Bearer Strategy used to authenticate the user to give access to protected Ressources on the Server
+   */
   Passport.use(new BearerStrategy ({},
     function(token, done) {
       User.getToken(token, function(err, tokenResult) {

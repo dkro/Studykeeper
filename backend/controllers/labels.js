@@ -4,7 +4,12 @@ var Promise      = require('es6-promise').Promise;
 var LabelPromise = require('./promises/labelPromises');
 var Async       = require('async');
 
-
+/**
+ * Creates a new Label
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.createLabel = function(req, res, next){
   var label;
 
@@ -30,6 +35,12 @@ module.exports.createLabel = function(req, res, next){
   });
 };
 
+/**
+ * Deletes an existing label
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.deleteLabel = function(req, res, next){
     var label = {id:req.params.id};
     LabelPromise.labelExists(label)
@@ -57,6 +68,12 @@ module.exports.deleteLabel = function(req, res, next){
     });
 };
 
+/**
+ * Provides a list of all available labels
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.allLabels = function(req, res, next){
   Label.getAllLabels(function(err, list){
     if (err){
@@ -84,6 +101,12 @@ module.exports.allLabels = function(req, res, next){
   });
 };
 
+/**
+ * Provides a label by id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getLabelById = function(req, res, next){
   Label.getLabelById(req.params.id, function(err,result){
     if (err) {

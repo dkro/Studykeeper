@@ -4,7 +4,12 @@ var Promise = require('es6-promise').Promise;
 var NewsPromise = require('./promises/newsPromises');
 var Async       = require('async');
 
-
+/**
+ * Creates a new News
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.createNews = function (req, res, next) {
 
   NewsPromise.validNewsReq(req)
@@ -25,6 +30,12 @@ module.exports.createNews = function (req, res, next) {
     });
 };
 
+/**
+ * Edits an existing news by id via the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.editNews = function (req, res, next) {
   var news;
   NewsPromise.validNewsReq(req)
@@ -49,6 +60,12 @@ module.exports.editNews = function (req, res, next) {
     });
 };
 
+/**
+ * Deletes an existing news view the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.deleteNews = function (req, res, next) {
   News.getNewsById(req.params.id, function (err, result) {
     if (err) {
@@ -81,7 +98,12 @@ module.exports.deleteNews = function (req, res, next) {
   });
 };
 
-
+/**
+ * Provides a news by id via the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getNewsById = function (req, res, next) {
   News.getNewsById(req.params.id, function (err, result) {
     if (err) {
@@ -104,6 +126,12 @@ module.exports.getNewsById = function (req, res, next) {
   });
 };
 
+/**
+ * Provides a list of all news
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.allNews = function (req, res, next) {
   News.getAllNews(function (err, list) {
     if (err) {

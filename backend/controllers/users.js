@@ -9,7 +9,14 @@ var uuid       = require('node-uuid');
 var Mail      = require('../utilities/mail');
 
 var passwordMinimumLength = 7;
+var URL = "http://studykeeper.medien.ifi.lmu.de:10001";
 
+/**
+ * Provides a simple user via the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getUser = function(req, res, next) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
@@ -23,6 +30,12 @@ module.exports.getUser = function(req, res, next) {
   });
 };
 
+/**
+ * Provides a full user via the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getUserById = function(req, res, next) {
   User.getUserById(req.params.id,function(err,result){
     if (err) {
@@ -71,6 +84,12 @@ module.exports.getUserById = function(req, res, next) {
   });
 };
 
+/**
+ * Provides a list of all Users
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getUsers = function(req, res, next) {
   User.getUsers(function(err,list){
       if (err) {
@@ -110,6 +129,12 @@ module.exports.getUsers = function(req, res, next) {
   });
 };
 
+/**
+ * Signs a user up in the system. It saves the user in the database and sends a confirmaiton mail
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.signup = function(req, res, next) {
 
   var user;
@@ -151,6 +176,11 @@ module.exports.signup = function(req, res, next) {
 
 };
 
+/**
+ * Sends the sign up mail in which the user has to confirm the email adress
+ * @param user the user object
+ * @param callback
+ */
 var sendSignUpMail = function(user, callback){
   var hash = uuid.v1();
   User.createConfirmationLink(user.id,hash,function(err){
@@ -161,7 +191,7 @@ var sendSignUpMail = function(user, callback){
         from: 'StudyKeeper <no-reply@studykeeper.com>',
         to: user.username,
         subject: 'Bitte Bestätigen Sie Ihre Email Adresse',
-        html: "Bitte clicken Sie <a href=\"http://studykeeper.medien.ifi.lmu.de:10001/#/status?hash=" + hash + "&type=confirm\">hier</a> " +
+        html: "Bitte clicken Sie <a href=\"" + URL + "/#/status?hash=" + hash + "&type=confirm\">hier</a> " +
         "um Ihre Email-Adresse zu bestätigten und melden sich dann " +
         "mit Ihren Nutzerdaten an."};
       Mail.sendMail(mail,function(err,result){
@@ -175,6 +205,12 @@ var sendSignUpMail = function(user, callback){
   });
 };
 
+/**
+ * Confirms the users Email Adress via a 3 day valid hash
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.confirmUser = function(req, res, next){
  var hash = req.params.hash;
   User.getUserForHash(hash,function(err,result){
@@ -208,6 +244,15 @@ module.exports.confirmUser = function(req, res, next){
   });
 };
 
+/**
+ * Logs the user into the system in case his email has been confirmed.
+ * A new Token is generated
+ * All old Tokens are deleted
+ * The token is send to him in the response
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.login = function(req, res, next) {
   var user;
 
@@ -249,6 +294,12 @@ module.exports.login = function(req, res, next) {
     });
 };
 
+/**
+ * Logs the user out. His Token is then deleted
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.logout = function(req, res, next) {
   UserPromise.userFromToken(req)
     .then(function(user){
@@ -285,6 +336,12 @@ module.exports.logout = function(req, res, next) {
   });
 };
 
+/**
+ * Creates a new user
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.createUser = function(req, res, next) {
   var user;
 
@@ -336,6 +393,12 @@ module.exports.createUser = function(req, res, next) {
   });
 };
 
+/**
+ * Edits an existing user via req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.editUser = function(req, res, next) {
   var user;
 
@@ -389,6 +452,12 @@ module.exports.editUser = function(req, res, next) {
     });
 };
 
+/**
+ * Sends the users welcome Mail containing his password
+ * @param email
+ * @param password
+ * @param callback
+ */
 var sendUserWelcomeMail = function(email,password,callback) {
   var mail = {
     from: 'StudyKeeper <no-reply@studykeeper.com>',
@@ -396,8 +465,8 @@ var sendUserWelcomeMail = function(email,password,callback) {
     subject: 'Es wurde ein Account für Sie erstellt.',
     html: "Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen " +
     "Ihrer Email Adresse bekommen. Nachdem Sie Ihre Email Adresse bestätigt haben, können Sie sich mit dieser " +
-    "und diesem Passwort: " + password + " bei der folgenden URL anmelden: " +
-    "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001\">http://studykeeper.medien.ifi.lmu.de:10001</a> " +
+    "und diesem Passwort: " + password + " über den folgenden Link anmelden: " +
+    "<a href=\"" + URL + "\">Studykeeper</a> " +
     " Das Passwort können Sie jederzeit in den Account Einstellungen ändern."};
   Mail.sendMail(mail,function(err,result){
     if (err) {
@@ -408,6 +477,12 @@ var sendUserWelcomeMail = function(email,password,callback) {
   });
 };
 
+/**
+ * Deletes the user from the system
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.deleteUser = function(req, res, next) {
   var userId = req.params.id;
   UserPromise.userExistsById(userId)
@@ -427,7 +502,12 @@ module.exports.deleteUser = function(req, res, next) {
     });
 };
 
-
+/**
+ * Validates the user has a role provided in the roleArray
+ * @param roleArray the Array containing all roles for which the user has to have one
+ * @param roleId the id of the role
+ * @param callback
+ */
 module.exports.validateRole = function(roleArray, roleId, callback) {
   var roleValidated = false;
   User.getRole(roleId, function(err, result){
@@ -443,7 +523,13 @@ module.exports.validateRole = function(roleArray, roleId, callback) {
   });
 };
 
-
+/**
+ * Iniates the Password retrieval process for a given email adress. Only if the email adress exists in the system
+ * the process is started
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.recoverPasswordRequest = function(req, res, next){
   var email = req.body.userEmail;
 
@@ -471,6 +557,14 @@ module.exports.recoverPasswordRequest = function(req, res, next){
   }
 };
 
+/**
+ * Validates a 3 day valid hash to recover the password
+ * If the hash is valid a new password is generated and saved for the user
+ * A Mail is sent to infor the user about the new password
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.recoverPasswordAction = function(req, res, next){
   var now = new Date();
   var ThreeDaysFromNow = new Date(now - 1000*60*60*24*3);
@@ -541,6 +635,12 @@ module.exports.recoverPasswordAction = function(req, res, next){
   });
 };
 
+/**
+ * Sends the mail in which the user can request a new password
+ * The mail contains a unique hash which is valid for three days
+ * @param email
+ * @param callback
+ */
 var sendPasswordRetrievalRequest = function(email, callback){
   var hash = uuid.v1();
   User.createPasswordRetrievalData(email,hash,function(err){
@@ -553,7 +653,7 @@ var sendPasswordRetrievalRequest = function(email, callback){
         subject: 'Passwort vergessen?',
         html: "Bitte klicken Sie auf folgenden Link, um Ihr Passwort zurückzusetzen. Falls Sie diese Mail nicht  " +
         "angefordert haben, ignorieren Sie diese Mail. "+
-        "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001/#/status?hash=" + hash + "&type=recover\">hier</a>"};
+        "<a href=\"" + URL + "/#/status?hash=" + hash + "&type=recover\">hier</a>"};
       Mail.sendMail(mail,function(err,result){
         if (err) {
           callback(err);
@@ -572,7 +672,7 @@ var sendPasswordRetrievalAction = function(email, newpw, callback){
     subject: 'Ihr Passwort wurde zurückgesetzt',
     html: "Ihr Passwort wurde zurückgesetzt. Ihr neues Passwort lautet: " + newpw + ". Bitte loggen Sie sich " +
     "mit diesem ein und ändern Sie Ihr Passwort in den Account Einstellungen. " +
-    "<a href=\"http://studykeeper.medien.ifi.lmu.de:10001\">http://studykeeper.medien.ifi.lmu.de:10001</a> "};
+    "<a href=\"" + URL + "\">Studykeeper</a> "};
   Mail.sendMail(mail,function(err,result){
     if (err) {
       callback(err);

@@ -6,7 +6,12 @@ var UserPromise  = require('./promises/userPromises');
 var UserstudyPromise = require('./promises/userstudyPromises');
 var Async       = require('async');
 
-
+/**
+ * Creates a new Userstudy
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.createUserstudy = function(req, res, next) {
 
   var userstudy = {};
@@ -39,6 +44,12 @@ module.exports.createUserstudy = function(req, res, next) {
   });
 };
 
+/**
+ * Edits an existing userstudy
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.editUserstudy = function(req, res, next) {
   var userstudy;
   var isExecutor = false;
@@ -78,6 +89,12 @@ module.exports.editUserstudy = function(req, res, next) {
     });
 };
 
+/**
+ * Deletes an existing userstudy
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.deleteUserstudy = function(req, res, next) {
   var userstudyId = req.params.id;
 
@@ -99,6 +116,12 @@ module.exports.deleteUserstudy = function(req, res, next) {
     });
 };
 
+/**
+ * Publishes a userstudy
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.publishUserstudy = function(req, res, next) {
   UserstudyPromise.userstudyExists({id:req.params.id})
   .then(function(userstudy){
@@ -118,6 +141,13 @@ module.exports.publishUserstudy = function(req, res, next) {
   });
 };
 
+/**
+ * Provides a single userstudy by id
+ * Different Roles have different visibilites on userstudies
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getUserstudyById = function(req, res, next) {
   UserPromise.userFromToken(req)
     .then(function(user){
@@ -196,6 +226,12 @@ module.exports.getUserstudyById = function(req, res, next) {
 
 };
 
+/**
+ * Provides the public view of a userstudy
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handlert
+ */
 module.exports.getPublicUserstudyById = function(req, res, next) {
   UserStudy.getPublicUserstudyById(req.params.id, function(err,result){
     if (err) {
@@ -251,6 +287,13 @@ module.exports.getPublicUserstudyById = function(req, res, next) {
   });
 };
 
+/**
+ * Provides a list of all userstudies
+ * Different Roles have differente visibility on userstudies
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.allUserstudies = function(req, res, next) {
   UserPromise.userFromToken(req)
     .then(function(user){
@@ -334,6 +377,12 @@ module.exports.allUserstudies = function(req, res, next) {
   });
 };
 
+/**
+ * Removes all Required Studies Relation for a userstudy
+ * @param userstudyList
+ * @param userId
+ * @param cb
+ */
 var removeReqStudies = function (userstudyList, userId, cb) {
   var reqStudies = []
   UserStudy.getRequiredStudyList(function(err, result){
@@ -380,6 +429,11 @@ var removeReqStudies = function (userstudyList, userId, cb) {
   });
 }
 
+/**
+ * Parses a userstudy
+ * @param userstudy
+ * @returns {*}
+ */
 var parseUserstudy = function (userstudy) {
   if (userstudy.requiredStudies === null) {
     userstudy.requiredStudies = [];
@@ -415,6 +469,12 @@ var parseUserstudy = function (userstudy) {
   return userstudy;
 };
 
+/**
+ * Registers a user to a study
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.registerUserToStudy = function(req, res, next){
   var userstudyId = req.params.studyId;
   var userId;
@@ -449,6 +509,12 @@ module.exports.registerUserToStudy = function(req, res, next){
   });
 };
 
+/**
+ * Signs a registered user from a study off
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.signoff = function(req, res, next){
   var userstudyId = req.params.studyId;
   var userId;
@@ -483,6 +549,12 @@ module.exports.signoff = function(req, res, next){
   });
 };
 
+/**
+ * Removes a user from a study
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.removeUserFromStudy = function(req, res, next){
   var userstudyId = req.params.id;
   var userId = req.params.userId;
@@ -536,6 +608,12 @@ module.exports.removeUserFromStudy = function(req, res, next){
     });
 };
 
+/**
+ * Confirms the Participation of a user for a study
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.confirmUserParticipation = function(req, res, next){
   var getsMMI = req.body.getsMMI;
 
@@ -603,6 +681,12 @@ module.exports.confirmUserParticipation = function(req, res, next){
   }
 };
 
+/**
+ * Closes a userstudy and gives all defined participants their MMI Points
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.closeUserstudy = function(req, res, next){
 
   var userstudy = {};

@@ -7,6 +7,22 @@ var lmuStaff = function(req) {
   return (req.body.user.username.indexOf("@cip.ifi.lmu.de") >= 0 || req.body.user.username.indexOf("@campus.lmu.de") >= 0 || req.body.user.username.indexOf("@ifi.lmu.de") >= 0);
 };
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+ *  "user": {
+ *    "username": "user1@studykeeper.com",
+ *    "firstname": "firstnamea",
+ *    "lastname": "lastnameb",
+ *    "password": "password",
+ *    "confirmPasswor": "password",
+ *    "mmi": false
+ *  }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated User Request
+ */
 module.exports.validSignupReq = function(req){
   return new Promise(function(resolve, reject){
     var validationErrors = [];
@@ -63,6 +79,16 @@ module.exports.validSignupReq = function(req){
   });
 };
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+    "username" : "user1@studykeeper.com",
+    "password" : "1234567"
+  }
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated User Request
+ */
 module.exports.validLoginReq = function(req){
   return new Promise(function(resolve, reject){
     var validationErrors = [];
@@ -85,6 +111,22 @@ module.exports.validLoginReq = function(req){
   });
 };
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+ *  "user": {
+ *    "username": "user1@studykeeper.com",
+ *    "firstname": "firstnamea",
+ *    "lastname": "lastnameb",
+ *    "mmi": 10,
+ *    "role": "participant",
+ *    "collectsMMI": false
+ *  }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated User Request
+ */
 module.exports.validCreateUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -143,6 +185,22 @@ module.exports.validCreateUserReq = function(req){
   });
 };
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+ *  "user": {
+ *    "username": "user1@studykeeper.com",
+ *    "firstname": "firstnamea",
+ *    "lastname": "lastnameb",
+ *    "mmi": 10,
+ *    "role": "participant",
+ *    "collectsMMI": false
+ *  }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated User Request
+ */
 module.exports.validEditUserReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -200,6 +258,11 @@ module.exports.validEditUserReq = function(req){
   });
 };
 
+/**
+ * Promises that the user with a certain username exists
+ * @param username the username for the user
+ * @returns {Promise} A Promise with the user Object
+ */
 module.exports.userExists = function(username){
   return new Promise(function(resolve, reject){
     User.getUserByName(username,function(err,result){
@@ -214,6 +277,11 @@ module.exports.userExists = function(username){
   });
 };
 
+/**
+ * Promises that the user with a certain id exists
+ * @param userId the userid for the user
+ * @returns {Promise} A Promise with the user Object
+ */
 module.exports.userExistsById = function(userId){
   return new Promise(function(resolve, reject){
     User.getUserById(userId,function(err,result){
@@ -228,6 +296,11 @@ module.exports.userExistsById = function(userId){
   });
 };
 
+/**
+ * Promises that the username is not taken yet
+ * @param username the username for the user
+ * @returns {Promise} A Promise
+ */
 module.exports.usernameAvailable = function(username){
   return new Promise(function(resolve, reject){
     User.getUserByName(username, function(err, result){
@@ -242,6 +315,11 @@ module.exports.usernameAvailable = function(username){
   });
 };
 
+/**
+ * Promises the userdata from a token
+ * @param req The request object containing the token
+ * @returns {Promise} A Promise with the user object
+ */
 module.exports.userFromToken = function(req){
   return new Promise(function(resolve, reject){
 
@@ -269,6 +347,11 @@ module.exports.userFromToken = function(req){
   });
 };
 
+/**
+ * Promises that the users email adress is confirmed
+ * @param user the user object with the email adress
+ * @returns {Promise} A Promise with the user data
+ */
 module.exports.userFromNameWithConfirmationData = function(user){
   return new Promise(function(resolve, reject){
     User.getUserByNameWithConfirmationData(user.username, function(err, result){
@@ -288,6 +371,12 @@ module.exports.userFromNameWithConfirmationData = function(user){
   });
 };
 
+/**
+ * Promises that the user Role is contained in the given role Array
+ * @param userId the user Id
+ * @param roleArr the roles to be checked against
+ * @returns {Promise} A Promise that the role of the user in the system is part of the role Array
+ */
 module.exports.userHasRole = function(userId, roleArr){
   return new Promise(function(resolve, reject){
     User.getUserById(userId, function(err, result){
@@ -306,18 +395,28 @@ module.exports.userHasRole = function(userId, roleArr){
   });
 };
 
-
+/**
+ * Promises that the users lmuStaff Flag is set to true
+ *
+ * @param user the user Object for check for lmuStaff
+ * @returns {Promise} A Promise containing the user
+ */
 module.exports.userIsLMU = function(user){
   return new Promise(function(resolve, reject){
     if (user.lmuStaff) {
       resolve(user);
     } else {
       reject("Der Nutzer besitzt keine LMU Email Adresse (Erforderlich: @cip.ifi.lmu.de, @campus.lmu.de, @ifi.lmu.de" +
-      ")und kann daher keine MMI Punkte sammeln.");
+      ") und kann daher keine MMI Punkte sammeln.");
     }
   });
 };
 
+/**
+ * Promises that the user with the role executor does not have any open studies
+ * @param userId the executors id
+ * @returns {Promise} An empty Promise
+ */
 module.exports.executorHasNoOpenStudies = function(userId) {
   return new Promise(function(resolve,reject){
     User.getOpenStudieIdsForExecutor(userId, function(err,result){
@@ -333,6 +432,11 @@ module.exports.executorHasNoOpenStudies = function(userId) {
   });
 };
 
+/**
+ * Promises that the user with the role tutor does not have any open studies
+ * @param userId the tutors id
+ * @returns {Promise} An empty Promise
+ */
 module.exports.tutorHasNoOpenStudies = function(userId ){
   return new Promise(function(resolve,reject){
     User.getOpenStudieIdsForTutor(userId, function(err,result){
@@ -348,6 +452,11 @@ module.exports.tutorHasNoOpenStudies = function(userId ){
   });
 };
 
+/**
+ * Creates a Token for the user
+ * @param user the user object for which a token should be created
+ * @returns {Promise} An empty Promise
+ */
 module.exports.createTokensForUser = function(user){
   return new Promise(function(resolve, reject){
     User.createTokenForUser(user, function(err, result){
@@ -360,6 +469,11 @@ module.exports.createTokensForUser = function(user){
   });
 };
 
+/**
+ * Deletes all Tokens for the user which are older than 30 Minutes
+ * @param user the user object for which the tokens should be deleted
+ * @returns {Promise} An empty Promise
+ */
 module.exports.deleteOldTokensForUser = function(user){
   var now = new Date();
   var ThirtyMinutesFromNow = new Date(now - 1000*60*30);
@@ -377,6 +491,11 @@ module.exports.deleteOldTokensForUser = function(user){
   });
 };
 
+/**
+ * Gets the Users Tokens ordered by Date
+ * @param user the user object
+ * @returns {Promise} A Promise containing all tokens for the user ordered by Date
+ */
 module.exports.getTokensForUserOrderedByDate = function(user){
   return new Promise(function(resolve, reject){
     User.getTokensForUser(user, function(err, result){

@@ -3,6 +3,20 @@ var News         = require('../../models/news');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
+/**
+ * Validates the the body in the Request to be of the following form:
+ * {
+ *  "news": {
+ *   "title": "News 1",
+ *   "date": "2014-12-12",
+ *   "description": "This news is very interesting. Come on, take a look!",
+ *   "link": "http://www.amazon.com"
+ *  }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated News Request
+ */
 module.exports.validNewsReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -44,6 +58,11 @@ module.exports.validNewsReq = function(req){
   });
 };
 
+/**
+ * Promises that the news with a certain ID exists in the System
+ * @param newsId the Id for the news
+ * @returns {Promise} A Promise with the news object
+ */
 module.exports.newsExists = function(newsId){
   return new Promise(function(resolve, reject){
     News.getNewsById(newsId, function(err, result){

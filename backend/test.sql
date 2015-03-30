@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.22)
 # Database: studykeeper
-# Generation Time: 2015-03-01 13:36:09 +0000
+# Generation Time: 2015-03-29 23:27:13 +0000
 # ************************************************************
 
 
@@ -35,6 +35,7 @@ CREATE TABLE `auth` (
   UNIQUE KEY `token` (`token`),
   KEY `user` (`userId`),
   KEY `role_auth_rel` (`roleId`),
+  CONSTRAINT `role_auth` FOREIGN KEY (`roleId`) REFERENCES `roles` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `user` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -43,10 +44,7 @@ LOCK TABLES `auth` WRITE;
 
 INSERT INTO `auth` (`id`, `userId`, `roleId`, `token`, `timestamp`)
 VALUES
-	(100,3,2,'932ba750-b6f2-11e4-977c-6385d5abd00a','2015-02-17 23:16:19'),
-	(101,3,2,'08407e30-b6f3-11e4-977c-6385d5abd00a','2015-02-17 23:21:44'),
-	(111,4,2,'90cba5c0-b78b-11e4-94f5-1f91ad06c959','2015-02-18 17:35:19'),
-	(117,1,1,'71910360-c016-11e4-a530-29e87e1a047e','2015-03-01 14:28:40');
+	(2,1,1,'cbc09d20-d577-11e4-8bec-59bda93b6e55','2015-03-28 19:26:43');
 
 /*!40000 ALTER TABLE `auth` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -69,11 +67,10 @@ LOCK TABLES `labels` WRITE;
 
 INSERT INTO `labels` (`id`, `title`)
 VALUES
-	(6,'Label 4'),
-	(1,'Label1'),
-	(2,'Label2'),
-	(3,'Label3'),
-	(7,'Test');
+	(3,'Feld-Studie'),
+	(10,'Mobile-Studie'),
+	(11,'NewTest'),
+	(1,'Online-Studie');
 
 /*!40000 ALTER TABLE `labels` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -98,9 +95,10 @@ LOCK TABLES `news` WRITE;
 
 INSERT INTO `news` (`id`, `title`, `date`, `description`, `link`)
 VALUES
-	(1,'News 1','2015-02-15','This news has the date 15.02.2015','http://www.lmu.de'),
-	(2,'News 2','2015-12-17','This news has the date 17.12.2015','http://www.medien.ifi.lmu.de'),
-	(11,'test','2015-02-03','test','http://www.google.de');
+	(15,'Studykeeper ist online!','2015-03-09','Studykeeper hat es nun doch noch geschafft!','http://www.medien.lmu.de'),
+	(16,'Die ersten Studien sind endlich da.','2015-03-31','Ab sofort sind Studien online und die Anmeldung ist offen.','http://www.mimuc.de'),
+	(17,'Bald ist es soweit!','2015-03-23','Amadeus und David müssen Ihre Bachelor Arbeiten abgeben','http://www.mimuc.de'),
+	(18,'Der Tag der Präsentation!','2015-03-24','Der Adrenalinspiegel ist hoch!','http://www.mimuc.de');
 
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -151,11 +149,14 @@ LOCK TABLES `studies_labels_rel` WRITE;
 
 INSERT INTO `studies_labels_rel` (`id`, `studyId`, `labelId`)
 VALUES
-	(27,1,2),
-	(28,1,1),
-	(36,24,7),
-	(39,23,1),
-	(40,26,1);
+	(97,21,3),
+	(98,21,10),
+	(99,31,1),
+	(102,1,1),
+	(103,2,3),
+	(104,2,10),
+	(107,37,3),
+	(108,23,10);
 
 /*!40000 ALTER TABLE `studies_labels_rel` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -170,7 +171,11 @@ CREATE TABLE `studies_news_rel` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `studyId` int(11) unsigned NOT NULL,
   `newsId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `news_rel` (`newsId`),
+  KEY `study_news_rel` (`studyId`),
+  CONSTRAINT `news_rel` FOREIGN KEY (`newsId`) REFERENCES `news` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `study_news_rel` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `studies_news_rel` WRITE;
@@ -178,10 +183,10 @@ LOCK TABLES `studies_news_rel` WRITE;
 
 INSERT INTO `studies_news_rel` (`id`, `studyId`, `newsId`)
 VALUES
-	(28,1,1),
-	(34,24,2),
-	(37,23,1),
-	(38,26,1);
+	(75,21,18),
+	(76,1,16),
+	(79,37,18),
+	(80,23,18);
 
 /*!40000 ALTER TABLE `studies_news_rel` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -199,6 +204,7 @@ CREATE TABLE `studies_requires_rel` (
   PRIMARY KEY (`id`),
   KEY `study_main1_rel` (`studyId`),
   KEY `study_required_rel` (`requiresId`),
+  CONSTRAINT `study_required_orig` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `study_required_rel` FOREIGN KEY (`requiresId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -207,11 +213,10 @@ LOCK TABLES `studies_requires_rel` WRITE;
 
 INSERT INTO `studies_requires_rel` (`id`, `studyId`, `requiresId`)
 VALUES
-	(9,21,1),
-	(10,22,1),
-	(11,22,2),
-	(14,4,3),
-	(21,23,1);
+	(1,23,1),
+	(2,23,2),
+	(3,38,24),
+	(4,38,22);
 
 /*!40000 ALTER TABLE `studies_requires_rel` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -226,10 +231,13 @@ CREATE TABLE `studies_template_values` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `studyId` int(11) unsigned NOT NULL,
   `templateId` int(11) unsigned NOT NULL,
+  `fieldId` int(11) unsigned NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `templatevalue_studies` (`studyId`),
   KEY `templatevalues_template` (`templateId`),
+  KEY `templatevalue_field` (`fieldId`),
+  CONSTRAINT `templatevalue_field` FOREIGN KEY (`fieldId`) REFERENCES `template_fields` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `templatevalue_studies` FOREIGN KEY (`studyId`) REFERENCES `userstudies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `templatevalues_template` FOREIGN KEY (`templateId`) REFERENCES `templates` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -237,30 +245,25 @@ CREATE TABLE `studies_template_values` (
 LOCK TABLES `studies_template_values` WRITE;
 /*!40000 ALTER TABLE `studies_template_values` DISABLE KEYS */;
 
-INSERT INTO `studies_template_values` (`id`, `studyId`, `templateId`, `value`)
+INSERT INTO `studies_template_values` (`id`, `studyId`, `templateId`, `fieldId`, `value`)
 VALUES
-	(87,21,1,''),
-	(88,21,1,''),
-	(89,22,1,''),
-	(90,22,1,''),
-	(121,1,2,'Value1234'),
-	(122,1,2,'value2234'),
-	(123,1,2,'test'),
-	(124,1,2,''),
-	(133,24,19,'Super'),
-	(134,24,19,'Duper'),
-	(141,2,17,'Wert1nyan'),
-	(142,2,17,'Wert2nyan'),
-	(147,23,19,'Amar'),
-	(148,23,19,'asd'),
-	(149,25,19,''),
-	(150,25,19,''),
-	(151,26,19,''),
-	(152,26,19,''),
-	(157,27,2,'feld'),
-	(158,27,2,'feld2'),
-	(159,27,2,''),
-	(160,27,2,'');
+	(279,3,1,1,'Im 2. Stock'),
+	(280,3,1,2,'30 Minuten'),
+	(302,21,4,34,'Smartphone'),
+	(303,21,4,35,'Android'),
+	(304,31,4,34,'Nichts'),
+	(305,31,4,35,'Smartphone Erfahrung'),
+	(308,1,2,3,'1 Stunde'),
+	(309,1,2,4,'www.mimuc.de'),
+	(310,1,2,5,'Erfahrung mit Windows 10'),
+	(311,2,4,34,'Smartphone'),
+	(312,2,4,35,'Android Kentnisse'),
+	(319,37,4,34,'Smartphone'),
+	(320,37,4,35,'Keine'),
+	(321,23,4,34,'Iphone'),
+	(322,23,4,35,'Keine'),
+	(323,38,4,34,''),
+	(324,38,4,35,'');
 
 /*!40000 ALTER TABLE `studies_template_values` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -289,19 +292,37 @@ LOCK TABLES `studies_users_rel` WRITE;
 
 INSERT INTO `studies_users_rel` (`id`, `studyId`, `userId`, `registered`, `confirmed`)
 VALUES
-	(82,1,8,1,1),
-	(83,1,9,1,1),
-	(84,1,4,1,1),
-	(85,1,5,1,1),
-	(94,24,3,1,1),
-	(95,24,8,1,1),
-	(96,24,9,1,1),
-	(97,24,4,1,1),
-	(98,24,5,1,1),
-	(99,24,7,1,1),
-	(103,2,7,1,0),
-	(108,23,10,1,0),
-	(109,23,7,1,0);
+	(169,28,3,1,0),
+	(170,28,7,1,0),
+	(201,3,20,1,0),
+	(202,3,17,1,0),
+	(203,3,1,1,0),
+	(204,3,3,1,0),
+	(205,3,4,1,0),
+	(206,3,7,1,0),
+	(221,24,1,1,0),
+	(223,22,1,1,0),
+	(224,21,3,1,0),
+	(226,24,5,1,0),
+	(227,21,10,1,0),
+	(234,1,7,1,0),
+	(235,1,9,1,0),
+	(236,1,8,1,0),
+	(237,1,10,1,0),
+	(238,1,17,1,0),
+	(239,1,20,1,0),
+	(240,1,5,1,0),
+	(241,2,3,1,0),
+	(242,2,4,1,0),
+	(243,2,7,1,0),
+	(244,2,9,1,0),
+	(245,2,8,1,0),
+	(246,2,10,1,0),
+	(247,2,5,1,0),
+	(249,21,1,1,0),
+	(253,37,4,1,1),
+	(254,37,3,1,1),
+	(255,37,1,1,1);
 
 /*!40000 ALTER TABLE `studies_users_rel` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -326,22 +347,13 @@ LOCK TABLES `template_fields` WRITE;
 
 INSERT INTO `template_fields` (`id`, `templateId`, `title`)
 VALUES
-	(1,1,'Felde Nummer1'),
-	(2,1,'Feld Nummer2'),
-	(3,2,'Feld 1 Template 2'),
-	(4,2,'Feld 2 Template 2'),
-	(5,2,'Feld 3 Template 2'),
-	(6,2,'Feldinhalt 4 Template 2'),
-	(7,3,'Feld 1 Template 3'),
-	(22,17,'Feld1'),
-	(23,17,'Feld2 '),
-	(26,18,'Feld 1'),
-	(27,18,'Feld 2k'),
-	(28,18,'Fedl 3'),
-	(34,4,'Feld 1 Template 4'),
-	(35,4,'Abc'),
-	(36,19,'dumperEins'),
-	(37,19,'sowasZwei');
+	(1,1,'Wegbeschreibung'),
+	(2,1,'Dauer'),
+	(3,2,'Dauer'),
+	(4,2,'URL'),
+	(5,2,'Vorraussetzungen'),
+	(34,4,'Mitzubringen'),
+	(35,4,'Vorraussetzung');
 
 /*!40000 ALTER TABLE `template_fields` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -364,13 +376,9 @@ LOCK TABLES `templates` WRITE;
 
 INSERT INTO `templates` (`id`, `title`)
 VALUES
-	(19,'SuperDuper'),
-	(1,'Template 1'),
-	(2,'Template 2'),
-	(3,'Template 3'),
-	(4,'Template 4'),
-	(17,'Template 5'),
-	(18,'Template 6 ');
+	(4,'Mobile Studie'),
+	(2,'Online Studie'),
+	(1,'Standart Template');
 
 /*!40000 ALTER TABLE `templates` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -403,17 +411,15 @@ LOCK TABLES `users` WRITE;
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `lmuStaff`, `mmi`, `firstname`, `lastname`, `visible`, `collectsMMI`)
 VALUES
-	(1,'tutor@campus.lmu.de','$2a$10$KUtrUWkmNYShDimkKjo3XODvQNUj6fqvkdsMN4Dcyhu8f8Fhjhc3y',1,1,0,'Test','Tutor',1,0),
-	(3,'executor@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,2,'Test','Executor',1,1),
-	(4,'executor2@campus.lmu.de','$2a$10$fnD1rqDxsgIuz9iUfMGBfeKEERL88fqF.uvJjcdgI8puUVH.uMKYu',2,1,2,'Test','Executor2',1,0),
-	(5,'tutor2@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,1,'Test','Tutor2',1,0),
-	(7,'participant1@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,4.5,'IfiStudent','Test',1,1),
-	(8,'participant2@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'LmuStudent','Test',1,1),
-	(9,'participant3@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip','Test',1,0),
-	(10,'participant4@whatever.com','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,0,0,'ExtParticip2','Test',1,0),
-	(11,'unconfirmed@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'unconfirmed','Test',1,1),
-	(12,'deleted12','$2a$10$SMN6536bm2EA.4lHlrghrOkK5yJtgqS0Nce4tIspmmoduRn6YolhW',3,0,0,'deleted','deleted',0,0),
-	(13,'deleted13','$2a$10$ocvmkGBXF0dEMLzu.XUUeO76SMDAHimpjihJWvmqC5lbudrpI/hzC',3,0,0,'deleted','deleted',0,0),
+	(1,'david.kronmueller@campus.lmu.de','$2a$10$KUtrUWkmNYShDimkKjo3XODvQNUj6fqvkdsMN4Dcyhu8f8Fhjhc3y',1,1,2,'David','Kronmueller',1,0),
+	(3,'jan.delay@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',2,1,4.5,'Jan','Delay',1,1),
+	(4,'dennis.lisk@campus.lmu.de','$2a$10$fnD1rqDxsgIuz9iUfMGBfeKEERL88fqF.uvJjcdgI8puUVH.uMKYu',2,1,2,'Dennis','Lisk',1,0),
+	(5,'amadeus.schell@cip.ifi.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',1,1,0,'Amadeus','Schell',1,0),
+	(7,'martin.laciny@cip.ifi.lmu.de','$2a$10$YIFp5koNoFKTAWg3SB1wgO1KoxVT/NTPXlQOS.gUolxWw.yXRGN4u',3,1,2,'Marten','Laciny',1,1),
+	(8,'felix.brummer@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1,'Felix','Brummer',1,1),
+	(9,'max.herre@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,0,'Max','Herre',1,1),
+	(10,'amadeus.schell@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,1.5,'Amadeus','Schell',1,1),
+	(11,'unconfirmed@campus.lmu.de','$2a$10$i/sIqsX/iAEpUynQbTvobuVFs8Q47DP49x9TV90szBXqsb5T.c1s2',3,1,0,'unconfirmed','user',1,1),
 	(17,'amadeus.schell17@gmail.com','$2a$10$NECkyFEG5MQpjj7JJcP70uLJtTNEzBYmGC163SiZz4AyWGNKN/yHK',3,0,0,'Ama','Schell',1,0),
 	(20,'david.kronmueller@gmail.com','$2a$10$EsK6UzBoZugzk2VCRfCBVuz7DmSvzAj8okCfzv5gqsV1EsxRfGfi2',3,0,0,'David','Kronmueller',1,0);
 
@@ -442,18 +448,17 @@ LOCK TABLES `users_confirm` WRITE;
 
 INSERT INTO `users_confirm` (`id`, `userId`, `confirmed`, `timestamp`, `hash`)
 VALUES
-	(4,1,1,'2015-02-15 14:06:04','123'),
-	(5,3,1,'2015-02-15 14:16:25',''),
-	(6,4,1,'2015-02-15 14:16:29',''),
-	(7,5,1,'2015-02-15 14:16:32',''),
-	(9,7,1,'2015-02-15 14:16:41',''),
-	(10,8,1,'2015-02-15 14:16:44',''),
-	(11,9,1,'2015-02-15 14:16:56',''),
-	(12,10,1,'2015-02-15 14:17:02',''),
-	(13,12,0,'2015-02-15 16:16:54','acab1c70-b525-11e4-b59a-b9807bf1f21c'),
-	(14,13,0,'2015-02-15 16:39:59','e62214b0-b528-11e4-be6c-5d3b38b74993'),
-	(18,17,0,'2015-02-17 23:37:20','8843e070-b6f5-11e4-8124-4d69a4a29ed5'),
-	(21,20,0,'2015-02-18 00:26:48','7145a140-b6fc-11e4-b43f-29cecdaae0c3');
+	(4,1,1,'2015-03-23 18:22:13',''),
+	(5,3,1,'2015-03-23 18:22:14',''),
+	(6,4,1,'2015-03-23 18:22:14',''),
+	(7,5,1,'2015-03-23 18:22:15',''),
+	(9,7,1,'2015-03-23 18:22:16',''),
+	(10,8,1,'2015-03-23 18:22:18',''),
+	(11,9,1,'2015-03-23 18:22:20',''),
+	(12,10,1,'2015-03-23 18:22:21',''),
+	(18,17,1,'2015-03-23 18:22:23',''),
+	(21,20,1,'2015-03-23 18:22:27',''),
+	(22,11,0,'2015-03-23 18:22:25','7145a140-b6fc-11e4-b43f-29cecdaae0c3');
 
 /*!40000 ALTER TABLE `users_confirm` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -516,16 +521,17 @@ LOCK TABLES `userstudies` WRITE;
 
 INSERT INTO `userstudies` (`id`, `tutorId`, `executorId`, `creatorId`, `templateId`, `fromDate`, `untilDate`, `title`, `description`, `link`, `space`, `mmi`, `compensation`, `location`, `visible`, `published`, `closed`)
 VALUES
-	(1,1,3,1,2,'2015-02-04','2015-02-28','Studie 1',' Die Beschreibung','http://www.linklinklinl.de',10,0,'0','der Ort',1,1,1),
-	(2,1,4,1,17,'2015-02-01','2015-02-01','Studie 2 nyan','Die Beschreibung nyan','http://www.amaistdoofnyan.com',1,1,'5','der Ort nyan',1,1,0),
-	(3,5,5,1,1,'2015-02-15','2015-02-15','Studie 3','Diese Nutzerstudie wird vom dem Tutor der sie erstellt hat auch ausgefuehrt','http://diewebseitevomtutor.de',0,0,'0','Tutors2 Office',1,1,0),
-	(21,1,4,1,1,'2015-02-17','2015-02-18','Studie Req Studie 1','Loc','http://www.test.test',1,1,'5','Hier',1,1,0),
-	(22,1,4,1,1,'2015-02-17','2015-02-18','Studie Req Studie 1 und 2','Loc','http://www.test.test',1,1,'5','Hier',1,1,0),
-	(23,1,3,1,19,'2015-02-28','2015-02-28','Ama','Ama','http://www.Ama.Ama',1,3.5,'35','Ama',1,0,0),
-	(24,1,3,1,19,'2015-02-17','2015-02-21','Geplante Studie','Geplante Beschreibung','http://www.linkzurgeplantenStudie.com',13,1,'10','Geplanter Ort',1,1,1),
-	(25,1,1,1,19,'2015-02-28','2015-02-28','Test','Beschreibung','http://www.link.link',0,0,'0','hier',1,0,0),
-	(26,1,1,1,19,'2015-02-27','2015-02-27','hier','hier','http://www.absd.de',0,0,'0','hier',1,0,0),
-	(27,1,3,1,2,'2015-03-12','2015-03-28','TEsttest','Beschr','http://www.abc.de',0,0,'30','Ort',1,0,0);
+	(1,1,3,1,2,'2015-02-04','2015-02-28','Abgeschlossene Online Studie','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.Dies ist die Beschreibung für die Studie Context-sensitive Modalities for Interaction with Large Screens','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',20,1,'5€ Zalando Gutschein','Amalienstraße 17, Raum A 105',1,1,1),
+	(2,1,4,1,4,'2015-02-01','2015-02-01','Abgeschlossene Mobile Studie','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus ','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',20,1,'5€ Amazon Gutschein','Oettingenstr. 67, Raum 001',1,1,1),
+	(3,1,4,1,1,'2015-02-15','2015-02-15','Abgeschlossene Standart Studie','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',10,2,'5€ Amazon Gutschein','Amalienstraße 17, Raum A 201',1,1,1),
+	(21,5,5,5,4,'2015-04-01','2015-04-02','Mobile Studie 2','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',15,1,'5€ Amazon Gutschein','Amalienstraße 17, Raum 300',1,1,0),
+	(22,5,4,1,1,'2015-03-17','2015-04-05','Studie mit Vorraussetzung','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',12,1,'5€ Amazon Gutschein','Theresienstraße 39, Raum 007',1,1,0),
+	(23,1,3,5,4,'2015-04-01','2015-04-06','Mobile Studie 3','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',20,0.5,'5€ Amazon Gutschein','Amalienstraße 17, Rückgebäude 2. Stock',1,1,0),
+	(24,1,3,1,1,'2015-04-01','2015-04-10','Standart Studie 2','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',10,0.5,'10€ Amazon Gutschein','Theresienstraße 39, Raum 302',1,1,0),
+	(28,5,4,5,1,'2015-04-10','2015-04-12','Standart Studie 3 (Nicht Veröffentlicht)','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',10,1,'5€ Amazon Gutschein','Amalienstraße 17, Raum A 105',1,0,0),
+	(31,5,4,5,4,'2015-04-10','2015-04-14','Online Studie 2 (Nicht Veröffentlicht)','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sodales purus. Ut ante risus, lacinia ut dictum quis, bibendum eget orci. Phasellus luctus eleifend lorem, ut interdum velit gravida feugiat. Vivamus finibus ultrices tellus imperdiet laoreet. Morbi mattis vel elit sed porta. Morbi at enim id lectus dignissim efficitur quis eu enim. Quisque turpis erat, pulvinar non ultricies porttitor, gravida in lectus. Mauris consectetur a justo eget pellentesque. Integer id egestas dolor. Suspendisse molestie molestie sem ut cursus. Mauris quis hendrerit nisl, ut maximus turpis.','http://www.medien.ifi.lmu.de/lehre/ws1415/dsm/',20,1,'5€ Amazon Gutschein','Oettingenstr. 67, Raum 222',1,0,0),
+	(37,5,1,5,4,'2015-03-10','2015-03-26','Teststudie','Keine','http://www.google.de',20,2,'Keine','Muenchen',1,1,1),
+	(38,1,1,1,4,'2015-03-19','2015-03-30','test','sda','http://www.abc.de',0,0,'12','das',1,0,0);
 
 /*!40000 ALTER TABLE `userstudies` ENABLE KEYS */;
 UNLOCK TABLES;

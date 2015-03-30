@@ -3,6 +3,18 @@ var Template     = require('../../models/templates');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
+/**
+ * Validates the Body of the Request Object to be of the following Form:
+ * {
+ *  "template" : {
+ *  "title" : "template title5",
+ *  "fields" : ["field1 title","field2 title","field 3 title"]
+ *  }
+ *}
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise with the validated Template Request
+ */
 module.exports.validFullTemplateReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -41,6 +53,11 @@ module.exports.validFullTemplateReq = function(req){
   });
 };
 
+/**
+ * Promises that the template with a certain ID exists in the System
+ * @param templateId the ID for the template
+ * @returns {Promise} A Promise with the template object
+ */
 module.exports.templateExists = function(templateId){
   return new Promise(function(resolve, reject){
     Template.getTemplateById(templateId, function(err, result){
@@ -55,6 +72,11 @@ module.exports.templateExists = function(templateId){
   });
 };
 
+/**
+ * Promises that the template name is not yet used
+ * @param templateName the template name to be checked against
+ * @returns {Promise} A Promise with the template Object
+ */
 module.exports.templateAvailable = function(templateName) {
   return new Promise(function(resolve, reject){
     Template.getTemplateByTitle(templateName, function(err, result){

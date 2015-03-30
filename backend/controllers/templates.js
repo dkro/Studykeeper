@@ -4,7 +4,12 @@ var Promise          = require('es6-promise').Promise;
 var TemplatePromise  = require('./promises/templatePromises');
 var Async       = require('async');
 
-
+/**
+ * Creates a new Template
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.createTemplate = function(req, res, next){
   var template;
   TemplatePromise.validFullTemplateReq(req)
@@ -30,6 +35,12 @@ module.exports.createTemplate = function(req, res, next){
     });
 };
 
+/**
+ * Edits an existing template via req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.editTemplate = function (req, res, next) {
   var template;
   TemplatePromise.validFullTemplateReq(req, true)
@@ -63,6 +74,12 @@ module.exports.editTemplate = function (req, res, next) {
     });
 };
 
+/**
+ * Deletes an existing template via req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.deleteTemplate = function(req, res, next){
     TemplatePromise.templateExists(req.params.id)
     .then(function(template){
@@ -90,6 +107,12 @@ module.exports.deleteTemplate = function(req, res, next){
     });
 };
 
+/**
+ * Provides a list of all templates
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.allTemplates = function (req, res, next){
   Template.getAllTemplates(function(err,result){
     if (err) {
@@ -116,6 +139,12 @@ module.exports.allTemplates = function (req, res, next){
   });
 };
 
+/**
+ * Provides a template by id via the req.params.id
+ * @param req Incoming Request Object
+ * @param res Outgoing Response Object
+ * @param next next handler
+ */
 module.exports.getTemplateById = function (req, res, next){
   Template.getTemplateById(req.params.id, function(err,result){
     if (err) {
@@ -137,6 +166,11 @@ module.exports.getTemplateById = function (req, res, next){
   });
 };
 
+/**
+ * Parses the templates SQL According to the API
+ * @param templateArray an Array of templates to be parsed
+ * @returns {Array} a parsed version of the templates
+ */
 var parseTemplateSQL = function(templateArray){
   var ids = [];
   var templates = [];

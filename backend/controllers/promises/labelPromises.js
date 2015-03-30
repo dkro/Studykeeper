@@ -3,6 +3,18 @@ var Label         = require('../../models/labels');
 var Promise      = require('es6-promise').Promise;
 var Validator    = require('validator');
 
+/**
+ * Validates the Body of the Request to be of the following form:
+ *
+ * {
+ *   "label": {
+ *     "title": "title"
+ *   }
+ * }
+ *
+ * @param req Incoming Request Object
+ * @returns {Promise} A Promise validating the Label Request
+ */
 module.exports.validLabelReq = function(req){
   return new Promise(function(resolve,reject) {
     var validationErrors = [];
@@ -25,6 +37,12 @@ module.exports.validLabelReq = function(req){
   });
 };
 
+/**
+ * Promises that the label with a certain ID exists in the System
+ *
+ * @param label a label object with an id
+ * @returns {Promise} A Promise with the label object
+ */
 module.exports.labelExists = function(label){
   return new Promise(function(resolve, reject){
     Label.getLabelById(label.id, function(err, result){
@@ -39,6 +57,11 @@ module.exports.labelExists = function(label){
   });
 };
 
+/**
+ * Promises that the title of the Label is not used in the System yet
+ * @param label a Label object with a title
+ * @returns {Promise} A Promise with the label object
+ */
 module.exports.labelAvailable = function(label) {
   return new Promise(function(resolve, reject){
     Label.getLabelByName(label.title,function(err, result){

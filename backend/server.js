@@ -4,7 +4,7 @@ var restify   = require('restify');
 var bunyan    = require('bunyan');
 var port      = process.env.PORT || 10001;
 var app       = restify.createServer({
-  name : 'UserstudyManager API'
+  name : 'Studykeeper'
 });
 app.use(restify.bodyParser({ mapParams: false}));
 
