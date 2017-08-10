@@ -11,9 +11,9 @@ The application was developed in the context of the bachelor thesis "A Managemen
 Authors
 ================
 
-Amadeus Schell / amadeus.schell17@gmail.com
+Amadeus Schell
 
-David Kronmüller / david.kronmueller@gmail.com
+David Kronmüller
 
 
 Front end
