@@ -24,7 +24,7 @@ var log = new bunyan.createLogger({
 
 // Create the Restify Server
 var app       = restify.createServer({
-  name : 'UserstudyManager',
+  name : 'Studykeeper',
   log: log
 });
 app.use(restify.bodyParser({ mapParams: false}));
