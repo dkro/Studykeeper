@@ -463,10 +463,10 @@ var sendUserWelcomeMail = function(email,password,callback) {
     from: 'StudyKeeper <no-reply@studykeeper.com>',
     to: email,
     subject: 'Es wurde ein Account für Sie erstellt.',
-    html: "Ein Tutor bei Studykeeper hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen " +
+    html: "Ein Tutor bei UserstudyManager hat einen Account für Sie erstellt. Sie werden in Kürze eine Mail zum Bestätigen " +
     "Ihrer Email Adresse bekommen. Nachdem Sie Ihre Email Adresse bestätigt haben, können Sie sich mit dieser " +
     "und diesem Passwort: " + password + " über den folgenden Link anmelden: " +
-    "<a href=\"" + URL + "\">Studykeeper</a> " +
+    "<a href=\"" + URL + "\">UserstudyManager</a> " +
     " Das Passwort können Sie jederzeit in den Account Einstellungen ändern."};
   Mail.sendMail(mail,function(err,result){
     if (err) {
@@ -672,7 +672,7 @@ var sendPasswordRetrievalAction = function(email, newpw, callback){
     subject: 'Ihr Passwort wurde zurückgesetzt',
     html: "Ihr Passwort wurde zurückgesetzt. Ihr neues Passwort lautet: " + newpw + ". Bitte loggen Sie sich " +
     "mit diesem ein und ändern Sie Ihr Passwort in den Account Einstellungen. " +
-    "<a href=\"" + URL + "\">Studykeeper</a> "};
+    "<a href=\"" + URL + "\">UserstudyManager</a> "};
   Mail.sendMail(mail,function(err,result){
     if (err) {
       callback(err);

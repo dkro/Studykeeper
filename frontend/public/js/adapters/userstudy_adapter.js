@@ -14,8 +14,7 @@ StudyManager.UserstudyAdapter = DS.RESTAdapter.extend({
 
     // Workaround to be conform to the Backend API expecting "api/userstudies" for study related requests
     // But Ember.js would implicitly enhance the study type with an "s". So without this fix, the default application
-    // would build the path "api/userstudys" which is not desired. See the Ember.js documentation about adapters and
-    //
+    // would build the path "api/userstudys" which is not desired. See the Ember.js documentation about adapters.
     pathForType: function(type) {
         return 'userstudies';
     }

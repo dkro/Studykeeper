@@ -1,5 +1,5 @@
 /**
- * Component for selecting and unselection labels und the userstudies route.
+ * Component for selecting and deselection labels und the userstudies route.
  */
 StudyManager.StudySearchformComponent = Ember.Component.extend({
     actions: {

@@ -1,5 +1,5 @@
 /**
- * Generic form component used for template route and template-creation route.
+ * Generic form component used for the template route and template-creation route.
  */
 StudyManager.TemplateConfigComponent = Ember.Component.extend({
     actions: {
