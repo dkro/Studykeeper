@@ -6,7 +6,7 @@ var nodemailer = require('nodemailer');
  */
 var transporter = nodemailer.createTransport(
   {
-    host: 'smtp.ifi.lmu.de',
+    host: 'smtp.domain.de',
     port: 25,
     auth: {
       user: '',
