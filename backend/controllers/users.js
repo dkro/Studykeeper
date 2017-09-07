@@ -9,7 +9,7 @@ var uuid       = require('node-uuid');
 var Mail      = require('../utilities/mail');
 
 var passwordMinimumLength = 7;
-var URL = "http://studykeeper.medien.ifi.lmu.de:10001";
+var URL = "http://configurableurl.com";
 
 /**
  * Provides a simple user via the req.params.id
