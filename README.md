@@ -16,7 +16,7 @@ Amadeus Schell
 David Kronmüller
 
 
-Front end
+Frontend
 ================
 
 For the front end, the framework [Ember.js](https://www.emberjs.com) was used.
@@ -24,7 +24,7 @@ For the front end, the framework [Ember.js](https://www.emberjs.com) was used.
 As time was short to create a fully customized design, the [Bootstrap](https://getbootstrap.com/) framework was used to provide a quick solution for a mobile first and responsive user interface.
 
 
-Back end
+Backend
 ================
 
 For the server side, the JavaScript runtime [Node.js](https://nodejs.org) and the database management system [MySQL](https://www.mysql.com/) were used as backbone.
@@ -79,7 +79,7 @@ Edit the following values to match your mail server:
 
 ```
 {
-    host: 'smtp.ifi.lmu.de',
+    host: 'smtp.domain.de',
     port: 25,
     auth: {
         user: 'example',
@@ -95,7 +95,7 @@ Edit the following values to match your mail server:
 To do this, you need to adjust one particular variable in */backend/controller/users*. At the beginning of the file, the following needs to be modified so that the String represents the URL of the environment.
 
 ```
-var URL = "http://studykeeper.medien.ifi.lmu.de:10001"
+var URL = "http://configurableurl.com"
 ```
 
 
